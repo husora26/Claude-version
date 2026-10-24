@@ -1196,6 +1196,71 @@
     .season-default-due input { width: 150px; min-height: 32px; padding: 4px 8px; font-size: 12px; }
     .season-overdue { margin: 0; padding: 7px 10px; border-radius: 8px; color: #8b2f25; background: var(--red-soft); font-size: 11.5px; font-weight: 600; }
     .inspection-status-badge.overdue { color: #8b2f25; background: var(--red-soft); }
+    .automation-summary.portfolio-kpis { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    @media (max-width: 640px) { .automation-summary.portfolio-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .portfolio-kpis > div { flex-direction: column; gap: 3px; } }
+    .house-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 460px), 1fr)); gap: 18px; align-items: start; }
+    .house-grid.single { grid-template-columns: 1fr; }
+    .house-card { overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); box-shadow: var(--shadow); }
+    .house-card-hero { position: relative; display: block; width: 100%; height: 190px; overflow: hidden; padding: 0; border: 0; background: linear-gradient(135deg, #2f5d4b, #6f8d70); text-align: left; }
+    .house-grid.single .house-card-hero { height: 240px; }
+    .house-card-hero img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .house-card-hero:hover img { transform: scale(1.03); }
+    .house-card-placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,.35); }
+    .house-card-placeholder svg { width: 72px; height: 72px; }
+    .house-card-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(10,25,20,.72)); }
+    .house-card-title { position: absolute; right: 16px; bottom: 14px; left: 16px; display: grid; gap: 2px; color: #fff; }
+    .house-card-title strong { font-size: 20px; letter-spacing: -.01em; text-shadow: 0 1px 6px rgba(0,0,0,.3); }
+    .house-card-title small { color: rgba(255,255,255,.85); font-size: 11.5px; }
+    .house-card-pill { position: absolute; top: 12px; right: 12px; padding: 5px 11px; border-radius: 20px; color: var(--green); background: rgba(255,255,255,.92); font-size: 11px; font-weight: 750; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+    .house-card-pill.st-busy { color: #fff; background: #a94e44; }
+    .house-card-pill.st-warn { color: #fff; background: #c98a2b; }
+    .house-card-body { display: grid; gap: 14px; padding: 14px 16px 16px; }
+    .house-facts { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
+    .house-facts div { display: flex; align-items: baseline; gap: 5px; padding: 5px 10px; border-radius: 8px; background: #f3f1ea; }
+    .house-facts dt { color: var(--muted); font-size: 9.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .house-facts dd { margin: 0; font-size: 12px; font-weight: 700; }
+    .house-facts-empty { margin: 0; color: var(--muted); font-size: 11.5px; }
+    .house-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .house-tile { --tone: #7c8a80; --bg: #f7f6f1; display: grid; align-content: start; gap: 2px; min-height: 82px; padding: 9px 10px; border: 1px solid #ebe6da; border-left: 3px solid var(--tone); border-radius: 10px; color: var(--ink); background: var(--bg); text-align: left; transition: transform .15s, box-shadow .15s; }
+    .house-tile:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(35,48,39,.08); }
+    .house-tile.st-ok { --tone: #3f8a5f; --bg: #f2f8f3; }
+    .house-tile.st-warn { --tone: #d58a1f; --bg: #fdf7ec; }
+    .house-tile.st-alert { --tone: #c0392b; --bg: #fcf1ef; }
+    .house-tile.st-busy { --tone: #a94e44; --bg: #fbf3f1; }
+    .house-tile-head { display: flex; align-items: center; gap: 5px; color: var(--tone); font-size: 9.5px; font-weight: 750; letter-spacing: .03em; text-transform: uppercase; }
+    .house-tile-head svg { width: 13px; height: 13px; flex: none; }
+    .house-tile strong { overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+    .house-tile small { overflow: hidden; color: var(--muted); font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
+    .house-tile-bar { height: 4px; margin-top: 4px; overflow: hidden; border-radius: 4px; background: #e6e2d8; }
+    .house-tile-bar span { display: block; height: 100%; background: var(--green); }
+    .house-tile.st-alert .house-tile-bar span { background: var(--red); }
+    .house-card-meta { display: grid; gap: 6px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .house-card-meta > div { display: grid; grid-template-columns: 112px 1fr; gap: 10px; align-items: baseline; font-size: 12px; }
+    .house-card-meta span { color: var(--muted); font-size: 10.5px; font-weight: 650; }
+    .house-card-meta strong { overflow: hidden; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+    .house-card-meta .cond-ok { color: #2f7a4f; } .house-card-meta .cond-warn { color: #9a6416; } .house-card-meta .cond-alert { color: var(--red); }
+    .house-card-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .house-card-actions .primary-btn, .house-card-actions .secondary-btn { min-height: 36px; padding: 0 12px; font-size: 11.5px; }
+    .house-card-actions svg { width: 14px; height: 14px; }
+    .house-settings-details { margin-top: 18px; }
+    .house-settings-details > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 19px; cursor: pointer; list-style: none; }
+    .house-settings-details > summary::-webkit-details-marker { display: none; }
+    .house-settings-details > summary strong { display: block; font-size: 13px; }
+    .house-settings-details > summary small { color: var(--muted); font-size: 11px; }
+    .house-settings-details > summary svg { width: 16px; height: 16px; color: var(--muted); }
+    .house-settings-details .house-settings-card { margin: 0; border: 0; border-top: 1px solid var(--line); border-radius: 0; box-shadow: none; }
+    .house-glance .card-head { flex-wrap: wrap; }
+    .house-glance-body { padding: 14px 16px 16px; }
+    .house-glance .house-tiles { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .detail-projects { display: grid; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .detail-projects li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; padding: 8px 10px; border-radius: 8px; background: #f6f4ee; }
+    .detail-projects span { color: var(--muted); font-size: 11px; }
+    @media (max-width: 1100px) { .house-glance .house-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 560px) { .house-tiles, .house-glance .house-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .house-card-hero { height: 165px; } .house-card-meta > div { grid-template-columns: 96px 1fr; } .house-card-actions > * { flex: 1 1 auto; } }
+    .detail-grid .property-card { padding: 11px 13px; border: 1px solid #ebe6da; border-radius: 10px; background: #f8f7f2; box-shadow: none; }
+    .detail-grid .property-card .form-label { color: var(--muted); font-size: 9.5px; font-weight: 750; letter-spacing: .05em; text-transform: uppercase; }
+    .detail-grid .property-card strong { display: block; margin-top: 3px; font-size: 13px; }
+    .detail-grid .property-card strong:empty::after { content: '—'; color: #b5b9b2; }
     /* Automatisierung */
     .text-btn.inline { padding: 0; font-size: inherit; }
     .care-steps { display: grid; gap: 4px; margin: 2px 0 4px; padding: 0; list-style: none; }
@@ -3701,19 +3766,89 @@
         <p class="pro-hint" id="pro-hint" ${needsPro ? '' : 'hidden'}>Für mehr als ${FREE_HOUSE_LIMIT} Ferienhaus brauchst du Husora Pro. Alle Versionen findest du unter <button type="button" class="text-btn" data-page="plans" style="padding:0">Versionen</button>.</p>
         <div class="house-settings-actions"><button type="submit" class="secondary-btn">Übernehmen</button><button type="button" class="primary-btn" id="buy-pro-btn" data-action="open-pro" data-plan="pro" ${needsPro ? '' : 'hidden'}>Husora Pro erwerben</button></div></form></section>`;
     }
+    // Status eines Hauses auf einen Blick: Belegung, Aufgaben, Hauskontrolle, Mängel, Saison und Kosten.
+    function houseStatus(property) {
+      const today = localDateKey(new Date());
+      const dayDiff = (to) => Math.round((new Date(`${to}T12:00:00`) - new Date(`${today}T12:00:00`)) / 86400000);
+      const inDays = (days) => (days === 0 ? 'heute' : days === 1 ? 'morgen' : `in ${days} Tagen`);
+      const tiles = [];
+      if (bookingsEnabled()) {
+        const guest = guestInHouse(property.id, today);
+        const departure = bookings.find((booking) => booking.propertyId === property.id && booking.endDate === today);
+        const next = bookings.filter((booking) => booking.propertyId === property.id && booking.startDate > today).sort((a, b) => a.startDate.localeCompare(b.startDate))[0];
+        tiles.push(guest
+          ? { id: 'bookings', icon: 'users', label: 'Belegt', value: guest.guestName, note: `bis ${fmtDate(guest.endDate)}`, state: 'busy' }
+          : departure ? { id: 'bookings', icon: 'users', label: 'Gästewechsel', value: 'Abreise heute', note: departure.guestName, state: 'warn' }
+          : { id: 'bookings', icon: 'calendar', label: 'Frei', value: next ? `Anreise ${inDays(dayDiff(next.startDate))}` : 'Keine Buchung', note: next ? `${next.guestName} · ${fmtDate(next.startDate)}` : 'Kalender ansehen', state: 'ok' });
+      }
+      const open = tasks.filter((task) => !task.done && (task.property === property.name || task.property === 'Alle Ferienhäuser'));
+      const overdue = open.filter((task) => task.date && task.date < today).length;
+      const nextTask = open.filter((task) => task.date >= today).sort((a, b) => a.date.localeCompare(b.date))[0];
+      tiles.push({ id: 'tasks', icon: 'task', label: 'Aufgaben', value: `${open.length} offen`, note: overdue ? `${overdue} überfällig` : nextTask ? `nächste ${fmtDate(nextTask.date)}` : 'alles erledigt', state: overdue ? 'alert' : open.length ? 'neutral' : 'ok' });
+      const last = lastAbsenceInspection(property.id);
+      tiles.push({ id: 'inspections', icon: 'inspection', label: 'Hauskontrolle', value: last.current ? 'Aktuell' : 'Fällig', note: last.current ? `bis ${fmtDate(last.validUntil)}` : last.entry ? `zuletzt ${fmtDate(last.entry.date)}` : 'noch nie protokolliert', state: last.current ? 'ok' : 'warn' });
+      const issuesOpen = openIssues(property.id);
+      const urgent = issuesOpen.filter((issue) => issue.priority === 'urgent').length;
+      const projects = renovationProjects.filter((project) => project.propertyId === property.id && project.status !== 'done');
+      tiles.push({ id: 'renovations', icon: 'alert', label: 'Mängel & Sanierung', value: issuesOpen.length ? `${issuesOpen.length} ${issuesOpen.length === 1 ? 'Mangel' : 'Mängel'} offen` : 'Keine Mängel', note: urgent ? `${urgent} dringend` : projects.length ? `${projects.length} ${projects.length === 1 ? 'Sanierungsprojekt' : 'Sanierungsprojekte'}` : 'keine Projekte', state: urgent ? 'alert' : issuesOpen.length ? 'warn' : 'ok' });
+      const month = new Date().getMonth();
+      const season = month >= 1 && month <= 5 ? 'spring' : 'winter';
+      const seasonState = seasonDueState(season, property.id);
+      const checked = winterChecks[SEASON_CHECKLISTS[season].key(property.id)] || {};
+      const doneCount = SEASON_CHECKLISTS[season].items.filter((item) => checked[item.id]).length;
+      tiles.push({ id: 'season', season, icon: 'moon', label: season === 'winter' ? 'Wintercheckliste' : 'Frühjahrscheckliste', value: seasonState.ready ? 'Erledigt' : `${doneCount} / ${SEASON_CHECKLISTS[season].items.length} Punkte`, note: seasonState.ready ? `Saison ${new Date().getFullYear()}` : seasonState.overdue ? `seit ${fmtDate(seasonState.due)} überfällig` : `fertig bis ${fmtDate(seasonState.due)}`, state: seasonState.ready ? 'ok' : seasonState.overdue ? 'alert' : seasonState.days <= 21 ? 'warn' : 'neutral' });
+      const costs = annualCosts[property.id] || initialCosts[property.id] || {};
+      const plan = costCategories.reduce((sum, category) => sum + Math.max(0, Number(costs[category.id]) || 0), 0);
+      const actual = expensesFor(property.id, new Date().getFullYear()).reduce((sum, expense) => sum + Number(expense.amount), 0);
+      tiles.push({ id: 'costs', icon: 'cost', label: `Kosten ${new Date().getFullYear()}`, value: formatCost(actual), note: `von ${formatCost(plan)} Plan`, state: plan && actual > plan ? 'alert' : 'neutral', progress: plan ? Math.min(100, Math.round((actual / plan) * 100)) : 0 });
+      return { tiles, overdue, issues: issuesOpen.length, busy: Boolean(bookingsEnabled() && guestInHouse(property.id, today)) };
+    }
+    function houseTilesHtml(property, status = houseStatus(property)) {
+      return `<div class="house-tiles">${status.tiles.map((tile) => `<button type="button" class="house-tile st-${tile.state}" data-house-goto="${tile.id}" data-property="${escapeHtml(property.id)}"${tile.season ? ` data-season="${tile.season}"` : ''}><span class="house-tile-head">${icon(tile.icon)}${escapeHtml(tile.label)}</span><strong>${escapeHtml(tile.value)}</strong><small>${escapeHtml(tile.note)}</small>${tile.progress !== undefined ? `<span class="house-tile-bar"><span style="width:${tile.progress}%"></span></span>` : ''}</button>`).join('')}</div>`;
+    }
+    function houseFactsHtml(property) {
+      const beds = Number.parseInt(property.beds, 10);
+      const facts = [
+        property.yearBuilt && ['Baujahr', property.yearBuilt],
+        property.livingArea && ['Wohnfläche', `${property.livingArea} m²`],
+        property.rooms && ['Zimmer', property.rooms],
+        Number.isFinite(beds) && ['Betten', String(beds)],
+        property.plotSize && ['Grundstück', `${Number(property.plotSize).toLocaleString('de-DE')} m²`],
+        property.heatingSystem && ['Heizung', property.heatingSystem.replace(' / Elektroheizung', '')]
+      ].filter(Boolean);
+      return facts.length ? `<dl class="house-facts">${facts.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl>` : '<p class="house-facts-empty">Noch keine Gebäudedaten – über „Bearbeiten“ ergänzen.</p>';
+    }
     function propertiesPage() {
-      return `<div class="welcome"><div><p class="eyebrow">Schweden · Värmland · Dalarna · Bohuslän</p><h1>${singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser'}</h1><p class="subtitle">Ferienhaus-Details und Servicebedarf auf einen Blick.</p></div>${isPro() ? `<button class="primary-btn" data-action="add-property">${icon('plus')} Ferienhaus hinzufügen</button>` : ''}</div>
-        ${houseSettingsCard()}
-        <div class="property-grid ${singleHouse() ? 'single' : ''}">${properties.map((rawProperty) => {
+      const statuses = Object.fromEntries(properties.map((property) => [property.id, houseStatus(property)]));
+      const conditionClass = (condition) => (/dringend/i.test(condition) ? 'alert' : /sanierungsbedarf|kleinere/i.test(condition) ? 'warn' : /gut/i.test(condition) ? 'ok' : 'neutral');
+      const year = new Date().getFullYear();
+      const yearActual = expenses.filter((expense) => expenseYear(expense) === String(year) && properties.some((property) => property.id === expense.propertyId)).reduce((sum, expense) => sum + Number(expense.amount), 0);
+      const portfolio = singleHouse() ? '' : `<section class="automation-summary portfolio-kpis"><div><strong>${properties.length}</strong><span>Ferienhäuser</span></div>${bookingsEnabled() ? `<div><strong>${properties.filter((property) => statuses[property.id].busy).length}</strong><span>heute belegt</span></div>` : ''}<div><strong>${properties.reduce((sum, property) => sum + statuses[property.id].overdue, 0)}</strong><span>überfällige Aufgaben</span></div><div><strong>${properties.reduce((sum, property) => sum + statuses[property.id].issues, 0)}</strong><span>offene Mängel</span></div><div><strong>${escapeHtml(formatCost(yearActual))}</strong><span>Ist-Kosten ${year}</span></div></section>`;
+      return `<div class="welcome"><div><p class="eyebrow">Schweden · Värmland · Dalarna · Bohuslän</p><h1>${singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser'}</h1><p class="subtitle">${singleHouse() ? 'Dein Ferienhaus' : 'Alle Häuser'} mit Belegung, offenen Aufgaben, Kontrollen, Mängeln und Kosten auf einen Blick.</p></div>${isPro() ? `<button class="primary-btn" data-action="add-property">${icon('plus')} Ferienhaus hinzufügen</button>` : ''}</div>
+        ${portfolio}
+        <div class="house-grid ${singleHouse() ? 'single' : ''}">${properties.map((rawProperty) => {
           const property = propertyWithDefaults(rawProperty);
+          const status = statuses[property.id];
           const assignedProviders = providers.filter((provider) => (servicePartnerAssignments[property.id] || []).includes(provider.id));
-          const partnerSummary = assignedProviders.length ? assignedProviders.map((provider) => provider.name).join(', ') : 'Keine Servicepartner zugeordnet';
-          return `<article class="card property-card" data-action="view-property" data-property="${escapeHtml(property.id)}" tabindex="0" role="link" aria-label="Objektübersicht für ${escapeHtml(property.name)} öffnen">${property.photo ? `<img class="property-card-photo" src="${escapeHtml(property.photo)}" alt="Hausfoto: ${escapeHtml(property.name)}">` : ''}<div class="property-top ${property.photo ? 'has-photo' : ''}">${property.photo ? '' : `<div class="property-symbol">${icon('home')}</div>`}<span class="status">Ferienhaus · Schweden</span></div>${inspectionStatusBadge(property.id)}<h3>${escapeHtml(property.name)}</h3><div class="property-address">${escapeHtml(property.address)}</div><div class="property-assigned-partners"><strong>Servicepartner:</strong>${partnerListHtml(assignedProviders)}</div><div class="property-details"><div><span>Region</span><strong>${escapeHtml(property.region || '—')}</strong></div><div><span>Grundstücksfläche</span><strong>${property.plotSize ? `${escapeHtml(property.plotSize)} m²` : '—'}</strong></div><div><span>Wohnfläche</span><strong>${property.livingArea ? `${escapeHtml(property.livingArea)} m²` : '—'}</strong></div><div><span>Baujahr</span><strong>${escapeHtml(property.yearBuilt || '—')}</strong></div><div><span>Zimmer</span><strong>${escapeHtml(property.rooms || '—')}</strong></div><div><span>Heizsystem</span><strong>${escapeHtml(property.heatingSystem || '—')}</strong></div></div><div class="property-condition"><span>Sanierungszustand</span><strong>${escapeHtml(property.condition || 'Noch nicht bewertet')}</strong>${(() => {
-            const entries = renovationEntries(property);
-            if (!entries.length) return '';
-            return `<ul class="card-reno-list" aria-label="Sanierungshistorie">${entries.slice(0, 3).map((entry) => `<li><span class="reno-year">${entry.year ? escapeHtml(entry.year) : '•'}</span><span>${escapeHtml(entry.text.length > 90 ? `${entry.text.slice(0, 87).trim()}…` : entry.text)}</span></li>`).join('')}</ul>${entries.length > 3 ? `<small class="card-reno-more">+ ${entries.length - 3} weitere in der Objektübersicht</small>` : ''}`;
-          })()}</div></article>`;
-        }).join('')}</div>`;
+          const lastReno = renovationEntries(property)[0];
+          const plannedProject = renovationProjects.find((project) => project.propertyId === property.id && project.status !== 'done');
+          const occupancy = status.tiles.find((tile) => tile.id === 'bookings');
+          const renoText = plannedProject ? `Geplant: ${plannedProject.title}` : property.plannedRenovations ? `Geplant: ${property.plannedRenovations.split(/[\n;]/)[0]}` : lastReno ? `${lastReno.year ? `${lastReno.year}: ` : ''}${lastReno.text}` : 'Keine Angaben';
+          return `<article class="house-card">
+            <button type="button" class="house-card-hero ${property.photo ? '' : 'no-photo'}" data-action="view-property" data-property="${escapeHtml(property.id)}" aria-label="Objektübersicht für ${escapeHtml(property.name)} öffnen">${property.photo ? `<img src="${escapeHtml(property.photo)}" alt="">` : `<span class="house-card-placeholder">${icon('home')}</span>`}<span class="house-card-shade"></span>${occupancy ? `<span class="house-card-pill st-${occupancy.state}">${escapeHtml(occupancy.label)}</span>` : ''}<span class="house-card-title"><strong>${escapeHtml(property.name)}</strong><small>${escapeHtml(property.address || property.region || 'Schweden')}</small></span></button>
+            <div class="house-card-body">
+              ${houseFactsHtml(property)}
+              ${houseTilesHtml(property, status)}
+              <div class="house-card-meta">
+                <div><span>Zustand</span><strong class="cond-${conditionClass(property.condition)}">${escapeHtml(property.condition || 'Noch nicht bewertet')}</strong></div>
+                <div><span>Sanierung</span><strong title="${escapeHtml(renoText)}">${escapeHtml(renoText.length > 52 ? `${renoText.slice(0, 50).trim()}…` : renoText)}</strong></div>
+                <div><span>Servicepartner</span><strong>${assignedProviders.length ? escapeHtml(assignedProviders.map((provider) => provider.name).join(', ')) : `<button type="button" class="text-btn inline" data-action="manage-assigned-providers" data-property="${escapeHtml(property.id)}">Partner zuordnen →</button>`}</strong></div>
+              </div>
+              <div class="house-card-actions"><button type="button" class="primary-btn" data-action="view-property" data-property="${escapeHtml(property.id)}">Objektübersicht</button>${isPro() ? `<button type="button" class="secondary-btn" data-house-goto="house3d" data-property="${escapeHtml(property.id)}">${icon('cube')} 3D</button>` : ''}<button type="button" class="secondary-btn" data-house-goto="documents" data-property="${escapeHtml(property.id)}">${icon('document')} Dokumente</button><button type="button" class="secondary-btn" data-action="edit-property" data-property="${escapeHtml(property.id)}">${icon('edit')} Bearbeiten</button></div>
+            </div>
+          </article>`;
+        }).join('')}</div>
+        <details class="card house-settings-details"><summary><span><strong>Nutzung & Anzahl der Ferienhäuser</strong><small>${profileData.usage === 'self' ? 'Nur Eigennutzung' : 'Eigennutzung und Vermietung'} · ${properties.length} ${properties.length === 1 ? 'Haus' : 'Häuser'}</small></span>${icon('edit')}</summary>${houseSettingsCard()}</details>`;
     }
     function partnerCategoryLabel(provider) {
       return provider.category === 'renovation' ? 'Sanierung' : provider.category === 'inspection' ? 'Hauskontrolle' : 'Hausservice';
@@ -3750,6 +3885,7 @@
       const assignedProviders = providers.filter((provider) => (servicePartnerAssignments[property.id] || []).includes(provider.id));
       const partnerSummary = assignedProviders.length ? assignedProviders.map((provider) => provider.name).join(', ') : 'Keine Servicepartner zugeordnet';
       return `<div class="welcome"><div><p class="eyebrow">Objektverwaltung · ${escapeHtml(property.region || 'Schweden')}</p><h1>${escapeHtml(property.name)}</h1><p class="subtitle">${escapeHtml(property.address)}</p>${inspectionStatusBadge(property.id)}</div><button class="primary-btn" data-action="edit-property" data-property="${escapeHtml(property.id)}">Bearbeiten</button></div>
+        <section class="card house-glance"><div class="card-head"><div><h2 class="card-title">Auf einen Blick</h2><p class="card-caption">Aktueller Stand – antippen für Details</p></div><div class="house-card-actions">${isPro() ? `<button type="button" class="secondary-btn" data-house-goto="house3d" data-property="${escapeHtml(property.id)}">${icon('cube')} 3D-Modell</button>` : ''}<button type="button" class="secondary-btn" data-house-goto="documents" data-property="${escapeHtml(property.id)}">${icon('document')} Dokumente</button></div></div><div class="house-glance-body">${houseTilesHtml(property)}</div></section>
         <section class="card"><div class="card-head"><div><h2 class="card-title">Gebäude & Grundstück</h2><p class="card-caption">Stammdaten, Zustand und Kapazität</p></div><button class="text-btn" data-page="properties">${singleHouse() ? '← Mein Ferienhaus' : '← Alle Ferienhäuser'}</button></div><div style="padding:16px">${property.photo ? `<img class="property-photo" src="${escapeHtml(property.photo)}" alt="Hausfoto: ${escapeHtml(property.name)}">` : ''}${(property.photos || []).length > 1 ? `<div class="photo-strip">${property.photos.map((src) => `<img src="${escapeHtml(src)}" alt="">`).join('')}</div>` : ''}<div class="detail-grid">
           <article class="property-card"><span class="form-label">Baujahr</span><strong>${escapeHtml(property.yearBuilt || '')}</strong></article>
           <article class="property-card"><span class="form-label">Wohnfläche</span><strong>${property.livingArea ? `${escapeHtml(property.livingArea)} m²` : ''}</strong></article>
@@ -3776,7 +3912,7 @@
           if (!entries.length) return '<div class="property-notes" style="margin:0;padding:17px 19px">Noch keine Sanierungen eingetragen.</div>';
           return `<ul class="reno-list">${entries.map((entry) => `<li><span class="reno-year">${entry.year ? escapeHtml(entry.year) : '•'}</span><span class="reno-text">${escapeHtml(entry.text)}</span></li>`).join('')}</ul>${property.renovationSource ? `<p class="reno-source">Aus dem Inserat übernommen (${escapeHtml(property.renovationSource)}). Bitte prüfen.</p>` : ''}`;
         })()}</section>
-        <section class="card"><div class="card-head"><div><h2 class="card-title">Anstehende Sanierungen</h2><p class="card-caption">Voraussichtlicher Zeitraum und nächste Schritte</p></div></div><div class="property-notes" style="margin:0;padding:17px 19px">${property.plannedRenovations ? escapeHtml(property.plannedRenovations).replace(/\\n/g, '<br>') : 'Noch keine Maßnahmen geplant.'}</div></section>
+        <section class="card"><div class="card-head"><div><h2 class="card-title">Anstehende Sanierungen</h2><p class="card-caption">Voraussichtlicher Zeitraum und nächste Schritte</p></div></div><div class="property-notes" style="margin:0;padding:17px 19px">${property.plannedRenovations ? escapeHtml(property.plannedRenovations).replace(/\\n/g, '<br>') : 'Noch keine Maßnahmen geplant.'}${(() => { const projects = renovationProjects.filter((project) => project.propertyId === property.id && project.status !== 'done'); return projects.length ? `<ul class="detail-projects">${projects.map((project) => `<li><strong>${escapeHtml(project.title)}</strong><span>${escapeHtml(renovationStatusLabel(project.status))}${project.startDate ? ` · ab ${escapeHtml(fmtDate(project.startDate))}` : ''}${project.budget ? ` · ${escapeHtml(formatCost(Number(project.budget)))}` : ''}</span></li>`).join('')}</ul>` : ''; })()}<div style="margin-top:10px"><button type="button" class="text-btn" data-house-goto="renovations" data-property="${escapeHtml(property.id)}">Zu Reparatur & Sanierung →</button></div></div></section>
         <section class="card" style="margin-top:16px"><div class="card-head"><div><h2 class="card-title">Zugeordnete Servicepartner</h2><p class="card-caption">Partner und deren Dokumente verwalten.</p></div><button class="text-btn" data-action="manage-assigned-providers" data-property="${escapeHtml(property.id)}">Servicepartner verwalten →</button></div><div class="property-notes" style="margin:0;padding:16px 19px;font-size:14px">${partnerListHtml(assignedProviders)}</div></section>
         ${(() => {
           const address = String(property.address || '').trim();
@@ -5660,6 +5796,25 @@
         delete overrides[seasonDueKey(dueReset.dataset.seasonDueReset, inspectionProperty)];
         automation.seasonDueOverride = overrides;
         persistAutomation(); render(); showToast('Standardfrist übernommen.');
+        return;
+      }
+      const houseGoto = event.target.closest('[data-house-goto]');
+      if (houseGoto) {
+        const property = properties.find((item) => item.id === houseGoto.dataset.property);
+        if (!property) return;
+        const target = houseGoto.dataset.houseGoto;
+        selectedPropertyId = property.id;
+        inspectionProperty = property.id;
+        costProperty = property.id;
+        documentsProperty = property.id;
+        houseModelProperty = property.id;
+        if (!singleHouse()) taskPropertyFilter = property.name;
+        if (target === 'season') { inspectionView = houseGoto.dataset.season || 'winter'; currentPage = 'inspections'; }
+        else if (target === 'inspections') { inspectionView = 'absence'; currentPage = 'inspections'; }
+        else if (target === 'bookings') { bookingView = 'list'; currentPage = 'bookings'; }
+        else currentPage = target;
+        render();
+        window.scrollTo(0, 0);
         return;
       }
       const stepButton = event.target.closest('[data-step-edit], [data-step-add], [data-step-cancel], [data-step-remove], [data-step-reset]');
