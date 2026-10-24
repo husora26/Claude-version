@@ -384,8 +384,17 @@
     .checklist-item input { width: 16px; height: 16px; flex: none; margin: 2px 0 0; accent-color: var(--green); }
     .checklist-item strong { display: block; margin-bottom: 3px; font-size: 11px; }
     .checklist-item small { color: var(--muted); font-size: 10px; line-height: 1.5; }
-    .inspection-tabs { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 15px; }
-    .inspection-tab { min-height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; color: #626c64; background: white; font-size: 11px; font-weight: 650; }
+    .inspection-tabs { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px 16px; margin: 0 0 15px; }
+    .inspection-tab-group { display: grid; gap: 5px; }
+    .inspection-tab-group-label { color: var(--muted); font-size: 9.5px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+    .inspection-tab-pair { display: flex; flex-wrap: wrap; gap: 7px; }
+    .inspection-tab-divider { width: 2px; align-self: stretch; border-radius: 2px; background: #cfc6b4; }
+    .inspection-tab-group.season .inspection-tab { border-style: dashed; }
+    .inspection-tab-group.season .inspection-tab.active { border-style: solid; }
+    .inspection-tab strong { display: block; font-size: 11.5px; }
+    .inspection-tab small { display: block; margin-top: 1px; color: var(--muted); font-size: 9.5px; font-weight: 500; }
+    @media (max-width: 560px) { .inspection-tab-divider { width: 100%; height: 2px; } .inspection-tab-group, .inspection-tab-pair { width: 100%; } .inspection-tab-pair .inspection-tab { flex: 1; } .inspection-tab-group:first-child .inspection-tab { width: 100%; } }
+    .inspection-tab { min-height: 36px; padding: 6px 12px; text-align: left; border: 1px solid var(--line); border-radius: 8px; color: #626c64; background: white; font-size: 11px; font-weight: 650; }
     .inspection-tab.active { border-color: var(--green); color: var(--green); background: var(--green-soft); }
     .winter-progress { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 10px; }
     .winter-progress progress { width: 100px; height: 8px; accent-color: var(--green); }
@@ -1172,6 +1181,21 @@
       .automation-step-when, .automation-step-tools { grid-column: 2; justify-self: start; justify-items: start; }
       .turnover-step-form { grid-template-columns: 1fr; }
     }
+    .season-due { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 14px; margin: 14px 18px 4px; padding: 12px 14px; border: 1px solid var(--line); border-left: 4px solid var(--green); border-radius: 10px; background: #fbfcfa; }
+    .season-due label { display: grid; gap: 5px; }
+    .season-due input { width: 170px; }
+    .season-due small { flex-basis: 100%; color: var(--muted); font-size: 10.5px; }
+    .season-due-state { padding: 6px 11px; border-radius: 20px; color: var(--green); background: var(--green-soft); font-size: 11.5px; font-weight: 700; }
+    .season-due.soon { border-left-color: #d58a1f; }
+    .season-due.soon .season-due-state { color: #7a5a23; background: var(--amber-soft); }
+    .season-due.overdue { border-left-color: var(--red); }
+    .season-due.overdue .season-due-state { color: #fff; background: var(--red); }
+    .season-row { align-items: center; }
+    .season-row > span small { display: block; margin-top: 2px; }
+    .season-default-due { display: flex; align-items: center; gap: 8px; }
+    .season-default-due input { width: 150px; min-height: 32px; padding: 4px 8px; font-size: 12px; }
+    .season-overdue { margin: 0; padding: 7px 10px; border-radius: 8px; color: #8b2f25; background: var(--red-soft); font-size: 11.5px; font-weight: 600; }
+    .inspection-status-badge.overdue { color: #8b2f25; background: var(--red-soft); }
     /* Automatisierung */
     .text-btn.inline { padding: 0; font-size: inherit; }
     .care-steps { display: grid; gap: 4px; margin: 2px 0 4px; padding: 0; list-style: none; }
@@ -2389,7 +2413,8 @@
       { id: 'winter', title: 'Ferienhaus winterfest machen (Wintercheckliste)', months: [9, 10, 11], due: (year) => `${year}-10-31`, priority: 'urgent', label: 'Winterfest machen', hint: 'Oktober bis Dezember, erledigt sich mit der Wintercheckliste' },
       { id: 'spring', title: 'Ferienhaus für die Saison öffnen (Frühjahrscheckliste)', months: [2, 3, 4], due: (year) => `${year}-04-30`, priority: 'soon', label: 'Frühjahrsöffnung', hint: 'März bis Mai, erledigt sich mit der Frühjahrscheckliste' }
     ];
-    let automation = { turnover: { defaultOn: true, steps: Object.fromEntries(TURNOVER_STEPS.map((step) => [step.id, { on: true, offset: step.offset }])), custom: [] }, vacancyInspection: true, seasonal: true, repairs: true, renovation: true, created: {}, log: [] };
+    const DEFAULT_SEASON_DUE = { winter: '10-31', spring: '04-30' };
+    let automation = { turnover: { defaultOn: true, steps: Object.fromEntries(TURNOVER_STEPS.map((step) => [step.id, { on: true, offset: step.offset }])), custom: [] }, vacancyInspection: true, seasonal: true, repairs: true, renovation: true, seasonDue: { ...DEFAULT_SEASON_DUE }, seasonDueOverride: {}, created: {}, log: [] };
     try {
       const savedAutomation = JSON.parse(localStorage.getItem('stugliv-automation') || 'null');
       if (savedAutomation && typeof savedAutomation === 'object') {
@@ -2398,6 +2423,8 @@
           ...savedAutomation,
           turnover: { defaultOn: savedAutomation.turnover?.defaultOn !== false, steps: { ...automation.turnover.steps, ...(savedAutomation.turnover?.steps || {}) }, custom: Array.isArray(savedAutomation.turnover?.custom) ? savedAutomation.turnover.custom.filter((step) => step && typeof step.id === 'string' && step.label) : [] },
           created: savedAutomation.created && typeof savedAutomation.created === 'object' ? savedAutomation.created : {},
+          seasonDue: { ...DEFAULT_SEASON_DUE, ...(savedAutomation.seasonDue || {}) },
+          seasonDueOverride: savedAutomation.seasonDueOverride && typeof savedAutomation.seasonDueOverride === 'object' ? savedAutomation.seasonDueOverride : {},
           log: Array.isArray(savedAutomation.log) ? savedAutomation.log.slice(0, 20) : []
         };
       }
@@ -2425,6 +2452,20 @@
       return step.offset === 0 ? `am ${name}stag` : `${Math.abs(step.offset)} ${Math.abs(step.offset) === 1 ? 'Tag' : 'Tage'} ${step.offset < 0 ? 'vor' : 'nach'} ${name}`;
     };
     let editingTurnoverStep = null;
+    // Fristen für Winter- und Frühjahrscheckliste: Standard je Saison (MM-TT) und optional je Haus und Jahr.
+    const seasonDueKey = (season, propertyId, year = new Date().getFullYear()) => `${season}:${year}:${propertyId}`;
+    function seasonDue(season, propertyId, year = new Date().getFullYear()) {
+      const override = automation.seasonDueOverride?.[seasonDueKey(season, propertyId, year)];
+      if (/^\d{4}-\d{2}-\d{2}$/.test(override || '')) return override;
+      const monthDay = /^\d{2}-\d{2}$/.test(automation.seasonDue?.[season] || '') ? automation.seasonDue[season] : DEFAULT_SEASON_DUE[season];
+      return `${year}-${monthDay}`;
+    }
+    function seasonDueState(season, propertyId) {
+      const due = seasonDue(season, propertyId);
+      const ready = season === 'winter' ? winterIsReady(propertyId) : springIsReady(propertyId);
+      const days = Math.round((new Date(`${due}T12:00:00`) - new Date(`${localDateKey(new Date())}T12:00:00`)) / 86400000);
+      return { due, ready, days, overdue: !ready && days < 0 };
+    }
     function persistAutomation() {
       try { localStorage.setItem('stugliv-automation', JSON.stringify(automation)); return true; }
       catch (error) { showToast('Speichern nicht möglich. Bitte Browser-Speicher prüfen.'); return false; }
@@ -2509,10 +2550,12 @@
           const openIndex = next.findIndex((task) => task.auto === 'season' && task.season === rule.id && task.propertyId === property.id && !task.done);
           const ready = rule.id === 'winter' ? winterIsReady(property.id) : springIsReady(property.id);
           if (openIndex >= 0 && ready) { next[openIndex] = { ...next[openIndex], status: 'Erledigt', done: true }; completed.push(next[openIndex]); return; }
-          if (!automation.seasonal || !rule.months.includes(month) || automation.created[key]) return;
+          const due = seasonDue(rule.id, property.id, year);
+          // Die Saisonaufgabe folgt der eingestellten Frist, solange sie nicht von Hand umdatiert wurde.
+          if (openIndex >= 0 && (next[openIndex].year ?? year) === year && !next[openIndex].pinned && next[openIndex].date !== due) { next[openIndex] = { ...next[openIndex], date: due, year }; changed = true; }
+          if (!automation.seasonal || today < shiftDateKey(due, -42) || today > shiftDateKey(due, 60) || automation.created[key]) return;
           if (ready) return;
-          const due = rule.due(year);
-          const task = { id: ++nextId, title: rule.title, property: property.name, date: due < today ? today : due, priority: rule.priority, area: 'Saison', status: 'Offen', done: false, repeat: 'Einmalig', description: 'Automatisch erstellte Saisonaufgabe.', auto: 'season', season: rule.id, propertyId: property.id };
+          const task = { id: ++nextId, year, title: rule.title, property: property.name, date: due, priority: rule.priority, area: 'Saison', status: 'Offen', done: false, repeat: 'Einmalig', description: `Automatisch erstellte Saisonaufgabe – Frist ${fmtDate(due)}. Erledigt sich, sobald die ${rule.id === 'winter' ? 'Wintercheckliste' : 'Frühjahrscheckliste'} vollständig abgehakt ist.`, auto: 'season', season: rule.id, propertyId: property.id };
           automation.created[key] = today;
           next.push(task);
           added.push(task);
@@ -3547,7 +3590,7 @@
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('inspection')}</span><div><h2 class="card-title">Hauskontrolle bei Leerstand</h2><p class="card-caption">Ist die monatliche Abwesenheitskontrolle fällig und kein Gast im Haus, legt Husora eine Aufgabe an. Mit dem Prüfprotokoll erledigt sie sich von selbst.</p></div></div>
             <div class="automation-body">${sw('auto-vacancy', automation.vacancyInspection, 'Kontrollaufgabe automatisch anlegen')}<ul class="automation-status">${inspectionRows}</ul><button type="button" class="text-btn" data-page="inspections">Zur Hauskontrolle →</button></div></section>
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('moon')}</span><div><h2 class="card-title">Saisonale Aufgaben</h2><p class="card-caption">Einmal pro Jahr und Haus zur passenden Jahreszeit.</p></div></div>
-            <div class="automation-body">${sw('auto-seasonal', automation.seasonal, 'Saisonaufgaben automatisch anlegen')}<ul class="automation-status">${SEASON_RULES.map((rule) => `<li><span>${escapeHtml(rule.label)}</span><small>${escapeHtml(rule.hint)}</small></li>`).join('')}</ul><div class="automation-links"><button type="button" class="text-btn" data-action="open-season-checklist" data-season="winter">Wintercheckliste →</button><button type="button" class="text-btn" data-action="open-season-checklist" data-season="spring">Frühjahrscheckliste →</button></div></div></section>
+            <div class="automation-body">${sw('auto-seasonal', automation.seasonal, 'Saisonaufgaben automatisch anlegen')}<ul class="automation-status">${SEASON_RULES.map((rule) => `<li class="season-row"><span>${escapeHtml(rule.label)}<small>${rule.id === 'winter' ? 'Erledigt sich mit der Wintercheckliste' : 'Erledigt sich mit der Frühjahrscheckliste'}</small></span><label class="season-default-due"><small>Standardfrist</small><input type="date" class="form-control" data-season-default-due="${rule.id}" value="${escapeHtml(seasonDue(rule.id, '__default__'))}" aria-label="Standardfrist ${escapeHtml(rule.label)}"></label></li>`).join('')}</ul>${properties.map((property) => ['winter', 'spring'].map((season) => { const state = seasonDueState(season, property.id); return state.overdue ? `<p class="season-overdue">${escapeHtml(property.name)}: ${season === 'winter' ? 'Wintercheckliste' : 'Frühjahrscheckliste'} seit ${escapeHtml(fmtDate(state.due))} überfällig</p>` : ''; }).join('')).join('')}<div class="automation-links"><button type="button" class="text-btn" data-action="open-season-checklist" data-season="winter">Wintercheckliste →</button><button type="button" class="text-btn" data-action="open-season-checklist" data-season="spring">Frühjahrscheckliste →</button></div></div></section>
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('alert')}</span><div><h2 class="card-title">Reparaturservice bei Auffälligkeiten</h2><p class="card-caption">Wird bei einer Kontrolle, einer Checkliste oder einem Serviceeinsatz etwas Auffälliges gemeldet, plant Husora sofort einen Reparaturauftrag – je nach Dringlichkeit in 1, 7 oder 21 Tagen, mit Vorschlag des zugeordneten Handwerkers.</p></div></div>
             <div class="automation-body">${sw('auto-repairs', automation.repairs, 'Reparaturaufträge automatisch planen')}<ul class="automation-status">${properties.map((property) => { const count = openIssues(property.id).length; return `<li><span>${escapeHtml(property.name)}</span><small class="${count ? 'due' : 'ok'}">${count ? `${count} offene ${count === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'}` : 'Keine offenen Auffälligkeiten'}</small></li>`; }).join('')}</ul><div class="automation-links"><button type="button" class="secondary-btn" data-action="report-issue">${icon('alert')} Auffälligkeit melden</button><button type="button" class="text-btn" data-page="renovations">Zur Übersicht →</button></div></div></section>
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('property')}</span><div><h2 class="card-title">Sanierungsarbeiten am Haus</h2><p class="card-caption">Für jedes Sanierungsprojekt mit Beginn plant Husora: Angebote einholen (60 Tage vorher), Handwerker beauftragen (30 Tage), Baubeginn vorbereiten und Abnahme. Abgeschlossene Projekte landen in der Sanierungshistorie.</p></div></div>
@@ -4316,15 +4359,19 @@
       const winterComplete = winterChecklist.filter((item) => checkedWinterItems[item.id]).length;
       const pageHeader = `<div class="welcome"><div><p class="eyebrow">${SEASON_CHECKLISTS[inspectionView] ? SEASON_CHECKLISTS[inspectionView].eyebrow : 'Bei längerer Abwesenheit'}</p><h1>${SEASON_CHECKLISTS[inspectionView] ? SEASON_CHECKLISTS[inspectionView].title : 'Hauskontrolle'}</h1><p class="subtitle">${SEASON_CHECKLISTS[inspectionView] ? escapeHtml(SEASON_CHECKLISTS[inspectionView].subtitle(property.name)) : `Prüfpunkte, Kontrolltaktung und durchgeführte Besuche ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} verwalten.`}</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>`;
       const propertyAndTabs = `${singleHouse() ? '' : `<div class="section-toolbar"><label><span class="form-label">Ferienhaus</span><select id="inspection-property" class="filter-select" aria-label="Ferienhaus für Hauskontrolle wählen">${properties.map((item) => `<option value="${item.id}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)} · ${escapeHtml(item.region)}</option>`).join('')}</select></label></div>`}
-        <div class="inspection-tabs" role="tablist" aria-label="Hauskontrolllisten"><button class="inspection-tab ${inspectionView === 'absence' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'absence'}" data-inspection-view="absence">Abwesenheitskontrolle</button><button class="inspection-tab ${inspectionView === 'winter' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'winter'}" data-inspection-view="winter">Wintercheckliste</button><button class="inspection-tab ${inspectionView === 'spring' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'spring'}" data-inspection-view="spring">Frühjahrscheckliste</button></div>`;
+        <div class="inspection-tabs" role="tablist" aria-label="Hauskontrolllisten"><div class="inspection-tab-group"><span class="inspection-tab-group-label">Laufend</span><button class="inspection-tab ${inspectionView === 'absence' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'absence'}" data-inspection-view="absence"><strong>Abwesenheitskontrolle</strong><small>monatlich bei Leerstand</small></button></div><span class="inspection-tab-divider" aria-hidden="true"></span><div class="inspection-tab-group season"><span class="inspection-tab-group-label">Saison-Checklisten</span><div class="inspection-tab-pair"><button class="inspection-tab ${inspectionView === 'spring' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'spring'}" data-inspection-view="spring"><strong>Frühjahrscheckliste</strong><small>bis ${escapeHtml(fmtDate(seasonDue('spring', property.id)))}${springIsReady(property.id) ? ' · erledigt' : ''}</small></button><button class="inspection-tab ${inspectionView === 'winter' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'winter'}" data-inspection-view="winter"><strong>Wintercheckliste</strong><small>bis ${escapeHtml(fmtDate(seasonDue('winter', property.id)))}${winterIsReady(property.id) ? ' · erledigt' : ''}</small></button></div></div></div>`;
       if (SEASON_CHECKLISTS[inspectionView]) {
         const season = SEASON_CHECKLISTS[inspectionView];
         const checked = winterChecks[season.key(property.id)] || {};
         const done = season.items.filter((item) => checked[item.id]).length;
         const total = season.items.length;
         const issueCount = openIssues(property.id).filter((issue) => issue.source === season.title).length;
+        const dueState = seasonDueState(inspectionView, property.id);
+        const dueText = dueState.ready ? 'Erledigt' : dueState.overdue ? `${Math.abs(dueState.days)} ${Math.abs(dueState.days) === 1 ? 'Tag' : 'Tage'} überfällig` : dueState.days === 0 ? 'heute fällig' : `noch ${dueState.days} ${dueState.days === 1 ? 'Tag' : 'Tage'}`;
+        const dueBox = `<div class="season-due ${dueState.ready ? 'ready' : dueState.overdue ? 'overdue' : dueState.days <= 14 ? 'soon' : ''}"><label><span class="form-label">Fertig bis</span><input class="form-control" type="date" id="season-due-input" data-season="${inspectionView}" value="${escapeHtml(dueState.due)}" min="${new Date().getFullYear()}-01-01" max="${new Date().getFullYear()}-12-31"></label><span class="season-due-state">${escapeHtml(dueText)}</span>${automation.seasonDueOverride?.[seasonDueKey(inspectionView, property.id)] ? `<button type="button" class="text-btn" data-season-due-reset="${inspectionView}">Auf Standardfrist zurücksetzen (${escapeHtml(fmtDate(seasonDue(inspectionView, '__default__')))})</button>` : ''}<small>Husora legt die Aufgabe 6 Wochen vor der Frist an und erinnert dich, bis alle Punkte abgehakt sind.</small></div>`;
         return `${pageHeader}${propertyAndTabs}
           <section class="card"><div class="card-head"><div><h2 class="card-title">${season.card} · ${escapeHtml(property.name)}</h2><p class="card-caption">${done} von ${total} Punkten abgehakt · Checkliste ${new Date().getFullYear()}${issueCount ? ` · ${issueCount} ${issueCount === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} in Reparatur` : ''}</p></div><div class="winter-progress"><progress max="${total}" value="${done}" aria-label="${done} von ${total} Punkten erledigt"></progress><strong>${Math.round(done / total * 100)} %</strong></div></div>
+            ${dueBox}
             <div class="checklist">${season.items.map((item) => `<div class="checklist-row"><label class="checklist-item"><input type="checkbox" data-season-check="${item.id}" ${checked[item.id] ? 'checked' : ''}><span><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.detail)}</small></span></label><button type="button" class="small-action issue-btn" data-report-issue-source="${escapeHtml(season.title)}" data-issue-text="${escapeHtml(item.title)}: " data-property="${escapeHtml(property.id)}">${icon('alert')} Auffälligkeit</button></div>`).join('')}</div>
             ${done === total ? `<div class="winter-ready">${icon('check')}<span><strong>${inspectionView === 'winter' ? 'Vorbereitet' : 'Geöffnet'}</strong><small>${escapeHtml(season.ready(property.name))}</small></span></div>` : ''}
             <div class="inspection-status">Der Fortschritt wird automatisch für dieses Ferienhaus und diese ${season.saison} gespeichert. Ist die Liste vollständig, erledigt sich die automatisch angelegte Saisonaufgabe. Schäden über „Auffälligkeit“ melden – die Reparatur wird automatisch geplant.</div>
@@ -5164,7 +5211,7 @@
     function winterStatusBadge(propertyId) {
       return winterIsReady(propertyId)
         ? `<span class="inspection-status-badge current">${icon('check')}Wintervorbereitung getroffen</span>`
-        : '<span class="inspection-status-badge">Wintervorbereitung offen</span>';
+        : `<span class="inspection-status-badge ${seasonDueState('winter', propertyId).overdue ? 'overdue' : ''}">Wintervorbereitung offen · bis ${escapeHtml(fmtDate(seasonDue('winter', propertyId)))}</span>`;
     }
     function inspectionStatusBadge(propertyId) {
       return inspectionIsCurrent(propertyId)
@@ -5607,6 +5654,14 @@
         return;
       }
       if (event.target.closest('[data-action="new-expense"]')) { openInvoiceModal({ propertyId: costProperty }); return; }
+      const dueReset = event.target.closest('[data-season-due-reset]');
+      if (dueReset) {
+        const overrides = { ...(automation.seasonDueOverride || {}) };
+        delete overrides[seasonDueKey(dueReset.dataset.seasonDueReset, inspectionProperty)];
+        automation.seasonDueOverride = overrides;
+        persistAutomation(); render(); showToast('Standardfrist übernommen.');
+        return;
+      }
       const stepButton = event.target.closest('[data-step-edit], [data-step-add], [data-step-cancel], [data-step-remove], [data-step-reset]');
       if (stepButton) {
         if (stepButton.matches('[data-step-remove]')) {
@@ -5910,6 +5965,17 @@
         persistAutomation();
         render();
         showToast('Gästewechsel-Ablauf aktualisiert.');
+        return;
+      }
+      if (event.target.id === 'season-due-input' || event.target.dataset?.seasonDefaultDue) {
+        const season = event.target.dataset.season || event.target.dataset.seasonDefaultDue;
+        const value = event.target.value;
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return;
+        if (event.target.id === 'season-due-input') automation.seasonDueOverride = { ...(automation.seasonDueOverride || {}), [seasonDueKey(season, inspectionProperty)]: value };
+        else automation.seasonDue = { ...automation.seasonDue, [season]: value.slice(5) };
+        persistAutomation();
+        render();
+        showToast(`Frist für die ${season === 'winter' ? 'Wintercheckliste' : 'Frühjahrscheckliste'} auf ${fmtDate(value)} gesetzt${event.target.id === 'season-due-input' ? '' : ' (Standard für alle Häuser)'}.`);
         return;
       }
       if (event.target.dataset?.renovationStatus) {
@@ -6435,7 +6501,7 @@
         repeat: String(formData.get('repeat')),
         description: String(formData.get('description')).trim()
       };
-      if (isEditing && updatedTask.auto === 'turnover') updatedTask.pinned = true;
+      if (isEditing && (updatedTask.auto === 'turnover' || updatedTask.auto === 'season')) updatedTask.pinned = true;
       const previousStatus = isEditing ? taskStatus(tasks.find((task) => task.id === editingTaskId) || {}) : 'Offen';
       updatedTask.status = previousStatus;
       updatedTask.done = previousStatus === 'Erledigt';
