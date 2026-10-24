@@ -1153,6 +1153,25 @@
     .expense-amount small { display: block; color: var(--muted); font-size: 10px; font-weight: 500; }
     .expense-actions { display: flex; gap: 5px; }
     @media (max-width: 760px) { .doc-upload-card { grid-template-columns: 1fr; } .expense-row { grid-template-columns: 48px 1fr auto; } .expense-actions { grid-column: 2 / -1; } .actual-row { grid-template-columns: 1fr auto; } .actual-track { grid-column: 1 / -1; order: 3; } }
+    .automation-step-when { justify-self: end; display: grid; justify-items: end; gap: 2px; color: #49544c; font-size: 11.5px; font-weight: 650; white-space: nowrap; }
+    .automation-step-when i { padding: 1px 7px; border-radius: 20px; color: #3d5a73; background: #e6edf3; font-size: 9.5px; font-style: normal; }
+    .automation-steps .automation-step { grid-template-columns: 26px 1fr auto auto; }
+    .automation-step-tools { display: flex; gap: 5px; }
+    .automation-step-tools .small-action { display: inline-flex; align-items: center; gap: 4px; }
+    .automation-step-tools svg { width: 13px; height: 13px; }
+    .automation-steps .automation-step.editing { grid-template-columns: 26px 1fr; align-items: start; background: #fff; border-color: var(--green); }
+    .turnover-step-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .turnover-step-form .full { grid-column: 1 / -1; }
+    .turnover-step-form label { display: grid; gap: 5px; }
+    .turnover-step-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .add-step-btn { display: inline-flex; justify-self: start; align-items: center; gap: 6px; padding: 9px 14px; border: 1.5px dashed #b7c7bb; border-radius: 10px; color: var(--green); background: transparent; font-size: 12px; font-weight: 700; }
+    .add-step-btn:hover { border-color: var(--green); background: var(--green-soft); }
+    .add-step-btn svg { width: 15px; height: 15px; }
+    @media (max-width: 640px) {
+      .automation-steps .automation-step, .automation-steps .automation-step.editing { grid-template-columns: 24px 1fr; }
+      .automation-step-when, .automation-step-tools { grid-column: 2; justify-self: start; justify-items: start; }
+      .turnover-step-form { grid-template-columns: 1fr; }
+    }
     /* Automatisierung */
     .text-btn.inline { padding: 0; font-size: inherit; }
     .care-steps { display: grid; gap: 4px; margin: 2px 0 4px; padding: 0; list-style: none; }
@@ -1821,7 +1840,7 @@
     function careControlHtml({ enabled, plan, form, bookingId }) {
       const toggleAttrs = form ? 'name="careEnabled"' : `data-care-toggle="${escapeHtml(bookingId)}"`;
       const planAttrs = form ? 'name="carePlan"' : `data-care-plan="${escapeHtml(bookingId)}"`;
-      const steps = TURNOVER_STEPS.filter((step) => automation.turnover.steps[step.id]?.on !== false);
+      const steps = turnoverSteps().filter((step) => step.on);
       const linked = bookingId ? bookingTasks(bookingId) : [];
       const doneCount = linked.filter((task) => task.done).length;
       const progress = !form && enabled && linked.length
@@ -1829,7 +1848,7 @@
         : '';
       const stepList = `<ul class="care-steps">${steps.map((step) => {
         const task = linked.find((item) => item.step === step.id);
-        const offset = Number(automation.turnover.steps[step.id]?.offset ?? step.offset);
+        const offset = step.offset;
         const started = bookingId && step.anchor === 'start' && !task && bookings.find((item) => item.id === bookingId)?.startDate < localDateKey(new Date());
         const when = task ? fmtDate(task.date) : started ? 'entfällt (bereits angereist)' : `${offset === 0 ? 'am' : `${Math.abs(offset)} ${Math.abs(offset) === 1 ? 'Tag' : 'Tage'} ${offset < 0 ? 'vor' : 'nach'}`} ${step.anchor === 'start' ? (offset === 0 ? 'Anreisetag' : 'Anreise') : (offset === 0 ? 'Abreisetag' : 'Abreise')}`;
         return `<li class="${task?.done ? 'done' : ''}"><i aria-hidden="true">${task?.done ? icon('check') : ''}</i><span>${escapeHtml(step.label)}</span><small>${escapeHtml(when)}</small></li>`;
@@ -2370,19 +2389,42 @@
       { id: 'winter', title: 'Ferienhaus winterfest machen (Wintercheckliste)', months: [9, 10, 11], due: (year) => `${year}-10-31`, priority: 'urgent', label: 'Winterfest machen', hint: 'Oktober bis Dezember, erledigt sich mit der Wintercheckliste' },
       { id: 'spring', title: 'Ferienhaus für die Saison öffnen (Frühjahrscheckliste)', months: [2, 3, 4], due: (year) => `${year}-04-30`, priority: 'soon', label: 'Frühjahrsöffnung', hint: 'März bis Mai, erledigt sich mit der Frühjahrscheckliste' }
     ];
-    let automation = { turnover: { defaultOn: true, steps: Object.fromEntries(TURNOVER_STEPS.map((step) => [step.id, { on: true, offset: step.offset }])) }, vacancyInspection: true, seasonal: true, repairs: true, renovation: true, created: {}, log: [] };
+    let automation = { turnover: { defaultOn: true, steps: Object.fromEntries(TURNOVER_STEPS.map((step) => [step.id, { on: true, offset: step.offset }])), custom: [] }, vacancyInspection: true, seasonal: true, repairs: true, renovation: true, created: {}, log: [] };
     try {
       const savedAutomation = JSON.parse(localStorage.getItem('stugliv-automation') || 'null');
       if (savedAutomation && typeof savedAutomation === 'object') {
         automation = {
           ...automation,
           ...savedAutomation,
-          turnover: { defaultOn: savedAutomation.turnover?.defaultOn !== false, steps: { ...automation.turnover.steps, ...(savedAutomation.turnover?.steps || {}) } },
+          turnover: { defaultOn: savedAutomation.turnover?.defaultOn !== false, steps: { ...automation.turnover.steps, ...(savedAutomation.turnover?.steps || {}) }, custom: Array.isArray(savedAutomation.turnover?.custom) ? savedAutomation.turnover.custom.filter((step) => step && typeof step.id === 'string' && step.label) : [] },
           created: savedAutomation.created && typeof savedAutomation.created === 'object' ? savedAutomation.created : {},
           log: Array.isArray(savedAutomation.log) ? savedAutomation.log.slice(0, 20) : []
         };
       }
     } catch (error) { console.error('Automatisierung konnte nicht geladen werden:', error); }
+    // Gästewechsel-Schritte: Standardschritte mit Anpassungen plus eigene Schritte, chronologisch sortiert.
+    function turnoverSteps() {
+      return [...TURNOVER_STEPS, ...automation.turnover.custom.map((step) => ({ ...step, custom: true }))].map((step) => {
+        const config = automation.turnover.steps[step.id] || {};
+        const label = config.label || step.label;
+        return {
+          ...step,
+          label,
+          title: config.label ? config.label : step.title || label,
+          hint: config.hint ?? step.hint ?? '',
+          priority: config.priority || step.priority || 'normal',
+          anchor: config.anchor || step.anchor || 'end',
+          offset: Number(config.offset ?? step.offset ?? 0),
+          on: config.on !== false,
+          edited: Boolean(!step.custom && (config.label || config.hint !== undefined || config.priority || config.anchor))
+        };
+      }).sort((a, b) => ((a.anchor === 'start' ? 0 : 1000) + a.offset) - ((b.anchor === 'start' ? 0 : 1000) + b.offset));
+    }
+    const stepWhen = (step) => {
+      const name = step.anchor === 'start' ? 'Anreise' : 'Abreise';
+      return step.offset === 0 ? `am ${name}stag` : `${Math.abs(step.offset)} ${Math.abs(step.offset) === 1 ? 'Tag' : 'Tage'} ${step.offset < 0 ? 'vor' : 'nach'} ${name}`;
+    };
+    let editingTurnoverStep = null;
     function persistAutomation() {
       try { localStorage.setItem('stugliv-automation', JSON.stringify(automation)); return true; }
       catch (error) { showToast('Speichern nicht möglich. Bitte Browser-Speicher prüfen.'); return false; }
@@ -2420,8 +2462,8 @@
         if (!property || booking.endDate < today) return;
         activeBookings.add(booking.id);
         const enabled = bookingAutomationOn(booking);
-        TURNOVER_STEPS.forEach((step) => {
-          const config = automation.turnover.steps[step.id] || { on: true, offset: step.offset };
+        turnoverSteps().forEach((step) => {
+          const config = step;
           const index = next.findIndex((task) => task.bookingId === booking.id && task.step === step.id);
           const existing = index >= 0 ? next[index] : null;
           if (!enabled || !config.on) {
@@ -2446,7 +2488,8 @@
         });
       });
       const before = next.length;
-      next = next.filter((task) => !(task.auto === 'turnover' && !task.done && !activeBookings.has(task.bookingId) && !bookings.some((booking) => booking.id === task.bookingId)));
+      const stepIds = new Set(turnoverSteps().map((step) => step.id));
+      next = next.filter((task) => !(task.auto === 'turnover' && !task.done && ((!activeBookings.has(task.bookingId) && !bookings.some((booking) => booking.id === task.bookingId)) || !stepIds.has(task.step))));
       if (next.length !== before) changed = true;
       properties.forEach((property) => {
         // Hauskontrolle bei Leerstand: Aufgabe anlegen, solange die Abwesenheitskontrolle fällig ist und kein Gast im Haus ist.
@@ -3469,18 +3512,22 @@
       const sw = (id, checked, label) => `<label class="switch"><input type="checkbox" id="${id}" ${checked ? 'checked' : ''}><span class="switch-track"></span><span>${label}</span></label>`;
       const upcoming = bookings.filter((booking) => booking.endDate >= today && properties.some((property) => property.id === booking.propertyId));
       const upcomingOn = upcoming.filter(bookingAutomationOn).length;
-      const offsetOptions = (step) => {
-        const current = Number(automation.turnover.steps[step.id]?.offset ?? step.offset);
-        const values = step.anchor === 'start' ? [-7, -5, -3, -2, -1, 0] : [0, 1, 2];
-        const name = step.anchor === 'start' ? 'Anreise' : 'Abreise';
-        return values.map((value) => `<option value="${value}" ${value === current ? 'selected' : ''}>${value === 0 ? `am ${name}stag` : `${Math.abs(value)} ${Math.abs(value) === 1 ? 'Tag' : 'Tage'} ${value < 0 ? 'vor' : 'nach'} ${name}`}</option>`).join('');
-      };
+      const offsetSelect = (step, name, attrs = '') => `<select class="filter-select" name="${name}" ${attrs}>${[-14, -7, -5, -3, -2, -1, 0, 1, 2, 3, 7].map((value) => `<option value="${value}" ${value === step.offset ? 'selected' : ''}>${value === 0 ? 'am selben Tag' : `${Math.abs(value)} ${Math.abs(value) === 1 ? 'Tag' : 'Tage'} ${value < 0 ? 'vorher' : 'danach'}`}</option>`).join('')}</select>`;
+      const stepForm = (step, isNew) => `<form class="turnover-step-form" id="turnover-step-form" data-step-id="${isNew ? 'new' : escapeHtml(step.id)}">
+          <label class="full"><span class="form-label">Bezeichnung *</span><input class="form-control" name="label" required maxlength="80" value="${escapeHtml(isNew ? '' : step.label)}" placeholder="z. B. Brennholz auffüllen"></label>
+          <label class="full"><span class="form-label">Beschreibung</span><input class="form-control" name="hint" maxlength="140" value="${escapeHtml(isNew ? '' : step.hint)}" placeholder="z. B. Holzkorb am Kamin und Anzünder bereitlegen"></label>
+          <label><span class="form-label">Bezogen auf</span><select class="filter-select" name="anchor"><option value="start" ${step.anchor === 'start' ? 'selected' : ''}>Anreise</option><option value="end" ${step.anchor !== 'start' ? 'selected' : ''}>Abreise</option></select></label>
+          <label><span class="form-label">Zeitpunkt</span>${offsetSelect(step, 'offset')}</label>
+          <label><span class="form-label">Priorität</span><select class="filter-select" name="priority"><option value="normal" ${step.priority === 'normal' ? 'selected' : ''}>Normal</option><option value="soon" ${step.priority === 'soon' ? 'selected' : ''}>Wichtig</option><option value="urgent" ${step.priority === 'urgent' ? 'selected' : ''}>Dringend</option></select></label>
+          <div class="turnover-step-actions full"><button type="submit" class="primary-btn">${isNew ? 'Schritt hinzufügen' : 'Speichern'}</button><button type="button" class="secondary-btn" data-step-cancel>Abbrechen</button>${!isNew && step.edited ? `<button type="button" class="text-btn" data-step-reset="${escapeHtml(step.id)}">Standard wiederherstellen</button>` : ''}</div>
+        </form>`;
       const turnoverCard = bookingsEnabled() ? `<section class="card automation-card wide"><div class="automation-head"><span class="automation-icon">${icon('calendar')}</span><div><h2 class="card-title">Gästewechsel je Buchung</h2><p class="card-caption">Für jede Buchung plant Husora die Aufgaben rund um An- und Abreise und verschiebt sie, wenn sich die Buchung ändert.</p></div></div>
         <div class="automation-body">${sw('auto-turnover-default', automation.turnover.defaultOn, 'Für neue und synchronisierte Buchungen automatisch einschalten')}
-          <div class="automation-steps">${TURNOVER_STEPS.map((step, index) => {
-            const config = automation.turnover.steps[step.id] || { on: true };
-            return `<div class="automation-step ${config.on === false ? 'off' : ''}"><span class="automation-step-no">${index + 1}</span><label class="automation-step-main"><input type="checkbox" data-auto-step="${step.id}" ${config.on === false ? '' : 'checked'}><span><strong>${escapeHtml(step.label)}</strong><small>${escapeHtml(step.hint)}</small></span></label><select class="filter-select" data-auto-offset="${step.id}" aria-label="Zeitpunkt für ${escapeHtml(step.label)}" ${config.on === false ? 'disabled' : ''}>${offsetOptions(step)}</select></div>`;
-          }).join('')}</div>
+          <div class="automation-steps">${turnoverSteps().map((step, index) => {
+            if (editingTurnoverStep === step.id) return `<div class="automation-step editing"><span class="automation-step-no">${index + 1}</span>${stepForm(step, false)}</div>`;
+            const config = step;
+            return `<div class="automation-step ${config.on === false ? 'off' : ''}"><span class="automation-step-no">${index + 1}</span><label class="automation-step-main"><input type="checkbox" data-auto-step="${step.id}" ${config.on === false ? '' : 'checked'}><span><strong>${escapeHtml(step.label)}</strong><small>${escapeHtml(step.hint)}</small></span></label><span class="automation-step-when">${escapeHtml(stepWhen(step))}${step.custom ? '<i>eigener Schritt</i>' : step.edited ? '<i>angepasst</i>' : ''}</span><span class="automation-step-tools"><button type="button" class="small-action" data-step-edit="${escapeHtml(step.id)}" aria-label="${escapeHtml(step.label)} bearbeiten">${icon('edit')} Bearbeiten</button>${step.custom ? `<button type="button" class="small-action danger" data-step-remove="${escapeHtml(step.id)}" aria-label="${escapeHtml(step.label)} entfernen">${icon('trash')}</button>` : ''}</span></div>`;
+          }).join('')}${editingTurnoverStep === 'new' ? `<div class="automation-step editing"><span class="automation-step-no">+</span>${stepForm({ anchor: 'end', offset: 0, priority: 'normal' }, true)}</div>` : `<button type="button" class="add-step-btn" data-step-add>${icon('plus')} Eigenen Schritt hinzufügen</button>`}</div>
           <div class="automation-foot"><span>${upcoming.length ? `Aktiv für <strong>${upcomingOn} von ${upcoming.length}</strong> kommenden ${upcoming.length === 1 ? 'Buchung' : 'Buchungen'}.` : 'Noch keine kommenden Buchungen.'}</span>${upcoming.length && upcomingOn < upcoming.length ? '<button type="button" class="secondary-btn" data-action="auto-turnover-all">Für alle kommenden Buchungen einschalten</button>' : ''}</div></div></section>` : '';
       const inspectionRows = properties.map((property) => {
         const last = lastAbsenceInspection(property.id);
@@ -5560,6 +5607,28 @@
         return;
       }
       if (event.target.closest('[data-action="new-expense"]')) { openInvoiceModal({ propertyId: costProperty }); return; }
+      const stepButton = event.target.closest('[data-step-edit], [data-step-add], [data-step-cancel], [data-step-remove], [data-step-reset]');
+      if (stepButton) {
+        if (stepButton.matches('[data-step-remove]')) {
+          const step = automation.turnover.custom.find((item) => item.id === stepButton.dataset.stepRemove);
+          if (!step || !window.confirm(`Schritt „${step.label}“ entfernen? Offene Aufgaben dieses Schritts werden gelöscht.`)) return;
+          automation.turnover.custom = automation.turnover.custom.filter((item) => item.id !== step.id);
+          delete automation.turnover.steps[step.id];
+          persistAutomation(); render(); showToast('Schritt entfernt.');
+          return;
+        }
+        if (stepButton.matches('[data-step-reset]')) {
+          const base = TURNOVER_STEPS.find((item) => item.id === stepButton.dataset.stepReset);
+          if (base) automation.turnover.steps[base.id] = { on: automation.turnover.steps[base.id]?.on !== false, offset: base.offset };
+          editingTurnoverStep = null;
+          persistAutomation(); render(); showToast('Standard wiederhergestellt.');
+          return;
+        }
+        editingTurnoverStep = stepButton.matches('[data-step-edit]') ? stepButton.dataset.stepEdit : stepButton.matches('[data-step-add]') ? 'new' : null;
+        render();
+        document.querySelector('#turnover-step-form [name="label"]')?.focus();
+        return;
+      }
       const reportFromTask = event.target.closest('[data-report-issue]');
       if (reportFromTask) {
         const task = tasks.find((item) => item.id === Number(reportFromTask.dataset.reportIssue));
@@ -6042,6 +6111,28 @@
         portalSync = { ...portalSync, apiKey: key, watermark: '' };
         portalMessage = null;
         if (persistPortal()) syncPortalBookings();
+        return;
+      }
+      if (event.target.id === 'turnover-step-form') {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        const values = { label: String(data.get('label') || '').trim(), hint: String(data.get('hint') || '').trim(), anchor: data.get('anchor') === 'start' ? 'start' : 'end', offset: Number(data.get('offset')) || 0, priority: String(data.get('priority') || 'normal') };
+        if (!values.label) return;
+        const stepId = event.target.dataset.stepId;
+        if (stepId === 'new') {
+          automation.turnover.custom.push({ id: `custom-${Date.now()}`, label: values.label, title: values.label, hint: values.hint, anchor: values.anchor, offset: values.offset, priority: values.priority });
+        } else if (automation.turnover.custom.some((item) => item.id === stepId)) {
+          automation.turnover.custom = automation.turnover.custom.map((item) => (item.id === stepId ? { ...item, ...values, title: values.label } : item));
+          automation.turnover.steps[stepId] = { ...(automation.turnover.steps[stepId] || {}), offset: values.offset };
+        } else {
+          const base = TURNOVER_STEPS.find((item) => item.id === stepId);
+          const current = automation.turnover.steps[stepId] || {};
+          automation.turnover.steps[stepId] = { on: current.on !== false, offset: values.offset, ...(base && values.label !== base.label ? { label: values.label } : {}), ...(base && values.hint !== base.hint ? { hint: values.hint } : {}), ...(base && values.priority !== base.priority ? { priority: values.priority } : {}), ...(base && values.anchor !== base.anchor ? { anchor: values.anchor } : {}) };
+        }
+        editingTurnoverStep = null;
+        persistAutomation();
+        render();
+        showToast(stepId === 'new' ? 'Eigener Schritt hinzugefügt – er wird für alle Buchungen mit Automatik geplant.' : 'Schritt gespeichert – offene Aufgaben wurden angepasst.');
         return;
       }
       if (event.target.id === 'auto-inline-form') {
