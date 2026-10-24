@@ -1045,6 +1045,55 @@
     @media (max-width: 1050px) { .package-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .auto-inline-grid { grid-template-columns: 1fr 1fr; } .auto-inline-grid input { grid-column: 1 / -1; } }
     @media (max-width: 760px) { .template-list { grid-template-columns: 1fr; } }
     @media (max-width: 520px) { .package-grid, .auto-inline-grid { grid-template-columns: 1fr; } }
+    .checklist-row { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f0f1ee; }
+    .checklist-row .checklist-item { flex: 1; border-bottom: 0; }
+    .small-action { min-height: 29px; padding: 0 10px; border: 1px solid var(--line); border-radius: 7px; color: #49544c; background: #fff; font-size: 10.5px; font-weight: 650; }
+    .small-action:hover { border-color: #b7c7bb; color: var(--green); background: #f8f9f6; }
+    .task-table .small-action.issue-btn { border-color: transparent; background: transparent; }
+    .small-action.issue-btn { display: inline-flex; align-items: center; gap: 4px; color: #8a5410; white-space: nowrap; }
+    .small-action.issue-btn svg { width: 13px; height: 13px; }
+    .house-pin.st-issue, .house-dot.st-issue { background: #c0392b; }
+    .house-status.st-issue { color: #8b2f25; background: var(--red-soft); }
+    .house-issue { color: #8b2f25; }
+    .inspection-findings { display: grid; gap: 6px; margin-top: 14px; }
+    .inspection-findings[hidden] { display: none; }
+    .automation-links { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+    .welcome-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .issue-list { display: grid; gap: 10px; padding: 14px 18px 16px; }
+    .issue-card { display: grid; grid-template-columns: 1fr auto; gap: 8px 14px; padding: 12px 14px; border: 1px solid var(--line); border-left: 4px solid #d58a1f; border-radius: 10px; background: #fffdf8; }
+    .issue-card.fixed { border-left-color: var(--green); opacity: .8; }
+    .issue-main { display: grid; gap: 3px; }
+    .issue-main strong { font-size: 12.5px; }
+    .issue-main small { color: var(--muted); font-size: 10.5px; }
+    .issue-main .issue-repair { color: var(--green); font-weight: 700; }
+    .issue-side { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+    .issue-status { color: var(--muted); font-size: 10.5px; font-weight: 600; }
+    .issue-actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
+    .issue-history { padding: 0 18px 14px; }
+    .issue-history summary { cursor: pointer; color: var(--green); font-size: 11.5px; font-weight: 700; }
+    .issue-history .issue-list { padding: 10px 0 0; }
+    .renovation-suggestions { display: grid; gap: 6px; margin: 14px 18px 0; padding: 12px 14px; border-radius: 10px; background: var(--amber-soft); font-size: 12px; }
+    .renovation-suggestion { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+    .renovation-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; padding: 16px 18px 18px; }
+    .renovation-grid .card + .card { margin-top: 0; }
+    .renovation-grid > .empty { grid-column: 1 / -1; }
+    .renovation-card { display: grid; gap: 12px; padding: 15px 16px; }
+    .renovation-card.done { opacity: .75; }
+    .renovation-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .renovation-card h3 { margin: 0 0 3px; font-size: 14px; }
+    .renovation-card-head small { color: var(--muted); font-size: 10.5px; }
+    .renovation-stages { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 0; padding: 0; list-style: none; }
+    .renovation-stages li { padding-top: 6px; border-top: 4px solid #e4e9e3; color: var(--muted); font-size: 9.5px; font-weight: 600; line-height: 1.25; }
+    .renovation-stages li.reached { border-top-color: var(--green); color: var(--green); }
+    .renovation-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 14px; margin: 0; }
+    .renovation-facts dt { color: var(--muted); font-size: 9.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+    .renovation-facts dd { margin: 2px 0 0; font-size: 12px; font-weight: 600; }
+    .renovation-notes { margin: 0; padding: 8px 10px; border-radius: 8px; background: #f6f4ee; color: #5d675f; font-size: 11.5px; white-space: pre-line; }
+    .renovation-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .renovation-form-grid .full { grid-column: 1 / -1; }
+    .renovation-form-grid [hidden] { display: none; }
+    @media (max-width: 860px) { .renovation-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 560px) { .renovation-form-grid { grid-template-columns: 1fr; } .renovation-stages { grid-template-columns: repeat(3, 1fr); } .checklist-row { flex-wrap: wrap; gap: 0 10px; padding-bottom: 8px; } .welcome-actions { width: 100%; } .welcome-actions > * { flex: 1; } }
     /* Automatisierung */
     .text-btn.inline { padding: 0; font-size: inherit; }
     .care-steps { display: grid; gap: 4px; margin: 2px 0 4px; padding: 0; list-style: none; }
@@ -1125,6 +1174,7 @@
             <button data-page="tasks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5M8.5 10h7m-7 4h7m-7 4h4"/></svg><span>Serviceaufgaben</span><i class="nav-count" id="nav-count">0</i></button>
             <button data-page="automation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span>Automatisierung</span></button>
             <button data-page="inspections"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 20 6v5c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V6z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg><span>Hauskontrolle</span></button>
+            <button data-page="renovations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 21h18M5 21V10l7-6 7 6v11"/><path d="m9.5 14 2 2 3.5-4"/></svg><span>Reparatur & Sanierung</span></button>
             <button data-page="house3d" data-pro-only><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg><span>Hausmodell</span></button>
             <button data-page="providers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14.5 6.5a5 5 0 0 0-6.7 6.7L3 18l3 3 4.8-4.8a5 5 0 0 0 6.7-6.7l-3.1 3.1-3-3z"/><path d="m15.5 4.5 4 4"/></svg><span>Servicepartner finden</span></button>
             <button data-page="documents"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8m-8 4h8"/></svg><span>Dokumente</span></button>
@@ -1291,8 +1341,40 @@
       <dl class="inspection-report-house" id="inspection-report-house"></dl>
       <h3 class="card-title">Geprüfte Positionen</h3>
       <ul class="inspection-report-list" id="inspection-report-list"></ul>
+      <label class="inspection-findings" id="inspection-findings-wrap"><span class="form-label">Auffälligkeiten bei dieser Kontrolle (optional)</span><textarea class="form-control textarea" id="inspection-findings" maxlength="400" placeholder="Eine Auffälligkeit pro Zeile, z. B. „Feuchter Fleck an der Badezimmerdecke“. Für jede Zeile wird automatisch ein Reparaturauftrag geplant."></textarea></label>
       <div class="form-actions"><button type="button" class="secondary-btn" id="cancel-inspection-confirmation">Abbrechen</button><button type="button" class="secondary-btn" id="export-inspection-pdf">Als PDF exportieren</button><button type="button" class="primary-btn" id="save-inspection-report">Kontrolle protokollieren</button></div>
     </section>
+  </div>
+  <div class="modal-backdrop" id="issue-modal" role="dialog" aria-modal="true" aria-labelledby="issue-modal-title">
+    <form class="modal send-plan-modal" id="issue-form">
+      <div class="modal-head"><div><h2 id="issue-modal-title">Auffälligkeit melden</h2><p id="issue-modal-subtitle">Husora plant daraus automatisch einen Reparaturauftrag.</p></div><button class="close-btn" type="button" data-close-issue aria-label="Schließen">✕</button></div>
+      <div class="send-plan-grid">
+        <label id="issue-property-wrap"><span class="form-label">Ferienhaus</span><select class="form-control" name="propertyId"></select></label>
+        <label><span class="form-label">Bauteil</span><select class="form-control" name="part"></select></label>
+        <label><span class="form-label">Was ist aufgefallen?</span><textarea class="form-control textarea" name="text" required maxlength="400" placeholder="z. B. Dachrinne an der Nordseite hängt durch, Wasser läuft an der Fassade herunter"></textarea></label>
+        <label><span class="form-label">Dringlichkeit</span><select class="form-control" name="priority"><option value="urgent">Dringend – Folgeschäden drohen (Reparatur in 1 Tag)</option><option value="soon" selected>Wichtig – zeitnah beheben (in 7 Tagen)</option><option value="normal">Normal – beim nächsten Einsatz (in 3 Wochen)</option></select></label>
+        <input type="hidden" name="source"><input type="hidden" name="taskId">
+        <p class="send-plan-note ok" id="issue-auto-note"></p>
+      </div>
+      <div class="form-actions"><button type="button" class="secondary-btn" data-close-issue>Abbrechen</button><button type="submit" class="primary-btn">Auffälligkeit melden</button></div>
+    </form>
+  </div>
+  <div class="modal-backdrop" id="renovation-modal" role="dialog" aria-modal="true" aria-labelledby="renovation-modal-title">
+    <form class="modal send-plan-modal" id="renovation-form">
+      <div class="modal-head"><div><h2 id="renovation-modal-title">Sanierungsprojekt anlegen</h2><p>Zeitraum, Budget und Handwerker festhalten – die Schritte plant Husora automatisch.</p></div><button class="close-btn" type="button" data-close-renovation aria-label="Schließen">✕</button></div>
+      <div class="renovation-form-grid">
+        <label class="full"><span class="form-label">Maßnahme *</span><input class="form-control" name="title" required maxlength="100" placeholder="z. B. Dach neu eindecken"></label>
+        <label id="renovation-property-wrap"><span class="form-label">Ferienhaus</span><select class="form-control" name="propertyId"></select></label>
+        <label><span class="form-label">Bauteil</span><select class="form-control" name="part"></select></label>
+        <label><span class="form-label">Status</span><select class="form-control" name="status"></select></label>
+        <label><span class="form-label">Budget (SEK)</span><input class="form-control" name="budget" type="number" min="0" step="500" placeholder="z. B. 85000"></label>
+        <label><span class="form-label">Geplanter Beginn</span><input class="form-control" name="startDate" type="date"></label>
+        <label><span class="form-label">Geplantes Ende</span><input class="form-control" name="endDate" type="date"></label>
+        <label class="full"><span class="form-label">Handwerker / Betrieb</span><select class="form-control" name="partnerId"></select></label>
+        <label class="full"><span class="form-label">Notizen</span><textarea class="form-control textarea" name="notes" maxlength="600" placeholder="Angebote, Absprachen, Förderung (z. B. ROT-Abzug)"></textarea></label>
+      </div>
+      <div class="form-actions"><button type="button" class="secondary-btn" data-close-renovation>Abbrechen</button><button type="submit" class="primary-btn" id="renovation-submit">Projekt speichern</button></div>
+    </form>
   </div>
   <div class="inspection-print-area" id="inspection-print-area" aria-hidden="true"></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1627,6 +1709,23 @@
       { id: 'security', title: 'Abwesenheit und Notfallkontakte vorbereiten', detail: 'Türen und Fenster sichern, vereinbarte Kontrollgänge planen und lokale Notfall- sowie Servicekontakte aktuell hinterlegen.' },
       { id: 'documentation', title: 'Winterzustand dokumentieren', detail: 'Abschlussdatum, Zählerstände nach Vereinbarung und Auffälligkeiten notieren; Fotos für Eigentümer oder Servicepartner aufnehmen.' }
     ];
+    const springChecklist = [
+      { id: 'water', title: 'Wasser wieder anstellen und Leitungen spülen', detail: 'Hauptventil öffnen, Hähne nacheinander laufen lassen und Anschlüsse, Boiler und Spülmaschine auf Tropfstellen prüfen.' },
+      { id: 'heating', title: 'Heizung vom Frostschutz auf Normalbetrieb umstellen', detail: 'Solltemperatur nach Eigentümer-Anweisung anpassen und Funktion von Wärmepumpe oder Heizkörpern prüfen.' },
+      { id: 'roof', title: 'Dach, Dachrinnen und Fallrohre auf Winterschäden prüfen', detail: 'Vom sicheren Standort aus auf verschobene Dachziegel, Eisschäden und verstopfte Abläufe achten.' },
+      { id: 'building', title: 'Fassade, Fenster und Türen kontrollieren', detail: 'Frost- und Feuchtigkeitsschäden, Holzfäule, defekte Dichtungen und schwergängige Schlösser notieren.' },
+      { id: 'crawlspace', title: 'Keller und Kriechkeller auf Feuchtigkeit prüfen', detail: 'Lüften, auf Schimmel, Geruch und stehendes Wasser achten; Luftentfeuchter kontrollieren.' },
+      { id: 'pests', title: 'Spuren von Nagern und Insekten prüfen', detail: 'Dachboden, Schränke und Vorräte kontrollieren; Köderstationen und Fliegengitter prüfen.' },
+      { id: 'drainage', title: 'Brunnen, Abwasser und Klärgrube nach dem Frost prüfen', detail: 'Wasserqualität beobachten, Pumpe testen und Klärgrube bzw. Sammelgrube auf Schäden kontrollieren.' },
+      { id: 'airing', title: 'Haus lüften und Geräte in Betrieb nehmen', detail: 'Kühlschrank, Warmwasser und Lüftung einschalten; Rauchmelder testen.' },
+      { id: 'outdoor', title: 'Gartenmöbel, Grill, Boot und Steg aus dem Winterlager holen', detail: 'Ausstattung reinigen, auf Schäden prüfen und sicher aufstellen.' },
+      { id: 'garden', title: 'Grundstück aufräumen und Sturmschäden beseitigen', detail: 'Äste und Laub entfernen, Wege und Zufahrt prüfen, umgestürzte Bäume vom Fachbetrieb entfernen lassen.' },
+      { id: 'documentation', title: 'Zustand nach dem Winter dokumentieren', detail: 'Zählerstände und Fotos festhalten; festgestellte Schäden als Auffälligkeit melden, damit die Reparatur automatisch geplant wird.' }
+    ];
+    const SEASON_CHECKLISTS = {
+      winter: { items: winterChecklist, key: (propertyId) => `${new Date().getFullYear()}:${propertyId}`, title: 'Wintercheckliste', card: 'Wintervorbereitung', eyebrow: 'Saisonvorbereitung · Schweden', subtitle: (name) => `Bereite ${name} auf Frost, Schnee und lange Winternächte vor.`, ready: (name) => `${name} ist für die Wintersaison ${new Date().getFullYear()} vorbereitet – alle Punkte sind abgehakt.`, saison: 'Wintersaison' },
+      spring: { items: springChecklist, key: (propertyId) => `spring:${new Date().getFullYear()}:${propertyId}`, title: 'Frühjahrscheckliste', card: 'Frühjahrsöffnung', eyebrow: 'Saisonstart · Schweden', subtitle: (name) => `Öffne ${name} nach dem Winter: Wasser, Heizung, Gebäude und Grundstück prüfen.`, ready: (name) => `${name} ist für die Saison ${new Date().getFullYear()} geöffnet – alle Punkte sind abgehakt.`, saison: 'Frühjahrssaison' }
+    };
     let annualCosts = initialCosts;
     try {
       const savedCosts = localStorage.getItem('stugliv-costs');
@@ -2072,38 +2171,38 @@
     ];
     const SEASONS = { all: { label: 'Ganzjährig', months: null }, spring: { label: 'Frühling (Apr–Mai)', months: [3, 4] }, summer: { label: 'Sommer (Jun–Aug)', months: [5, 6, 7] }, autumn: { label: 'Herbst (Sep–Nov)', months: [8, 9, 10] }, winter: { label: 'Winter (Dez–Mär)', months: [11, 0, 1, 2] } };
     const defaultAutoTemplates = [
-      { id: 'tpl-smoke', title: 'Rauchmelder und Feuerlöscher prüfen', priority: 'urgent', interval: 180, category: 'safety', selected: true },
-      { id: 'tpl-chimney', title: 'Schornsteinfeger beauftragen (Sotning und Brandschutzkontrolle)', priority: 'urgent', interval: 365, category: 'safety', season: 'autumn' },
+      { id: 'tpl-smoke', title: 'Rauchmelder testen, Batterien und Prüfdatum der Feuerlöscher kontrollieren', priority: 'urgent', interval: 180, category: 'safety', selected: true },
+      { id: 'tpl-chimney', title: 'Schornsteinfeger beauftragen (Sotning und Brandschutzkontrolle)', priority: 'urgent', interval: 365, category: 'safety', season: 'summer' },
       { id: 'tpl-locks', title: 'Schlösser, Schlüsselbox und Alarmanlage testen', priority: 'soon', interval: 180, category: 'safety' },
       { id: 'tpl-electric', title: 'Elektrik prüfen: FI-Schalter testen, Sicherungen und Kabel kontrollieren', priority: 'soon', interval: 365, category: 'safety' },
-      { id: 'tpl-water', title: 'Wasserleitungen und Heizung kontrollieren', priority: 'soon', interval: 90, category: 'water' },
+      { id: 'tpl-boiler', title: 'Heizungsanlage und Warmwasserbereiter warten lassen', priority: 'soon', interval: 365, category: 'water', season: 'summer' },
       { id: 'tpl-heatpump', title: 'Wärmepumpe: Filter reinigen und Service', priority: 'normal', interval: 180, category: 'water' },
       { id: 'tpl-ventilation', title: 'Lüftung und Abluftfilter reinigen', priority: 'normal', interval: 180, category: 'water' },
       { id: 'tpl-well', title: 'Brunnenwasser untersuchen lassen (Wasserprobe)', priority: 'soon', interval: 365, category: 'water', season: 'summer' },
       { id: 'tpl-septic', title: 'Kläranlage / Sammelgrube leeren lassen (Slamtömning)', priority: 'soon', interval: 365, category: 'water', season: 'summer' },
       { id: 'tpl-sauna', title: 'Saunaofen und Schornstein prüfen', priority: 'normal', interval: 365, category: 'water' },
-      { id: 'tpl-gutter', title: 'Dachrinnen und Dach kontrollieren', priority: 'soon', interval: 365, category: 'building', season: 'autumn', selected: true },
+      { id: 'tpl-gutter', title: 'Dach und Dachrinnen nach dem Winter kontrollieren', priority: 'soon', interval: 365, category: 'building', season: 'spring', selected: true },
       { id: 'tpl-facade', title: 'Fassade und Holz auf Fäulnis prüfen, Falu-Farbe ausbessern', priority: 'normal', interval: 365, category: 'building', season: 'summer' },
       { id: 'tpl-windows', title: 'Fenster putzen, Dichtungen und Rahmen prüfen', priority: 'normal', interval: 180, category: 'building' },
       { id: 'tpl-crawlspace', title: 'Kriechkeller und Fundament auf Feuchtigkeit und Schimmel prüfen', priority: 'soon', interval: 365, category: 'building', season: 'spring' },
-      { id: 'tpl-pests', title: 'Schädlingskontrolle (Mäuse, Ameisen, Wespennester)', priority: 'normal', interval: 90, category: 'building' },
+      { id: 'tpl-pests', title: 'Schädlingsschutz erneuern (Köderstationen, Wespennester entfernen)', priority: 'normal', interval: 180, category: 'building' },
       { id: 'tpl-garden', title: 'Grundstück und Außenanlage pflegen', priority: 'normal', interval: 30, category: 'outdoor', season: 'summer' },
       { id: 'tpl-lawn', title: 'Rasen mähen und Wege freihalten', priority: 'normal', interval: 14, category: 'outdoor', months: [4, 5, 6, 7, 8] },
       { id: 'tpl-deck', title: 'Terrasse und Holzdeck reinigen und ölen', priority: 'normal', interval: 365, category: 'outdoor', season: 'spring' },
       { id: 'tpl-trees', title: 'Bäume und Sträucher schneiden, Laub entfernen', priority: 'normal', interval: 365, category: 'outdoor', season: 'autumn' },
-      { id: 'tpl-furniture', title: 'Gartenmöbel und Grill einlagern', priority: 'normal', interval: 365, category: 'season', months: [9] },
       { id: 'tpl-boat', title: 'Boot und Steg winterfest machen', priority: 'normal', interval: 365, category: 'season', months: [9] },
       { id: 'tpl-snow', title: 'Schneeräumung und Dachlast prüfen', priority: 'soon', interval: 30, category: 'season', season: 'winter' },
-      { id: 'tpl-frost', title: 'Frostschutz prüfen: Grundtemperatur, Leitungen und Außenhähne', priority: 'urgent', interval: 30, category: 'season', months: [11, 0, 1] },
       { id: 'tpl-inventory', title: 'Inventar prüfen und Verbrauchsmaterial auffüllen', priority: 'normal', interval: 90, category: 'admin' },
       { id: 'tpl-firstaid', title: 'Erste-Hilfe-Set und Notfallnummern aktualisieren', priority: 'normal', interval: 365, category: 'admin' },
       { id: 'tpl-contracts', title: 'Versicherung, Strom-, Wasser- und Abfallverträge prüfen', priority: 'normal', interval: 365, category: 'admin', months: [0] },
       { id: 'tpl-meter', title: 'Zählerstände ablesen und Verbrauch dokumentieren', priority: 'normal', interval: 90, category: 'admin' }
     ].map((template) => ({ selected: false, ...template, builtin: true }));
+    // Diese früheren Vorlagen sind in der Abwesenheitskontrolle bzw. der Wintercheckliste enthalten und entfallen daher.
+    const COVERED_BY_INSPECTION = ['tpl-water', 'tpl-frost', 'tpl-furniture'];
     const SERVICE_PACKAGES = [
-      { id: 'basis', name: 'Basis', tagline: 'Sicherheit und Pflichttermine', templates: ['tpl-smoke', 'tpl-chimney', 'tpl-locks', 'tpl-electric', 'tpl-water', 'tpl-gutter', 'tpl-frost'] },
-      { id: 'komfort', name: 'Komfort', tagline: 'Basis plus Technik und Pflege', templates: ['tpl-smoke', 'tpl-chimney', 'tpl-locks', 'tpl-electric', 'tpl-water', 'tpl-gutter', 'tpl-frost', 'tpl-heatpump', 'tpl-ventilation', 'tpl-pests', 'tpl-windows', 'tpl-garden', 'tpl-deck', 'tpl-inventory', 'tpl-furniture'] },
-      { id: 'vermietung', name: 'Vermietung', tagline: 'Für Häuser mit wechselnden Gästen', templates: ['tpl-smoke', 'tpl-chimney', 'tpl-locks', 'tpl-electric', 'tpl-water', 'tpl-gutter', 'tpl-frost', 'tpl-windows', 'tpl-pests', 'tpl-lawn', 'tpl-garden', 'tpl-inventory', 'tpl-firstaid', 'tpl-meter', 'tpl-contracts'] },
+      { id: 'basis', name: 'Basis', tagline: 'Sicherheit und Pflichttermine', templates: ['tpl-smoke', 'tpl-chimney', 'tpl-locks', 'tpl-electric', 'tpl-boiler', 'tpl-gutter'] },
+      { id: 'komfort', name: 'Komfort', tagline: 'Basis plus Technik und Pflege', templates: ['tpl-smoke', 'tpl-chimney', 'tpl-locks', 'tpl-electric', 'tpl-boiler', 'tpl-gutter', 'tpl-heatpump', 'tpl-ventilation', 'tpl-pests', 'tpl-windows', 'tpl-garden', 'tpl-deck', 'tpl-inventory'] },
+      { id: 'vermietung', name: 'Vermietung', tagline: 'Für Häuser mit wechselnden Gästen', templates: ['tpl-smoke', 'tpl-chimney', 'tpl-locks', 'tpl-electric', 'tpl-boiler', 'tpl-gutter', 'tpl-windows', 'tpl-pests', 'tpl-lawn', 'tpl-garden', 'tpl-inventory', 'tpl-firstaid', 'tpl-meter', 'tpl-contracts'] },
       { id: 'premium', name: 'Rundum-sorglos', tagline: 'Alle typischen Jahresaufgaben', templates: defaultAutoTemplates.filter((template) => template.id !== 'tpl-boat').map((template) => template.id) }
     ];
     const templateMonths = (template) => (Array.isArray(template.months) ? template.months : SEASONS[template.season]?.months || null);
@@ -2117,7 +2216,7 @@
         const removed = Array.isArray(savedAuto.removed) ? savedAuto.removed : [];
         const savedById = new Map(savedAuto.templates.filter((template) => template && template.id).map((template) => [template.id, template]));
         const builtins = defaultAutoTemplates.filter((template) => !removed.includes(template.id)).map((template) => ({ ...template, selected: savedById.has(template.id) ? Boolean(savedById.get(template.id).selected) : false }));
-        const customs = savedAuto.templates.filter((template) => template && template.id && !defaultAutoTemplates.some((item) => item.id === template.id)).map((template) => ({ ...template, builtin: false }));
+        const customs = savedAuto.templates.filter((template) => template && template.id && !COVERED_BY_INSPECTION.includes(template.id) && !defaultAutoTemplates.some((item) => item.id === template.id)).map((template) => ({ ...template, builtin: false }));
         autoTasks = { enabled: !!savedAuto.enabled, templates: [...builtins, ...customs], created: savedAuto.created || {}, packageId: SERVICE_PACKAGES.some((item) => item.id === savedAuto.packageId) ? savedAuto.packageId : '', removed };
       }
     } catch (error) {
@@ -2191,9 +2290,9 @@
     ];
     const SEASON_RULES = [
       { id: 'winter', title: 'Ferienhaus winterfest machen (Wintercheckliste)', months: [9, 10, 11], due: (year) => `${year}-10-31`, priority: 'urgent', label: 'Winterfest machen', hint: 'Oktober bis Dezember, erledigt sich mit der Wintercheckliste' },
-      { id: 'spring', title: 'Frühjahrsöffnung: Wasser anstellen, lüften, Winterschäden prüfen', months: [3, 4], due: (year) => `${year}-04-30`, priority: 'soon', label: 'Frühjahrsöffnung', hint: 'April und Mai' }
+      { id: 'spring', title: 'Ferienhaus für die Saison öffnen (Frühjahrscheckliste)', months: [2, 3, 4], due: (year) => `${year}-04-30`, priority: 'soon', label: 'Frühjahrsöffnung', hint: 'März bis Mai, erledigt sich mit der Frühjahrscheckliste' }
     ];
-    let automation = { turnover: { defaultOn: true, steps: Object.fromEntries(TURNOVER_STEPS.map((step) => [step.id, { on: true, offset: step.offset }])) }, vacancyInspection: true, seasonal: true, created: {}, log: [] };
+    let automation = { turnover: { defaultOn: true, steps: Object.fromEntries(TURNOVER_STEPS.map((step) => [step.id, { on: true, offset: step.offset }])) }, vacancyInspection: true, seasonal: true, repairs: true, renovation: true, created: {}, log: [] };
     try {
       const savedAutomation = JSON.parse(localStorage.getItem('stugliv-automation') || 'null');
       if (savedAutomation && typeof savedAutomation === 'object') {
@@ -2219,6 +2318,8 @@
     function dismissAutomatedTask(task) {
       if (task.auto === 'turnover') automation.created[`dismiss|${task.bookingId}|${task.step}`] = localDateKey(new Date());
       else if (task.auto === 'inspection') automation.created[inspectionDismissKey(task.propertyId)] = localDateKey(new Date());
+      else if (task.auto === 'renovation') automation.created[`dismiss-reno|${task.projectId}|${task.step}`] = localDateKey(new Date());
+      else if (task.auto === 'repair') { const issue = issues.find((item) => item.id === task.issueId); if (issue) { issue.repairDismissed = true; persistIssues(); } }
       else return;
       persistAutomation();
     }
@@ -2285,9 +2386,10 @@
         SEASON_RULES.forEach((rule) => {
           const key = `${year}-${rule.id}|${property.id}`;
           const openIndex = next.findIndex((task) => task.auto === 'season' && task.season === rule.id && task.propertyId === property.id && !task.done);
-          if (rule.id === 'winter' && openIndex >= 0 && winterIsReady(property.id)) { next[openIndex] = { ...next[openIndex], status: 'Erledigt', done: true }; completed.push(next[openIndex]); return; }
+          const ready = rule.id === 'winter' ? winterIsReady(property.id) : springIsReady(property.id);
+          if (openIndex >= 0 && ready) { next[openIndex] = { ...next[openIndex], status: 'Erledigt', done: true }; completed.push(next[openIndex]); return; }
           if (!automation.seasonal || !rule.months.includes(month) || automation.created[key]) return;
-          if (rule.id === 'winter' && winterIsReady(property.id)) return;
+          if (ready) return;
           const due = rule.due(year);
           const task = { id: ++nextId, title: rule.title, property: property.name, date: due < today ? today : due, priority: rule.priority, area: 'Saison', status: 'Offen', done: false, repeat: 'Einmalig', description: 'Automatisch erstellte Saisonaufgabe.', auto: 'season', season: rule.id, propertyId: property.id };
           automation.created[key] = today;
@@ -2295,6 +2397,7 @@
           added.push(task);
         });
       });
+      if (syncRepairsAndRenovations(next, () => ++nextId, added, completed, today)) changed = true;
       if (!added.length && !completed.length && !changed) return 0;
       const previousTasks = tasks;
       tasks = next;
@@ -2302,9 +2405,119 @@
       if (added.length) logAutomation(`${added.length} ${added.length === 1 ? 'Aufgabe' : 'Aufgaben'} geplant: ${added.slice(0, 3).map((task) => task.title.split(' · ')[0]).join(', ')}${added.length > 3 ? ' …' : ''}`);
       completed.forEach((task) => logAutomation(`Erledigt: ${task.title} (${task.property})`));
       persistAutomation();
+      persistIssues();
+      persistRenovations();
       return added.length;
     }
-    const automationActiveCount = () => [automation.turnover.defaultOn && bookingsEnabled(), automation.vacancyInspection, automation.seasonal, autoTasks.enabled, (portalConnected() && portalSync.auto) || (icalSync.auto && icalLinkCount() > 0)].filter(Boolean).length;
+    // Reparaturservice: Auffälligkeiten aus Kontrollen und Serviceaufgaben werden automatisch zu Reparaturaufträgen.
+    const ISSUE_STATUS = { open: 'Gemeldet', planned: 'Reparatur geplant', fixed: 'Behoben', renovation: 'Als Sanierung geplant' };
+    const REPAIR_DAYS = { urgent: 1, soon: 7, normal: 21 };
+    let issues = [];
+    try {
+      const savedIssues = JSON.parse(localStorage.getItem('stugliv-issues') || '[]');
+      if (Array.isArray(savedIssues)) issues = savedIssues.filter((issue) => issue && typeof issue.id === 'string' && typeof issue.propertyId === 'string');
+    } catch (error) { console.error('Auffälligkeiten konnten nicht geladen werden:', error); }
+    function persistIssues() {
+      try { localStorage.setItem('stugliv-issues', JSON.stringify(issues)); return true; }
+      catch (error) { showToast('Auffälligkeiten konnten nicht gespeichert werden.'); return false; }
+    }
+    // Sanierungsprojekte mit automatisch geplanten Schritten von der Angebotseinholung bis zur Abnahme.
+    const RENOVATION_STATUS = [['idea', 'Idee'], ['planned', 'Geplant'], ['offers', 'Angebote eingeholt'], ['ordered', 'Beauftragt'], ['active', 'In Arbeit'], ['done', 'Abgeschlossen']];
+    const renovationStatusLabel = (status) => (RENOVATION_STATUS.find(([id]) => id === status) || RENOVATION_STATUS[1])[1];
+    const RENOVATION_STEPS = [
+      { id: 'offers', title: 'Angebote von Handwerkern einholen', offset: -60, anchor: 'start', until: ['offers', 'ordered', 'active', 'done'] },
+      { id: 'order', title: 'Handwerker beauftragen und Termin bestätigen', offset: -30, anchor: 'start', until: ['ordered', 'active', 'done'] },
+      { id: 'start', title: 'Baubeginn vorbereiten (Zugang, Schlüssel, Strom, Wasser)', offset: -2, anchor: 'start', until: ['active', 'done'] },
+      { id: 'handover', title: 'Abnahme und Endkontrolle der Arbeiten', offset: 0, anchor: 'end', until: ['done'] }
+    ];
+    let renovationProjects = [];
+    try {
+      const savedProjects = JSON.parse(localStorage.getItem('stugliv-renovations') || '[]');
+      if (Array.isArray(savedProjects)) renovationProjects = savedProjects.filter((project) => project && typeof project.id === 'string' && typeof project.propertyId === 'string');
+    } catch (error) { console.error('Sanierungsprojekte konnten nicht geladen werden:', error); }
+    function persistRenovations() {
+      try { localStorage.setItem('stugliv-renovations', JSON.stringify(renovationProjects)); return true; }
+      catch (error) { showToast('Sanierungsprojekte konnten nicht gespeichert werden.'); return false; }
+    }
+    const partLabel = (partId) => housePartDefs.find((part) => part.id === partId)?.label || '';
+    const craftsmanFor = (propertyId) => {
+      const assigned = servicePartnerAssignments[propertyId] || [];
+      return providers.find((provider) => provider.category === 'renovation' && assigned.includes(provider.id)) || providers.find((provider) => provider.category === 'house' && assigned.includes(provider.id)) || null;
+    };
+    function syncRepairsAndRenovations(next, newId, added, completed, today) {
+      let changed = false;
+      issues.forEach((issue) => {
+        const property = properties.find((item) => item.id === issue.propertyId);
+        const index = next.findIndex((task) => task.auto === 'repair' && task.issueId === issue.id);
+        const task = index >= 0 ? next[index] : null;
+        if (task && task.done && issue.status !== 'fixed' && issue.status !== 'renovation') {
+          issue.status = 'fixed';
+          issue.fixedAt = today;
+          completed.push(task);
+          changed = true;
+        } else if (task && !task.done && (issue.status === 'fixed' || issue.status === 'renovation')) {
+          next.splice(index, 1);
+          changed = true;
+        } else if (!task && property && automation.repairs && (issue.status === 'open' || issue.status === 'planned') && !issue.repairDismissed) {
+          const partner = craftsmanFor(property.id);
+          const part = partLabel(issue.part);
+          const short = issue.text.length > 60 ? `${issue.text.slice(0, 57).trim()}…` : issue.text;
+          const repair = { id: newId(), title: `Reparatur${part && !short.toLowerCase().startsWith(part.toLowerCase()) ? ` ${part}` : ''}: ${short}`, property: property.name, date: shiftDateKey(today, REPAIR_DAYS[issue.priority] ?? 7), priority: issue.priority || 'soon', area: part || 'Reparatur', status: 'Offen', done: false, repeat: 'Einmalig', description: `Automatisch aus einer Auffälligkeit (${issue.source || 'Meldung'} vom ${fmtDate(issue.date)}): ${issue.text}${partner ? ` · Vorgeschlagener Betrieb: ${partner.name}` : ' · Noch kein Handwerker zugeordnet.'}`, auto: 'repair', issueId: issue.id, propertyId: property.id };
+          next.push(repair);
+          added.push(repair);
+          issue.status = 'planned';
+          changed = true;
+        }
+      });
+      renovationProjects.forEach((project) => {
+        const property = properties.find((item) => item.id === project.propertyId);
+        const enabled = automation.renovation && property && /^\d{4}-\d{2}-\d{2}$/.test(project.startDate || '') && project.status !== 'idea';
+        const endDate = /^\d{4}-\d{2}-\d{2}$/.test(project.endDate || '') ? project.endDate : project.startDate ? shiftDateKey(project.startDate, 14) : '';
+        RENOVATION_STEPS.forEach((step) => {
+          const index = next.findIndex((task) => task.auto === 'renovation' && task.projectId === project.id && task.step === step.id);
+          const existing = index >= 0 ? next[index] : null;
+          const reached = step.until.includes(project.status);
+          if (existing && !existing.done && reached) { next[index] = { ...existing, status: 'Erledigt', done: true }; changed = true; return; }
+          if (!enabled || reached) { if (existing && !existing.done) { next.splice(index, 1); changed = true; } return; }
+          let date = shiftDateKey(step.anchor === 'start' ? project.startDate : endDate, step.offset);
+          if (date < today) date = today;
+          const title = `${step.title} · ${project.title}`;
+          if (!existing && automation.created[`dismiss-reno|${project.id}|${step.id}`]) return;
+          if (!existing) {
+            const task = { id: newId(), title, property: property.name, date, priority: step.id === 'handover' ? 'soon' : 'normal', area: 'Sanierung', status: 'Offen', done: false, repeat: 'Einmalig', description: `Automatisch geplant für das Sanierungsprojekt „${project.title}“.`, auto: 'renovation', projectId: project.id, step: step.id };
+            next.push(task);
+            added.push(task);
+          } else if (!existing.done && (existing.date !== date || existing.title !== title || existing.property !== property.name)) {
+            next[index] = { ...existing, date, title, property: property.name };
+            changed = true;
+          }
+        });
+        if (project.status === 'done' && property && !project.logged) {
+          const year = (project.endDate && project.endDate < today ? project.endDate : today).slice(0, 4);
+          const part = partLabel(project.part);
+          const entry = `${year}: ${part ? `${part} – ` : ''}${project.title}`;
+          property.lastRenovations = [entry, property.lastRenovations].filter(Boolean).join('\n');
+          project.logged = true;
+          saveProperties();
+          logAutomation(`Sanierung abgeschlossen und in der Objekthistorie eingetragen: ${project.title}`);
+          changed = true;
+        }
+      });
+      const before = next.length;
+      for (let index = next.length - 1; index >= 0; index -= 1) {
+        const task = next[index];
+        if (!task.done && ((task.auto === 'renovation' && !renovationProjects.some((project) => project.id === task.projectId)) || (task.auto === 'repair' && !issues.some((issue) => issue.id === task.issueId)))) next.splice(index, 1);
+      }
+      return changed || next.length !== before;
+    }
+    function createIssue({ propertyId, part = '', text, priority = 'soon', source = 'Meldung', taskId = null }) {
+      const issue = { id: `issue-${Date.now()}-${Math.round(Math.random() * 1000)}`, propertyId, part, text: String(text).trim(), priority, source, taskId, date: localDateKey(new Date()), status: 'open' };
+      issues = [issue, ...issues];
+      persistIssues();
+      return issue;
+    }
+    const openIssues = (propertyId) => issues.filter((issue) => (!propertyId || issue.propertyId === propertyId) && (issue.status === 'open' || issue.status === 'planned'));
+    const automationActiveCount = () => [automation.turnover.defaultOn && bookingsEnabled(), automation.vacancyInspection, automation.seasonal, autoTasks.enabled, automation.repairs, automation.renovation, (portalConnected() && portalSync.auto) || (icalSync.auto && icalLinkCount() > 0)].filter(Boolean).length;
     const intervalLabel = (days) => ({ 14: 'alle 2 Wochen', 30: 'monatlich', 90: 'vierteljährlich', 180: 'halbjährlich', 365: 'jährlich' }[days] || `alle ${days} Tage`);
     function templateListHtml() {
       const priorityLabel = { urgent: 'Dringend', soon: 'Wichtig', normal: 'Normal' };
@@ -2876,6 +3089,13 @@
                 return `<button class="house-service-row" data-action="open-inspection" data-property="${escapeHtml(property.id)}"><span class="house-service-name">${escapeHtml(property.name)}<small>${escapeHtml(property.region || property.address)}</small></span><span class="house-service-badges">${inspectionStatusBadge(property.id)}${winterStatusBadge(property.id)}</span></button>`;
               }).join('') || '<div class="empty">Noch keine Ferienhäuser vorhanden.</div>'}</div>
             </section>
+            <section class="card"><div class="card-head"><div><h2 class="card-title">Reparatur & Sanierung</h2><p class="card-caption">Gemeldete Auffälligkeiten und laufende Projekte</p></div><button class="text-btn" data-page="renovations">Übersicht →</button></div>
+              <div class="house-service-list">${properties.map((property) => {
+                const count = openIssues(property.id).length;
+                const projects = renovationProjects.filter((project) => project.propertyId === property.id && project.status !== 'done');
+                return `<button class="house-service-row" data-page="renovations"><span class="house-service-name">${escapeHtml(property.name)}<small>${projects.length ? `${projects.length} ${projects.length === 1 ? 'Sanierungsprojekt' : 'Sanierungsprojekte'}: ${escapeHtml(projects.map((project) => project.title).join(', '))}` : 'Kein Sanierungsprojekt geplant'}</small></span><span class="occupancy-pill ${count ? 'busy' : 'free'}">${count ? `${count} offen` : 'Keine Mängel'}</span></button>`;
+              }).join('')}</div>
+            </section>
             <section class="card"><div class="card-head"><div><h2 class="card-title">Servicepartner</h2><p class="card-caption">${singleHouse() ? 'Ausgewählte Partner für dein Ferienhaus' : 'Ausgewählte Partner je Ferienhaus'}</p></div><button class="text-btn" data-action="manage-assigned-providers" data-property="${escapeHtml(properties[0]?.id || '')}">Servicepartner →</button></div>
               <div class="house-service-list">${properties.map((property) => {
                 const assigned = providers.filter((provider) => (servicePartnerAssignments[property.id] || []).includes(provider.id));
@@ -3157,7 +3377,7 @@
           <td class="${overdue ? 'overdue' : ''}">${task.date ? fmtDate(task.date) : '—'}</td>
           <td><span class="badge-wrap ${priority}">${priorityText[priority] || 'Normal'}</span></td>
           <td><select class="filter-select status-select" data-status-task="${task.id}" aria-label="Status für ${escapeHtml(task.title)} ändern">${taskStatuses.map((value) => `<option ${status === value ? 'selected' : ''}>${value}</option>`).join('')}</select></td>
-          <td><div class="row-actions"><button type="button" class="small-action" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten">Bearbeiten</button><button type="button" class="small-action" data-delete-task="${task.id}" aria-label="Aufgabe löschen">Löschen</button></div></td></tr>`;
+          <td><div class="row-actions"><button type="button" class="small-action" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten">Bearbeiten</button><button type="button" class="small-action issue-btn" data-report-issue="${task.id}" aria-label="Auffälligkeit zu ${escapeHtml(task.title)} melden">${icon('alert')} Auffälligkeit</button><button type="button" class="small-action" data-delete-task="${task.id}" aria-label="Aufgabe löschen">Löschen</button></div></td></tr>`;
       }).join('');
       const openCount = tasks.filter((task) => taskStatus(task) !== 'Erledigt').length;
       return `<div class="welcome"><div><p class="eyebrow">Buchungen & Instandhaltung</p><h1>Serviceaufgaben</h1><p class="subtitle">Koordiniere Reinigung, Schlüsselübergaben und saisonale Stugapflege.</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>
@@ -3196,13 +3416,17 @@
       const nextSteps = tasks.filter((task) => task.auto && !task.done).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 6);
       const timeFmt = (iso) => new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
       return `<div class="welcome"><div><p class="eyebrow">Abläufe automatisieren</p><h1>Automatisierung</h1><p class="subtitle">Lege fest, welche Abläufe Husora für ${singleHouse() ? 'dein Ferienhaus' : 'deine Ferienhäuser'} selbst plant: Gästewechsel, Hauskontrolle, Saison und Wartung.</p></div><button class="secondary-btn" data-action="go-back">← Zurück</button></div>
-        <section class="automation-summary"><div><strong>${automationActiveCount()}</strong><span>von ${bookingsEnabled() ? 5 : 4} Automatiken aktiv</span></div><div><strong>${tasks.filter((task) => task.auto && !task.done).length}</strong><span>automatisch geplante Aufgaben offen</span></div><div><strong>${tasks.filter((task) => task.auto && task.done).length}</strong><span>davon bereits erledigt</span></div></section>
+        <section class="automation-summary"><div><strong>${automationActiveCount()}</strong><span>von ${bookingsEnabled() ? 7 : 6} Automatiken aktiv</span></div><div><strong>${tasks.filter((task) => task.auto && !task.done).length}</strong><span>automatisch geplante Aufgaben offen</span></div><div><strong>${tasks.filter((task) => task.auto && task.done).length}</strong><span>davon bereits erledigt</span></div></section>
         <div class="automation-grid">
           ${turnoverCard}
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('inspection')}</span><div><h2 class="card-title">Hauskontrolle bei Leerstand</h2><p class="card-caption">Ist die monatliche Abwesenheitskontrolle fällig und kein Gast im Haus, legt Husora eine Aufgabe an. Mit dem Prüfprotokoll erledigt sie sich von selbst.</p></div></div>
             <div class="automation-body">${sw('auto-vacancy', automation.vacancyInspection, 'Kontrollaufgabe automatisch anlegen')}<ul class="automation-status">${inspectionRows}</ul><button type="button" class="text-btn" data-page="inspections">Zur Hauskontrolle →</button></div></section>
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('moon')}</span><div><h2 class="card-title">Saisonale Aufgaben</h2><p class="card-caption">Einmal pro Jahr und Haus zur passenden Jahreszeit.</p></div></div>
-            <div class="automation-body">${sw('auto-seasonal', automation.seasonal, 'Saisonaufgaben automatisch anlegen')}<ul class="automation-status">${SEASON_RULES.map((rule) => `<li><span>${escapeHtml(rule.label)}</span><small>${escapeHtml(rule.hint)}</small></li>`).join('')}</ul></div></section>
+            <div class="automation-body">${sw('auto-seasonal', automation.seasonal, 'Saisonaufgaben automatisch anlegen')}<ul class="automation-status">${SEASON_RULES.map((rule) => `<li><span>${escapeHtml(rule.label)}</span><small>${escapeHtml(rule.hint)}</small></li>`).join('')}</ul><div class="automation-links"><button type="button" class="text-btn" data-action="open-season-checklist" data-season="winter">Wintercheckliste →</button><button type="button" class="text-btn" data-action="open-season-checklist" data-season="spring">Frühjahrscheckliste →</button></div></div></section>
+          <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('alert')}</span><div><h2 class="card-title">Reparaturservice bei Auffälligkeiten</h2><p class="card-caption">Wird bei einer Kontrolle, einer Checkliste oder einem Serviceeinsatz etwas Auffälliges gemeldet, plant Husora sofort einen Reparaturauftrag – je nach Dringlichkeit in 1, 7 oder 21 Tagen, mit Vorschlag des zugeordneten Handwerkers.</p></div></div>
+            <div class="automation-body">${sw('auto-repairs', automation.repairs, 'Reparaturaufträge automatisch planen')}<ul class="automation-status">${properties.map((property) => { const count = openIssues(property.id).length; return `<li><span>${escapeHtml(property.name)}</span><small class="${count ? 'due' : 'ok'}">${count ? `${count} offene ${count === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'}` : 'Keine offenen Auffälligkeiten'}</small></li>`; }).join('')}</ul><div class="automation-links"><button type="button" class="secondary-btn" data-action="report-issue">${icon('alert')} Auffälligkeit melden</button><button type="button" class="text-btn" data-page="renovations">Zur Übersicht →</button></div></div></section>
+          <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('property')}</span><div><h2 class="card-title">Sanierungsarbeiten am Haus</h2><p class="card-caption">Für jedes Sanierungsprojekt mit Beginn plant Husora: Angebote einholen (60 Tage vorher), Handwerker beauftragen (30 Tage), Baubeginn vorbereiten und Abnahme. Abgeschlossene Projekte landen in der Sanierungshistorie.</p></div></div>
+            <div class="automation-body">${sw('auto-renovation', automation.renovation, 'Sanierungsschritte automatisch planen')}<ul class="automation-status"><li><span>Laufende Projekte</span><small>${renovationProjects.filter((project) => project.status !== 'done').length}</small></li><li><span>Abgeschlossen</span><small>${renovationProjects.filter((project) => project.status === 'done').length}</small></li></ul><div class="automation-links"><button type="button" class="secondary-btn" data-action="new-renovation">${icon('plus')} Sanierungsprojekt</button><button type="button" class="text-btn" data-page="renovations">Zur Übersicht →</button></div></div></section>
           <section class="card automation-card wide"><div class="automation-head"><span class="automation-icon">${icon('task')}</span><div><h2 class="card-title">Servicepakete & Jahresaufgaben</h2><p class="card-caption">Wähle ein Paket mit den typischen Jahresaufgaben eines Ferienhauses und erweitere es individuell. Husora legt die Aufgaben zur passenden Jahreszeit automatisch an.</p></div></div>
             <div class="automation-body">${sw('auto-task-toggle', autoTasks.enabled, 'Jahresaufgaben automatisch erstellen')}${servicePackagesHtml()}</div></section>
           ${bookingsEnabled() ? `<section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('clock')}</span><div><h2 class="card-title">Kalender-Synchronisierung</h2><p class="card-caption">Buchungen von Airbnb, Booking.com und Vrbo laufen automatisch alle 15 Minuten ein.</p></div></div>
@@ -3212,6 +3436,91 @@
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('note')}</span><div><h2 class="card-title">Protokoll</h2><p class="card-caption">Was die Automatik zuletzt erledigt hat.</p></div></div>
             <ul class="automation-log">${automation.log.length ? automation.log.slice(0, 8).map((entry) => `<li><small>${escapeHtml(timeFmt(entry.at))}</small><span>${escapeHtml(entry.text)}</span></li>`).join('') : '<li class="empty">Noch keine automatischen Aktionen.</li>'}</ul></section>
         </div>`;
+    }
+    function partOptions(selected) {
+      return `<option value="">Sonstiges / ganzes Haus</option>${housePartDefs.map((part) => `<option value="${part.id}" ${part.id === selected ? 'selected' : ''}>${escapeHtml(part.label)}</option>`).join('')}`;
+    }
+    function propertyOptions(selected) {
+      return properties.map((property) => `<option value="${escapeHtml(property.id)}" ${property.id === selected ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('');
+    }
+    function openIssueModal({ propertyId = properties[0]?.id, part = '', text = '', source = 'Meldung', taskId = '' } = {}) {
+      const form = document.getElementById('issue-form');
+      form.reset();
+      form.elements.propertyId.innerHTML = propertyOptions(propertyId);
+      document.getElementById('issue-property-wrap').hidden = singleHouse();
+      form.elements.part.innerHTML = partOptions(part || housePartDefs.find((item) => item.match.test(text))?.id || '');
+      form.elements.text.value = text;
+      form.elements.source.value = source;
+      form.elements.taskId.value = taskId;
+      document.getElementById('issue-modal-subtitle').textContent = `Quelle: ${source}`;
+      const partner = craftsmanFor(propertyId);
+      document.getElementById('issue-auto-note').textContent = automation.repairs
+        ? `Der Reparaturservice ist aktiv: Husora legt sofort einen Reparaturauftrag an${partner ? ` und schlägt ${partner.name} vor` : ''}.`
+        : 'Der Reparaturservice ist ausgeschaltet – die Auffälligkeit wird nur gespeichert. Einschalten unter „Automatisierung“.';
+      document.getElementById('issue-modal').classList.add('open');
+      form.elements.text.focus();
+      form.elements.text.setSelectionRange(text.length, text.length);
+    }
+    function openRenovationModal(project = null, prefill = {}) {
+      const form = document.getElementById('renovation-form');
+      const data = { propertyId: properties[0]?.id, part: '', status: 'planned', title: '', budget: '', startDate: '', endDate: '', partnerId: '', notes: '', ...prefill, ...(project || {}) };
+      form.reset();
+      form.dataset.editing = project ? project.id : '';
+      form.dataset.issueId = prefill.issueId || '';
+      document.getElementById('renovation-modal-title').textContent = project ? 'Sanierungsprojekt bearbeiten' : 'Sanierungsprojekt anlegen';
+      form.elements.propertyId.innerHTML = propertyOptions(data.propertyId);
+      document.getElementById('renovation-property-wrap').hidden = singleHouse();
+      form.elements.part.innerHTML = partOptions(data.part);
+      form.elements.status.innerHTML = RENOVATION_STATUS.map(([id, label]) => `<option value="${id}" ${id === data.status ? 'selected' : ''}>${label}</option>`).join('');
+      const craftsmen = providers.filter((provider) => provider.category === 'renovation' || provider.category === 'house');
+      const assigned = servicePartnerAssignments[data.propertyId] || [];
+      form.elements.partnerId.innerHTML = `<option value="">Noch offen</option>${[...craftsmen].sort((a, b) => Number(assigned.includes(b.id)) - Number(assigned.includes(a.id))).map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === data.partnerId ? 'selected' : ''}>${escapeHtml(provider.name)} · ${escapeHtml(provider.town || '')}${assigned.includes(provider.id) ? ' · zugeordnet' : ''}</option>`).join('')}`;
+      ['title', 'budget', 'startDate', 'endDate', 'notes'].forEach((name) => { form.elements[name].value = data[name] || ''; });
+      document.getElementById('renovation-modal').classList.add('open');
+      form.elements.title.focus();
+    }
+    function renovationSuggestions() {
+      return properties.flatMap((property) => String(property.plannedRenovations || '').split(/[\n;]+/).map((text) => text.trim()).filter(Boolean)
+        .filter((text) => !renovationProjects.some((project) => project.propertyId === property.id && project.sourceText === text))
+        .map((text) => ({ property, text, part: housePartDefs.find((part) => part.match.test(text))?.id || '' })));
+    }
+    function renovationsPage() {
+      const today = localDateKey(new Date());
+      const dateText = (date) => (date ? fmtDate(date) : 'offen');
+      const propertyName = (id) => properties.find((property) => property.id === id)?.name || 'Ferienhaus entfernt';
+      const activeIssues = issues.filter((issue) => issue.status === 'open' || issue.status === 'planned');
+      const doneIssues = issues.filter((issue) => issue.status === 'fixed').slice(0, 5);
+      const openProjects = renovationProjects.filter((project) => project.status !== 'done');
+      const budget = openProjects.reduce((sum, project) => sum + (Number(project.budget) || 0), 0);
+      const issueRow = (issue) => {
+        const repair = tasks.find((task) => task.auto === 'repair' && task.issueId === issue.id);
+        const prio = { urgent: 'Dringend', soon: 'Wichtig', normal: 'Normal' }[issue.priority] || 'Wichtig';
+        return `<article class="issue-card ${issue.status}"><div class="issue-main"><strong>${escapeHtml(issue.text)}</strong><small>${singleHouse() ? '' : `${escapeHtml(propertyName(issue.propertyId))} · `}${partLabel(issue.part) ? `${escapeHtml(partLabel(issue.part))} · ` : ''}${escapeHtml(issue.source || 'Meldung')} · ${escapeHtml(fmtDate(issue.date))}</small>${repair ? `<small class="issue-repair">${repair.done ? 'Reparatur erledigt' : `Reparatur geplant für ${escapeHtml(fmtDate(repair.date))}`}</small>` : ''}</div>
+          <div class="issue-side"><span class="task-tag ${issue.priority === 'urgent' ? 'urgent' : issue.priority === 'soon' ? 'soon' : ''}">${prio}</span><span class="issue-status">${ISSUE_STATUS[issue.status] || ''}</span></div>
+          <div class="issue-actions">${issue.status !== 'fixed' && issue.status !== 'renovation' ? `<button type="button" class="small-action" data-issue-fixed="${issue.id}">Als behoben markieren</button><button type="button" class="small-action" data-issue-renovation="${issue.id}">Als Sanierung planen</button>` : ''}<button type="button" class="small-action" data-issue-delete="${issue.id}">Löschen</button></div></article>`;
+      };
+      const projectCard = (project) => {
+        const linked = tasks.filter((task) => task.auto === 'renovation' && task.projectId === project.id);
+        const nextStep = linked.filter((task) => !task.done).sort((a, b) => a.date.localeCompare(b.date))[0];
+        const partner = providers.find((provider) => provider.id === project.partnerId);
+        const stageIndex = RENOVATION_STATUS.findIndex(([id]) => id === project.status);
+        return `<article class="card renovation-card ${project.status === 'done' ? 'done' : ''}"><div class="renovation-card-head"><div><h3>${escapeHtml(project.title)}</h3><small>${singleHouse() ? '' : `${escapeHtml(propertyName(project.propertyId))} · `}${escapeHtml(partLabel(project.part) || 'Ganzes Haus')}</small></div><select class="filter-select" data-renovation-status="${project.id}" aria-label="Status von ${escapeHtml(project.title)}">${RENOVATION_STATUS.map(([id, label]) => `<option value="${id}" ${id === project.status ? 'selected' : ''}>${label}</option>`).join('')}</select></div>
+          <ol class="renovation-stages">${RENOVATION_STATUS.slice(1).map(([id, label], index) => `<li class="${index + 1 <= stageIndex ? 'reached' : ''}">${label}</li>`).join('')}</ol>
+          <dl class="renovation-facts"><div><dt>Zeitraum</dt><dd>${escapeHtml(dateText(project.startDate))} – ${escapeHtml(dateText(project.endDate))}</dd></div><div><dt>Budget</dt><dd>${project.budget ? escapeHtml(formatCost(Number(project.budget))) : '—'}</dd></div><div><dt>Handwerker</dt><dd>${escapeHtml(partner?.name || 'noch offen')}</dd></div><div><dt>Nächster Schritt</dt><dd>${nextStep ? `${escapeHtml(fmtDate(nextStep.date))}: ${escapeHtml(nextStep.title.split(' · ')[0])}` : project.status === 'done' ? 'Abgeschlossen' : project.startDate ? 'Alle Schritte erledigt' : 'Beginn eintragen, dann plant Husora die Schritte'}</dd></div></dl>
+          ${project.notes ? `<p class="renovation-notes">${escapeHtml(project.notes)}</p>` : ''}
+          <div class="row-actions"><button type="button" class="small-action" data-renovation-edit="${project.id}">Bearbeiten</button><button type="button" class="small-action" data-renovation-delete="${project.id}">Löschen</button></div></article>`;
+      };
+      const suggestions = renovationSuggestions();
+      return `<div class="welcome"><div><p class="eyebrow">Instandhaltung · Reparatur & Sanierung</p><h1>Reparatur & Sanierung</h1><p class="subtitle">Auffälligkeiten aus Kontrollen und Serviceeinsätzen werden automatisch zu Reparaturaufträgen. Größere Maßnahmen planst du als Sanierungsprojekt.</p></div><div class="welcome-actions"><button class="secondary-btn" data-action="report-issue">${icon('alert')} Auffälligkeit melden</button><button class="primary-btn" data-action="new-renovation">${icon('plus')} Sanierungsprojekt</button></div></div>
+        <section class="automation-summary"><div><strong>${activeIssues.length}</strong><span>offene ${activeIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'}</span></div><div><strong>${openProjects.length}</strong><span>laufende Sanierungsprojekte</span></div><div><strong>${escapeHtml(formatCost(budget))}</strong><span>geplantes Sanierungsbudget</span></div></section>
+        <section class="card"><div class="card-head"><div><h2 class="card-title">Reparaturservice</h2><p class="card-caption">${automation.repairs ? 'Aktiv – jede Auffälligkeit wird automatisch als Reparaturauftrag eingeplant.' : 'Ausgeschaltet – Auffälligkeiten werden nur gesammelt.'}</p></div><button class="text-btn" data-page="automation">Automatik →</button></div>
+          <div class="issue-list">${activeIssues.length ? activeIssues.map(issueRow).join('') : '<div class="empty">Keine offenen Auffälligkeiten. Melde Schäden direkt bei einer Serviceaufgabe, in den Checklisten oder im 3D-Hausmodell.</div>'}</div>
+          ${doneIssues.length ? `<details class="issue-history"><summary>Zuletzt behoben (${doneIssues.length})</summary><div class="issue-list">${doneIssues.map(issueRow).join('')}</div></details>` : ''}
+        </section>
+        <section class="card"><div class="card-head"><div><h2 class="card-title">Sanierungsarbeiten am Haus</h2><p class="card-caption">${automation.renovation ? 'Husora plant Angebote, Beauftragung, Baubeginn und Abnahme automatisch.' : 'Automatische Planung ausgeschaltet.'} Abgeschlossene Projekte erscheinen in der Sanierungshistorie und im 3D-Modell.</p></div></div>
+          ${suggestions.length ? `<div class="renovation-suggestions"><strong>Aus den Objektdaten (anstehende Sanierungen):</strong>${suggestions.map((item, index) => `<div class="renovation-suggestion"><span>${singleHouse() ? '' : `${escapeHtml(item.property.name)} · `}${escapeHtml(item.text)}</span><button type="button" class="small-action" data-renovation-suggest="${index}">Als Projekt übernehmen</button></div>`).join('')}</div>` : ''}
+          <div class="renovation-grid">${renovationProjects.length ? [...renovationProjects].sort((a, b) => Number(a.status === 'done') - Number(b.status === 'done') || (a.startDate || '9999').localeCompare(b.startDate || '9999')).map(projectCard).join('') : '<div class="empty">Noch keine Sanierungsprojekte angelegt.</div>'}</div>
+        </section>`;
     }
     function houseSettingsCard() {
       const desired = Math.max(1, Math.floor(Number(profileData.desiredHouseCount || profileData.houseCount)) || 1);
@@ -3393,7 +3702,7 @@
     }
     const houseRenovationLabels = { planned: 'Sanierung geplant', done: 'Saniert', none: 'Keine Sanierung eingetragen' };
     const houseIntervalDays = { w1: 7, w2: 14, m1: 30, q1: 91, h1: 182, y1: 365 };
-    const houseStatusLabels = { ok: 'Aktuell', due: 'Kontrolle fällig', never: 'Noch nicht kontrolliert', none: 'Kein Prüfpunkt zugeordnet' };
+    const houseStatusLabels = { issue: 'Reparatur offen', ok: 'Aktuell', due: 'Kontrolle fällig', never: 'Noch nicht kontrolliert', none: 'Kein Prüfpunkt zugeordnet' };
     let houseRotation = { x: -24, y: -32 };
     let houseModelProperty = properties[0].id;
     let selectedHousePart = null;
@@ -3439,10 +3748,12 @@
         ? info.rows.map((row) => `<div class="house-info-row"><strong>${escapeHtml(row.item.title)}</strong><small>Letzte Kontrolle: ${row.last ? `${escapeHtml(formatInspectionDate(row.last))} (${ago(row.days)})` : 'noch nicht protokolliert'}</small><small>Kontrolltaktung: ${row.frequency ? escapeHtml(planFrequencyLabel(row.frequency)) : 'nicht festgelegt (Richtwert: jährlich)'}</small></div>`).join('')
         : '<div class="house-info-row"><strong>Kontrolle</strong><small>Für dieses Bauteil gibt es keinen eigenen Prüfpunkt in der Checkliste.</small></div>';
       const partTasks = tasks.filter((task) => !task.done && task.property === property.name && String(task.area || '').toLowerCase() === part.label.toLowerCase());
+      const partIssues = openIssues(property.id).filter((issue) => issue.part === part.id);
+      const issueBlock = `<div class="house-info-row"><strong>Auffälligkeiten</strong>${partIssues.length ? partIssues.map((issue) => `<small class="house-issue">${escapeHtml(fmtDate(issue.date))}: ${escapeHtml(issue.text)} · ${escapeHtml(ISSUE_STATUS[issue.status])}</small>`).join('') : '<small>Keine offenen Auffälligkeiten.</small>'}<button class="text-btn" type="button" data-action="report-issue" data-part="${escapeHtml(part.id)}" data-property="${escapeHtml(property.id)}" data-source="3D-Hausmodell">+ Auffälligkeit melden</button></div>`;
       const taskBlock = partTasks.length ? `<div class="house-info-row"><strong>Offene Aufgaben</strong>${partTasks.map((task) => `<small>${escapeHtml(fmtDate(task.date))}: ${escapeHtml(task.title)}</small>`).join('')}</div>` : '';
       const conditionRows = part.interior ? houseConditionRows(property, part) : null;
       const conditionBlock = part.interior ? `<div class="house-info-row"><strong>Zustand</strong>${conditionRows.length ? conditionRows.map((text) => `<small>${escapeHtml(text)}</small>`).join('') : '<small>Dazu sind in der Objektverwaltung noch keine Angaben eingetragen.</small>'}</div>` : '';
-      return `<div class="house-info" role="dialog" aria-label="Info zu ${escapeHtml(part.label)}"><button class="house-info-close" type="button" data-house-action="close" aria-label="Info schließen">✕</button><h3>${escapeHtml(part.label)}</h3><span class="house-status st-${info.status}">${houseStatusLabels[info.status]}</span><span class="house-status reno-${renovation.status}">${houseRenovationLabels[renovation.status]}</span>${inspectionRows}${taskBlock}${conditionBlock}<div class="house-info-row"><strong>Sanierungsstatus</strong>${renovationRows}</div><button class="text-btn" type="button" data-page="inspections">Zur Hauskontrolle →</button> <button class="text-btn" type="button" data-action="house-part-task" data-part="${escapeHtml(part.id)}" data-property="${escapeHtml(property.id)}">+ Aufgabe für ${escapeHtml(part.label)}</button> <button class="text-btn" type="button" data-action="view-property" data-property="${escapeHtml(property.id)}">Zur Objektverwaltung →</button></div>`;
+      return `<div class="house-info" role="dialog" aria-label="Info zu ${escapeHtml(part.label)}"><button class="house-info-close" type="button" data-house-action="close" aria-label="Info schließen">✕</button><h3>${escapeHtml(part.label)}</h3><span class="house-status st-${info.status}">${houseStatusLabels[info.status]}</span><span class="house-status reno-${renovation.status}">${houseRenovationLabels[renovation.status]}</span>${inspectionRows}${issueBlock}${taskBlock}${conditionBlock}<div class="house-info-row"><strong>Sanierungsstatus</strong>${renovationRows}</div><button class="text-btn" type="button" data-page="inspections">Zur Hauskontrolle →</button> <button class="text-btn" type="button" data-action="house-part-task" data-part="${escapeHtml(part.id)}" data-property="${escapeHtml(property.id)}">+ Aufgabe für ${escapeHtml(part.label)}</button> <button class="text-btn" type="button" data-action="view-property" data-property="${escapeHtml(property.id)}">Zur Objektverwaltung →</button></div>`;
     }
     function houseModelHtml(statuses, property, renovated = {}) {
       const W = 220, D = 150, H = 100, R = 60, OH = 14;
@@ -3506,7 +3817,7 @@
     }
     function house3dPage() {
       const property = properties.find((item) => item.id === houseModelProperty) || properties[0];
-      const statuses = Object.fromEntries(housePartDefs.map((part) => [part.id, housePartInfo(property.id, part).status]));
+      const statuses = Object.fromEntries(housePartDefs.map((part) => [part.id, openIssues(property.id).some((issue) => issue.part === part.id) ? 'issue' : housePartInfo(property.id, part).status]));
       const selected = housePartDefs.find((part) => part.id === selectedHousePart);
       const renovated = Object.fromEntries(activeHouseParts(property).map((part) => [part.id, houseRenovationInfo(propertyWithDefaults(property), part).done.length > 0]));
       const selector = singleHouse() ? '' : `<div class="section-toolbar"><label><span class="form-label">Ferienhaus</span><select id="house-property" class="filter-select" aria-label="Ferienhaus für das Hausmodell wählen">${properties.map((item) => `<option value="${escapeHtml(item.id)}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)} · ${escapeHtml(item.region)}</option>`).join('')}</select></label></div>`;
@@ -3515,7 +3826,7 @@
         <section class="card house-card"><div class="card-head"><div><h2 class="card-title">${escapeHtml(property.name)}</h2><p class="card-caption">Gebäudehülle und Innenausstattung · ziehen zum Drehen · Mausrad oder zwei Finger zum Zoomen</p></div><div class="house-controls"><button type="button" id="house-open-btn" data-house-action="toggle-open" aria-pressed="${houseOpen}">${houseOpen ? 'Dach schließen' : 'Dach öffnen'}</button><button type="button" data-house-action="zoom-in" aria-label="Näher heranzoomen">Zoom +</button><button type="button" data-house-action="zoom-out" aria-label="Weiter herauszoomen">Zoom −</button><button type="button" data-house-action="rotate-left" aria-label="Nach links drehen">⟲ Links</button><button type="button" data-house-action="rotate-right" aria-label="Nach rechts drehen">Rechts ⟳</button><button type="button" data-house-action="reset">Zurücksetzen</button></div></div>
           <div class="house-scene ${houseOpen ? 'open' : ''}" id="house-scene" tabindex="0" aria-label="3D-Modell des Ferienhauses. Mit den Pfeiltasten drehen, mit Plus und Minus zoomen."><div class="house-stage-wrap" id="house-stage-wrap"><div class="house-stage" id="house-stage" style="transform:rotateX(${houseRotation.x}deg) rotateY(${houseRotation.y}deg)">${houseModelHtml(statuses, property, renovated)}</div></div><div id="house-info-slot">${selected ? houseInfoHtml(property.id, selected) : ''}</div></div>
           <div class="house-legend">${activeHouseParts(property).map((part, index) => `<button class="house-chip-btn ${part.id === selectedHousePart ? 'selected' : ''}" type="button" data-part="${part.id}"><i class="house-dot st-${statuses[part.id]}"></i>${index + 1}. ${escapeHtml(part.label)}${renovated[part.id] ? '<span class="house-reno-tag">saniert</span>' : ''}</button>`).join('')}</div>
-          <div class="house-key"><span><i class="house-dot st-ok"></i>Aktuell</span><span><i class="house-dot st-due"></i>Kontrolle fällig</span><span><i class="house-dot st-never"></i>Noch nicht kontrolliert</span><span><i class="house-dot reno-key"></i>Saniert (grüner Rand)</span></div>
+          <div class="house-key"><span><i class="house-dot st-ok"></i>Aktuell</span><span><i class="house-dot st-due"></i>Kontrolle fällig</span><span><i class="house-dot st-never"></i>Noch nicht kontrolliert</span><span><i class="house-dot st-issue"></i>Auffälligkeit / Reparatur offen</span><span><i class="house-dot reno-key"></i>Saniert (grüner Rand)</span></div>
         </section>`;
     }
     function fitHouseScene() {
@@ -3619,15 +3930,20 @@
       const winterKey = `${new Date().getFullYear()}:${property.id}`;
       const checkedWinterItems = winterChecks[winterKey] || {};
       const winterComplete = winterChecklist.filter((item) => checkedWinterItems[item.id]).length;
-      const pageHeader = `<div class="welcome"><div><p class="eyebrow">${inspectionView === 'winter' ? 'Saisonvorbereitung · Schweden' : 'Bei längerer Abwesenheit'}</p><h1>${inspectionView === 'winter' ? 'Wintercheckliste' : 'Hauskontrolle'}</h1><p class="subtitle">${inspectionView === 'winter' ? `Bereite ${escapeHtml(property.name)} auf Frost, Schnee und lange Winternächte vor.` : `Prüfpunkte, Kontrolltaktung und durchgeführte Besuche ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} verwalten.`}</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>`;
+      const pageHeader = `<div class="welcome"><div><p class="eyebrow">${SEASON_CHECKLISTS[inspectionView] ? SEASON_CHECKLISTS[inspectionView].eyebrow : 'Bei längerer Abwesenheit'}</p><h1>${SEASON_CHECKLISTS[inspectionView] ? SEASON_CHECKLISTS[inspectionView].title : 'Hauskontrolle'}</h1><p class="subtitle">${SEASON_CHECKLISTS[inspectionView] ? escapeHtml(SEASON_CHECKLISTS[inspectionView].subtitle(property.name)) : `Prüfpunkte, Kontrolltaktung und durchgeführte Besuche ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} verwalten.`}</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>`;
       const propertyAndTabs = `${singleHouse() ? '' : `<div class="section-toolbar"><label><span class="form-label">Ferienhaus</span><select id="inspection-property" class="filter-select" aria-label="Ferienhaus für Hauskontrolle wählen">${properties.map((item) => `<option value="${item.id}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)} · ${escapeHtml(item.region)}</option>`).join('')}</select></label></div>`}
-        <div class="inspection-tabs" role="tablist" aria-label="Hauskontrolllisten"><button class="inspection-tab ${inspectionView === 'absence' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'absence'}" data-inspection-view="absence">Abwesenheitskontrolle</button><button class="inspection-tab ${inspectionView === 'winter' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'winter'}" data-inspection-view="winter">Wintercheckliste</button></div>`;
-      if (inspectionView === 'winter') {
+        <div class="inspection-tabs" role="tablist" aria-label="Hauskontrolllisten"><button class="inspection-tab ${inspectionView === 'absence' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'absence'}" data-inspection-view="absence">Abwesenheitskontrolle</button><button class="inspection-tab ${inspectionView === 'winter' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'winter'}" data-inspection-view="winter">Wintercheckliste</button><button class="inspection-tab ${inspectionView === 'spring' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'spring'}" data-inspection-view="spring">Frühjahrscheckliste</button></div>`;
+      if (SEASON_CHECKLISTS[inspectionView]) {
+        const season = SEASON_CHECKLISTS[inspectionView];
+        const checked = winterChecks[season.key(property.id)] || {};
+        const done = season.items.filter((item) => checked[item.id]).length;
+        const total = season.items.length;
+        const issueCount = openIssues(property.id).filter((issue) => issue.source === season.title).length;
         return `${pageHeader}${propertyAndTabs}
-          <section class="card"><div class="card-head"><div><h2 class="card-title">Wintervorbereitung · ${escapeHtml(property.name)}</h2><p class="card-caption">${winterComplete} von ${winterChecklist.length} Punkten abgehakt · Checkliste ${new Date().getFullYear()}</p></div><div class="winter-progress"><progress max="${winterChecklist.length}" value="${winterComplete}" aria-label="${winterComplete} von ${winterChecklist.length} Winterpunkten erledigt"></progress><strong>${Math.round(winterComplete / winterChecklist.length * 100)} %</strong></div></div>
-            <div class="checklist">${winterChecklist.map((item) => `<label class="checklist-item"><input type="checkbox" data-winter-check="${item.id}" ${checkedWinterItems[item.id] ? 'checked' : ''}><span><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.detail)}</small></span></label>`).join('')}</div>
-            ${winterComplete === winterChecklist.length ? `<div class="winter-ready">${icon('check')}<span><strong>Vorbereitet</strong><small>${escapeHtml(property.name)} ist für die Wintersaison ${new Date().getFullYear()} vorbereitet – alle Punkte sind abgehakt.</small></span></div>` : ''}
-            <div class="inspection-status">Der Fortschritt wird automatisch für dieses Ferienhaus und diese Wintersaison gespeichert. Sicherheits- und Installationsarbeiten bei Bedarf qualifizierten Fachkräften überlassen.</div>
+          <section class="card"><div class="card-head"><div><h2 class="card-title">${season.card} · ${escapeHtml(property.name)}</h2><p class="card-caption">${done} von ${total} Punkten abgehakt · Checkliste ${new Date().getFullYear()}${issueCount ? ` · ${issueCount} ${issueCount === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} in Reparatur` : ''}</p></div><div class="winter-progress"><progress max="${total}" value="${done}" aria-label="${done} von ${total} Punkten erledigt"></progress><strong>${Math.round(done / total * 100)} %</strong></div></div>
+            <div class="checklist">${season.items.map((item) => `<div class="checklist-row"><label class="checklist-item"><input type="checkbox" data-season-check="${item.id}" ${checked[item.id] ? 'checked' : ''}><span><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.detail)}</small></span></label><button type="button" class="small-action issue-btn" data-report-issue-source="${escapeHtml(season.title)}" data-issue-text="${escapeHtml(item.title)}: " data-property="${escapeHtml(property.id)}">${icon('alert')} Auffälligkeit</button></div>`).join('')}</div>
+            ${done === total ? `<div class="winter-ready">${icon('check')}<span><strong>${inspectionView === 'winter' ? 'Vorbereitet' : 'Geöffnet'}</strong><small>${escapeHtml(season.ready(property.name))}</small></span></div>` : ''}
+            <div class="inspection-status">Der Fortschritt wird automatisch für dieses Ferienhaus und diese ${season.saison} gespeichert. Ist die Liste vollständig, erledigt sich die automatisch angelegte Saisonaufgabe. Schäden über „Auffälligkeit“ melden – die Reparatur wird automatisch geplant.</div>
           </section>`;
       }
       return `${pageHeader}${propertyAndTabs}
@@ -3710,6 +4026,8 @@
         ? `${inspection.checkedItems.length} archivierte Prüfpunkte. Dieses gespeicherte Protokoll kann erneut als PDF exportiert werden.`
         : `${inspection.checkedItems.length} Prüfpunkte wurden vollständig abgehakt. Kontrolliere die Hausangaben und exportiere das Prüfprotokoll bei Bedarf als PDF.`;
       document.getElementById('save-inspection-report').hidden = archived;
+      document.getElementById('inspection-findings-wrap').hidden = archived;
+      document.getElementById('inspection-findings').value = '';
       document.getElementById('inspection-report-house').innerHTML = inspection.houseDetails
         .map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('');
       document.getElementById('inspection-report-list').innerHTML = inspection.checkedItems
@@ -4334,6 +4652,7 @@
     function saveInspectionReport() {
       if (!pendingInspection) return;
       const { property, date, checkedItemIds, checkedItems } = pendingInspection;
+      const findings = String(document.getElementById('inspection-findings').value || '').split('\n').map((line) => line.trim()).filter(Boolean);
       const entries = inspectionLogEntries(property.id);
       entries.push({
         date,
@@ -4360,9 +4679,13 @@
         checksCleared = false;
         console.error('Abgehakte Prüfpunkte konnten nach dem Archivieren nicht zurückgesetzt werden:', error);
       }
+      findings.forEach((text) => createIssue({ propertyId: property.id, part: housePartDefs.find((part) => part.match.test(text))?.id || '', text, priority: 'soon', source: 'Hauskontrolle' }));
+      if (findings.length) entries[entries.length - 1].findings = findings;
+      if (findings.length) { try { localStorage.setItem('stugliv-inspection-log', JSON.stringify(inspectionLog)); } catch (error) { /* Protokoll ist bereits gespeichert */ } }
       closeInspectionConfirmation();
       inspectionManual = false;
       render();
+      if (findings.length) { showToast(`Prüfprotokoll gespeichert · ${findings.length} ${findings.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} an den Reparaturservice übergeben.`); return; }
       showToast(checksCleared
         ? 'Prüfprotokoll wurde im Hauskontroll-Archiv gespeichert.'
         : 'Prüfprotokoll ist archiviert; die Prüfpunkte konnten nicht zurückgesetzt werden.');
@@ -4445,6 +4768,10 @@
     }
     function inspectionIsCurrent(propertyId) {
       return lastAbsenceInspection(propertyId).current;
+    }
+    function springIsReady(propertyId) {
+      const checked = winterChecks[SEASON_CHECKLISTS.spring.key(propertyId)] || {};
+      return springChecklist.every((item) => checked[item.id]);
     }
     function winterIsReady(propertyId) {
       const checked = winterChecks[`${new Date().getFullYear()}:${propertyId}`] || {};
@@ -4590,15 +4917,16 @@
       const plannedCount = syncAutomation();
       if (plannedCount) setTimeout(() => {
         const toast = document.getElementById('toast');
-        const prefix = toast.classList.contains('show') && !toast.textContent.includes('automatisch geplant') ? `${toast.textContent} ` : '';
+        if (toast.classList.contains('show') && /geplant|angelegt/.test(toast.textContent)) return;
+        const prefix = toast.classList.contains('show') ? `${toast.textContent} ` : '';
         showToast(`${prefix}${plannedCount} ${plannedCount === 1 ? 'Aufgabe' : 'Aufgaben'} automatisch geplant.`);
       }, 0);
       if (currentPage === 'house3d' && !isPro()) {
         showToast('Das 3D-Hausmodell ist Teil von Husora Pro.');
         currentPage = 'plans';
       }
-      const pages = { dashboard, automation: automationPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPage, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage };
-      const labels = { dashboard: 'Übersicht', automation: 'Automatisierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner', documents: 'Dokumente', costs: 'Jahreskosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: 'Buchung', profile: 'Benutzerprofil' };
+      const pages = { dashboard, automation: automationPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPage, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage };
+      const labels = { dashboard: 'Übersicht', automation: 'Automatisierung', renovations: 'Reparatur & Sanierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner', documents: 'Dokumente', costs: 'Jahreskosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: 'Buchung', profile: 'Benutzerprofil' };
       if (currentPage !== lastRenderedPage) {
         if (returningToPreviousPage) {
           returningToPreviousPage = false;
@@ -4871,7 +5199,60 @@
         render();
         return;
       }
+      if (event.target.closest('[data-close-issue]') || event.target.id === 'issue-modal') { document.getElementById('issue-modal').classList.remove('open'); return; }
+      if (event.target.closest('[data-close-renovation]') || event.target.id === 'renovation-modal') { document.getElementById('renovation-modal').classList.remove('open'); return; }
+      const reportFromTask = event.target.closest('[data-report-issue]');
+      if (reportFromTask) {
+        const task = tasks.find((item) => item.id === Number(reportFromTask.dataset.reportIssue));
+        if (task) openIssueModal({ propertyId: properties.find((property) => property.name === task.property)?.id || properties[0]?.id, part: housePartDefs.find((part) => part.label === task.area)?.id || '', source: `Serviceaufgabe: ${task.title.split(' · ')[0]}`, taskId: String(task.id) });
+        return;
+      }
+      const reportFromList = event.target.closest('[data-report-issue-source]');
+      if (reportFromList) { openIssueModal({ propertyId: reportFromList.dataset.property, text: reportFromList.dataset.issueText || '', source: reportFromList.dataset.reportIssueSource }); return; }
+      const issueAction = event.target.closest('[data-issue-fixed], [data-issue-renovation], [data-issue-delete]');
+      if (issueAction) {
+        const id = issueAction.dataset.issueFixed || issueAction.dataset.issueRenovation || issueAction.dataset.issueDelete;
+        const issue = issues.find((item) => item.id === id);
+        if (!issue) return;
+        if (issueAction.dataset.issueFixed) {
+          issue.status = 'fixed';
+          issue.fixedAt = localDateKey(new Date());
+          tasks = tasks.map((task) => (task.auto === 'repair' && task.issueId === id && !task.done ? { ...task, status: 'Erledigt', done: true } : task));
+          persistTasks(); persistIssues(); render(); showToast('Auffälligkeit als behoben markiert.');
+        } else if (issueAction.dataset.issueRenovation) {
+          openRenovationModal(null, { propertyId: issue.propertyId, part: issue.part, title: issue.text.length > 100 ? issue.text.slice(0, 100) : issue.text, notes: `Aus Auffälligkeit (${issue.source}, ${fmtDate(issue.date)}): ${issue.text}`, issueId: issue.id });
+        } else if (window.confirm('Auffälligkeit und offenen Reparaturauftrag löschen?')) {
+          issues = issues.filter((item) => item.id !== id);
+          persistIssues(); render(); showToast('Auffälligkeit gelöscht.');
+        }
+        return;
+      }
+      const renovationAction = event.target.closest('[data-renovation-edit], [data-renovation-delete], [data-renovation-suggest]');
+      if (renovationAction) {
+        if (renovationAction.dataset.renovationSuggest !== undefined) {
+          const item = renovationSuggestions()[Number(renovationAction.dataset.renovationSuggest)];
+          if (item) openRenovationModal(null, { propertyId: item.property.id, part: item.part, title: item.text.slice(0, 100), sourceText: item.text, notes: `Aus den Objektdaten: ${item.text}` });
+          return;
+        }
+        const project = renovationProjects.find((item) => item.id === (renovationAction.dataset.renovationEdit || renovationAction.dataset.renovationDelete));
+        if (!project) return;
+        if (renovationAction.dataset.renovationEdit) openRenovationModal(project);
+        else if (window.confirm(`Sanierungsprojekt „${project.title}“ löschen?`)) { renovationProjects = renovationProjects.filter((item) => item.id !== project.id); persistRenovations(); render(); showToast('Sanierungsprojekt gelöscht.'); }
+        return;
+      }
       const action = event.target.closest('[data-action]')?.dataset.action;
+      if (action === 'report-issue') {
+        const trigger = event.target.closest('[data-action="report-issue"]');
+        openIssueModal({ propertyId: trigger.dataset.property || properties[0]?.id, part: trigger.dataset.part || '', source: trigger.dataset.source || 'Meldung' });
+        return;
+      }
+      if (action === 'new-renovation') { openRenovationModal(); return; }
+      if (action === 'open-season-checklist') {
+        inspectionView = event.target.closest('[data-season]')?.dataset.season || 'winter';
+        currentPage = 'inspections';
+        render();
+        return;
+      }
       if (action === 'new-task') openTaskModal();
       const packageButton = event.target.closest('[data-service-package]');
       if (packageButton) {
@@ -5103,6 +5484,18 @@
         showToast('Gästewechsel-Ablauf aktualisiert.');
         return;
       }
+      if (event.target.dataset?.renovationStatus) {
+        const project = renovationProjects.find((item) => item.id === event.target.dataset.renovationStatus);
+        if (project) { project.status = event.target.value; persistRenovations(); render(); showToast(`Status: ${renovationStatusLabel(project.status)}${project.status === 'done' ? ' – in der Sanierungshistorie eingetragen.' : ''}`); }
+        return;
+      }
+      if (event.target.id === 'auto-repairs' || event.target.id === 'auto-renovation') {
+        automation[event.target.id === 'auto-repairs' ? 'repairs' : 'renovation'] = event.target.checked;
+        persistAutomation();
+        render();
+        showToast(event.target.checked ? 'Automatik eingeschaltet.' : 'Automatik ausgeschaltet – bereits geplante Aufgaben bleiben bestehen.');
+        return;
+      }
       if (event.target.dataset?.autoTemplate) {
         const template = autoTasks.templates.find((item) => item.id === event.target.dataset.autoTemplate);
         if (template) { template.selected = event.target.checked; persistAutoTasks(); }
@@ -5212,12 +5605,12 @@
         persistInspectionData();
         render();
       }
-      if (event.target.matches('[data-winter-check]')) {
-        const winterKey = `${new Date().getFullYear()}:${inspectionProperty}`;
+      if (event.target.matches('[data-season-check]') && SEASON_CHECKLISTS[inspectionView]) {
+        const winterKey = SEASON_CHECKLISTS[inspectionView].key(inspectionProperty);
         const previousChecks = winterChecks[winterKey] || {};
         winterChecks = {
           ...winterChecks,
-          [winterKey]: { ...previousChecks, [event.target.dataset.winterCheck]: event.target.checked }
+          [winterKey]: { ...previousChecks, [event.target.dataset.seasonCheck]: event.target.checked }
         };
         if (!persistWinterChecks()) winterChecks[winterKey] = previousChecks;
         render();
@@ -6163,6 +6556,49 @@
       addAutoTemplate(data);
       event.currentTarget.reset();
       renderAutoTemplates();
+    });
+    document.getElementById('issue-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      const propertyId = String(data.get('propertyId') || properties[0]?.id || '');
+      const text = String(data.get('text') || '').trim();
+      if (!text || !properties.some((property) => property.id === propertyId)) return;
+      createIssue({ propertyId, part: String(data.get('part') || '') || housePartDefs.find((part) => part.match.test(text))?.id || '', text, priority: String(data.get('priority') || 'soon'), source: String(data.get('source') || 'Meldung'), taskId: data.get('taskId') ? Number(data.get('taskId')) : null });
+      document.getElementById('issue-modal').classList.remove('open');
+      render();
+      showToast(automation.repairs ? 'Auffälligkeit gemeldet – der Reparaturauftrag wurde automatisch geplant.' : 'Auffälligkeit gespeichert.');
+    });
+    document.getElementById('renovation-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const editingId = form.dataset.editing;
+      const existing = renovationProjects.find((project) => project.id === editingId);
+      const startDate = String(data.get('startDate') || '');
+      const endDate = String(data.get('endDate') || '');
+      if (startDate && endDate && endDate < startDate) { showToast('Das Ende darf nicht vor dem Beginn liegen.'); return; }
+      const project = {
+        ...(existing || { id: `reno-${Date.now()}`, createdAt: localDateKey(new Date()) }),
+        title: String(data.get('title') || '').trim(),
+        propertyId: String(data.get('propertyId') || properties[0]?.id || ''),
+        part: String(data.get('part') || ''),
+        status: String(data.get('status') || 'planned'),
+        budget: data.get('budget') ? Number(data.get('budget')) : '',
+        startDate, endDate,
+        partnerId: String(data.get('partnerId') || ''),
+        notes: String(data.get('notes') || '').trim()
+      };
+      if (!existing && form.dataset.issueId) project.issueId = form.dataset.issueId;
+      const suggestion = renovationSuggestions().find((item) => item.property.id === project.propertyId && project.notes.includes(item.text));
+      if (!existing && suggestion) project.sourceText = suggestion.text;
+      if (!project.title) return;
+      renovationProjects = existing ? renovationProjects.map((item) => (item.id === existing.id ? project : item)) : [...renovationProjects, project];
+      if (!persistRenovations()) return;
+      if (project.issueId) { const issue = issues.find((item) => item.id === project.issueId); if (issue) { issue.status = 'renovation'; persistIssues(); } }
+      document.getElementById('renovation-modal').classList.remove('open');
+      currentPage = 'renovations';
+      render();
+      showToast(existing ? 'Sanierungsprojekt aktualisiert.' : `Sanierungsprojekt angelegt${automation.renovation && project.startDate ? ' – die Schritte wurden automatisch geplant' : ''}.`);
     });
     document.getElementById('close-modal').addEventListener('click', closeTaskModal);
     document.getElementById('cancel-modal').addEventListener('click', closeTaskModal);
