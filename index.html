@@ -1094,6 +1094,65 @@
     .renovation-form-grid [hidden] { display: none; }
     @media (max-width: 860px) { .renovation-grid { grid-template-columns: 1fr; } }
     @media (max-width: 560px) { .renovation-form-grid { grid-template-columns: 1fr; } .renovation-stages { grid-template-columns: repeat(3, 1fr); } .checklist-row { flex-wrap: wrap; gap: 0 10px; padding-bottom: 8px; } .welcome-actions { width: 100%; } .welcome-actions > * { flex: 1; } }
+    .doc-upload-card { display: grid; grid-template-columns: 1fr minmax(220px, 280px); gap: 14px; align-items: center; padding: 14px; }
+    .doc-dropzone { display: flex; align-items: center; gap: 14px; padding: 18px; border: 2px dashed #c9d3cc; border-radius: 12px; background: #f8faf7; cursor: pointer; transition: border-color .15s, background .15s; }
+    .doc-dropzone:hover, .doc-dropzone.drag { border-color: var(--green); background: var(--green-soft); }
+    .doc-dropzone strong { display: block; font-size: 13.5px; }
+    .doc-dropzone small { color: var(--muted); font-size: 11px; }
+    .doc-drop-icon { display: grid; place-items: center; width: 42px; height: 42px; flex: none; border-radius: 50%; color: #fff; background: var(--green); }
+    .doc-drop-icon svg { width: 20px; height: 20px; }
+    .doc-upload-type { display: grid; gap: 6px; }
+    .doc-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 14px; }
+    .doc-filter { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border: 1px solid var(--line); border-radius: 20px; color: #49544c; background: var(--paper); font-size: 11.5px; font-weight: 650; }
+    .doc-filter i { padding: 1px 7px; border-radius: 20px; background: #eeece6; font-size: 10px; font-style: normal; }
+    .doc-filter.active { border-color: var(--green); color: #fff; background: var(--green); }
+    .doc-filter.active i { color: var(--green); background: #fff; }
+    .doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+    .doc-grid > .empty { grid-column: 1 / -1; }
+    .doc-card { --accent: #7c8a80; display: grid; grid-template-columns: 64px 1fr; gap: 10px 12px; padding: 12px; border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 12px; background: var(--paper); box-shadow: var(--shadow); }
+    .doc-card.cat-invoice { --accent: #c17b4a; }
+    .doc-card.cat-protocol { --accent: #315c49; }
+    .doc-card.cat-offer { --accent: #728da1; }
+    .doc-card.cat-contract { --accent: #8b6fa8; }
+    .doc-card.cat-notice { --accent: #b6913d; }
+    .doc-thumb { display: grid; place-items: center; width: 64px; height: 76px; overflow: hidden; padding: 0; border: 1px solid var(--line); border-radius: 8px; color: var(--accent); background: #f6f4ee; }
+    .doc-thumb svg { width: 26px; height: 26px; }
+    .doc-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .doc-body { display: grid; align-content: start; gap: 3px; min-width: 0; }
+    .doc-body strong { overflow: hidden; font-size: 12.5px; text-overflow: ellipsis; white-space: nowrap; }
+    .doc-body small { color: var(--muted); font-size: 10.5px; }
+    .doc-badge, .doc-category { justify-self: start; padding: 2px 8px; border: 0; border-radius: 20px; color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, white); font-size: 10px; font-weight: 750; }
+    .doc-category { padding-right: 20px; cursor: pointer; }
+    .doc-cost { justify-self: start; margin-top: 3px; padding: 3px 9px; border-radius: 6px; color: #7a4a24; background: #f7ebdf; font-size: 11px; font-weight: 700; }
+    .doc-cost-btn { display: inline-flex; justify-self: start; align-items: center; gap: 5px; margin-top: 3px; padding: 4px 9px; border: 1px dashed #c17b4a; border-radius: 6px; color: #8c5124; background: #fffaf4; font-size: 10.5px; font-weight: 700; }
+    .doc-cost-btn svg { width: 12px; height: 12px; }
+    .doc-actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
+    .small-action.danger { color: var(--red); }
+    .invoice-status { margin: 0 0 12px; padding: 9px 12px; border-radius: 8px; background: #f2f0ea; color: #5d675f; font-size: 11.5px; }
+    .invoice-status:empty { display: none; }
+    .invoice-status.ok { color: var(--green); background: var(--green-soft); }
+    .invoice-status.warn { color: #7a5a23; background: var(--amber-soft); }
+    .invoice-text { margin-top: 12px; }
+    .invoice-text summary { cursor: pointer; color: var(--green); font-size: 11px; font-weight: 700; }
+    .invoice-text pre { max-height: 160px; overflow: auto; padding: 10px; border-radius: 8px; background: #f6f4ee; font-size: 10px; white-space: pre-wrap; }
+    .actual-card .card-head { flex-wrap: wrap; }
+    .actual-bars { display: grid; gap: 9px; margin: 0; padding: 14px 19px 4px; list-style: none; }
+    .actual-row { display: grid; grid-template-columns: minmax(140px, 220px) 1fr auto; align-items: center; gap: 12px; font-size: 11.5px; }
+    .actual-track { height: 8px; overflow: hidden; border-radius: 8px; background: #ebe8df; }
+    .actual-track span { display: block; height: 100%; border-radius: inherit; background: var(--green); }
+    .actual-row.over .actual-track span { background: var(--red); }
+    .actual-value { font-weight: 700; text-align: right; }
+    .actual-value small { display: block; color: var(--muted); font-size: 9.5px; font-weight: 500; }
+    .expense-list { display: grid; padding: 8px 19px 14px; }
+    .expense-row { display: grid; grid-template-columns: 56px 1fr auto auto; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #eee8dc; }
+    .expense-row:last-child { border-bottom: 0; }
+    .expense-date { color: var(--muted); font-size: 11px; font-weight: 700; }
+    .expense-main strong { display: block; font-size: 12.5px; }
+    .expense-main small { color: var(--muted); font-size: 10.5px; }
+    .expense-amount { font-size: 13px; font-weight: 750; text-align: right; }
+    .expense-amount small { display: block; color: var(--muted); font-size: 10px; font-weight: 500; }
+    .expense-actions { display: flex; gap: 5px; }
+    @media (max-width: 760px) { .doc-upload-card { grid-template-columns: 1fr; } .expense-row { grid-template-columns: 48px 1fr auto; } .expense-actions { grid-column: 2 / -1; } .actual-row { grid-template-columns: 1fr auto; } .actual-track { grid-column: 1 / -1; order: 3; } }
     /* Automatisierung */
     .text-btn.inline { padding: 0; font-size: inherit; }
     .care-steps { display: grid; gap: 4px; margin: 2px 0 4px; padding: 0; list-style: none; }
@@ -1374,6 +1433,25 @@
         <label class="full"><span class="form-label">Notizen</span><textarea class="form-control textarea" name="notes" maxlength="600" placeholder="Angebote, Absprachen, Förderung (z. B. ROT-Abzug)"></textarea></label>
       </div>
       <div class="form-actions"><button type="button" class="secondary-btn" data-close-renovation>Abbrechen</button><button type="submit" class="primary-btn" id="renovation-submit">Projekt speichern</button></div>
+    </form>
+  </div>
+  <div class="modal-backdrop" id="invoice-modal" role="dialog" aria-modal="true" aria-labelledby="invoice-modal-title">
+    <form class="modal send-plan-modal invoice-modal" id="invoice-form">
+      <div class="modal-head"><div><h2 id="invoice-modal-title">Rechnung auslesen</h2><p id="invoice-modal-subtitle"></p></div><button class="close-btn" type="button" data-close-invoice aria-label="Schließen">✕</button></div>
+      <p class="invoice-status" id="invoice-status" role="status" aria-live="polite"></p>
+      <div class="renovation-form-grid">
+        <label class="full" id="invoice-property-wrap"><span class="form-label">Ferienhaus</span><select class="form-control" name="propertyId"></select></label>
+        <label class="full"><span class="form-label">Rechnungssteller</span><input class="form-control" name="vendor" maxlength="100" placeholder="z. B. Sunne Sotning AB"></label>
+        <label><span class="form-label">Rechnungsdatum</span><input class="form-control" name="date" type="date" required></label>
+        <label><span class="form-label">Rechnungsnummer</span><input class="form-control" name="invoiceNo" maxlength="40"></label>
+        <label><span class="form-label">Betrag (brutto) *</span><input class="form-control" name="amount" type="number" min="0" step="0.01" required inputmode="decimal"></label>
+        <label><span class="form-label">Währung</span><select class="form-control" name="currency"><option value="SEK">SEK (kr)</option><option value="EUR">EUR (€)</option></select></label>
+        <label class="full"><span class="form-label">Kostenposten</span><select class="form-control" name="category"></select></label>
+        <label class="full" id="invoice-project-wrap"><span class="form-label">Sanierungsprojekt (optional)</span><select class="form-control" name="projectId"></select></label>
+        <label class="full"><span class="form-label">Leistung / Notiz</span><input class="form-control" name="note" maxlength="160" placeholder="z. B. Endreinigung nach Buchung, Sotning 2026"></label>
+      </div>
+      <details class="invoice-text" id="invoice-text-wrap" hidden><summary>Erkannter Text</summary><pre id="invoice-text"></pre></details>
+      <div class="form-actions"><button type="button" class="secondary-btn" data-close-invoice id="invoice-skip">Nur ablegen</button><button type="submit" class="primary-btn" id="invoice-submit">In Kosten übernehmen</button></div>
     </form>
   </div>
   <div class="inspection-print-area" id="inspection-print-area" aria-hidden="true"></div>
@@ -3506,7 +3584,7 @@
         const stageIndex = RENOVATION_STATUS.findIndex(([id]) => id === project.status);
         return `<article class="card renovation-card ${project.status === 'done' ? 'done' : ''}"><div class="renovation-card-head"><div><h3>${escapeHtml(project.title)}</h3><small>${singleHouse() ? '' : `${escapeHtml(propertyName(project.propertyId))} · `}${escapeHtml(partLabel(project.part) || 'Ganzes Haus')}</small></div><select class="filter-select" data-renovation-status="${project.id}" aria-label="Status von ${escapeHtml(project.title)}">${RENOVATION_STATUS.map(([id, label]) => `<option value="${id}" ${id === project.status ? 'selected' : ''}>${label}</option>`).join('')}</select></div>
           <ol class="renovation-stages">${RENOVATION_STATUS.slice(1).map(([id, label], index) => `<li class="${index + 1 <= stageIndex ? 'reached' : ''}">${label}</li>`).join('')}</ol>
-          <dl class="renovation-facts"><div><dt>Zeitraum</dt><dd>${escapeHtml(dateText(project.startDate))} – ${escapeHtml(dateText(project.endDate))}</dd></div><div><dt>Budget</dt><dd>${project.budget ? escapeHtml(formatCost(Number(project.budget))) : '—'}</dd></div><div><dt>Handwerker</dt><dd>${escapeHtml(partner?.name || 'noch offen')}</dd></div><div><dt>Nächster Schritt</dt><dd>${nextStep ? `${escapeHtml(fmtDate(nextStep.date))}: ${escapeHtml(nextStep.title.split(' · ')[0])}` : project.status === 'done' ? 'Abgeschlossen' : project.startDate ? 'Alle Schritte erledigt' : 'Beginn eintragen, dann plant Husora die Schritte'}</dd></div></dl>
+          <dl class="renovation-facts"><div><dt>Zeitraum</dt><dd>${escapeHtml(dateText(project.startDate))} – ${escapeHtml(dateText(project.endDate))}</dd></div><div><dt>Budget / Ist</dt><dd>${project.budget ? escapeHtml(formatCost(Number(project.budget))) : '—'}${(() => { const actual = expenses.filter((expense) => expense.projectId === project.id).reduce((sum, expense) => sum + Number(expense.amount), 0); return actual ? ` · Ist ${escapeHtml(formatCost(actual))}` : ''; })()}</dd></div><div><dt>Handwerker</dt><dd>${escapeHtml(partner?.name || 'noch offen')}</dd></div><div><dt>Nächster Schritt</dt><dd>${nextStep ? `${escapeHtml(fmtDate(nextStep.date))}: ${escapeHtml(nextStep.title.split(' · ')[0])}` : project.status === 'done' ? 'Abgeschlossen' : project.startDate ? 'Alle Schritte erledigt' : 'Beginn eintragen, dann plant Husora die Schritte'}</dd></div></dl>
           ${project.notes ? `<p class="renovation-notes">${escapeHtml(project.notes)}</p>` : ''}
           <div class="row-actions"><button type="button" class="small-action" data-renovation-edit="${project.id}">Bearbeiten</button><button type="button" class="small-action" data-renovation-delete="${project.id}">Löschen</button></div></article>`;
       };
@@ -3886,6 +3964,25 @@
         return `<li class="cost-bar-row" data-cost-bar="${row.category.id}"><span class="cost-bar-label" title="${escapeHtml(row.category.label)}">${escapeHtml(row.category.label)}${costSources[propertyId]?.[row.category.id] ? '<span class="cost-source cost-source-mini" title="Kosten aus Inserat">Inserat</span>' : ''}</span><span class="cost-bar-track"><span class="cost-bar-fill" style="width:${width}%;background:${row.color}"></span></span><span class="cost-bar-values"><strong>${formatCost(row.value)}</strong><small>${new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(share)}%</small></span></li>`;
       }).join('');
     }
+    function actualCostsHtml(property, costs) {
+      const year = new Date().getFullYear();
+      const list = expensesFor(property.id, year).sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      const older = expensesFor(property.id).filter((expense) => expenseYear(expense) !== String(year)).length;
+      const total = list.reduce((sum, expense) => sum + Number(expense.amount), 0);
+      const plan = costCategories.reduce((sum, category) => sum + Math.max(0, Number(costs[category.id]) || 0), 0);
+      const rows = costCategories.map((category) => {
+        const actual = list.filter((expense) => expense.category === category.id).reduce((sum, expense) => sum + Number(expense.amount), 0);
+        const planned = Math.max(0, Number(costs[category.id]) || 0);
+        if (!actual) return '';
+        const ratio = planned ? actual / planned : 1;
+        return `<li class="actual-row ${ratio > 1 ? 'over' : ''}"><span class="actual-label">${escapeHtml(category.label)}</span><span class="actual-track"><span style="width:${Math.min(100, Math.round(ratio * 100))}%"></span></span><span class="actual-value">${escapeHtml(formatCost(actual))}<small>von ${escapeHtml(formatCost(planned))}</small></span></li>`;
+      }).join('');
+      const docName = (id) => documents.find((doc) => doc.id === id)?.name || '';
+      return `<section class="card actual-card"><div class="card-head"><div><h2 class="card-title">Ist-Kosten ${year} aus Rechnungen</h2><p class="card-caption">${list.length} ${list.length === 1 ? 'Position' : 'Positionen'} · ${escapeHtml(formatCost(total))} von ${escapeHtml(formatCost(plan))} Plan (${plan ? Math.round((total / plan) * 100) : 0} %)${older ? ` · ${older} aus Vorjahren` : ''}</p></div><div class="welcome-actions"><button type="button" class="secondary-btn" data-page="documents">${icon('document')} Rechnung hochladen</button><button type="button" class="secondary-btn" data-action="new-expense">${icon('plus')} Position erfassen</button></div></div>
+        ${rows ? `<ul class="actual-bars">${rows}</ul>` : ''}
+        ${list.length ? `<div class="expense-list">${list.map((expense) => `<article class="expense-row"><span class="expense-date">${escapeHtml(fmtDate(expense.date))}</span><span class="expense-main"><strong>${escapeHtml(expense.vendor || 'Ohne Rechnungssteller')}</strong><small>${escapeHtml(costCategories.find((category) => category.id === expense.category)?.label || '')}${expense.note ? ` · ${escapeHtml(expense.note)}` : ''}${expense.invoiceNo ? ` · Nr. ${escapeHtml(expense.invoiceNo)}` : ''}${expense.projectId ? ` · Sanierung: ${escapeHtml(renovationProjects.find((project) => project.id === expense.projectId)?.title || '')}` : ''}</small></span><span class="expense-amount">${escapeHtml(formatCost(Number(expense.amount)))}${expense.originalCurrency === 'EUR' ? `<small>${escapeHtml(new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(expense.originalAmount))}</small>` : ''}</span><span class="expense-actions">${expense.documentId && docName(expense.documentId) ? `<button type="button" class="small-action" data-open-document="${escapeHtml(expense.documentId)}">Rechnung</button>` : ''}<button type="button" class="small-action" data-expense-edit="${escapeHtml(expense.id)}">Bearbeiten</button><button type="button" class="small-action danger" data-expense-delete="${escapeHtml(expense.id)}">Löschen</button></span></article>`).join('')}</div>` : `<div class="empty">Noch keine Rechnungen für ${year}. Lade unter „Dokumente“ eine Rechnung hoch – Husora liest Betrag, Datum und Rechnungssteller aus und trägt die Position hier ein.</div>`}
+      </section>`;
+    }
     function costsPage() {
       const property = properties.find((item) => item.id === costProperty) || properties[0];
       const costs = annualCosts[property.id] || initialCosts[property.id];
@@ -3895,6 +3992,7 @@
         ${singleHouse() ? '' : `<div class="section-toolbar"><label><span class="form-label">Ferienhaus</span><select id="cost-property" class="filter-select" aria-label="Ferienhaus für Jahreskosten wählen">${properties.map((item) => `<option value="${item.id}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)} · ${escapeHtml(item.region)}</option>`).join('')}</select></label></div>`}
         ${costImportBannerHtml(property.id)}
         <div class="cost-summary"><article class="cost-total"><small>Geschätzte Jahreskosten · ${escapeHtml(property.name)}</small><strong id="annual-total">${money(total)}</strong><span>Ändere die Beträge unten, um dein eigenes Budget abzubilden.</span></article><article class="card cost-average"><span>Monatlicher Budgetdurchschnitt</span><strong id="monthly-total">${money(Math.round(total / 12))}</strong></article></div>
+        ${actualCostsHtml(property, costs)}
         <section class="card cost-chart-card"><div class="card-head"><div><h2 class="card-title">Kostenverteilung</h2><p class="card-caption">Posten nach Anteil an den Jahreskosten sortiert · ${escapeHtml(property.name)}</p></div></div><ul class="cost-bars" id="cost-bars" aria-label="Kostenverteilung als Balkendiagramm">${costBarsHtml(costs, property.id)}</ul></section>
         <section class="card"><div class="card-head"><div><h2 class="card-title">Jährliche Kostenposten</h2><p class="card-caption">${isEuro() ? 'Beträge in Euro (€) pro Jahr, umgerechnet aus Schwedischen Kronen' : 'Beträge in Schwedischen Kronen (SEK) pro Jahr'}</p></div><button type="button" class="status pending cost-toggle" id="cost-toggle" data-action="toggle-cost-list" aria-expanded="${costListOpen}" aria-controls="cost-list"><span>Planwerte bearbeiten</span>${Object.keys(costSources[property.id] || {}).length ? `<span class="cost-toggle-count">${Object.keys(costSources[property.id]).length} aus Inserat</span>` : ''}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div>
           ${Object.keys(costSources[property.id] || {}).length ? `<p class="cost-source-note">Positionen mit „Kosten aus Inserat“ stammen aus dem Inserat (${escapeHtml([...new Set(Object.values(costSources[property.id]))].join(', '))}, Jahreswerte in SEK). Alle anderen Positionen sind Planwerte. Sobald du einen Betrag änderst, entfällt die Markierung.</p>` : ''}
@@ -3903,17 +4001,256 @@
           <p class="source-note">Quellen: <a href="https://www.skatteverket.se/privat/fastigheterochbostad/fastighetsskattfastighetsavgift.4.69ef368911e1304a625800013531.html" target="_blank" rel="noopener noreferrer">Skatteverket · Immobilienabgabe</a> · <a href="https://www.svensktvatten.se/om-oss/verksamhet-och-strategi/fakta-om-vatten/va-taxa/" target="_blank" rel="noopener noreferrer">Svenskt Vatten · lokale VA-Tarife</a> · <a href="https://www.konsumenternas.se/forsakringar/boendeforsakringar/fritidshusforsakringar/" target="_blank" rel="noopener noreferrer">Konsumenternas · Ferienhausversicherung</a>.</p>
         </section>`;
     }
+    // Dokumente: Rechnungen, Protokolle und weitere Unterlagen; Rechnungen werden ausgelesen und als Ist-Kosten gebucht.
+    const DOC_CATEGORIES = [
+      { id: 'invoice', label: 'Rechnungen', single: 'Rechnung', match: /rechnung|faktura|invoice|kvitto|quittung|beleg/i },
+      { id: 'protocol', label: 'Protokolle', single: 'Protokoll', match: /protokoll|rapport|prüf|kontroll|besiktning|tillsyn|abnahme/i },
+      { id: 'offer', label: 'Angebote', single: 'Angebot', match: /angebot|offert|kostenvoranschlag|quote/i },
+      { id: 'contract', label: 'Verträge & Versicherung', single: 'Vertrag', match: /vertrag|avtal|försäkring|versicherung|police|kontrakt/i },
+      { id: 'notice', label: 'Bescheide & Behörden', single: 'Bescheid', match: /bescheid|beslut|skatteverket|kommun|fastighetsavgift|bygglov/i },
+      { id: 'manual', label: 'Anleitungen', single: 'Anleitung', match: /anleitung|manual|bruksanvisning|handbuch/i },
+      { id: 'other', label: 'Sonstiges', single: 'Dokument', match: /$^/ }
+    ];
+    const docCategory = (id) => DOC_CATEGORIES.find((item) => item.id === id) || DOC_CATEGORIES[DOC_CATEGORIES.length - 1];
+    const guessDocCategory = (name) => (DOC_CATEGORIES.find((item) => item.match.test(name)) || DOC_CATEGORIES[DOC_CATEGORIES.length - 1]).id;
+    let docFilter = 'all';
+    let docUploadCategory = 'auto';
+    let expenses = [];
+    try {
+      const savedExpenses = JSON.parse(localStorage.getItem('stugliv-expenses') || '[]');
+      if (Array.isArray(savedExpenses)) expenses = savedExpenses.filter((item) => item && typeof item.id === 'string' && typeof item.propertyId === 'string' && Number.isFinite(Number(item.amount)));
+    } catch (error) { console.error('Ist-Kosten konnten nicht geladen werden:', error); }
+    function persistExpenses() {
+      try { localStorage.setItem('stugliv-expenses', JSON.stringify(expenses)); return true; }
+      catch (error) { showToast('Kostenposition konnte nicht gespeichert werden. Browser-Speicher prüfen.'); return false; }
+    }
+    function persistDocuments(nextDocuments) {
+      try { localStorage.setItem('stugliv-documents', JSON.stringify(nextDocuments)); documents = nextDocuments; return true; }
+      catch (error) { console.error('Dokumente konnten nicht gespeichert werden:', error); showToast('Speicher voll – Dokument konnte nicht gespeichert werden. Bitte kleinere Dateien verwenden oder alte Dokumente löschen.'); return false; }
+    }
+    const docDate = (document) => document.createdIso || (/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.test(document.createdAt || '') ? document.createdAt.replace(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/, (m, d, mo, y) => `${y}-${mo.padStart(2, '0')}-${d.padStart(2, '0')}`) : '');
+    const dataUrlBytes = (dataUrl) => Uint8Array.from(atob(String(dataUrl).split(',')[1] || ''), (ch) => ch.charCodeAt(0));
+    function openDocument(doc) {
+      if (doc.type === 'application/pdf' || /^data:application\/pdf/.test(doc.dataUrl)) { showPdf(dataUrlBytes(doc.dataUrl), doc.name, docCategory(doc.category).single); return; }
+      const url = URL.createObjectURL(new Blob([dataUrlBytes(doc.dataUrl)], { type: doc.type || 'image/jpeg' }));
+      const opened = window.open(url, '_blank', 'noopener');
+      if (!opened) showToast('Bitte Pop-ups erlauben, um das Bild zu öffnen.');
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    }
+    // Texterkennung: PDF über pdf.js, Fotos und Scans über Tesseract (beides wird erst bei Bedarf geladen).
+    let pdfJsPromise = null;
+    let tesseractPromise = null;
+    const loadScript = (src) => new Promise((resolve, reject) => { const script = document.createElement('script'); script.src = src; script.onload = resolve; script.onerror = () => reject(new Error(`Skript konnte nicht geladen werden: ${src}`)); document.head.append(script); });
+    function loadPdfJs() {
+      if (!pdfJsPromise) pdfJsPromise = loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js').then(() => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; return window.pdfjsLib; });
+      pdfJsPromise.catch(() => { pdfJsPromise = null; });
+      return pdfJsPromise;
+    }
+    function loadTesseract() {
+      if (!tesseractPromise) tesseractPromise = loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js').then(() => window.Tesseract);
+      tesseractPromise.catch(() => { tesseractPromise = null; });
+      return tesseractPromise;
+    }
+    async function extractDocumentText(doc, onProgress) {
+      if (doc.type === 'application/pdf') {
+        onProgress('PDF wird gelesen …');
+        const pdfjs = await loadPdfJs();
+        const pdf = await pdfjs.getDocument({ data: dataUrlBytes(doc.dataUrl) }).promise;
+        const pages = [];
+        for (let number = 1; number <= Math.min(pdf.numPages, 3); number += 1) {
+          const content = await (await pdf.getPage(number)).getTextContent();
+          const rows = new Map();
+          content.items.forEach((item) => { const y = Math.round(item.transform[5] / 3); rows.set(y, [...(rows.get(y) || []), item]); });
+          pages.push([...rows.entries()].sort((a, b) => b[0] - a[0]).map(([, items]) => items.sort((a, b) => a.transform[4] - b.transform[4]).map((item) => item.str).join(' ').replace(/\s+/g, ' ').trim()).filter(Boolean).join('\n'));
+        }
+        const text = pages.join('\n');
+        if (text.trim().length > 20) return text;
+        onProgress('Die PDF enthält keinen Text (Scan) – bitte die Angaben manuell ergänzen.');
+        return '';
+      }
+      onProgress('Texterkennung läuft – das dauert beim ersten Mal etwas länger …');
+      const Tesseract = await loadTesseract();
+      const result = await Tesseract.recognize(doc.dataUrl, 'swe+deu+eng', { logger: (message) => { if (message.status === 'recognizing text') onProgress(`Texterkennung … ${Math.round(message.progress * 100)} %`); } });
+      return result.data.text || '';
+    }
+    function parseAmount(raw) {
+      let value = String(raw).replace(/[\s ']/g, '').replace(/:-$/, '');
+      if (value.includes(',') && value.includes('.')) value = value.lastIndexOf(',') > value.lastIndexOf('.') ? value.replace(/\./g, '').replace(',', '.') : value.replace(/,/g, '');
+      else if (value.includes(',')) value = /,\d{1,2}$/.test(value) ? value.replace(/\.(?=\d{3})/g, '').replace(',', '.') : value.replace(/,/g, '');
+      else if ((value.match(/\./g) || []).length > 1 || /\.\d{3}$/.test(value)) value = value.replace(/\./g, '');
+      const number = Number(value);
+      return Number.isFinite(number) ? number : null;
+    }
+    const COST_KEYWORDS = [
+      ['fire', /sotning|skorsten|sotare|kamin|schornstein|brandskydd|brandsläckare|rauchmelder/i],
+      ['cleaning', /städ|reinig|cleaning|tvätt|wäsche|linne|slutstäd/i],
+      ['energy', /elnät|elhandel|kwh|strom|vattenfall|e\.on|ellevio|fortum|fjärrvärme|pellets|eldningsolja|heizöl/i],
+      ['water', /vatten|avlopp|slamtömning|slam|sophämtning|avfall|renhållning|abwasser|müll/i],
+      ['insurance', /försäkring|versicherung|premie|police/i],
+      ['grounds', /snöröj|snöplog|trädgård|gräsklipp|garten|rasen|schnee|fällning|trädfäll/i],
+      ['inspection', /tillsyn|hauskontrolle|husvakt|fastighetsskötsel/i],
+      ['propertyFee', /fastighetsavgift|fastighetsskatt|immobilienabgabe/i],
+      ['maintenance', /bygg|reparation|renover|måleri|målning|rörmok|vvs|snickeri|elektriker|tak|fönster|handwerk|reparatur|material/i]
+    ];
+    function parseInvoice(text) {
+      const lines = String(text).split(/\n/).map((line) => line.trim()).filter(Boolean);
+      const lower = lines.map((line) => line.toLowerCase());
+      const numberPattern = /(?:€\s*)?(\d{1,3}(?:[ . ']\d{3})+(?:[,.]\d{1,2})?|\d+[,.]\d{2}|\d{2,7})(?:\s*(?:kr|sek|:-|€|eur))?/gi;
+      const amountsIn = (line) => [...line.matchAll(numberPattern)].map((match) => ({ value: parseAmount(match[1]), raw: match[0] })).filter((item) => item.value !== null && item.value > 0 && !/^(19|20)\d{2}$/.test(item.raw.trim()));
+      const keys = ['att betala', 'belopp att betala', 'summa att betala', 'totalt att betala', 'zu zahlen', 'zahlbetrag', 'rechnungsbetrag', 'gesamtbetrag', 'amount due', 'total to pay', 'totalbelopp', 'summa inkl', 'summe brutto', 'brutto', 'totalt', 'summa', 'summe', 'total', 'betrag'];
+      let amount = null;
+      for (const key of keys) {
+        for (let index = 0; index < lines.length && amount === null; index += 1) {
+          if (!lower[index].includes(key) || /moms att betala|varav moms|exkl/.test(lower[index])) continue;
+          const found = amountsIn(lines[index].slice(lower[index].indexOf(key) + key.length));
+          const candidates = found.length ? found : amountsIn(lines[index + 1] || '');
+          if (candidates.length) amount = candidates[candidates.length - 1].value;
+        }
+        if (amount !== null) break;
+      }
+      if (amount === null) {
+        const withCurrency = lines.flatMap((line) => amountsIn(line).filter((item) => /kr|sek|:-|€|eur/i.test(item.raw)));
+        if (withCurrency.length) amount = Math.max(...withCurrency.map((item) => item.value));
+      }
+      const isoFrom = (match) => {
+        if (!match) return '';
+        if (match[1]) return `${match[1]}-${match[2]}-${match[3]}`;
+        return `${match[6]}-${match[5].padStart(2, '0')}-${match[4].padStart(2, '0')}`;
+      };
+      const datePattern = /(20\d{2})-(\d{2})-(\d{2})|(\d{1,2})[./](\d{1,2})[./](20\d{2})/;
+      const dateLine = lines.find((line) => /fakturadatum|rechnungsdatum|invoice date|datum|date/i.test(line) && datePattern.test(line) && !/förfallo|fällig|due/i.test(line));
+      const date = isoFrom((dateLine || lines.find((line) => datePattern.test(line)) || '').match(datePattern));
+      const numberMatch = String(text).match(/(?:fakturanummer|fakturanr|faktura nr|faktura-nr|rechnungsnummer|rechnungs-nr\.?|rechnung nr\.?|invoice (?:no\.?|number))[\s.:#-]*([A-Z0-9][A-Z0-9-/]{2,})/i);
+      const vendor = lines.find((line) => /\b(AB|HB|KB|GmbH|AG|Ltd|Oy|AS|e\.K\.)\b/.test(line) && line.length <= 70) || lines.find((line) => /[A-Za-zÅÄÖåäö]{3,}/.test(line) && !/^(faktura|rechnung|invoice|kvitto)\b/i.test(line) && line.length <= 60) || '';
+      const category = (COST_KEYWORDS.find(([, pattern]) => pattern.test(text)) || ['maintenance'])[0];
+      const currency = /€|\beur\b/i.test(text) && !/\b(kr|sek)\b/i.test(text) ? 'EUR' : 'SEK';
+      const rot = /rot-?avdrag|rotavdrag|rut-?avdrag/i.test(text);
+      return { amount, date, invoiceNo: numberMatch ? numberMatch[1] : '', vendor: vendor.replace(/\s{2,}/g, ' ').slice(0, 100), category, currency, rot };
+    }
+    let invoiceQueue = [];
+    let invoiceDraft = null;
+    function fillInvoiceForm(values) {
+      const form = document.getElementById('invoice-form');
+      Object.entries(values).forEach(([name, value]) => { if (form.elements[name] && value !== undefined && value !== null && value !== '') form.elements[name].value = value; });
+    }
+    async function openInvoiceModal({ doc = null, expense = null, propertyId = documentsProperty } = {}) {
+      const form = document.getElementById('invoice-form');
+      form.reset();
+      invoiceDraft = { docId: doc?.id || '', expenseId: expense?.id || '' };
+      const targetProperty = expense?.propertyId || doc?.propertyId || propertyId || properties[0]?.id;
+      form.elements.propertyId.innerHTML = propertyOptions(targetProperty);
+      document.getElementById('invoice-property-wrap').hidden = singleHouse();
+      form.elements.category.innerHTML = costCategories.map((category) => `<option value="${category.id}">${escapeHtml(category.label)}</option>`).join('');
+      const projects = renovationProjects.filter((project) => project.propertyId === targetProperty);
+      form.elements.projectId.innerHTML = `<option value="">Kein Projekt</option>${projects.map((project) => `<option value="${escapeHtml(project.id)}">${escapeHtml(project.title)}</option>`).join('')}`;
+      document.getElementById('invoice-project-wrap').hidden = !projects.length;
+      document.getElementById('invoice-modal-title').textContent = expense ? 'Kostenposition bearbeiten' : doc ? 'Rechnung auslesen' : 'Kostenposition erfassen';
+      document.getElementById('invoice-modal-subtitle').textContent = doc ? doc.name : 'Ist-Kosten für das Ferienhaus erfassen';
+      document.getElementById('invoice-skip').textContent = doc && !expense ? 'Nur ablegen' : 'Abbrechen';
+      document.getElementById('invoice-submit').textContent = expense ? 'Änderungen speichern' : 'In Kosten übernehmen';
+      document.getElementById('invoice-text-wrap').hidden = true;
+      form.elements.date.value = localDateKey(new Date());
+      form.elements.currency.value = 'SEK';
+      const status = document.getElementById('invoice-status');
+      status.textContent = '';
+      status.className = 'invoice-status';
+      document.getElementById('invoice-modal').classList.add('open');
+      if (expense) { fillInvoiceForm({ ...expense, amount: expense.amount, currency: 'SEK' }); return; }
+      if (!doc) { form.elements.amount.focus(); return; }
+      const submit = document.getElementById('invoice-submit');
+      submit.disabled = true;
+      try {
+        const text = await extractDocumentText(doc, (message) => { status.textContent = message; });
+        if (invoiceDraft?.docId !== doc.id) return;
+        const parsed = parseInvoice(text);
+        fillInvoiceForm({ ...parsed, amount: parsed.amount !== null ? parsed.amount.toFixed(2) : '' });
+        if (parsed.rot) form.elements.note.value = 'ROT/RUT-Abzug auf der Rechnung erkannt';
+        const found = [parsed.amount !== null && 'Betrag', parsed.date && 'Datum', parsed.vendor && 'Rechnungssteller', parsed.invoiceNo && 'Rechnungsnummer'].filter(Boolean);
+        status.textContent = text ? (found.length ? `Erkannt: ${found.join(', ')}. Bitte kurz prüfen und bei Bedarf korrigieren.` : 'Text gelesen, aber keine Rechnungsangaben gefunden – bitte manuell ergänzen.') : status.textContent;
+        status.className = `invoice-status ${found.includes('Betrag') ? 'ok' : 'warn'}`;
+        if (text) { document.getElementById('invoice-text').textContent = text.slice(0, 4000); document.getElementById('invoice-text-wrap').hidden = false; }
+      } catch (error) {
+        console.error('Rechnung konnte nicht ausgelesen werden:', error);
+        status.textContent = 'Automatisches Auslesen nicht möglich (keine Verbindung zum Texterkennungsdienst). Bitte die Angaben manuell eintragen.';
+        status.className = 'invoice-status warn';
+      } finally {
+        submit.disabled = false;
+      }
+    }
+    function nextInvoiceInQueue() {
+      const nextDoc = invoiceQueue.shift();
+      if (nextDoc) openInvoiceModal({ doc: nextDoc });
+    }
+    function closeInvoiceModal() {
+      document.getElementById('invoice-modal').classList.remove('open');
+      invoiceDraft = null;
+      setTimeout(nextInvoiceInQueue, 200);
+    }
+    const expenseYear = (expense) => String(expense.date || '').slice(0, 4);
+    const expensesFor = (propertyId, year) => expenses.filter((expense) => expense.propertyId === propertyId && (!year || expenseYear(expense) === String(year)));
+    async function addDocumentFiles(files) {
+      const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+      const added = [];
+      for (const file of files) {
+        if (!allowedTypes.includes(file.type)) { showToast(`„${file.name}“: bitte PDF, JPG, PNG oder WebP verwenden.`); continue; }
+        const isImage = file.type.startsWith('image/');
+        if (!isImage && file.size > 1.5 * 1024 * 1024) { showToast(`„${file.name}“ ist größer als 1,5 MB.`); continue; }
+        try {
+          const dataUrl = isImage
+            ? await compressPropertyPhoto(file, 1800, 0.82)
+            : await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(reader.error); reader.readAsDataURL(file); });
+          const category = docUploadCategory === 'auto' ? guessDocCategory(file.name) : docUploadCategory;
+          added.push({ id: `document-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, propertyId: documentsProperty, name: file.name, type: isImage ? 'image/jpeg' : file.type, size: Math.round((dataUrl.length - dataUrl.indexOf(',') - 1) * 0.75), dataUrl, category, createdIso: localDateKey(new Date()), createdAt: new Intl.DateTimeFormat('de-DE').format(new Date()) });
+        } catch (error) { console.error('Datei konnte nicht gelesen werden:', error); showToast(`„${file.name}“ konnte nicht gelesen werden.`); }
+      }
+      if (!added.length || !persistDocuments([...documents, ...added])) return;
+      render();
+      const invoices = added.filter((doc) => doc.category === 'invoice');
+      showToast(`${added.length} ${added.length === 1 ? 'Dokument' : 'Dokumente'} gespeichert${invoices.length ? ` – ${invoices.length === 1 ? 'Rechnung wird' : 'Rechnungen werden'} ausgelesen` : ''}.`);
+      invoiceQueue.push(...invoices);
+      if (!document.getElementById('invoice-modal').classList.contains('open')) nextInvoiceInQueue();
+    }
     function documentsPage() {
       const property = properties.find((item) => item.id === documentsProperty) || properties[0];
-      const propertyDocuments = documents.filter((document) => document.propertyId === property.id && !document.providerId)
-        .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       const fileSize = (bytes) => bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-      return `<div class="welcome"><div><p class="eyebrow">${singleHouse() ? 'Unterlagen für dein Ferienhaus' : 'Unterlagen je Ferienhaus'}</p><h1>Dokumente</h1><p class="subtitle">Versicherungen, Bescheide, Anleitungen und weitere wichtige Dateien lokal im Browser verwalten.</p></div></div>
+      const dateLabel = (iso) => (iso ? new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(`${iso}T12:00:00`)) : '');
+      const own = documents.filter((document) => document.propertyId === property.id && !document.providerId).map((document) => ({ kind: 'file', category: document.category || guessDocCategory(document.name), date: docDate(document), doc: document }));
+      const protocols = [
+        ...inspectionLogEntries(property.id).map((entry, index) => ({ kind: 'inspection', category: 'protocol', date: entry.date, index, entry })),
+        ...(planUploads[property.id] || []).map((upload) => ({ kind: 'upload', category: 'protocol', date: String(upload.uploadedAt || '').slice(0, 10), upload }))
+      ];
+      const all = [...own, ...protocols].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      const counts = Object.fromEntries(DOC_CATEGORIES.map((category) => [category.id, all.filter((item) => item.category === category.id).length]));
+      const visible = docFilter === 'all' ? all : all.filter((item) => item.category === docFilter);
+      const year = new Date().getFullYear();
+      const yearExpenses = expensesFor(property.id, year);
+      const yearTotal = yearExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
+      const openInvoices = own.filter((item) => item.category === 'invoice' && !item.doc.expenseId).length;
+      const card = (item) => {
+        const category = docCategory(item.category);
+        if (item.kind === 'inspection') {
+          const count = Array.isArray(item.entry.checkedItemsSnapshot) ? item.entry.checkedItemsSnapshot.length : item.entry.checkedItems?.length || 0;
+          return `<article class="doc-card cat-protocol"><div class="doc-thumb">${icon('inspection')}</div><div class="doc-body"><span class="doc-badge">Prüfprotokoll</span><strong>Abwesenheitskontrolle · ${escapeHtml(formatInspectionDate(item.entry.date))}</strong><small>${count} geprüfte Positionen${item.entry.findings?.length ? ` · ${item.entry.findings.length} Auffälligkeiten` : ''} · aus der Hauskontrolle</small></div><div class="doc-actions"><button type="button" class="small-action" data-inspection-archive="${item.index}" data-archive-property="${escapeHtml(property.id)}">Ansehen / PDF</button></div></article>`;
+        }
+        if (item.kind === 'upload') {
+          return `<article class="doc-card cat-protocol"><div class="doc-thumb">${icon('document')}</div><div class="doc-body"><span class="doc-badge">Prüfprotokoll</span><strong title="${escapeHtml(item.upload.name)}">${escapeHtml(item.upload.name)}</strong><small>Vom Servicepartner · ${escapeHtml(dateLabel(item.date))}</small></div><div class="doc-actions"><button type="button" class="small-action" data-open-upload="${escapeHtml(item.upload.id)}" data-archive-property="${escapeHtml(property.id)}">PDF anzeigen</button></div></article>`;
+        }
+        const doc = item.doc;
+        const expense = doc.expenseId ? expenses.find((entry) => entry.id === doc.expenseId) : null;
+        const isImage = /^data:image\//.test(doc.dataUrl);
+        const costLine = item.category === 'invoice'
+          ? (expense ? `<span class="doc-cost">${escapeHtml(formatCost(Number(expense.amount)))} · ${escapeHtml(costCategories.find((entry) => entry.id === expense.category)?.label || '')}</span>` : '<button type="button" class="doc-cost-btn" data-invoice-read="' + escapeHtml(doc.id) + '">' + icon('cost') + ' Auslesen & in Kosten übernehmen</button>')
+          : '';
+        return `<article class="doc-card cat-${item.category}"><button type="button" class="doc-thumb ${isImage ? 'has-image' : ''}" data-open-document="${escapeHtml(doc.id)}" aria-label="${escapeHtml(doc.name)} öffnen">${isImage ? `<img src="${escapeHtml(doc.dataUrl)}" alt="">` : icon(item.category === 'invoice' ? 'cost' : 'document')}</button><div class="doc-body"><select class="doc-category" data-doc-category="${escapeHtml(doc.id)}" aria-label="Art des Dokuments">${DOC_CATEGORIES.map((entry) => `<option value="${entry.id}" ${entry.id === item.category ? 'selected' : ''}>${escapeHtml(entry.single)}</option>`).join('')}</select><strong title="${escapeHtml(doc.name)}">${escapeHtml(doc.name)}</strong><small>${escapeHtml(dateLabel(item.date))} · ${fileSize(doc.size || 0)}${expense?.vendor ? ` · ${escapeHtml(expense.vendor)}` : ''}</small>${costLine}</div><div class="doc-actions"><button type="button" class="small-action" data-open-document="${escapeHtml(doc.id)}">Öffnen</button>${expense ? `<button type="button" class="small-action" data-expense-edit="${escapeHtml(expense.id)}">Kosten bearbeiten</button>` : ''}<button type="button" class="small-action danger" data-delete-document="${escapeHtml(doc.id)}">Löschen</button></div></article>`;
+      };
+      return `<div class="welcome"><div><p class="eyebrow">${singleHouse() ? 'Unterlagen für dein Ferienhaus' : 'Unterlagen je Ferienhaus'}</p><h1>Dokumente</h1><p class="subtitle">Rechnungen, Prüfprotokolle, Angebote und Verträge an einem Ort. Rechnungen liest Husora aus und bucht sie als Kosten beim Haus.</p></div></div>
         ${singleHouse() ? '' : `<div class="section-toolbar"><label><span class="form-label">Ferienhaus</span><select id="documents-property" class="filter-select" aria-label="Ferienhaus für Dokumente wählen">${properties.map((item) => `<option value="${escapeHtml(item.id)}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)} · ${escapeHtml(item.region)}</option>`).join('')}</select></label></div>`}
-        <section class="card"><div class="card-head"><div><h2 class="card-title">Dokumente für ${escapeHtml(property.name)}</h2><p class="card-caption">${propertyDocuments.length} ${propertyDocuments.length === 1 ? 'Datei' : 'Dateien'} gespeichert</p></div><label class="primary-btn">${icon('plus')} Datei hinzufügen<input id="document-upload" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" hidden></label></div>
-          ${propertyDocuments.length ? `<div class="document-list">${propertyDocuments.map((document) => `<article class="document-row"><span class="document-icon">${icon('document')}</span><span class="document-info"><strong title="${escapeHtml(document.name)}">${escapeHtml(document.name)}</strong><small>${fileSize(document.size)} · hinzugefügt am ${escapeHtml(document.createdAt)}</small></span><span class="document-actions"><a href="${escapeHtml(document.dataUrl)}" target="_blank" rel="noopener noreferrer">Öffnen</a><button class="danger-btn" data-delete-document="${escapeHtml(document.id)}" type="button">Löschen</button></span></article>`).join('')}</div>` : '<div class="empty">Für dieses Ferienhaus sind noch keine Dokumente gespeichert.</div>'}
-          <p class="source-note">PDF-, JPG-, PNG- und WebP-Dateien bis 1 MB. Die Dateien werden lokal in diesem Browser gespeichert und nicht synchronisiert oder hochgeladen.</p>
-        </section>`;
+        <section class="automation-summary"><div><strong>${all.length}</strong><span>Dokumente · ${escapeHtml(property.name)}</span></div><div><strong>${escapeHtml(formatCost(yearTotal))}</strong><span>Rechnungen ${year} in den Kosten</span></div><div><strong>${openInvoices}</strong><span>${openInvoices === 1 ? 'Rechnung' : 'Rechnungen'} noch nicht übernommen</span></div></section>
+        <section class="card doc-upload-card"><label class="doc-dropzone" id="doc-dropzone"><input id="document-upload" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" hidden><span class="doc-drop-icon">${icon('plus')}</span><span><strong>Dateien hochladen</strong><small>Hierher ziehen oder tippen zum Auswählen · PDF, JPG, PNG, WebP · Fotos von Rechnungen werden automatisch verkleinert</small></span></label>
+          <label class="doc-upload-type"><span class="form-label">Art der Dokumente</span><select class="form-control" id="doc-upload-category"><option value="auto" ${docUploadCategory === 'auto' ? 'selected' : ''}>Automatisch erkennen (Dateiname)</option>${DOC_CATEGORIES.map((category) => `<option value="${category.id}" ${docUploadCategory === category.id ? 'selected' : ''}>${escapeHtml(category.single)}</option>`).join('')}</select></label></section>
+        <div class="doc-filters" role="tablist" aria-label="Dokumente filtern"><button type="button" class="doc-filter ${docFilter === 'all' ? 'active' : ''}" data-doc-filter="all">Alle <i>${all.length}</i></button>${DOC_CATEGORIES.filter((category) => counts[category.id] || docFilter === category.id || category.id === 'invoice' || category.id === 'protocol').map((category) => `<button type="button" class="doc-filter ${docFilter === category.id ? 'active' : ''}" data-doc-filter="${category.id}">${escapeHtml(category.label)} <i>${counts[category.id]}</i></button>`).join('')}</div>
+        <div class="doc-grid">${visible.length ? visible.map(card).join('') : `<div class="empty card">${docFilter === 'all' ? 'Für dieses Ferienhaus sind noch keine Dokumente gespeichert.' : `Keine ${escapeHtml(docCategory(docFilter).label)} vorhanden.`}</div>`}</div>
+        <p class="source-note">Die Dateien werden lokal in diesem Browser gespeichert (insgesamt ca. 5 MB). Zum Auslesen werden pdf.js bzw. die Texterkennung Tesseract geladen; der Inhalt der Rechnung verlässt dabei dein Gerät nicht.</p>`;
     }
     function inspectionsPage() {
       const property = properties.find((item) => item.id === inspectionProperty) || properties[0];
@@ -5008,7 +5345,7 @@
       }
       const openUpload = event.target.closest('[data-open-upload]');
       if (openUpload) {
-        const entry = (planUploads[inspectionProperty] || []).find((item) => item.id === openUpload.dataset.openUpload);
+        const entry = (planUploads[openUpload.dataset.archiveProperty || inspectionProperty] || []).find((item) => item.id === openUpload.dataset.openUpload);
         if (entry) {
           showPdf(planUploadBytes(entry), entry.name, 'Archivierte PDF');
         }
@@ -5053,7 +5390,7 @@
       const archivedInspectionButton = event.target.closest('[data-inspection-archive]');
       if (archivedInspectionButton) {
         const archiveIndex = Number(archivedInspectionButton.dataset.inspectionArchive);
-        const archivedEntry = inspectionLogEntries(inspectionProperty)[archiveIndex];
+        const archivedEntry = inspectionLogEntries(archivedInspectionButton.dataset.archiveProperty || inspectionProperty)[archiveIndex];
         if (archivedEntry) openArchivedInspection(archivedEntry);
         return;
       }
@@ -5086,7 +5423,8 @@
       const documentToDelete = event.target.closest('[data-delete-document]');
       if (documentToDelete) {
         const file = documents.find((item) => item.id === documentToDelete.dataset.deleteDocument);
-        if (!file || !window.confirm(`Möchtest du „${file.name}“ wirklich löschen?`)) return;
+        if (!file || !window.confirm(file.expenseId ? `Möchtest du „${file.name}“ wirklich löschen? Die übernommene Kostenposition bleibt erhalten.` : `Möchtest du „${file.name}“ wirklich löschen?`)) return;
+        if (file.expenseId) { expenses = expenses.map((expense) => (expense.id === file.expenseId ? { ...expense, documentId: '' } : expense)); persistExpenses(); }
         const previousDocuments = documents;
         documents = documents.filter((item) => item.id !== file.id);
         try {
@@ -5201,6 +5539,27 @@
       }
       if (event.target.closest('[data-close-issue]') || event.target.id === 'issue-modal') { document.getElementById('issue-modal').classList.remove('open'); return; }
       if (event.target.closest('[data-close-renovation]') || event.target.id === 'renovation-modal') { document.getElementById('renovation-modal').classList.remove('open'); return; }
+      if (event.target.closest('[data-close-invoice]') || event.target.id === 'invoice-modal') { closeInvoiceModal(); return; }
+      const docFilterButton = event.target.closest('[data-doc-filter]');
+      if (docFilterButton) { docFilter = docFilterButton.dataset.docFilter; render(); return; }
+      const openDocButton = event.target.closest('[data-open-document]');
+      if (openDocButton) { const doc = documents.find((item) => item.id === openDocButton.dataset.openDocument); if (doc) openDocument(doc); return; }
+      const invoiceReadButton = event.target.closest('[data-invoice-read]');
+      if (invoiceReadButton) { const doc = documents.find((item) => item.id === invoiceReadButton.dataset.invoiceRead); if (doc) openInvoiceModal({ doc }); return; }
+      const expenseEdit = event.target.closest('[data-expense-edit]');
+      if (expenseEdit) { const expense = expenses.find((item) => item.id === expenseEdit.dataset.expenseEdit); if (expense) openInvoiceModal({ expense }); return; }
+      const expenseDelete = event.target.closest('[data-expense-delete]');
+      if (expenseDelete) {
+        const expense = expenses.find((item) => item.id === expenseDelete.dataset.expenseDelete);
+        if (expense && window.confirm('Kostenposition löschen? Das Dokument bleibt erhalten.')) {
+          expenses = expenses.filter((item) => item.id !== expense.id);
+          persistExpenses();
+          persistDocuments(documents.map((doc) => (doc.expenseId === expense.id ? { ...doc, expenseId: undefined } : doc)));
+          render(); showToast('Kostenposition gelöscht.');
+        }
+        return;
+      }
+      if (event.target.closest('[data-action="new-expense"]')) { openInvoiceModal({ propertyId: costProperty }); return; }
       const reportFromTask = event.target.closest('[data-report-issue]');
       if (reportFromTask) {
         const task = tasks.find((item) => item.id === Number(reportFromTask.dataset.reportIssue));
@@ -5529,7 +5888,17 @@
       if (event.target.id === 'provider-radius') { providerRadius = Number(event.target.value); render(); }
       if (event.target.id === 'cost-property') { costProperty = event.target.value; render(); }
       if (event.target.id === 'documents-property') { documentsProperty = event.target.value; render(); return; }
-      if (event.target.id === 'document-upload' || event.target.matches('[data-provider-document-upload]')) {
+      if (event.target.id === 'doc-upload-category') { docUploadCategory = event.target.value; return; }
+      if (event.target.dataset?.docCategory) {
+        const doc = documents.find((item) => item.id === event.target.dataset.docCategory);
+        if (doc) {
+          const nextDocuments = documents.map((item) => (item.id === doc.id ? { ...item, category: event.target.value } : item));
+          if (persistDocuments(nextDocuments)) { render(); if (event.target.value === 'invoice' && !doc.expenseId) openInvoiceModal({ doc: { ...doc, category: 'invoice' } }); }
+        }
+        return;
+      }
+      if (event.target.id === 'document-upload') { await addDocumentFiles([...(event.target.files || [])]); event.target.value = ''; return; }
+      if (event.target.matches('[data-provider-document-upload]')) {
         const file = event.target.files?.[0];
         if (!file) return;
         const providerId = event.target.dataset.providerDocumentUpload;
@@ -6557,6 +6926,40 @@
       event.currentTarget.reset();
       renderAutoTemplates();
     });
+    document.getElementById('invoice-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      const entered = Number(data.get('amount'));
+      if (!Number.isFinite(entered) || entered <= 0) { showToast('Bitte einen gültigen Betrag eingeben.'); return; }
+      const currency = String(data.get('currency'));
+      const amount = Math.round((currency === 'EUR' ? entered / fxRate.rate : entered) * 100) / 100;
+      const existing = expenses.find((item) => item.id === invoiceDraft?.expenseId);
+      const expense = {
+        ...(existing || { id: `expense-${Date.now()}`, documentId: invoiceDraft?.docId || '' }),
+        propertyId: String(data.get('propertyId') || properties[0]?.id || ''),
+        vendor: String(data.get('vendor') || '').trim(),
+        date: String(data.get('date') || localDateKey(new Date())),
+        invoiceNo: String(data.get('invoiceNo') || '').trim(),
+        amount,
+        originalAmount: entered,
+        originalCurrency: currency,
+        category: String(data.get('category') || 'maintenance'),
+        projectId: String(data.get('projectId') || ''),
+        note: String(data.get('note') || '').trim()
+      };
+      const duplicate = !existing && expense.invoiceNo && expenses.find((item) => item.invoiceNo === expense.invoiceNo && item.vendor === expense.vendor && item.propertyId === expense.propertyId);
+      if (duplicate && !window.confirm(`Die Rechnung ${expense.invoiceNo} von ${expense.vendor || 'diesem Anbieter'} ist bereits in den Kosten erfasst. Trotzdem erneut übernehmen?`)) return;
+      expenses = existing ? expenses.map((item) => (item.id === existing.id ? expense : item)) : [...expenses, expense];
+      if (!persistExpenses()) return;
+      if (expense.documentId) persistDocuments(documents.map((doc) => (doc.id === expense.documentId ? { ...doc, expenseId: expense.id, category: 'invoice', propertyId: expense.propertyId } : doc)));
+      const propertyName = properties.find((property) => property.id === expense.propertyId)?.name || '';
+      const categoryLabel = costCategories.find((category) => category.id === expense.category)?.label || '';
+      document.getElementById('invoice-modal').classList.remove('open');
+      invoiceDraft = null;
+      render();
+      showToast(existing ? 'Kostenposition aktualisiert.' : `${formatCost(amount)} unter „${categoryLabel}“ bei ${propertyName} in die Kosten übernommen.`);
+      setTimeout(nextInvoiceInQueue, 400);
+    });
     document.getElementById('issue-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
@@ -6600,6 +7003,9 @@
       render();
       showToast(existing ? 'Sanierungsprojekt aktualisiert.' : `Sanierungsprojekt angelegt${automation.renovation && project.startDate ? ' – die Schritte wurden automatisch geplant' : ''}.`);
     });
+    pageContent.addEventListener('dragover', (event) => { const zone = event.target.closest('#doc-dropzone'); if (!zone) return; event.preventDefault(); zone.classList.add('drag'); });
+    pageContent.addEventListener('dragleave', (event) => { event.target.closest('#doc-dropzone')?.classList.remove('drag'); });
+    pageContent.addEventListener('drop', (event) => { const zone = event.target.closest('#doc-dropzone'); if (!zone) return; event.preventDefault(); zone.classList.remove('drag'); addDocumentFiles([...(event.dataTransfer?.files || [])]); });
     document.getElementById('close-modal').addEventListener('click', closeTaskModal);
     document.getElementById('cancel-modal').addEventListener('click', closeTaskModal);
     document.getElementById('close-property-modal').addEventListener('click', closePropertyModal);
