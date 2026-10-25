@@ -3205,7 +3205,6 @@
     let taskFilter = 'all';
     let taskPropertyFilter = 'all';
     let taskPriorityFilter = 'all';
-    let taskPartnerFilter = 'all';
     let taskView = 'list';
     let providerProperty = properties[0].id;
     let providerCategory = 'all';
@@ -4025,8 +4024,7 @@
         const matchesStatus = taskFilter === 'all' || taskStatus(task) === taskFilter;
         const matchesProperty = taskPropertyFilter === 'all' || task.property === taskPropertyFilter;
         const matchesPriority = taskPriorityFilter === 'all' || (task.priority || 'normal') === taskPriorityFilter;
-        const matchesPartner = taskPartnerFilter === 'all' || (taskPartnerFilter === 'none' ? !task.partnerId : task.partnerId === taskPartnerFilter);
-        return matchesStatus && matchesProperty && matchesPriority && matchesPartner;
+        return matchesStatus && matchesProperty && matchesPriority;
       }).sort((a, b) => (Number(taskStatus(a) === 'Erledigt') - Number(taskStatus(b) === 'Erledigt')) || (a.date || '9999').localeCompare(b.date || '9999') || ((rank[a.priority] ?? 2) - (rank[b.priority] ?? 2)));
       const rows = visible.map((task) => {
         const status = taskStatus(task);
@@ -4044,7 +4042,7 @@
       return `<div class="welcome"><div><p class="eyebrow">Buchungen & Instandhaltung</p><h1>Serviceaufgaben</h1><p class="subtitle">Koordiniere Reinigung, Schlüsselübergaben und saisonale Stugapflege.</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>
         <section class="card auto-task-bar"><div><label class="switch"><input type="checkbox" id="auto-task-toggle" ${autoTasks.enabled ? 'checked' : ''}><span class="switch-track"></span><span>Aufgaben automatisch erstellen</span></label><p>${packageExtras().servicePackage ? `Servicepaket ${escapeHtml(packageExtras().servicePackage.name)} · ` : ''}${autoTasks.templates.filter((template) => template.selected).length} Vorlagen ausgewählt – werden ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} automatisch angelegt.</p></div><div class="auto-task-actions"><button class="primary-btn" data-action="new-task">${icon('plus')} Aufgabe erstellen</button><button class="secondary-btn" data-action="auto-task-config">Aufgaben auswählen / erstellen</button><button class="secondary-btn" data-page="automation">${icon('bolt')} Alle Automatiken</button></div></section>
         <section class="card"><div class="card-head"><div><h2 class="card-title">Alle Serviceaufgaben</h2><p class="card-caption">${openCount} offen · ${tasks.length - openCount} erledigt</p></div></div>
-        <div class="section-toolbar" style="padding:0 18px"><div class="toolbar-right"><select id="task-filter" class="filter-select" aria-label="Nach Status filtern"><option value="all">Alle Status</option>${taskStatuses.map((value) => `<option ${taskFilter === value ? 'selected' : ''}>${value}</option>`).join('')}</select>${singleHouse() ? '' : `<select id="task-property-filter" class="filter-select" aria-label="Nach Gebäude filtern"><option value="all">Alle Gebäude</option>${properties.map((property) => `<option value="${escapeHtml(property.name)}" ${taskPropertyFilter === property.name ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select>`}<select id="task-priority-filter" class="filter-select" aria-label="Nach Priorität filtern"><option value="all">Alle Prioritäten</option><option value="urgent" ${taskPriorityFilter === 'urgent' ? 'selected' : ''}>Dringend</option><option value="soon" ${taskPriorityFilter === 'soon' ? 'selected' : ''}>Wichtig</option><option value="normal" ${taskPriorityFilter === 'normal' ? 'selected' : ''}>Normal</option></select><select id="task-partner-filter" class="filter-select" aria-label="Nach Servicepartner filtern"><option value="all">Alle Servicepartner</option><option value="none" ${taskPartnerFilter === 'none' ? 'selected' : ''}>Ohne Servicepartner</option>${[...new Set(tasks.map((task) => task.partnerId).filter(Boolean))].map(providerById).filter(Boolean).map((provider) => `<option value="${escapeHtml(provider.id)}" ${taskPartnerFilter === provider.id ? 'selected' : ''}>${escapeHtml(provider.name)}</option>`).join('')}</select></div><div class="view-toggle" role="tablist" aria-label="Ansicht"><button type="button" class="${taskView === 'list' ? 'active' : ''}" data-task-view="list">Liste</button><button type="button" class="${taskView === 'partners' ? 'active' : ''}" data-task-view="partners">Nach Servicepartner</button></div></div>
+        <div class="section-toolbar" style="padding:0 18px"><div class="toolbar-right"><select id="task-filter" class="filter-select" aria-label="Nach Status filtern"><option value="all">Alle Status</option>${taskStatuses.map((value) => `<option ${taskFilter === value ? 'selected' : ''}>${value}</option>`).join('')}</select>${singleHouse() ? '' : `<select id="task-property-filter" class="filter-select" aria-label="Nach Gebäude filtern"><option value="all">Alle Gebäude</option>${properties.map((property) => `<option value="${escapeHtml(property.name)}" ${taskPropertyFilter === property.name ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select>`}<select id="task-priority-filter" class="filter-select" aria-label="Nach Priorität filtern"><option value="all">Alle Prioritäten</option><option value="urgent" ${taskPriorityFilter === 'urgent' ? 'selected' : ''}>Dringend</option><option value="soon" ${taskPriorityFilter === 'soon' ? 'selected' : ''}>Wichtig</option><option value="normal" ${taskPriorityFilter === 'normal' ? 'selected' : ''}>Normal</option></select></div><div class="view-toggle" role="tablist" aria-label="Ansicht"><button type="button" class="${taskView === 'list' ? 'active' : ''}" data-task-view="list">Liste</button><button type="button" class="${taskView === 'partners' ? 'active' : ''}" data-task-view="partners">Nach Servicepartner</button></div></div>
         ${taskView === 'partners' ? partnerTasksView(visible) : `<div class="task-table-wrap"><table class="task-table"><thead><tr><th>Aufgabe</th><th>Haus / Bereich</th><th>Servicepartner</th><th>Fälligkeit</th><th>Priorität</th><th>Status</th><th></th></tr></thead><tbody>${rows || '<tr><td colspan="7"><div class="empty">Keine Aufgaben gefunden. Erstelle eine Aufgabe oder ändere die Filter.</div></td></tr>'}</tbody></table></div>`}</section>`;
     }
     function automationPage() {
@@ -6719,7 +6717,7 @@
         return;
       }
       const partnerTasksLink = event.target.closest('[data-partner-tasks]');
-      if (partnerTasksLink) { taskPartnerFilter = tasks.some((task) => task.partnerId === partnerTasksLink.dataset.partnerTasks) ? partnerTasksLink.dataset.partnerTasks : 'all'; taskView = taskPartnerFilter === 'all' ? 'list' : 'partners'; currentPage = 'tasks'; render(); window.scrollTo(0, 0); return; }
+      if (partnerTasksLink) { taskView = tasks.some((task) => task.partnerId === partnerTasksLink.dataset.partnerTasks) ? 'partners' : 'list'; currentPage = 'tasks'; render(); window.scrollTo(0, 0); return; }
       const sectionToggle = event.target.closest('[data-section-toggle]');
       if (sectionToggle) {
         const id = sectionToggle.dataset.sectionToggle;
@@ -7167,7 +7165,6 @@
       if (event.target.id === 'task-filter') { taskFilter = event.target.value; render(); }
       if (event.target.id === 'task-property-filter') { taskPropertyFilter = event.target.value; render(); }
       if (event.target.id === 'task-priority-filter') { taskPriorityFilter = event.target.value; render(); }
-      if (event.target.id === 'task-partner-filter') { taskPartnerFilter = event.target.value; render(); }
       if (event.target.dataset?.positionNote) {
         inspectionNotes = { ...inspectionNotes, [inspectionProperty]: { ...(inspectionNotes[inspectionProperty] || {}), [event.target.dataset.positionNote]: event.target.value.trim() } };
         persistInspectionNotes();
