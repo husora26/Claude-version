@@ -1541,6 +1541,20 @@
       .tcard .partner-select, .tcard .status-select { width: 100%; }
       .tcard-actions { margin-left: 0; }
     }
+    /* Mängel: Servicepartner und Rechnungen */
+    .issue-extras { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 16px; padding-top: 10px; border-top: 1px dashed var(--line); }
+    .issue-partner { display: grid; gap: 3px; }
+    .issue-partner > span, .issue-invoices-head { color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .issue-partner .partner-select { width: 250px; max-width: 100%; height: 30px; padding-top: 0; padding-bottom: 0; font-size: 10px; }
+    .issue-invoices { display: flex; flex: 1; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; min-width: 0; }
+    .issue-invoices-head { flex-basis: 100%; text-align: right; }
+    .issue-invoices-head b { color: var(--ink); }
+    .issue-invoice { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 3px 4px 3px 8px; border: 1px solid var(--line); border-radius: 7px; background: white; font-size: 10.5px; }
+    .issue-invoice-name { display: inline-flex; align-items: center; gap: 4px; max-width: 170px; overflow: hidden; padding: 0; border: 0; color: var(--ink); background: none; font: inherit; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+    .issue-invoice-name svg { width: 12px; height: 12px; flex-shrink: 0; }
+    .issue-invoice em { color: var(--green); font-style: normal; font-weight: 700; }
+    .issue-invoice-read { padding: 2px 7px; border: 0; border-radius: 5px; color: #8e622b; background: var(--amber-soft); font-size: 10px; font-weight: 700; cursor: pointer; }
+    @media (max-width: 560px) { .issue-partner { flex-basis: 100%; } .issue-partner .partner-select { width: 100%; } .issue-invoices { justify-content: flex-start; } .issue-invoices-head { text-align: left; } }
     .partner-tasks-link { display: inline-block; margin-top: 4px; font-size: 11.5px; }
     /* Hauskontrolle: Statuskopf, Schritte, Prüfliste mit Auffälligkeiten und Reparaturen */
     .insp-status-card { padding: 0; border-top: 4px solid #d58a1f; }
@@ -1930,6 +1944,7 @@
         <label id="issue-property-wrap"><span class="form-label">Ferienhaus</span><select class="form-control" name="propertyId"></select></label>
         <label><span class="form-label">Bauteil</span><select class="form-control" name="part"></select></label>
         <label><span class="form-label">Was ist aufgefallen?</span><textarea class="form-control textarea" name="text" required maxlength="400" placeholder="z. B. Dachrinne an der Nordseite hängt durch, Wasser läuft an der Fassade herunter"></textarea></label>
+        <label><span class="form-label">Servicepartner für die Reparatur</span><select class="form-control" name="partnerId"></select><small class="form-hint" id="issue-partner-hint"></small></label>
         <label><span class="form-label">Dringlichkeit</span><select class="form-control" name="priority"><option value="urgent">Dringend – Folgeschäden drohen (Reparatur in 1 Tag)</option><option value="soon" selected>Wichtig – zeitnah beheben (in 7 Tagen)</option><option value="normal">Normal – beim nächsten Einsatz (in 3 Wochen)</option></select></label>
         <input type="hidden" name="source"><input type="hidden" name="taskId">
         <p class="send-plan-note ok" id="issue-auto-note"></p>
@@ -3142,7 +3157,7 @@
           const partner = craftsmanFor(property.id);
           const part = partLabel(issue.part);
           const short = issue.text.length > 60 ? `${issue.text.slice(0, 57).trim()}…` : issue.text;
-          const repair = { id: newId(), partnerId: suggestPartner(property.id, 'repair'), title: `Reparatur${part && !short.toLowerCase().startsWith(part.toLowerCase()) ? ` ${part}` : ''}: ${short}`, property: property.name, date: shiftDateKey(today, REPAIR_DAYS[issue.priority] ?? 7), priority: issue.priority || 'soon', area: part || 'Reparatur', status: 'Offen', done: false, repeat: 'Einmalig', description: `Automatisch aus einer Auffälligkeit (${issue.source || 'Meldung'} vom ${fmtDate(issue.date)}): ${issue.text}${partner ? ` · Vorgeschlagener Betrieb: ${partner.name}` : ' · Noch kein Handwerker zugeordnet.'}`, auto: 'repair', issueId: issue.id, propertyId: property.id };
+          const repair = { id: newId(), partnerId: issue.partnerId || suggestPartner(property.id, 'repair'), title: `Reparatur${part && !short.toLowerCase().startsWith(part.toLowerCase()) ? ` ${part}` : ''}: ${short}`, property: property.name, date: shiftDateKey(today, REPAIR_DAYS[issue.priority] ?? 7), priority: issue.priority || 'soon', area: part || 'Reparatur', status: 'Offen', done: false, repeat: 'Einmalig', description: `Automatisch aus einer Auffälligkeit (${issue.source || 'Meldung'} vom ${fmtDate(issue.date)}): ${issue.text}${partner ? ` · Vorgeschlagener Betrieb: ${partner.name}` : ' · Noch kein Handwerker zugeordnet.'}`, auto: 'repair', issueId: issue.id, propertyId: property.id };
           next.push(repair);
           added.push(repair);
           issue.status = 'planned';
@@ -3190,8 +3205,8 @@
       }
       return changed || next.length !== before;
     }
-    function createIssue({ propertyId, part = '', text, priority = 'soon', source = 'Meldung', taskId = null }) {
-      const issue = { id: `issue-${Date.now()}-${Math.round(Math.random() * 1000)}`, propertyId, part, text: String(text).trim(), priority, source, taskId, date: localDateKey(new Date()), status: 'open' };
+    function createIssue({ propertyId, part = '', text, priority = 'soon', source = 'Meldung', taskId = null, partnerId = '' }) {
+      const issue = { id: `issue-${Date.now()}-${Math.round(Math.random() * 1000)}`, propertyId, part, text: String(text).trim(), priority, source, taskId, partnerId, date: localDateKey(new Date()), status: 'open' };
       issues = [issue, ...issues];
       persistIssues();
       return issue;
@@ -4214,7 +4229,13 @@
     function propertyOptions(selected) {
       return properties.map((property) => `<option value="${escapeHtml(property.id)}" ${property.id === selected ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('');
     }
-    function openIssueModal({ propertyId = properties[0]?.id, part = '', text = '', source = 'Meldung', taskId = '' } = {}) {
+    function fillIssuePartners(form, propertyId, selected = '') {
+      const name = properties.find((property) => property.id === propertyId)?.name || '';
+      form.elements.partnerId.innerHTML = partnerOptionsHtml(name, selected);
+      const assigned = (servicePartnerAssignments[propertyId] || []).length;
+      document.getElementById('issue-partner-hint').textContent = assigned ? 'Vorgeschlagen ist dein zugeordneter Handwerker – du kannst jeden Partner wählen.' : 'Diesem Haus sind noch keine Servicepartner zugeordnet – wähle einen aus der Liste.';
+    }
+    function openIssueModal({ propertyId = properties[0]?.id, part = '', text = '', source = 'Meldung', taskId = '', partnerId = '' } = {}) {
       const form = document.getElementById('issue-form');
       form.reset();
       form.elements.propertyId.innerHTML = propertyOptions(propertyId);
@@ -4224,9 +4245,9 @@
       form.elements.source.value = source;
       form.elements.taskId.value = taskId;
       document.getElementById('issue-modal-subtitle').textContent = `Quelle: ${source}`;
-      const partner = craftsmanFor(propertyId);
+      fillIssuePartners(form, propertyId, partnerId || suggestPartner(propertyId, 'repair') || '');
       document.getElementById('issue-auto-note').textContent = automation.repairs
-        ? `Der Reparaturservice ist aktiv: Husora legt sofort einen Reparaturauftrag an${partner ? ` und schlägt ${partner.name} vor` : ''}.`
+        ? 'Der Reparaturservice ist aktiv: Husora legt sofort einen Reparaturauftrag für den gewählten Servicepartner an. Die Rechnung lädst du später direkt beim Mangel hoch.'
         : 'Der Reparaturservice ist ausgeschaltet – die Auffälligkeit wird nur gespeichert. Einschalten unter „Automatisierung“.';
       document.getElementById('issue-modal').classList.add('open');
       form.elements.text.focus();
@@ -4258,6 +4279,19 @@
         .filter((text) => !renovationProjects.some((project) => project.propertyId === property.id && project.sourceText === text))
         .map((text) => ({ property, text, part: housePartDefs.find((part) => part.match.test(text))?.id || '' })));
     }
+    function issueExtrasHtml(issue, repair) {
+      const propertyName = properties.find((property) => property.id === issue.propertyId)?.name || '';
+      const partnerId = repair?.partnerId || issue.partnerId || '';
+      const partner = providerById(partnerId);
+      const invoices = documents.filter((doc) => doc.issueId === issue.id);
+      const total = invoices.reduce((sum, doc) => sum + Number(expenses.find((expense) => expense.id === doc.expenseId)?.amount || 0), 0);
+      return `<div class="issue-extras">
+        <label class="issue-partner"><span>Servicepartner${partner ? ` <i class="tcard-ptype cat-${escapeHtml(partner.category)}">${partnerCategoryLabel(partner)}</i>` : ''}</span><select class="filter-select partner-select ${partnerId ? 'has-partner' : ''}" data-issue-partner="${escapeHtml(issue.id)}" aria-label="Servicepartner für diesen Mangel">${partnerOptionsHtml(propertyName, partnerId)}</select></label>
+        <div class="issue-invoices"><span class="issue-invoices-head">Rechnungen${invoices.length ? ` (${invoices.length})` : ''}${total ? ` · <b>${escapeHtml(formatCost(total))}</b>` : ''}</span>
+          ${invoices.map((doc) => { const expense = expenses.find((entry) => entry.id === doc.expenseId); return `<span class="issue-invoice"><button type="button" class="issue-invoice-name" data-open-document="${escapeHtml(doc.id)}" title="${escapeHtml(doc.name)}">${icon('document')} ${escapeHtml(doc.name)}</button>${expense ? `<em>${escapeHtml(formatCost(Number(expense.amount)))}</em>` : `<button type="button" class="issue-invoice-read" data-invoice-read="${escapeHtml(doc.id)}">Auslesen</button>`}</span>`; }).join('')}
+          <label class="ap-upload">${icon('plus')} Rechnung hochladen<input type="file" data-issue-invoice="${escapeHtml(issue.id)}" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" hidden></label></div>
+      </div>`;
+    }
     function repairPlanningPage(mode) {
       const today = localDateKey(new Date());
       const dateText = (date) => (date ? fmtDate(date) : 'offen');
@@ -4271,6 +4305,7 @@
         const prio = { urgent: 'Dringend', soon: 'Wichtig', normal: 'Normal' }[issue.priority] || 'Wichtig';
         return `<article class="issue-card ${issue.status}"><div class="issue-main"><strong>${escapeHtml(issue.text)}</strong><small>${singleHouse() ? '' : `${escapeHtml(propertyName(issue.propertyId))} · `}${partLabel(issue.part) ? `${escapeHtml(partLabel(issue.part))} · ` : ''}${escapeHtml(issue.source || 'Meldung')} · ${escapeHtml(fmtDate(issue.date))}</small>${repair ? `<small class="issue-repair">${repair.done ? 'Reparatur erledigt' : `Reparatur geplant für ${escapeHtml(fmtDate(repair.date))}`}</small>` : ''}</div>
           <div class="issue-side"><span class="task-tag ${issue.priority === 'urgent' ? 'urgent' : issue.priority === 'soon' ? 'soon' : ''}">${prio}</span><span class="issue-status">${ISSUE_STATUS[issue.status] || ''}</span></div>
+          ${issueExtrasHtml(issue, repair)}
           <div class="issue-actions">${issue.status !== 'fixed' && issue.status !== 'renovation' ? `<button type="button" class="small-action" data-issue-fixed="${issue.id}">Als behoben markieren</button><button type="button" class="small-action" data-issue-renovation="${issue.id}">Als Sanierung planen</button>` : ''}<button type="button" class="small-action" data-issue-delete="${issue.id}">Löschen</button></div></article>`;
       };
       const projectCard = (project) => {
@@ -5219,6 +5254,16 @@
       const form = document.getElementById('invoice-form');
       Object.entries(values).forEach(([name, value]) => { if (form.elements[name] && value !== undefined && value !== null && value !== '') form.elements[name].value = value; });
     }
+    // Rechnung zu einem Mangel: Kostenart, Handwerker und Bezug vorbelegen.
+    function prefillIssueInvoice(form, doc) {
+      const issue = doc?.issueId ? issues.find((item) => item.id === doc.issueId) : null;
+      if (!issue) return;
+      const partner = providerById(issue.partnerId || tasks.find((task) => task.auto === 'repair' && task.issueId === issue.id)?.partnerId || '');
+      form.elements.category.value = 'maintenance';
+      if (partner && !form.elements.vendor.value) form.elements.vendor.value = partner.name;
+      const reference = `Reparatur: ${issue.text.length > 80 ? `${issue.text.slice(0, 77)}…` : issue.text}`;
+      form.elements.note.value = form.elements.note.value ? `${reference} · ${form.elements.note.value}` : reference;
+    }
     async function openInvoiceModal({ doc = null, expense = null, propertyId = documentsProperty } = {}) {
       const form = document.getElementById('invoice-form');
       form.reset();
@@ -5243,6 +5288,7 @@
       document.getElementById('invoice-modal').classList.add('open');
       if (expense) { fillInvoiceForm({ ...expense, amount: expense.amount, currency: 'SEK' }); return; }
       if (!doc) { form.elements.amount.focus(); return; }
+      prefillIssueInvoice(form, doc);
       const submit = document.getElementById('invoice-submit');
       submit.disabled = true;
       try {
@@ -5251,6 +5297,7 @@
         const parsed = parseInvoice(text);
         fillInvoiceForm({ ...parsed, amount: parsed.amount !== null ? parsed.amount.toFixed(2) : '' });
         if (parsed.rot) form.elements.note.value = 'ROT/RUT-Abzug auf der Rechnung erkannt';
+        prefillIssueInvoice(form, doc);
         const found = [parsed.amount !== null && 'Betrag', parsed.date && 'Datum', parsed.vendor && 'Rechnungssteller', parsed.invoiceNo && 'Rechnungsnummer'].filter(Boolean);
         status.textContent = text ? (found.length ? `Erkannt: ${found.join(', ')}. Bitte kurz prüfen und bei Bedarf korrigieren.` : 'Text gelesen, aber keine Rechnungsangaben gefunden – bitte manuell ergänzen.') : status.textContent;
         status.className = `invoice-status ${found.includes('Betrag') ? 'ok' : 'warn'}`;
@@ -5274,7 +5321,7 @@
     }
     const expenseYear = (expense) => String(expense.date || '').slice(0, 4);
     const expensesFor = (propertyId, year) => expenses.filter((expense) => expense.propertyId === propertyId && (!year || expenseYear(expense) === String(year)));
-    async function addDocumentFiles(files) {
+    async function addDocumentFiles(files, context = {}) {
       const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
       const added = [];
       for (const file of files) {
@@ -5285,8 +5332,8 @@
           const dataUrl = isImage
             ? await compressPropertyPhoto(file, 1800, 0.82)
             : await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(reader.error); reader.readAsDataURL(file); });
-          const category = docUploadCategory === 'auto' ? guessDocCategory(file.name) : docUploadCategory;
-          added.push({ id: `document-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, propertyId: documentsProperty, name: file.name, type: isImage ? 'image/jpeg' : file.type, size: Math.round((dataUrl.length - dataUrl.indexOf(',') - 1) * 0.75), dataUrl, category, createdIso: localDateKey(new Date()), createdAt: new Intl.DateTimeFormat('de-DE').format(new Date()) });
+          const category = context.category || (docUploadCategory === 'auto' ? guessDocCategory(file.name) : docUploadCategory);
+          added.push({ id: `document-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, ...(context.issueId ? { issueId: context.issueId } : {}), propertyId: context.propertyId || documentsProperty, name: file.name, type: isImage ? 'image/jpeg' : file.type, size: Math.round((dataUrl.length - dataUrl.indexOf(',') - 1) * 0.75), dataUrl, category, createdIso: localDateKey(new Date()), createdAt: new Intl.DateTimeFormat('de-DE').format(new Date()) });
         } catch (error) { console.error('Datei konnte nicht gelesen werden:', error); showToast(`„${file.name}“ konnte nicht gelesen werden.`); }
       }
       if (!added.length || !persistDocuments([...documents, ...added])) return;
@@ -7303,6 +7350,18 @@
         inspectionNotes = { ...inspectionNotes, [inspectionProperty]: { ...(inspectionNotes[inspectionProperty] || {}), [event.target.dataset.positionNote]: event.target.value.trim() } };
         persistInspectionNotes();
       }
+      if (event.target.dataset?.issuePartner) {
+        const issue = issues.find((item) => item.id === event.target.dataset.issuePartner);
+        if (issue) {
+          issue.partnerId = event.target.value;
+          persistIssues();
+          tasks = tasks.map((task) => (task.auto === 'repair' && task.issueId === issue.id && !task.done ? { ...task, partnerId: issue.partnerId } : task));
+          persistTasks();
+          render();
+          showToast(issue.partnerId ? `${providerById(issue.partnerId)?.name || 'Servicepartner'} übernimmt die Reparatur.` : 'Zuordnung entfernt.');
+        }
+        return;
+      }
       if (event.target.dataset?.partnerTask) {
         const task = tasks.find((item) => item.id === Number(event.target.dataset.partnerTask));
         if (task) {
@@ -7327,6 +7386,12 @@
         return;
       }
       if (event.target.id === 'document-upload') { await addDocumentFiles([...(event.target.files || [])]); event.target.value = ''; return; }
+      if (event.target.dataset?.issueInvoice) {
+        const issue = issues.find((item) => item.id === event.target.dataset.issueInvoice);
+        if (issue) await addDocumentFiles([...(event.target.files || [])], { propertyId: issue.propertyId, category: 'invoice', issueId: issue.id });
+        event.target.value = '';
+        return;
+      }
       if (event.target.matches('[data-provider-document-upload]')) {
         const file = event.target.files?.[0];
         if (!file) return;
@@ -8682,6 +8747,7 @@
         originalCurrency: currency,
         category: String(data.get('category') || 'maintenance'),
         projectId: String(data.get('projectId') || ''),
+        issueId: existing?.issueId || documents.find((doc) => doc.id === invoiceDraft?.docId)?.issueId || '',
         note: String(data.get('note') || '').trim()
       };
       const duplicate = !existing && expense.invoiceNo && expenses.find((item) => item.invoiceNo === expense.invoiceNo && item.vendor === expense.vendor && item.propertyId === expense.propertyId);
@@ -8697,13 +8763,16 @@
       showToast(existing ? 'Kostenposition aktualisiert.' : `${formatCost(amount)} unter „${categoryLabel}“ bei ${propertyName} in die Kosten übernommen.`);
       setTimeout(nextInvoiceInQueue, 400);
     });
+    document.getElementById('issue-form').addEventListener('change', (event) => {
+      if (event.target.name === 'propertyId') fillIssuePartners(event.currentTarget, event.target.value, suggestPartner(event.target.value, 'repair') || '');
+    });
     document.getElementById('issue-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       const propertyId = String(data.get('propertyId') || properties[0]?.id || '');
       const text = String(data.get('text') || '').trim();
       if (!text || !properties.some((property) => property.id === propertyId)) return;
-      createIssue({ propertyId, part: String(data.get('part') || '') || housePartDefs.find((part) => part.match.test(text))?.id || '', text, priority: String(data.get('priority') || 'soon'), source: String(data.get('source') || 'Meldung'), taskId: data.get('taskId') ? Number(data.get('taskId')) : null });
+      createIssue({ propertyId, part: String(data.get('part') || '') || housePartDefs.find((part) => part.match.test(text))?.id || '', text, priority: String(data.get('priority') || 'soon'), source: String(data.get('source') || 'Meldung'), taskId: data.get('taskId') ? Number(data.get('taskId')) : null, partnerId: String(data.get('partnerId') || '') });
       document.getElementById('issue-modal').classList.remove('open');
       render();
       showToast(automation.repairs ? 'Auffälligkeit gemeldet – der Reparaturauftrag wurde automatisch geplant.' : 'Auffälligkeit gespeichert.');
