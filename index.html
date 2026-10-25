@@ -1019,7 +1019,7 @@
     @media (max-width: 1050px) {
       .stats .stat-wide ~ .stat:last-child:nth-child(2n), .stats .stat:first-child:not(.stat-wide) ~ .stat:last-child:nth-child(2n+1) { grid-column: 1 / -1; }
     }
-    .automation-summary.booking-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .automation-summary.booking-kpis { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
     .booking-kpis strong { font-size: 22px; }
     .booking-list-heading { grid-column: 1 / -1; margin: 10px 0 0; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
     .booking-status.live { color: #fff; background: var(--amber); }
@@ -1261,6 +1261,28 @@
     .detail-grid .property-card .form-label { color: var(--muted); font-size: 9.5px; font-weight: 750; letter-spacing: .05em; text-transform: uppercase; }
     .detail-grid .property-card strong { display: block; margin-top: 3px; font-size: 13px; }
     .detail-grid .property-card strong:empty::after { content: '—'; color: #b5b9b2; }
+    .calendar-event-chip.booking.owner { color: #1f4f7a; background: #e3eef8; }
+    .calendar-event.booking.owner { border-left-color: #3b78b5; }
+    .calendar-event.booking.owner .calendar-event-time, .calendar-event.booking.owner strong { color: #1f4f7a; }
+    .calendar-dot.owner { background: #3b78b5; }
+    .booking-source.owner { color: #1f4f7a; background: #e3eef8; }
+    .booking-overview-card.owner-stay { border-left: 4px solid #3b78b5; }
+    .booking-status.owner { color: #fff; background: #3b78b5; }
+    .booking-status.owner.past { color: var(--muted); background: #eeece6; }
+    .occupancy-pill.owner { color: #1f4f7a; background: #e3eef8; }
+    .house-tile.st-owner { --tone: #3b78b5; --bg: #f1f6fb; }
+    .house-card-pill.st-owner { color: #fff; background: #3b78b5; }
+    .stay-legend { display: flex; gap: 12px; color: var(--muted); font-size: 11px; }
+    .stay-legend i { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 3px; background: var(--green); vertical-align: -1px; }
+    .stay-legend i.owner { background: #3b78b5; }
+    .stay-kind { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stay-kind label { display: flex; align-items: center; gap: 10px; padding: 11px 13px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; cursor: pointer; }
+    .stay-kind label.active { border-color: var(--green); background: var(--green-soft); }
+    .stay-kind label.active.owner { border-color: #3b78b5; background: #eaf2fa; }
+    .stay-kind input { accent-color: var(--green); }
+    .stay-kind strong { display: block; font-size: 12.5px; }
+    .stay-kind small { color: var(--muted); font-size: 10.5px; }
+    .owner-btn svg { width: 15px; height: 15px; }
     /* Automatisierung */
     .text-btn.inline { padding: 0; font-size: inherit; }
     .care-steps { display: grid; gap: 4px; margin: 2px 0 4px; padding: 0; list-style: none; }
@@ -1927,10 +1949,10 @@
       { id: 'premium', name: 'Husora Care Premium' }
     ];
     const carePlanId = (value) => (CARE_PACKAGES.some((item) => item.id === value) ? value : '');
-    function careControlHtml({ enabled, plan, form, bookingId }) {
+    function careControlHtml({ enabled, plan, form, bookingId, owner = false }) {
       const toggleAttrs = form ? 'name="careEnabled"' : `data-care-toggle="${escapeHtml(bookingId)}"`;
       const planAttrs = form ? 'name="carePlan"' : `data-care-plan="${escapeHtml(bookingId)}"`;
-      const steps = turnoverSteps().filter((step) => step.on);
+      const steps = turnoverSteps().filter((step) => step.on && !(owner && step.id === 'welcome'));
       const linked = bookingId ? bookingTasks(bookingId) : [];
       const doneCount = linked.filter((task) => task.done).length;
       const progress = !form && enabled && linked.length
@@ -1943,7 +1965,7 @@
         const when = task ? fmtDate(task.date) : started ? 'entfällt (bereits angereist)' : `${offset === 0 ? 'am' : `${Math.abs(offset)} ${Math.abs(offset) === 1 ? 'Tag' : 'Tage'} ${offset < 0 ? 'vor' : 'nach'}`} ${step.anchor === 'start' ? (offset === 0 ? 'Anreisetag' : 'Anreise') : (offset === 0 ? 'Abreisetag' : 'Abreise')}`;
         return `<li class="${task?.done ? 'done' : ''}"><i aria-hidden="true">${task?.done ? icon('check') : ''}</i><span>${escapeHtml(step.label)}</span><small>${escapeHtml(when)}</small></li>`;
       }).join('')}</ul>`;
-      return `<div class="care-box"><div class="care-head"><strong>Gästewechsel automatisch planen</strong><label class="currency-switch care-switch"><span class="${enabled ? '' : 'on'}">Aus</span><input type="checkbox" ${toggleAttrs} role="switch" aria-label="Gästewechsel automatisch planen" ${enabled ? 'checked' : ''}><span class="currency-track"></span><span class="${enabled ? 'on' : ''}">An</span></label></div>
+      return `<div class="care-box"><div class="care-head"><strong>${owner ? 'Vorbereitung & Reinigung automatisch planen' : 'Gästewechsel automatisch planen'}</strong><label class="currency-switch care-switch"><span class="${enabled ? '' : 'on'}">Aus</span><input type="checkbox" ${toggleAttrs} role="switch" aria-label="Gästewechsel automatisch planen" ${enabled ? 'checked' : ''}><span class="currency-track"></span><span class="${enabled ? 'on' : ''}">An</span></label></div>
         <div class="care-plan" data-care-plan-wrap ${enabled ? '' : 'hidden'}>${steps.length ? stepList : '<p class="care-note">In der Automatisierung sind alle Schritte ausgeschaltet.</p>'}${progress}
         <details class="care-package"><summary>Husora Care Paket (optional)</summary><label><span class="form-label">Husora Care Paket</span><select class="form-control" ${planAttrs} aria-label="Husora Care Paket"><option value="">Kein Paket</option>${CARE_PACKAGES.map((item) => `<option value="${item.id}" ${item.id === plan ? 'selected' : ''}>${escapeHtml(item.name)} · in Planung</option>`).join('')}</select></label><p class="care-note">Mit einem Paket übernimmt künftig ein Husora-Servicepartner diese Schritte. Die Pakete werden noch festgelegt.</p></details>
         <p class="care-note">Husora legt die Schritte als Serviceaufgaben an und verschiebt sie, wenn sich die Buchung ändert. <button type="button" class="text-btn inline" data-page="automation">Schritte anpassen →</button></p></div></div>`;
@@ -2536,7 +2558,7 @@
       try { localStorage.setItem('stugliv-automation', JSON.stringify(automation)); return true; }
       catch (error) { showToast('Speichern nicht möglich. Bitte Browser-Speicher prüfen.'); return false; }
     }
-    const bookingAutomationOn = (booking) => (booking.care ? Boolean(booking.care.enabled) : automation.turnover.defaultOn);
+    const bookingAutomationOn = (booking) => (booking.care ? Boolean(booking.care.enabled) : !isOwnerStay(booking) && automation.turnover.defaultOn);
     const shiftDateKey = (dateKey, days) => { const date = new Date(`${dateKey}T12:00:00`); date.setDate(date.getDate() + days); return localDateKey(date); };
     const guestInHouseCount = (dateKey) => properties.filter((property) => guestInHouse(property.id, dateKey)).length;
     const bookingTasks = (bookingId) => tasks.filter((task) => task.bookingId === bookingId);
@@ -2564,12 +2586,12 @@
       const partnerFor = (propertyId, category) => providers.find((provider) => provider.category === category && (servicePartnerAssignments[propertyId] || []).includes(provider.id));
       // Gästewechsel: Aufgaben je Buchung anlegen, bei Terminänderung verschieben, bei Storno entfernen.
       const activeBookings = new Set();
-      (bookingsEnabled() ? bookings : []).forEach((booking) => {
+      visibleStays().forEach((booking) => {
         const property = propertyById(booking.propertyId);
         if (!property || booking.endDate < today) return;
         activeBookings.add(booking.id);
         const enabled = bookingAutomationOn(booking);
-        turnoverSteps().forEach((step) => {
+        turnoverSteps().filter((step) => !(isOwnerStay(booking) && step.id === 'welcome')).forEach((step) => {
           const config = step;
           const index = next.findIndex((task) => task.bookingId === booking.id && task.step === step.id);
           const existing = index >= 0 ? next[index] : null;
@@ -2804,6 +2826,10 @@
     let returningToPreviousPage = false;
     let profileData = { name: 'Max Mustermann', username: 'Alex', email: '', usage: 'rental', houseCount: 1 };
     const bookingsEnabled = () => profileData.usage !== 'self';
+    // Eigennutzung: Aufenthalte der Eigentümer werden wie Buchungen geführt, aber als eigene Art gekennzeichnet.
+    const isOwnerStay = (booking) => booking.kind === 'owner' || String(booking.source || '').toLowerCase() === 'owner';
+    const visibleStays = () => (bookingsEnabled() ? bookings : bookings.filter(isOwnerStay));
+    const staysLabel = () => (bookingsEnabled() ? 'Buchungen' : 'Eigennutzung');
     const singleHouse = () => Number(profileData.houseCount) === 1;
     // Konfiguration für Husora Pro. Mit client-id "sb" läuft PayPal im Testmodus (Sandbox).
     const PAYPAL_CONFIG = { clientId: 'sb', currency: 'EUR', supportEmail: '' };
@@ -2859,7 +2885,7 @@
     let bookingEndDate = '';
     let editingBookingId = null;
     let bookingView = 'list';
-    let bookingDraft = { propertyId: properties[0]?.id || '', guestName: '', guestCount: '1', arrivalTime: '15:00', notes: '', careEnabled: automation.turnover.defaultOn, carePlan: '' };
+    let bookingDraft = { kind: 'guest', propertyId: properties[0]?.id || '', guestName: '', guestCount: '1', arrivalTime: '15:00', notes: '', careEnabled: automation.turnover.defaultOn, carePlan: '' };
     let bookings = [];
     try {
       const savedBookings = localStorage.getItem('stugliv-bookings');
@@ -3197,7 +3223,8 @@
       editingBookingId = null;
       bookingStartDate = '';
       bookingEndDate = '';
-      bookingDraft = { propertyId: properties[0]?.id || '', guestName: '', guestCount: '1', arrivalTime: '15:00', notes: '', careEnabled: automation.turnover.defaultOn, carePlan: '' };
+      const kind = bookingsEnabled() ? 'guest' : 'owner';
+      bookingDraft = { kind, propertyId: properties[0]?.id || '', guestName: '', guestCount: '1', arrivalTime: '15:00', notes: '', careEnabled: kind === 'guest' && automation.turnover.defaultOn, carePlan: '' };
     }
     function editBooking(booking) {
       if (!booking) return;
@@ -3205,6 +3232,7 @@
       editingBookingId = booking.id;
       bookingView = 'form';
       bookingDraft = {
+        kind: isOwnerStay(booking) ? 'owner' : 'guest',
         propertyId: booking.propertyId,
         guestName: booking.guestName,
         guestCount: String(booking.guestCount || 1),
@@ -3248,10 +3276,11 @@
         const departureToday = bookings.find((booking) => booking.propertyId === property.id && booking.endDate === today);
         let state = 'free';
         let text = 'Frei · keine kommende Buchung';
-        if (guest) { state = 'busy'; text = `${guest.guestName} · bis ${fmtDate(guest.endDate)}`; }
+        if (guest && isOwnerStay(guest)) { state = 'owner'; text = `Eigennutzung · ${guest.guestName} bis ${fmtDate(guest.endDate)}`; }
+        else if (guest) { state = 'busy'; text = `${guest.guestName} · bis ${fmtDate(guest.endDate)}`; }
         else if (departureToday) { state = 'turnover'; text = `Abreise heute · ${departureToday.guestName}`; }
         else if (nextArrival) { const days = dayDiff(today, nextArrival.startDate); text = `Frei · nächste Anreise ${days === 1 ? 'morgen' : `in ${days} Tagen`}`; }
-        const label = state === 'busy' ? 'Belegt' : state === 'turnover' ? 'Gästewechsel' : 'Frei';
+        const label = state === 'owner' ? 'Eigennutzung' : state === 'busy' ? 'Belegt' : state === 'turnover' ? 'Gästewechsel' : 'Frei';
         return `<button class="house-service-row" data-page="bookings"><span class="house-service-name">${escapeHtml(property.name)}<small>${escapeHtml(text)}</small></span><span class="occupancy-pill ${state}">${label}</span></button>`;
       }).join('');
     }
@@ -3344,28 +3373,30 @@
     function calendarEvents() {
       return [
         ...activeGuestChanges(),
-        ...(bookingsEnabled() ? bookings : []).flatMap((booking) => {
+        ...visibleStays().flatMap((booking) => {
           const propertyName = properties.find((property) => property.id === booking.propertyId)?.name || 'Ferienhaus';
           return [
             {
               id: `booking-${booking.id}-arrival`,
               bookingId: booking.id,
-              title: `Check-in · ${booking.guestName}`,
+              title: isOwnerStay(booking) ? `Eigennutzung ab · ${booking.guestName}` : `Check-in · ${booking.guestName}`,
               property: propertyName,
               date: booking.startDate,
               time: booking.arrivalTime || '',
               detail: `${booking.guestCount} ${Number(booking.guestCount) === 1 ? 'Person' : 'Personen'}`,
-              type: 'booking'
+              type: 'booking',
+              owner: isOwnerStay(booking)
             },
             {
               id: `booking-${booking.id}-departure`,
               bookingId: booking.id,
-              title: `Check-out · ${booking.guestName}`,
+              title: isOwnerStay(booking) ? `Eigennutzung bis · ${booking.guestName}` : `Check-out · ${booking.guestName}`,
               property: propertyName,
               date: booking.endDate,
               time: '',
               detail: 'Abreise',
-              type: 'booking'
+              type: 'booking',
+              owner: isOwnerStay(booking)
             }
           ];
         }),
@@ -3411,7 +3442,7 @@
           return item.type === 'task'
             ? `<span class="calendar-event-chip task">${label}</span>`
             : item.type === 'booking'
-              ? `<span class="calendar-event-chip booking">${label}</span>`
+              ? `<span class="calendar-event-chip booking ${item.owner ? 'owner' : ''}">${label}</span>`
               : `<span class="calendar-event-chip">${label}</span>`;
         }).join('');
         const moreEvents = dayEvents.length > maxVisible ? `<span class="calendar-event-chip">+${dayEvents.length - maxVisible} weitere</span>` : '';
@@ -3421,7 +3452,7 @@
       return `<div class="welcome"><div><p class="eyebrow">Planung & Buchungen</p><h1>Kalender</h1><p class="subtitle">Buchungen und datierte Serviceaufgaben im Monatsüberblick.</p></div></div>
         <section class="card"><div class="card-head"><h2 class="card-title">Termine</h2><div class="calendar-toolbar"><button class="calendar-nav" data-calendar-step="-1" aria-label="${calendarView === 'week' ? 'Vorherige Woche' : 'Vorheriger Monat'}">‹</button><strong>${escapeHtml(monthTitle)}</strong><button class="calendar-nav" data-calendar-step="1" aria-label="${calendarView === 'week' ? 'Nächste Woche' : 'Nächster Monat'}">›</button><button type="button" class="calendar-today-btn" data-calendar-today>Heute</button><div class="calendar-view-toggle" aria-label="Kalenderansicht"><button type="button" data-calendar-view="month" class="${calendarView === 'month' ? 'active' : ''}" aria-pressed="${calendarView === 'month'}">Monat</button><button type="button" data-calendar-view="week" class="${calendarView === 'week' ? 'active' : ''}" aria-pressed="${calendarView === 'week'}">Woche</button></div></div></div>
           <div class="calendar-grid calendar-page-grid ${calendarView === 'week' ? 'calendar-week-view' : ''}">${weekdayLabels.map((label) => `<div class="calendar-weekday">${label}</div>`).join('')}${cells.join('')}</div>
-          <div class="calendar-legend">${bookingsEnabled() ? '<span><i class="calendar-dot booking"></i>Buchungen</span>' : ''}<span><i class="calendar-dot task"></i>Serviceaufgabe</span></div>
+          <div class="calendar-legend">${bookingsEnabled() ? '<span><i class="calendar-dot booking"></i>Buchungen</span>' : ''}<span><i class="calendar-dot owner"></i>Eigennutzung</span><span><i class="calendar-dot task"></i>Serviceaufgabe</span></div>
         </section>
         <section class="card" style="margin-top:16px"><div class="card-head"><div><h2 class="card-title">${escapeHtml(selectedLabel)}</h2><p class="card-caption">${selectedEvents.length} ${selectedEvents.length === 1 ? 'Termin' : 'Termine'}</p></div><button class="text-btn" data-page="tasks">Aufgaben ansehen →</button></div>
           ${selectedEvents.length ? selectedEvents.map((item) => {
@@ -3429,7 +3460,7 @@
             return item.type === 'task'
               ? `<button type="button" class="calendar-event" data-edit-task="${item.taskId}" aria-label="Aufgabe bearbeiten: ${escapeHtml(item.title)}">${eventDetails}</button>`
               : item.type === 'booking'
-                ? `<button type="button" class="calendar-event booking" data-edit-booking="${escapeHtml(item.bookingId)}" aria-label="Buchung bearbeiten: ${escapeHtml(item.title)}">${eventDetails}</button>`
+                ? `<button type="button" class="calendar-event booking ${item.owner ? 'owner' : ''}" data-edit-booking="${escapeHtml(item.bookingId)}" aria-label="Buchung bearbeiten: ${escapeHtml(item.title)}">${eventDetails}</button>`
                 : `<div class="calendar-event">${eventDetails}</div>`;
           }).join('') : '<div class="empty">Für diesen Tag sind keine Termine eingetragen.</div>'}
         </section>`;
@@ -3437,40 +3468,46 @@
     function bookingsPage() {
       if (bookingView === 'list') {
         const todayKey = localDateKey(new Date());
-        const upcomingBookings = bookings.filter((booking) => booking.endDate >= todayKey).sort((a, b) => a.startDate.localeCompare(b.startDate));
-        const pastBookingList = bookings.filter((booking) => booking.endDate < todayKey).sort((a, b) => b.startDate.localeCompare(a.startDate));
+        const allStays = visibleStays();
+        const upcomingBookings = allStays.filter((booking) => booking.endDate >= todayKey).sort((a, b) => a.startDate.localeCompare(b.startDate));
+        const pastBookingList = allStays.filter((booking) => booking.endDate < todayKey).sort((a, b) => b.startDate.localeCompare(a.startDate));
         const now = new Date();
         const monthStart = localDateKey(new Date(now.getFullYear(), now.getMonth(), 1));
         const monthEnd = localDateKey(new Date(now.getFullYear(), now.getMonth() + 1, 1));
         const yearStart = `${now.getFullYear()}-01-01`;
         const yearEnd = `${now.getFullYear() + 1}-01-01`;
-        const nightsBetween = (from, to) => bookings.reduce((sum, booking) => {
-          if (!properties.some((property) => property.id === booking.propertyId)) return sum;
+        const nightsBetween = (from, to, filter = () => true) => allStays.reduce((sum, booking) => {
+          if (!properties.some((property) => property.id === booking.propertyId) || !filter(booking)) return sum;
           const start = booking.startDate > from ? booking.startDate : from;
           const end = booking.endDate < to ? booking.endDate : to;
           return sum + Math.max(0, Math.round((new Date(`${end}T12:00:00`) - new Date(`${start}T12:00:00`)) / 86400000));
         }, 0);
         const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
         const occupancy = properties.length ? Math.round((nightsBetween(monthStart, monthEnd) / (daysInMonth * properties.length)) * 100) : 0;
-        const nextArrival = upcomingBookings.find((booking) => booking.startDate >= todayKey);
+        const nextArrival = upcomingBookings.find((booking) => booking.startDate >= todayKey && (!bookingsEnabled() || !isOwnerStay(booking)));
         const kpi = (value, label) => `<div><strong>${value}</strong><span>${label}</span></div>`;
-        const bookingKpis = `<section class="automation-summary booking-kpis">${kpi(upcomingBookings.length, upcomingBookings.length === 1 ? 'kommende Buchung' : 'kommende Buchungen')}${kpi(`${Math.min(100, occupancy)} %`, `Belegung ${escapeHtml(new Intl.DateTimeFormat('de-DE', { month: 'long' }).format(now))}`)}${kpi(nightsBetween(yearStart, yearEnd), `Nächte ${now.getFullYear()} gebucht`)}${kpi(nextArrival ? escapeHtml(fmtDate(nextArrival.startDate)) : '—', 'nächste Anreise')}</section>`;
+        const guestUpcoming = upcomingBookings.filter((booking) => !isOwnerStay(booking));
+        const ownerUpcoming = upcomingBookings.filter(isOwnerStay);
+        const bookingKpis = bookingsEnabled()
+          ? `<section class="automation-summary booking-kpis">${kpi(guestUpcoming.length, guestUpcoming.length === 1 ? 'kommende Buchung' : 'kommende Buchungen')}${kpi(`${Math.min(100, occupancy)} %`, `Belegung ${escapeHtml(new Intl.DateTimeFormat('de-DE', { month: 'long' }).format(now))}`)}${kpi(nightsBetween(yearStart, yearEnd, (booking) => !isOwnerStay(booking)), `Gästenächte ${now.getFullYear()}`)}${kpi(nightsBetween(yearStart, yearEnd, isOwnerStay), `Nächte Eigennutzung ${now.getFullYear()}`)}${kpi(nextArrival ? escapeHtml(fmtDate(nextArrival.startDate)) : '—', 'nächste Anreise')}</section>`
+          : `<section class="automation-summary booking-kpis">${kpi(ownerUpcoming.length, ownerUpcoming.length === 1 ? 'geplanter Aufenthalt' : 'geplante Aufenthalte')}${kpi(nightsBetween(yearStart, yearEnd, isOwnerStay), `Nächte im Haus ${now.getFullYear()}`)}${kpi(nextArrival ? escapeHtml(fmtDate(nextArrival.startDate)) : '—', 'nächster Aufenthalt')}</section>`;
         const detailedDate = (date) => new Intl.DateTimeFormat('de-DE', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${date}T12:00:00`));
         const nightCount = (startDate, endDate) => Math.round((new Date(`${endDate}T12:00:00`) - new Date(`${startDate}T12:00:00`)) / 86400000);
-        return `<div class="welcome"><div><p class="eyebrow">Buchungsplanung · Schweden</p><h1>Buchungen</h1><p class="subtitle">${singleHouse() ? 'Alle gebuchten Aufenthalte mit An- und Abreise und Gastdetails.' : 'Alle gebuchten Aufenthalte mit An- und Abreise, Ferienhaus und Gastdetails.'}</p></div><button class="primary-btn" data-action="new-booking">${icon('plus')} Neue Buchung</button></div>
+        return `<div class="welcome"><div><p class="eyebrow">Belegungsplanung · Schweden</p><h1>${bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung'}</h1><p class="subtitle">${bookingsEnabled() ? 'Gästebuchungen und eigene Aufenthalte im Ferienhaus mit An- und Abreise. Eigennutzung blockiert den Zeitraum für Buchungen.' : 'Trage ein, wann du selbst im Ferienhaus bist. Husora berücksichtigt die Zeiträume bei Hauskontrolle und Aufgaben.'}</p></div><div class="welcome-actions">${bookingsEnabled() ? `<button class="primary-btn" data-action="new-booking">${icon('plus')} Neue Buchung</button>` : ''}<button class="${bookingsEnabled() ? 'secondary-btn' : 'primary-btn'} owner-btn" data-action="new-owner-stay">${icon('home')} Eigennutzung eintragen</button></div></div>
           ${portalHintHtml()}
-          ${bookings.length ? bookingKpis : ''}
-          <section class="card booking-overview"><div class="card-head"><div><h2 class="card-title">Gebuchte Termine</h2><p class="card-caption">${bookings.length} ${bookings.length === 1 ? 'Buchung' : 'Buchungen'} gespeichert</p></div></div>
-            ${bookings.length ? `${upcomingBookings.length ? '' : '<div class="empty">Keine kommenden Buchungen. Über „Neue Buchung“ kannst du einen Aufenthalt erfassen.</div>'}<div class="booking-overview-list">${[...upcomingBookings, ...pastBookingList].map((booking, position) => {
+          ${allStays.length ? bookingKpis : ''}
+          <section class="card booking-overview"><div class="card-head"><div><h2 class="card-title">${bookingsEnabled() ? 'Belegungsplan' : 'Deine Aufenthalte'}</h2><p class="card-caption">${allStays.filter((booking) => !isOwnerStay(booking)).length} ${bookingsEnabled() ? 'Gästebuchungen · ' : ''}${allStays.filter(isOwnerStay).length}× Eigennutzung</p></div>${bookingsEnabled() ? '<div class="stay-legend"><span><i class="guest"></i>Gäste</span><span><i class="owner"></i>Eigennutzung</span></div>' : ''}</div>
+            ${allStays.length ? `${upcomingBookings.length ? '' : '<div class="empty">Keine kommenden Aufenthalte.</div>'}<div class="booking-overview-list">${[...upcomingBookings, ...pastBookingList].map((booking, position) => {
               const propertyName = properties.find((property) => property.id === booking.propertyId)?.name || 'Ferienhaus entfernt';
               const checkedOut = booking.endDate < todayKey;
               const inHouse = booking.startDate <= todayKey && todayKey < booking.endDate;
               const pastHeading = position === upcomingBookings.length && pastBookingList.length ? `<h3 class="booking-list-heading">Vergangene Buchungen (${pastBookingList.length})</h3>` : '';
               const guests = Number(booking.guestCount) || 1;
               const nights = nightCount(booking.startDate, booking.endDate);
-              return `${pastHeading}<article class="booking-overview-card ${checkedOut ? 'past' : ''}">
-                <div class="booking-overview-title"><strong>${escapeHtml(booking.guestName)}${booking.source ? `<span class="booking-source">${escapeHtml(portalSourceName(booking.source))}</span>` : ''}</strong><small>${escapeHtml(propertyName)}</small></div>
-                <span class="booking-status ${checkedOut ? 'past' : inHouse ? 'live' : ''}">${checkedOut ? 'Ausgecheckt' : inHouse ? 'Gast im Haus' : 'Gebucht'}</span>
+              const owner = isOwnerStay(booking);
+              return `${pastHeading}<article class="booking-overview-card ${checkedOut ? 'past' : ''} ${owner ? 'owner-stay' : ''}">
+                <div class="booking-overview-title"><strong>${escapeHtml(booking.guestName)}${owner ? '<span class="booking-source owner">Eigennutzung</span>' : ''}${booking.source && !owner ? `<span class="booking-source">${escapeHtml(portalSourceName(booking.source))}</span>` : ''}</strong><small>${escapeHtml(propertyName)}</small></div>
+                <span class="booking-status ${checkedOut ? 'past' : inHouse ? 'live' : ''} ${owner ? 'owner' : ''}">${owner ? (checkedOut ? 'Vorbei' : inHouse ? 'Du bist im Haus' : 'Eigennutzung geplant') : checkedOut ? 'Ausgecheckt' : inHouse ? 'Gast im Haus' : 'Gebucht'}</span>
                 <div class="booking-overview-dates"><div class="booking-overview-date"><span>Anreise</span><strong>${escapeHtml(detailedDate(booking.startDate))}</strong></div><div class="booking-overview-date"><span>Abreise</span><strong>${escapeHtml(detailedDate(booking.endDate))}</strong></div></div>
                 ${(() => {
                   const noteLines = String(booking.notes || '').split('\n');
@@ -3480,9 +3517,9 @@
                   return `<div class="booking-facts">${fact('users', 'Gäste', booking.guestsUnknown ? 'nicht angegeben' : `${guests} ${guests === 1 ? 'Person' : 'Personen'}`)}${fact('moon', 'Aufenthalt', `${nights} ${nights === 1 ? 'Nacht' : 'Nächte'}`)}${fact('clock', 'Ankunft', booking.arrivalTime ? `${booking.arrivalTime} Uhr` : '—')}${codeMatch ? fact('ticket', 'Buchungscode', codeMatch[1]) : ''}</div>${noteText ? `<div class="booking-note"><span class="booking-fact-icon">${icon('note')}</span><div><small>${booking.guestsUnknown ? 'Weitere Angaben aus dem Kalender' : booking.source ? 'Nachricht des Gasts' : 'Hinweise zur Buchung'}</small><p>${escapeHtml(noteText).replace(/\n/g, '<br>')}</p></div></div>` : ''}`;
                 })()}
                 ${booking.source ? `<div class="booking-row-actions"><span class="booking-managed">Wird automatisch über ${escapeHtml(portalSourceName(booking.source))} synchronisiert</span></div>` : `<div class="booking-row-actions"><button type="button" data-edit-booking="${escapeHtml(booking.id)}" aria-label="Buchung von ${escapeHtml(booking.guestName)} bearbeiten" class="booking-edit-btn">${icon('edit')}Bearbeiten</button><button type="button" data-delete-booking="${escapeHtml(booking.id)}" aria-label="Buchung von ${escapeHtml(booking.guestName)} löschen" class="booking-delete-btn">${icon('trash')}Löschen</button></div>`}
-                ${checkedOut && !bookingTasks(booking.id).length ? '' : careControlHtml({ enabled: bookingAutomationOn(booking), plan: carePlanId(booking.care?.plan), bookingId: booking.id })}
+                ${checkedOut && !bookingTasks(booking.id).length ? '' : careControlHtml({ enabled: bookingAutomationOn(booking), plan: carePlanId(booking.care?.plan), bookingId: booking.id, owner })}
               </article>`;
-            }).join('')}</div>` : '<div class="empty">Noch keine Buchungen vorhanden. Über „Neue Buchung“ kannst du einen Aufenthalt erfassen.</div>'}
+            }).join('')}</div>` : `<div class="empty">${bookingsEnabled() ? 'Noch keine Buchungen oder Eigennutzung eingetragen.' : 'Noch keine Eigennutzung eingetragen. Über „Eigennutzung eintragen“ legst du fest, wann du im Haus bist.'}</div>`}
           </section>`;
       }
       const year = bookingCalendarMonth.getFullYear();
@@ -3508,7 +3545,7 @@
         const eventChips = dayBookings.map((booking) => {
           const isArrival = dateKey === booking.startDate;
           const label = `${isArrival ? 'Anreise' : 'Abreise'} · ${escapeHtml(booking.guestName)}`;
-          return `<button type="button" class="calendar-event-chip booking" data-edit-booking="${escapeHtml(booking.id)}" aria-label="Buchung bearbeiten: ${label}">${label}</button>`;
+          return `<button type="button" class="calendar-event-chip booking ${isOwnerStay(booking) ? 'owner' : ''}" data-edit-booking="${escapeHtml(booking.id)}" aria-label="Aufenthalt bearbeiten: ${label}">${isOwnerStay(booking) ? 'Eigennutzung · ' : ''}${label}</button>`;
         }).join('');
         const selected = dateKey === bookingStartDate || dateKey === bookingEndDate;
         const dayLabel = new Intl.DateTimeFormat('de-DE', { dateStyle: 'full' }).format(dayDate);
@@ -3519,25 +3556,27 @@
       const dateSummary = bookingStartDate && bookingEndDate
         ? `${fmtDate(bookingStartDate)} – ${fmtDate(bookingEndDate)} · ${Math.round((new Date(`${bookingEndDate}T12:00:00`) - new Date(`${bookingStartDate}T12:00:00`)) / 86400000)} Nächte`
         : bookingStartDate ? `Anreise: ${fmtDate(bookingStartDate)} · jetzt den Abreisetag auswählen.` : 'Im Kalender zuerst den Anreisetag, danach den Abreisetag auswählen.';
-      return `<div class="welcome"><div><p class="eyebrow">Buchungsplanung · Schweden</p><h1>${editingBookingId ? 'Buchung bearbeiten' : 'Neue Buchung'}</h1><p class="subtitle">Buchungszeitraum im Kalender auswählen und Ankunftsdaten für ${singleHouse() ? 'dein Ferienhaus' : 'deine Ferienhäuser'} erfassen.</p></div></div>
+      return `<div class="welcome"><div><p class="eyebrow">Buchungsplanung · Schweden</p><h1>${bookingDraft.kind === 'owner' ? (editingBookingId ? 'Eigennutzung bearbeiten' : 'Eigennutzung eintragen') : (editingBookingId ? 'Buchung bearbeiten' : 'Neue Buchung')}</h1><p class="subtitle">${bookingDraft.kind === 'owner' ? `Zeitraum im Kalender wählen, in dem du selbst im Ferienhaus bist.${bookingsEnabled() ? ' Er ist dann für Buchungen gesperrt.' : ''}` : `Buchungszeitraum im Kalender auswählen und Ankunftsdaten für ${singleHouse() ? 'dein Ferienhaus' : 'deine Ferienhäuser'} erfassen.`}</p></div></div>
         <div class="booking-layout">
-          <section class="card"><div class="card-head"><div><h2 class="card-title">${editingBookingId ? 'Buchung bearbeiten' : 'Buchung erfassen'}</h2><p class="card-caption">Gastangaben für die Buchung</p></div></div>
+          <section class="card"><div class="card-head"><div><h2 class="card-title">${bookingDraft.kind === 'owner' ? 'Eigennutzung' : editingBookingId ? 'Buchung bearbeiten' : 'Buchung erfassen'}</h2><p class="card-caption">${bookingDraft.kind === 'owner' ? 'Zeitraum und Angaben zum eigenen Aufenthalt' : 'Gastangaben für die Buchung'}</p></div></div>
             <form id="booking-form" class="booking-form"><p class="booking-hint">Wähle im Kalender zuerst den Anreisetag und anschließend den Abreisetag. Der Abreisetag ist nicht mehr als Übernachtung belegt.</p>
               <div class="booking-range-summary">${escapeHtml(dateSummary)}</div>
               <input type="hidden" name="startDate" value="${escapeHtml(bookingStartDate)}"><input type="hidden" name="endDate" value="${escapeHtml(bookingEndDate)}">
               <div class="booking-form-grid">
+                ${bookingsEnabled() ? `<div class="full stay-kind" role="radiogroup" aria-label="Art des Aufenthalts"><label class="${bookingDraft.kind !== 'owner' ? 'active' : ''}"><input type="radio" name="kind" value="guest" ${bookingDraft.kind !== 'owner' ? 'checked' : ''}><span><strong>Gästebuchung</strong><small>Vermietung an Gäste</small></span></label><label class="${bookingDraft.kind === 'owner' ? 'active owner' : ''}"><input type="radio" name="kind" value="owner" ${bookingDraft.kind === 'owner' ? 'checked' : ''}><span><strong>Eigennutzung</strong><small>Du oder deine Familie im Haus</small></span></label></div>` : '<input type="hidden" name="kind" value="owner">'}
                 ${singleHouse() ? `<input type="hidden" name="propertyId" value="${escapeHtml(propertyId || properties[0]?.id || '')}">` : `<label class="full"><span class="form-label">Ferienhaus</span><select class="form-control" name="propertyId" required ${properties.length ? '' : 'disabled'}>${properties.map((property) => `<option value="${escapeHtml(property.id)}" ${property.id === propertyId ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select></label>`}
                 <div class="full booking-inline-calendar booking-calendar"><div class="card-head"><div><h2 class="card-title">Belegungskalender</h2><p class="card-caption">Anreise und Abreise durch Auswahl von zwei Tagen festlegen</p></div><div class="calendar-toolbar"><button type="button" class="calendar-nav" data-booking-month="-1" aria-label="Vorheriger Monat">‹</button><strong>${escapeHtml(monthTitle)}</strong><button type="button" class="calendar-nav" data-booking-month="1" aria-label="Nächster Monat">›</button></div></div>
                   <div class="calendar-grid">${dayLabels.map((label) => `<div class="calendar-weekday">${label}</div>`).join('')}${cells.join('')}</div>
-                  <div class="calendar-legend"><span><i class="calendar-dot booking"></i>Gebuchte Übernachtung</span><span><i class="calendar-dot task"></i>Abreise</span></div>
+                  <div class="calendar-legend"><span><i class="calendar-dot booking"></i>Belegt</span><span><i class="calendar-dot task"></i>Abreise</span></div>
                 </div>
-                <label class="full"><span class="form-label">Name des Gasts</span><input class="form-control" name="guestName" required maxlength="100" autocomplete="name" value="${escapeHtml(bookingDraft.guestName)}" placeholder="Vor- und Nachname"></label>
+
+                <label class="full"><span class="form-label">${bookingDraft.kind === 'owner' ? 'Wer ist im Haus? (optional)' : 'Name des Gasts'}</span><input class="form-control" name="guestName" ${bookingDraft.kind === 'owner' ? '' : 'required'} maxlength="100" autocomplete="name" value="${escapeHtml(bookingDraft.guestName)}" placeholder="${bookingDraft.kind === 'owner' ? `z. B. ${escapeHtml(profileData.name || 'Familie')} oder Freunde` : 'Vor- und Nachname'}"></label>
                 <label><span class="form-label">Personen</span><input class="form-control" name="guestCount" type="number" min="1" max="30" step="1" required value="${escapeHtml(bookingDraft.guestCount)}"></label>
                 <label><span class="form-label">Ankunftszeit</span><input class="form-control" name="arrivalTime" type="time" required value="${escapeHtml(bookingDraft.arrivalTime)}"></label>
-                <label class="full"><span class="form-label">Hinweise (optional)</span><textarea class="form-control textarea" name="notes" maxlength="500" placeholder="Zum Beispiel Schlüsselübergabe oder besondere Absprachen">${escapeHtml(bookingDraft.notes)}</textarea></label>
-                <div class="full">${careControlHtml({ enabled: bookingDraft.careEnabled, plan: bookingDraft.carePlan, form: true })}</div>
+                <label class="full"><span class="form-label">Hinweise (optional)</span><textarea class="form-control textarea" name="notes" maxlength="500" placeholder="${bookingDraft.kind === 'owner' ? 'Zum Beispiel: Haus vorheizen, Boot bereitstellen' : 'Zum Beispiel Schlüsselübergabe oder besondere Absprachen'}">${escapeHtml(bookingDraft.notes)}</textarea></label>
+                <div class="full">${careControlHtml({ enabled: bookingDraft.careEnabled, plan: bookingDraft.carePlan, form: true, owner: bookingDraft.kind === 'owner' })}</div>
               </div>
-              <div class="form-actions"><button type="submit" class="primary-btn">${editingBookingId ? 'Änderungen speichern' : 'Buchung speichern'}</button>${editingBookingId ? '<button type="button" class="secondary-btn" data-action="cancel-booking-edit">Abbrechen</button>' : ''}</div>
+              <div class="form-actions"><button type="submit" class="primary-btn">${editingBookingId ? 'Änderungen speichern' : bookingDraft.kind === 'owner' ? 'Eigennutzung speichern' : 'Buchung speichern'}</button>${editingBookingId ? '<button type="button" class="secondary-btn" data-action="cancel-booking-edit">Abbrechen</button>' : ''}</div>
             </form>
           </section>
         </div>
@@ -3791,12 +3830,13 @@
       const dayDiff = (to) => Math.round((new Date(`${to}T12:00:00`) - new Date(`${today}T12:00:00`)) / 86400000);
       const inDays = (days) => (days === 0 ? 'heute' : days === 1 ? 'morgen' : `in ${days} Tagen`);
       const tiles = [];
-      if (bookingsEnabled()) {
+      if (bookingsEnabled() || bookings.some(isOwnerStay)) {
         const guest = guestInHouse(property.id, today);
+        const ownerNow = guest && isOwnerStay(guest);
         const departure = bookings.find((booking) => booking.propertyId === property.id && booking.endDate === today);
         const next = bookings.filter((booking) => booking.propertyId === property.id && booking.startDate > today).sort((a, b) => a.startDate.localeCompare(b.startDate))[0];
         tiles.push(guest
-          ? { id: 'bookings', icon: 'users', label: 'Belegt', value: guest.guestName, note: `bis ${fmtDate(guest.endDate)}`, state: 'busy' }
+          ? { id: 'bookings', icon: ownerNow ? 'home' : 'users', label: ownerNow ? 'Eigennutzung' : 'Belegt', value: guest.guestName, note: `bis ${fmtDate(guest.endDate)}`, state: ownerNow ? 'owner' : 'busy' }
           : departure ? { id: 'bookings', icon: 'users', label: 'Gästewechsel', value: 'Abreise heute', note: departure.guestName, state: 'warn' }
           : { id: 'bookings', icon: 'calendar', label: 'Frei', value: next ? `Anreise ${inDays(dayDiff(next.startDate))}` : 'Keine Buchung', note: next ? `${next.guestName} · ${fmtDate(next.startDate)}` : 'Kalender ansehen', state: 'ok' });
       }
@@ -3820,7 +3860,7 @@
       const plan = costCategories.reduce((sum, category) => sum + Math.max(0, Number(costs[category.id]) || 0), 0);
       const actual = expensesFor(property.id, new Date().getFullYear()).reduce((sum, expense) => sum + Number(expense.amount), 0);
       tiles.push({ id: 'costs', icon: 'cost', label: `Kosten ${new Date().getFullYear()}`, value: formatCost(actual), note: `von ${formatCost(plan)} Plan`, state: plan && actual > plan ? 'alert' : 'neutral', progress: plan ? Math.min(100, Math.round((actual / plan) * 100)) : 0 });
-      return { tiles, overdue, issues: issuesOpen.length, busy: Boolean(bookingsEnabled() && guestInHouse(property.id, today)) };
+      return { tiles, overdue, issues: issuesOpen.length, busy: Boolean(guestInHouse(property.id, today)) };
     }
     function houseTilesHtml(property, status = houseStatus(property)) {
       return `<div class="house-tiles">${status.tiles.map((tile) => `<button type="button" class="house-tile st-${tile.state}" data-house-goto="${tile.id}" data-property="${escapeHtml(property.id)}"${tile.season ? ` data-season="${tile.season}"` : ''}><span class="house-tile-head">${icon(tile.icon)}${escapeHtml(tile.label)}</span><strong>${escapeHtml(tile.value)}</strong><small>${escapeHtml(tile.note)}</small>${tile.progress !== undefined ? `<span class="house-tile-bar"><span style="width:${tile.progress}%"></span></span>` : ''}</button>`).join('')}</div>`;
@@ -5497,8 +5537,9 @@
       }
     }
     function render() {
-      document.body.classList.toggle('no-bookings', !bookingsEnabled());
-      if (!bookingsEnabled() && currentPage === 'bookings') currentPage = 'dashboard';
+      document.body.classList.remove('no-bookings');
+      const bookingsNav = document.querySelector('.nav [data-page="bookings"] span');
+      if (bookingsNav) bookingsNav.textContent = bookingsEnabled() ? 'Buchung & Eigennutzung' : 'Eigennutzung';
       document.querySelectorAll('[data-pro-only]').forEach((node) => { node.hidden = !isPro(); });
       const plannedCount = syncAutomation();
       if (plannedCount) setTimeout(() => {
@@ -5512,7 +5553,7 @@
         currentPage = 'plans';
       }
       const pages = { dashboard, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPage, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage };
-      const labels = { dashboard: 'Übersicht', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner', documents: 'Dokumente', costs: 'Jahreskosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: 'Buchung', profile: 'Benutzerprofil' };
+      const labels = { dashboard: 'Übersicht', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner', documents: 'Dokumente', costs: 'Jahreskosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil' };
       if (currentPage !== lastRenderedPage) {
         if (returningToPreviousPage) {
           returningToPreviousPage = false;
@@ -5942,6 +5983,15 @@
         return;
       }
       if (action === 'auto-task-config') { document.getElementById('auto-task-subtitle').textContent = singleHouse() ? 'Wähle aus, welche Aufgaben für dein Ferienhaus automatisch erstellt werden.' : 'Wähle aus, welche Aufgaben für jedes Ferienhaus automatisch erstellt werden.'; renderAutoTemplates(); document.getElementById('auto-task-modal').classList.add('open'); }
+      if (action === 'new-owner-stay') {
+        resetBookingEditor();
+        bookingDraft.kind = 'owner';
+        bookingDraft.careEnabled = false;
+        bookingView = 'form';
+        currentPage = 'bookings';
+        render();
+        return;
+      }
       if (action === 'new-booking') {
         resetBookingEditor();
         bookingView = 'form';
@@ -6112,6 +6162,12 @@
       if (event.target.form?.id === 'booking-form' && Object.hasOwn(bookingDraft, event.target.name)) {
         bookingDraft[event.target.name] = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
         if (event.target.name === 'propertyId') render();
+        if (event.target.name === 'kind') {
+          bookingDraft.careEnabled = event.target.value === 'guest' && automation.turnover.defaultOn;
+          const nameInput = document.querySelector('#booking-form [name="guestName"]');
+          if (nameInput) bookingDraft.guestName = nameInput.value;
+          render();
+        }
         if (event.target.name === 'careEnabled') {
           const box = event.target.closest('.care-box');
           box.querySelector('[data-care-plan-wrap]').hidden = !event.target.checked;
@@ -6389,7 +6445,8 @@
         event.preventDefault();
         const formData = new FormData(event.target);
         const propertyId = String(formData.get('propertyId') || '');
-        const guestName = String(formData.get('guestName') || '').trim();
+        const stayKind = formData.get('kind') === 'owner' || !bookingsEnabled() ? 'owner' : 'guest';
+        const guestName = String(formData.get('guestName') || '').trim() || (stayKind === 'owner' ? (profileData.name?.trim() || 'Eigennutzung') : '');
         const guestCount = Number(formData.get('guestCount'));
         const startDate = String(formData.get('startDate') || '');
         const endDate = String(formData.get('endDate') || '');
@@ -6415,7 +6472,7 @@
           && booking.propertyId === propertyId
           && startDate < booking.endDate && endDate > booking.startDate);
         if (conflictingBooking) {
-          showToast(`Der Zeitraum überschneidet sich mit der Buchung von ${conflictingBooking.guestName}.`);
+          showToast(`Der Zeitraum überschneidet sich mit ${isOwnerStay(conflictingBooking) ? 'der Eigennutzung' : 'der Buchung'} von ${conflictingBooking.guestName}.`);
           return;
         }
         if (editingBookingId && !bookings.some((booking) => booking.id === editingBookingId)) {
@@ -6427,6 +6484,7 @@
         const isEditing = editingBookingId !== null;
         const updatedBooking = {
           id: isEditing ? editingBookingId : `booking-${Date.now()}`,
+          kind: stayKind,
           propertyId,
           guestName,
           guestCount,
@@ -6444,7 +6502,7 @@
         resetBookingEditor();
         bookingView = 'list';
         render();
-        showToast(isEditing ? 'Buchung wurde aktualisiert.' : 'Buchung wurde gespeichert.');
+        showToast(stayKind === 'owner' ? (isEditing ? 'Eigennutzung wurde aktualisiert.' : bookingsEnabled() ? 'Eigennutzung eingetragen – der Zeitraum ist für Buchungen gesperrt.' : 'Eigennutzung eingetragen.') : isEditing ? 'Buchung wurde aktualisiert.' : 'Buchung wurde gespeichert.');
         return;
       }
       if (event.target.id !== 'profile-form' && event.target.id !== 'mail-form') return;
