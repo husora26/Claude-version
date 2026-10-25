@@ -4139,10 +4139,11 @@
     const providerById = (id) => providers.find((provider) => provider.id === id) || null;
     const propertyIdByName = (name) => properties.find((property) => property.name === name)?.id || '';
     function partnerOptionsHtml(propertyName, selected = '') {
+      // Nur die dem Ferienhaus zugeordneten Servicepartner stehen zur Auswahl.
       const assigned = servicePartnerAssignments[propertyIdByName(propertyName)] || [];
       const mine = providers.filter((provider) => assigned.includes(provider.id));
-      const others = providers.filter((provider) => !assigned.includes(provider.id) && provider.id === selected);
-      return `<option value="">Kein Servicepartner</option>${mine.length ? `<optgroup label="Zugeordnet">${mine.map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === selected ? 'selected' : ''}>${escapeHtml(provider.name)} · ${partnerCategoryLabel(provider)}</option>`).join('')}</optgroup>` : ''}${others.map((provider) => `<option value="${escapeHtml(provider.id)}" selected>${escapeHtml(provider.name)} · ${partnerCategoryLabel(provider)}</option>`).join('')}<optgroup label="Alle Servicepartner">${providers.filter((provider) => !assigned.includes(provider.id) && provider.id !== selected).map((provider) => `<option value="${escapeHtml(provider.id)}">${escapeHtml(provider.name)} · ${partnerCategoryLabel(provider)} · ${escapeHtml(provider.town || '')}</option>`).join('')}</optgroup>`;
+      const previous = !assigned.includes(selected) ? providerById(selected) : null;
+      return `<option value="">${mine.length ? 'Kein Servicepartner' : 'Noch keine Servicepartner zugeordnet'}</option>${mine.map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === selected ? 'selected' : ''}>${escapeHtml(provider.name)} · ${partnerCategoryLabel(provider)}</option>`).join('')}${previous ? `<option value="${escapeHtml(previous.id)}" selected>${escapeHtml(previous.name)} · nicht mehr zugeordnet</option>` : ''}`;
     }
     // Vorschlag für automatisch erzeugte Aufgaben: zugeordneter Partner der passenden Kategorie.
     function suggestPartner(propertyId, kind) {
@@ -4286,7 +4287,7 @@
       const name = properties.find((property) => property.id === propertyId)?.name || '';
       form.elements.partnerId.innerHTML = partnerOptionsHtml(name, selected);
       const assigned = (servicePartnerAssignments[propertyId] || []).length;
-      document.getElementById('issue-partner-hint').textContent = assigned ? 'Vorgeschlagen ist dein zugeordneter Handwerker – du kannst jeden Partner wählen.' : 'Diesem Haus sind noch keine Servicepartner zugeordnet – wähle einen aus der Liste.';
+      document.getElementById('issue-partner-hint').textContent = assigned ? 'Zur Auswahl stehen die Servicepartner, die diesem Ferienhaus zugeordnet sind.' : 'Diesem Ferienhaus sind noch keine Servicepartner zugeordnet – das geht unter „Servicepartner finden“.';
     }
     function openIssueModal({ propertyId = properties[0]?.id, part = '', text = '', source = 'Meldung', taskId = '', partnerId = '' } = {}) {
       const form = document.getElementById('issue-form');
