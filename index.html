@@ -1517,7 +1517,7 @@
     .tcard-ptype { margin-left: 4px; padding: 1px 6px; border-radius: 10px; color: var(--green); background: var(--green-soft); font-style: normal; letter-spacing: .02em; text-transform: none; }
     .tcard-ptype.cat-inspection { color: #2f6676; background: #e3eff2; }
     .tcard-ptype.cat-renovation { color: #8e622b; background: var(--amber-soft); }
-    .tcard .status-select { width: 132px; height: 32px; font-size: 11px; font-weight: 650; }
+    .tcard .status-select { width: 150px; height: 32px; font-size: 11px; font-weight: 650; }
     .tcard .status-select.st-progress { color: #2f5f86; background-color: #eef4fa; border-color: #c9dbea; }
     .tcard .status-select.st-done { color: var(--green); background-color: var(--green-soft); border-color: transparent; }
     .tcard-actions { display: flex; gap: 2px; }
@@ -1527,6 +1527,14 @@
     .tcard-action:hover { border-color: var(--line); color: var(--green); background: #f6f8f4; }
     .tcard-action.warn:hover { color: #9a6416; background: var(--amber-soft); }
     .tcard-action.danger:hover { color: var(--red); background: var(--red-soft); }
+    .tcard-action.warn.active { color: #8a5a00; background: #ffd84d; border-color: #e8b800; }
+    .tcard-action.warn.active svg { fill: #ffd84d; }
+    .tcard-issues { display: grid; gap: 5px; margin-top: 8px; }
+    .tcard-issue { display: flex; align-items: flex-start; gap: 7px; padding: 6px 9px; border: 1px solid #f0d56b; border-radius: 8px; color: #5f4700; background: #fff8d6; font-size: 11px; line-height: 1.45; }
+    .tcard-issue svg { flex-shrink: 0; width: 14px; height: 14px; margin-top: 1px; color: #b88a00; fill: #ffd84d; }
+    .tcard-issue em { display: block; color: #8a6d12; font-size: 10px; font-style: normal; font-weight: 650; }
+    .tcard-issue.fixed { border-color: #cfe0d4; color: var(--muted); background: #f2f7f3; }
+    .tcard-issue.fixed svg { color: var(--green); fill: none; }
     .tcard.is-done { background: #f6f7f4; box-shadow: none; }
     .tcard.is-done .tcard-title { color: var(--muted); text-decoration: line-through; }
     .tcard.is-done .tcard-date { color: #8a928c; background: #eceee9; }
@@ -4200,18 +4208,21 @@
           task.area ? `<span class="tchip">${icon(areaIcon)} ${escapeHtml(task.area)}</span>` : '',
           singleHouse() ? '' : `<span class="tchip">${icon('property')} ${escapeHtml(task.property)}</span>`
         ].filter(Boolean).join('');
-        return `<article class="tcard prio-${priority} ${done ? 'is-done' : ''} ${overdue ? 'is-overdue' : ''}">
+        const taskIssues = issues.filter((issue) => issue.taskId === task.id);
+        const issueNote = taskIssues.length ? `<div class="tcard-issues">${taskIssues.map((issue) => `<span class="tcard-issue ${issue.status}">${icon('alert')}<span><strong>Auffälligkeit:</strong> ${escapeHtml(issue.text)}<em>${ISSUE_STATUS[issue.status] || ''}${partLabel(issue.part) ? ` · ${escapeHtml(partLabel(issue.part))}` : ''}</em></span></span>`).join('')}</div>` : '';
+        return `<article class="tcard prio-${priority} ${done ? 'is-done' : ''} ${overdue ? 'is-overdue' : ''} ${taskIssues.length ? 'has-issue' : ''}">
           <button type="button" class="tcard-check" data-complete-task="${task.id}" aria-pressed="${done}" aria-label="${done ? 'Wieder öffnen' : 'Als erledigt markieren'}: ${escapeHtml(task.title)}">${icon('check')}</button>
           <div class="tcard-date">${dueDate ? `<strong>${dueDate.getDate()}</strong><span>${dueDate.toLocaleDateString('de-DE', { month: 'short' })}</span>` : '<strong>–</strong><span>offen</span>'}</div>
           <div class="tcard-body">
             <button type="button" class="tcard-title" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten: ${escapeHtml(task.title)}">${escapeHtml(task.title)}</button>
             <div class="tcard-chips">${relative ? `<span class="tchip when ${overdue ? 'late' : dayDiff <= 2 ? 'soon' : ''}">${overdue ? 'Überfällig · ' : ''}${relative}</span>` : ''}${chips}</div>
             ${task.description ? `<p class="tcard-desc">${escapeHtml(task.description)}</p>` : ''}
+            ${issueNote}
           </div>
           <div class="tcard-controls">
             <label class="tcard-field"><span>Servicepartner${providerById(task.partnerId) ? ` <i class="tcard-ptype cat-${escapeHtml(providerById(task.partnerId).category)}">${partnerCategoryLabel(providerById(task.partnerId))}</i>` : ''}</span><select class="filter-select partner-select ${task.partnerId ? 'has-partner' : ''}" data-partner-task="${task.id}" aria-label="Servicepartner für ${escapeHtml(task.title)}">${partnerOptionsHtml(task.property, task.partnerId || '')}</select></label>
             <label class="tcard-field"><span>Status</span><select class="filter-select status-select st-${status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open'}" data-status-task="${task.id}" aria-label="Status für ${escapeHtml(task.title)} ändern">${taskStatuses.map((value) => `<option ${status === value ? 'selected' : ''}>${value}</option>`).join('')}</select></label>
-            <div class="tcard-actions"><button type="button" class="tcard-action" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten">${icon('note')}<span>Bearbeiten</span></button><button type="button" class="tcard-action warn" data-report-issue="${task.id}" aria-label="Auffälligkeit zu ${escapeHtml(task.title)} melden">${icon('alert')}<span>Auffälligkeit</span></button><button type="button" class="tcard-action danger" data-delete-task="${task.id}" aria-label="Aufgabe löschen">✕<span>Löschen</span></button></div>
+            <div class="tcard-actions"><button type="button" class="tcard-action" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten">${icon('note')}<span>Bearbeiten</span></button><button type="button" class="tcard-action warn ${taskIssues.some((issue) => issue.status === 'open' || issue.status === 'planned') ? 'active' : ''}" data-report-issue="${task.id}" aria-label="Auffälligkeit zu ${escapeHtml(task.title)} melden${taskIssues.length ? ` (${taskIssues.length} gemeldet)` : ''}" title="${taskIssues.length ? `${taskIssues.length} ${taskIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet` : 'Auffälligkeit melden'}">${icon('alert')}<span>Auffälligkeit</span></button><button type="button" class="tcard-action danger" data-delete-task="${task.id}" aria-label="Aufgabe löschen">✕<span>Löschen</span></button></div>
           </div>
         </article>`;
       }).join('');
@@ -8953,7 +8964,9 @@
       const propertyId = String(data.get('propertyId') || properties[0]?.id || '');
       const text = String(data.get('text') || '').trim();
       if (!text || !properties.some((property) => property.id === propertyId)) return;
-      createIssue({ propertyId, part: String(data.get('part') || '') || housePartDefs.find((part) => part.match.test(text))?.id || '', text, priority: String(data.get('priority') || 'soon'), source: String(data.get('source') || 'Meldung'), taskId: data.get('taskId') ? Number(data.get('taskId')) : null, partnerId: String(data.get('partnerId') || '') });
+      const sourceTask = data.get('taskId') ? tasks.find((task) => task.id === Number(data.get('taskId'))) : null;
+      createIssue({ propertyId, part: String(data.get('part') || '') || housePartDefs.find((part) => part.match.test(text))?.id || '', text, priority: String(data.get('priority') || 'soon'), source: String(data.get('source') || 'Meldung'), taskId: sourceTask ? sourceTask.id : null, partnerId: String(data.get('partnerId') || '') });
+      if (sourceTask && taskStatus(sourceTask) === 'Offen') { setTaskStatus(sourceTask, 'In Bearbeitung'); persistTasks(); }
       document.getElementById('issue-modal').classList.remove('open');
       render();
       showToast(automation.repairs ? 'Auffälligkeit gemeldet – der Reparaturauftrag wurde automatisch geplant.' : 'Auffälligkeit gespeichert.');
