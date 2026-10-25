@@ -1563,6 +1563,17 @@
     .issue-invoice em { color: var(--green); font-style: normal; font-weight: 700; }
     .issue-invoice-read { padding: 2px 7px; border: 0; border-radius: 5px; color: #8e622b; background: var(--amber-soft); font-size: 10px; font-weight: 700; cursor: pointer; }
     @media (max-width: 560px) { .issue-partner { flex-basis: 100%; } .issue-partner .partner-select { width: 100%; } .issue-invoices { justify-content: flex-start; } .issue-invoices-head { text-align: left; } }
+    /* Service vor Ort: Status und Meldungen statt Abhakkästchen */
+    .task-row .task-main { flex: 1; min-width: 0; }
+    .task-row-side { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+    .task-status-pill { padding: 3px 9px; border-radius: 20px; color: #5d6b62; background: #eef1ec; font-size: 10px; font-weight: 700; white-space: nowrap; }
+    .task-status-pill.st-progress { color: #2f5f86; background: #e6eff7; }
+    .task-status-pill.st-done { color: var(--green); background: var(--green-soft); }
+    .task-issue-flag { display: grid; place-items: center; width: 26px; height: 26px; border: 1px solid #e8b800; border-radius: 7px; background: #ffd84d; color: #8a5a00; }
+    .task-issue-flag svg { width: 14px; height: 14px; fill: #ffd84d; }
+    .task-row-issue { margin-top: 4px; overflow: hidden; color: #7a5c00; font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
+    .task-row-side .task-due { min-width: 44px; text-align: right; }
+    @media (max-width: 520px) { .task-row { flex-wrap: wrap; padding: 10px 0; } .task-row-side { width: 100%; justify-content: flex-end; } }
     .partner-tasks-link { display: inline-block; margin-top: 4px; font-size: 11.5px; }
     /* Hauskontrolle: Statuskopf, Schritte, Prüfliste mit Auffälligkeiten und Reparaturen */
     .insp-status-card { padding: 0; border-top: 4px solid #d58a1f; }
@@ -3769,10 +3780,12 @@
       const tagClass = task.priority === 'urgent' ? 'urgent' : task.priority === 'soon' ? 'soon' : '';
       const overdue = !task.done && task.date && task.date < localDateKey(new Date());
       const extraTags = `${overdue ? '<span class="task-tag overdue">Überfällig</span>' : ''}${task.auto ? '<span class="task-tag auto">Automatisch</span>' : ''}`;
-      return `<div class="task-row ${task.done ? 'is-done' : ''}">
-        <button class="check ${task.done ? 'done' : ''}" data-toggle="${task.id}" aria-label="${task.done ? 'Als offen markieren' : 'Als erledigt markieren'}">${task.done ? icon('check') : ''}</button>
-        <div class="task-main"><button class="task-name ${task.done ? 'completed' : ''}" type="button" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten: ${escapeHtml(task.title)}">${escapeHtml(task.title)}</button><div class="task-meta"><span>${escapeHtml(task.property)}</span><span class="task-tag ${tagClass}">${priority}</span>${extraTags}</div>        </div>
-        <div class="task-due ${overdue ? 'overdue' : ''}">${fmtDate(task.date)}</div>
+      const status = taskStatus(task);
+      const openIssues = issues.filter((issue) => issue.taskId === task.id && (issue.status === 'open' || issue.status === 'planned'));
+      const statusClass = status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open';
+      return `<div class="task-row ${task.done ? 'is-done' : ''} ${openIssues.length ? 'has-issue' : ''}">
+        <div class="task-main"><button class="task-name ${task.done ? 'completed' : ''}" type="button" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten: ${escapeHtml(task.title)}">${escapeHtml(task.title)}</button><div class="task-meta"><span>${escapeHtml(task.property)}</span><span class="task-tag ${tagClass}">${priority}</span>${extraTags}</div>${openIssues.length ? `<div class="task-row-issue">${escapeHtml(openIssues.map((issue) => issue.text).join(' · '))}</div>` : ''}</div>
+        <div class="task-row-side">${openIssues.length ? `<span class="task-issue-flag" title="${openIssues.length} ${openIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet" aria-label="${openIssues.length} ${openIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet">${icon('alert')}</span>` : ''}<span class="task-status-pill st-${statusClass}">${escapeHtml(status)}</span><span class="task-due ${overdue ? 'overdue' : ''}">${fmtDate(task.date)}</span></div>
       </div>`;
     }
     function escapeHtml(value) {
