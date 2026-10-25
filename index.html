@@ -1421,6 +1421,31 @@
     .house-overview > * { min-width: 0; }
     .house-service-row.stacked { flex-direction: column; align-items: flex-start; gap: 7px; text-align: left; }
     .house-service-row.stacked .house-service-badges { justify-content: flex-start; }
+    .partner-select { max-width: 190px; font-size: 11px; }
+    .partner-select.has-partner { border-color: #b8cfc0; color: var(--green); background: #f3f8f4; font-weight: 650; }
+    .view-toggle { display: inline-flex; gap: 3px; padding: 3px; border-radius: 9px; background: #efede6; }
+    .view-toggle button { min-height: 32px; padding: 0 11px; border: 0; border-radius: 7px; color: #5d675f; background: transparent; font-size: 11.5px; font-weight: 700; }
+    .view-toggle button.active { color: var(--green); background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .partner-task-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 12px; padding: 14px 18px 18px; }
+    .partner-task-card { display: grid; gap: 10px; align-content: start; padding: 14px; border: 1px solid var(--line); border-top: 3px solid var(--green); border-radius: 12px; background: #fff; }
+    .partner-task-card.unassigned { border-top-color: #b5bcb4; background: #faf9f5; }
+    .partner-task-head { display: flex; align-items: center; gap: 10px; }
+    .partner-task-head strong { display: block; font-size: 13px; }
+    .partner-task-head small { color: var(--muted); font-size: 11px; }
+    .partner-task-head b { color: var(--red); }
+    .partner-task-list { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+    .partner-task-list li { display: grid; grid-template-columns: 52px 1fr; gap: 8px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid #f0ece2; font-size: 12px; }
+    .partner-task-list li > span { color: var(--muted); font-size: 11px; font-weight: 700; }
+    .partner-task-list li.overdue > span { color: var(--red); }
+    .partner-task-list button { padding: 0; border: 0; color: var(--ink); background: none; font-weight: 650; text-align: left; }
+    .partner-task-list button small { display: block; color: var(--muted); font-size: 10.5px; font-weight: 500; }
+    .partner-task-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .partner-task-actions .secondary-btn { min-height: 32px; padding: 0 10px; font-size: 11px; }
+    .partner-task-actions svg { width: 13px; height: 13px; }
+    .partner-task-actions a.secondary-btn { display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
+    .partner-hint, .form-hint { color: var(--muted); font-size: 11px; }
+    .form-hint[hidden] { display: none; }
+    .partner-tasks-link { display: inline-block; margin-top: 4px; font-size: 11.5px; }
     /* Automatisierung */
     .text-btn.inline { padding: 0; font-size: inherit; }
     .care-steps { display: grid; gap: 4px; margin: 2px 0 4px; padding: 0; list-style: none; }
@@ -1637,6 +1662,7 @@
         <label><span class="form-label">Priorität</span><select class="form-control" name="priority"><option value="normal">Normal</option><option value="soon">Wichtig</option><option value="urgent">Dringend</option></select></label>
         <label><span class="form-label">Bereich</span><input class="form-control" name="area" maxlength="60" placeholder="z. B. Heizungsraum, Außenbereich"></label>
         <label><span class="form-label">Status</span><select class="form-control" name="status"><option>Offen</option><option>In Bearbeitung</option><option>Erledigt</option></select></label>
+        <label><span class="form-label">Servicepartner</span><select class="form-control" name="partnerId"></select></label>
         <label><span class="form-label">Wiederholung</span><select class="form-control" name="repeat"><option>Einmalig</option><option>Wöchentlich</option><option>Monatlich</option><option>Jährlich</option></select></label>
         <label style="grid-column:1/-1"><span class="form-label">Beschreibung</span><textarea class="form-control" name="description" rows="2" maxlength="300" placeholder="Optionale Hinweise zur Aufgabe"></textarea></label>
       </div>
@@ -1707,7 +1733,7 @@
         <label><span class="form-label">Budget (SEK)</span><input class="form-control" name="budget" type="number" min="0" step="500" placeholder="z. B. 85000"></label>
         <label><span class="form-label">Geplanter Beginn</span><input class="form-control" name="startDate" type="date"></label>
         <label><span class="form-label">Geplantes Ende</span><input class="form-control" name="endDate" type="date"></label>
-        <label class="full"><span class="form-label">Handwerker / Betrieb</span><select class="form-control" name="partnerId"></select></label>
+        <label class="full"><span class="form-label">Handwerker / Betrieb (aus deinen Servicepartnern)</span><select class="form-control" name="partnerId"></select><small class="form-hint" id="renovation-partner-hint" hidden>Wähle zuerst unter „Servicepartner finden“ Betriebe für dieses Haus aus – sie erscheinen dann hier.</small></label>
         <label class="full"><span class="form-label">Notizen</span><textarea class="form-control textarea" name="notes" maxlength="600" placeholder="Angebote, Absprachen, Förderung (z. B. ROT-Abzug)"></textarea></label>
       </div>
       <div class="form-actions"><button type="button" class="secondary-btn" data-close-renovation>Abbrechen</button><button type="submit" class="primary-btn" id="renovation-submit">Projekt speichern</button></div>
@@ -2624,7 +2650,7 @@
           const spread = !last && !months && Number(template.interval) >= 90 ? (index % 8) * 7 : 0;
           const date = spread ? localIsoDate(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7 + spread)) : dueDate;
           const fromPackage = servicePackage && servicePackage.templates.includes(template.id);
-          added.push({ id: Date.now() + added.length, title: template.title, property: property.name, date, priority: template.priority, area: templateCategory(template).label, description: fromPackage ? `Aus dem Servicepaket „${servicePackage.name}“.` : 'Wiederkehrende Aufgabe (individuell ergänzt).', done: false, status: 'Offen', repeat: 'Einmalig', auto: 'maintenance' });
+          added.push({ id: Date.now() + added.length, partnerId: suggestPartner(property.id, ['outdoor', 'season'].includes(templateCategory(template).id) ? 'outdoor' : 'maintenance'), title: template.title, property: property.name, date, priority: template.priority, area: templateCategory(template).label, description: fromPackage ? `Aus dem Servicepaket „${servicePackage.name}“.` : 'Wiederkehrende Aufgabe (individuell ergänzt).', done: false, status: 'Offen', repeat: 'Einmalig', auto: 'maintenance' });
           autoTasks.created[key] = todayIso;
         });
       });
@@ -2754,7 +2780,7 @@
           const description = `Automatisch geplant für die Buchung ${booking.guestName} (${fmtDate(booking.startDate)} – ${fmtDate(booking.endDate)}).${partner ? ` Servicepartner: ${partner.name}.` : ''}`;
           if (!existing) {
             if ((step.anchor === 'start' && booking.startDate < today) || automation.created[`dismiss|${booking.id}|${step.id}`]) return;
-            const task = { id: ++nextId, title, property: property.name, date, priority: step.priority, area: 'Gästewechsel', status: 'Offen', done: false, repeat: 'Einmalig', description, auto: 'turnover', bookingId: booking.id, step: step.id };
+            const task = { id: ++nextId, partnerId: step.partnerCategory || step.id === 'prepare' ? suggestPartner(property.id, 'cleaning') : step.id === 'checkout' ? suggestPartner(property.id, 'inspection') : '', title, property: property.name, date, priority: step.priority, area: 'Gästewechsel', status: 'Offen', done: false, repeat: 'Einmalig', description, auto: 'turnover', bookingId: booking.id, step: step.id };
             next.push(task);
             added.push(task);
           } else if (!existing.done && !existing.pinned && (existing.date !== date || existing.property !== property.name || existing.title !== title)) {
@@ -2773,7 +2799,7 @@
         if (inspectionIsCurrent(property.id)) {
           if (inspectionIndex >= 0) { next[inspectionIndex] = { ...next[inspectionIndex], status: 'Erledigt', done: true }; completed.push(next[inspectionIndex]); }
         } else if (automation.vacancyInspection && inspectionIndex < 0 && !guestInHouse(property.id, today) && !automation.created[inspectionDismissKey(property.id)]) {
-          const task = { id: ++nextId, title: 'Abwesenheitskontrolle durchführen', property: property.name, date: today, priority: 'soon', area: 'Hauskontrolle', status: 'Offen', done: false, repeat: 'Einmalig', description: 'Automatisch erstellt: Die monatliche Abwesenheitskontrolle ist fällig und das Haus ist nicht belegt.', auto: 'inspection', propertyId: property.id };
+          const task = { id: ++nextId, partnerId: suggestPartner(property.id, 'inspection'), title: 'Abwesenheitskontrolle durchführen', property: property.name, date: today, priority: 'soon', area: 'Hauskontrolle', status: 'Offen', done: false, repeat: 'Einmalig', description: 'Automatisch erstellt: Die monatliche Abwesenheitskontrolle ist fällig und das Haus ist nicht belegt.', auto: 'inspection', propertyId: property.id };
           next.push(task);
           added.push(task);
         }
@@ -2790,7 +2816,7 @@
           if (openIndex >= 0 && (next[openIndex].year ?? year) === year && !next[openIndex].pinned && next[openIndex].date !== due) { next[openIndex] = { ...next[openIndex], date: due, year }; changed = true; }
           if (!automation.seasonal || today < shiftDateKey(due, -42) || today > shiftDateKey(due, 60) || automation.created[key]) return;
           if (ready) return;
-          const task = { id: ++nextId, year, title: rule.title, property: property.name, date: due, priority: rule.priority, area: 'Saison', status: 'Offen', done: false, repeat: 'Einmalig', description: `Automatisch erstellte Saisonaufgabe – Frist ${fmtDate(due)}. Erledigt sich, sobald die ${rule.id === 'winter' ? 'Wintercheckliste' : 'Frühjahrscheckliste'} vollständig abgehakt ist.`, auto: 'season', season: rule.id, propertyId: property.id };
+          const task = { id: ++nextId, year, partnerId: suggestPartner(property.id, 'inspection'), title: rule.title, property: property.name, date: due, priority: rule.priority, area: 'Saison', status: 'Offen', done: false, repeat: 'Einmalig', description: `Automatisch erstellte Saisonaufgabe – Frist ${fmtDate(due)}. Erledigt sich, sobald die ${rule.id === 'winter' ? 'Wintercheckliste' : 'Frühjahrscheckliste'} vollständig abgehakt ist.`, auto: 'season', season: rule.id, propertyId: property.id };
           automation.created[key] = today;
           next.push(task);
           added.push(task);
@@ -2861,7 +2887,7 @@
           const partner = craftsmanFor(property.id);
           const part = partLabel(issue.part);
           const short = issue.text.length > 60 ? `${issue.text.slice(0, 57).trim()}…` : issue.text;
-          const repair = { id: newId(), title: `Reparatur${part && !short.toLowerCase().startsWith(part.toLowerCase()) ? ` ${part}` : ''}: ${short}`, property: property.name, date: shiftDateKey(today, REPAIR_DAYS[issue.priority] ?? 7), priority: issue.priority || 'soon', area: part || 'Reparatur', status: 'Offen', done: false, repeat: 'Einmalig', description: `Automatisch aus einer Auffälligkeit (${issue.source || 'Meldung'} vom ${fmtDate(issue.date)}): ${issue.text}${partner ? ` · Vorgeschlagener Betrieb: ${partner.name}` : ' · Noch kein Handwerker zugeordnet.'}`, auto: 'repair', issueId: issue.id, propertyId: property.id };
+          const repair = { id: newId(), partnerId: suggestPartner(property.id, 'repair'), title: `Reparatur${part && !short.toLowerCase().startsWith(part.toLowerCase()) ? ` ${part}` : ''}: ${short}`, property: property.name, date: shiftDateKey(today, REPAIR_DAYS[issue.priority] ?? 7), priority: issue.priority || 'soon', area: part || 'Reparatur', status: 'Offen', done: false, repeat: 'Einmalig', description: `Automatisch aus einer Auffälligkeit (${issue.source || 'Meldung'} vom ${fmtDate(issue.date)}): ${issue.text}${partner ? ` · Vorgeschlagener Betrieb: ${partner.name}` : ' · Noch kein Handwerker zugeordnet.'}`, auto: 'repair', issueId: issue.id, propertyId: property.id };
           next.push(repair);
           added.push(repair);
           issue.status = 'planned';
@@ -3013,6 +3039,8 @@
     let taskFilter = 'all';
     let taskPropertyFilter = 'all';
     let taskPriorityFilter = 'all';
+    let taskPartnerFilter = 'all';
+    let taskView = 'list';
     let providerProperty = properties[0].id;
     let providerCategory = 'all';
     let providerSearch = '';
@@ -3095,6 +3123,7 @@
       dateInput.value = localDateKey(new Date());
       const propertySelect = document.querySelector('#task-form [name="property"]');
       propertySelect.innerHTML = `${properties.map((property) => `<option>${escapeHtml(property.name)}</option>`).join('')}${singleHouse() ? '' : '<option>Alle Ferienhäuser</option>'}`;
+      form.elements.partnerId.innerHTML = partnerOptionsHtml(propertySelect.value || properties[0]?.name || '', '');
       document.getElementById('modal-title').textContent = 'Aufgabe erstellen';
       form.querySelector('[type="submit"]').textContent = 'Aufgabe speichern';
       document.getElementById('task-modal').classList.add('open');
@@ -3117,6 +3146,7 @@
       form.elements.status.value = taskStatus(task);
       form.elements.repeat.value = task.repeat || 'Einmalig';
       form.elements.description.value = task.description || '';
+      form.elements.partnerId.innerHTML = partnerOptionsHtml(task.property, task.partnerId || '');
       document.getElementById('modal-title').textContent = 'Aufgabe bearbeiten';
       form.querySelector('[type="submit"]').textContent = 'Änderungen speichern';
       document.getElementById('task-modal').classList.add('open');
@@ -3783,6 +3813,44 @@
         <div style="height:16px"></div>
         ${proProfileCard()}`;
     }
+    // Servicepartner je Aufgabe: Auswahl (zugeordnete Partner des Hauses zuerst), Filter und Übersicht je Partner.
+    const providerById = (id) => providers.find((provider) => provider.id === id) || null;
+    const propertyIdByName = (name) => properties.find((property) => property.name === name)?.id || '';
+    function partnerOptionsHtml(propertyName, selected = '') {
+      const assigned = servicePartnerAssignments[propertyIdByName(propertyName)] || [];
+      const mine = providers.filter((provider) => assigned.includes(provider.id));
+      const others = providers.filter((provider) => !assigned.includes(provider.id) && provider.id === selected);
+      return `<option value="">Kein Servicepartner</option>${mine.length ? `<optgroup label="Zugeordnet">${mine.map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === selected ? 'selected' : ''}>${escapeHtml(provider.name)}</option>`).join('')}</optgroup>` : ''}${others.map((provider) => `<option value="${escapeHtml(provider.id)}" selected>${escapeHtml(provider.name)}</option>`).join('')}<optgroup label="Alle Servicepartner">${providers.filter((provider) => !assigned.includes(provider.id) && provider.id !== selected).map((provider) => `<option value="${escapeHtml(provider.id)}">${escapeHtml(provider.name)} · ${escapeHtml(provider.town || '')}</option>`).join('')}</optgroup>`;
+    }
+    // Vorschlag für automatisch erzeugte Aufgaben: zugeordneter Partner der passenden Kategorie.
+    function suggestPartner(propertyId, kind) {
+      const assigned = servicePartnerAssignments[propertyId] || [];
+      const order = { cleaning: ['house'], repair: ['renovation', 'house'], inspection: ['inspection', 'house'], outdoor: ['house', 'inspection'], maintenance: ['inspection', 'house', 'renovation'] }[kind] || ['house'];
+      for (const category of order) {
+        const match = providers.find((provider) => provider.category === category && assigned.includes(provider.id));
+        if (match) return match.id;
+      }
+      return '';
+    }
+    function partnerTaskListText(partner, list) {
+      const lines = list.map((task) => `• ${task.date ? fmtDate(task.date) : 'ohne Datum'} · ${task.property}: ${task.title}${task.description ? `\n  ${task.description}` : ''}`);
+      return `Hallo ${partner ? partner.name : ''},\n\nhier die anstehenden Aufgaben für unser Ferienhaus:\n\n${lines.join('\n')}\n\nBitte gib kurz Bescheid, wenn eine Aufgabe erledigt ist oder dir dabei etwas auffällt.\n\nViele Grüße\n${profileData.name || ''}`;
+    }
+    function partnerTasksView(visible) {
+      const open = visible.filter((task) => taskStatus(task) !== 'Erledigt');
+      const groups = new Map();
+      open.forEach((task) => { const key = task.partnerId && providerById(task.partnerId) ? task.partnerId : ''; groups.set(key, [...(groups.get(key) || []), task]); });
+      const today = localDateKey(new Date());
+      const cards = [...groups.entries()].sort((a, b) => (a[0] ? 0 : 1) - (b[0] ? 0 : 1) || b[1].length - a[1].length).map(([partnerId, list]) => {
+        const partner = providerById(partnerId);
+        const overdue = list.filter((task) => task.date && task.date < today).length;
+        const sorted = [...list].sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999'));
+        return `<article class="partner-task-card ${partner ? '' : 'unassigned'}"><div class="partner-task-head"><span class="provider-avatar">${escapeHtml(partner ? partner.initials || partner.name.slice(0, 2).toUpperCase() : '?')}</span><div><strong>${escapeHtml(partner ? partner.name : 'Noch ohne Servicepartner')}</strong><small>${list.length} offen${overdue ? ` · <b>${overdue} überfällig</b>` : ''}${partner ? ` · ${escapeHtml(partnerCategoryLabel(partner))}` : ''}</small></div></div>
+          <ul class="partner-task-list">${sorted.map((task) => `<li class="${task.date && task.date < today ? 'overdue' : ''}"><span>${task.date ? escapeHtml(fmtDate(task.date)) : '—'}</span><button type="button" data-edit-task="${task.id}">${escapeHtml(task.title)}<small>${escapeHtml(task.property)}</small></button></li>`).join('')}</ul>
+          <div class="partner-task-actions">${partner ? `${partner.email ? `<a class="secondary-btn" href="mailto:${encodeURIComponent(partner.email)}?subject=${encodeURIComponent(`Aufgaben für ${singleHouse() ? properties[0]?.name || 'unser Ferienhaus' : 'unsere Ferienhäuser'}`)}&body=${encodeURIComponent(partnerTaskListText(partner, sorted))}">${icon('note')} Liste per E-Mail</a>` : ''}<button type="button" class="secondary-btn" data-copy-partner-tasks="${escapeHtml(partnerId)}">Liste kopieren</button>${partner.phone ? `<a class="secondary-btn" href="tel:${encodeURIComponent(partner.phone.replace(/[^\d+]/g, ''))}">Anrufen</a>` : ''}` : '<span class="partner-hint">In der Liste je Aufgabe einen Servicepartner wählen.</span>'}</div></article>`;
+      }).join('');
+      return cards ? `<div class="partner-task-grid">${cards}</div>` : '<div class="empty">Keine offenen Aufgaben für diese Auswahl.</div>';
+    }
     function tasksPage() {
       const rank = { urgent: 0, soon: 1, normal: 2 };
       const priorityText = { urgent: 'Dringend', soon: 'Wichtig', normal: 'Normal' };
@@ -3791,7 +3859,8 @@
         const matchesStatus = taskFilter === 'all' || taskStatus(task) === taskFilter;
         const matchesProperty = taskPropertyFilter === 'all' || task.property === taskPropertyFilter;
         const matchesPriority = taskPriorityFilter === 'all' || (task.priority || 'normal') === taskPriorityFilter;
-        return matchesStatus && matchesProperty && matchesPriority;
+        const matchesPartner = taskPartnerFilter === 'all' || (taskPartnerFilter === 'none' ? !task.partnerId : task.partnerId === taskPartnerFilter);
+        return matchesStatus && matchesProperty && matchesPriority && matchesPartner;
       }).sort((a, b) => (Number(taskStatus(a) === 'Erledigt') - Number(taskStatus(b) === 'Erledigt')) || (a.date || '9999').localeCompare(b.date || '9999') || ((rank[a.priority] ?? 2) - (rank[b.priority] ?? 2)));
       const rows = visible.map((task) => {
         const status = taskStatus(task);
@@ -3799,6 +3868,7 @@
         const priority = task.priority || 'normal';
         return `<tr class="prio-${priority} ${status === 'Erledigt' ? 'is-done' : ''}"><td><button type="button" class="cell-title ${status === 'Erledigt' ? 'completed' : ''}" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten: ${escapeHtml(task.title)}">${escapeHtml(task.title)}</button>${overdue || task.auto ? `<div class="task-meta">${overdue ? '<span class="task-tag overdue">Überfällig</span>' : ''}${task.auto ? '<span class="task-tag auto">Automatisch geplant</span>' : ''}</div>` : ''}${task.repeat && task.repeat !== 'Einmalig' ? `<div class="cell-sub">Wiederholt sich ${escapeHtml(task.repeat.toLowerCase())}</div>` : ''}${task.description ? `<div class="cell-sub">${escapeHtml(task.description)}</div>` : ''}</td>
           <td>${escapeHtml(task.property)}<div class="cell-sub">${escapeHtml(task.area || '—')}</div></td>
+          <td><select class="filter-select partner-select ${task.partnerId ? 'has-partner' : ''}" data-partner-task="${task.id}" aria-label="Servicepartner für ${escapeHtml(task.title)}">${partnerOptionsHtml(task.property, task.partnerId || '')}</select></td>
           <td class="${overdue ? 'overdue' : ''}">${task.date ? fmtDate(task.date) : '—'}</td>
           <td><span class="badge-wrap ${priority}">${priorityText[priority] || 'Normal'}</span></td>
           <td><select class="filter-select status-select" data-status-task="${task.id}" aria-label="Status für ${escapeHtml(task.title)} ändern">${taskStatuses.map((value) => `<option ${status === value ? 'selected' : ''}>${value}</option>`).join('')}</select></td>
@@ -3808,8 +3878,8 @@
       return `<div class="welcome"><div><p class="eyebrow">Buchungen & Instandhaltung</p><h1>Serviceaufgaben</h1><p class="subtitle">Koordiniere Reinigung, Schlüsselübergaben und saisonale Stugapflege.</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>
         <section class="card auto-task-bar"><div><label class="switch"><input type="checkbox" id="auto-task-toggle" ${autoTasks.enabled ? 'checked' : ''}><span class="switch-track"></span><span>Aufgaben automatisch erstellen</span></label><p>${packageExtras().servicePackage ? `Servicepaket ${escapeHtml(packageExtras().servicePackage.name)} · ` : ''}${autoTasks.templates.filter((template) => template.selected).length} Vorlagen ausgewählt – werden ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} automatisch angelegt.</p></div><div class="auto-task-actions"><button class="primary-btn" data-action="new-task">${icon('plus')} Aufgabe erstellen</button><button class="secondary-btn" data-action="auto-task-config">Aufgaben auswählen / erstellen</button><button class="secondary-btn" data-page="automation">${icon('bolt')} Alle Automatiken</button></div></section>
         <section class="card"><div class="card-head"><div><h2 class="card-title">Alle Serviceaufgaben</h2><p class="card-caption">${openCount} offen · ${tasks.length - openCount} erledigt</p></div></div>
-        <div class="section-toolbar" style="padding:0 18px"><div class="toolbar-right"><select id="task-filter" class="filter-select" aria-label="Nach Status filtern"><option value="all">Alle Status</option>${taskStatuses.map((value) => `<option ${taskFilter === value ? 'selected' : ''}>${value}</option>`).join('')}</select>${singleHouse() ? '' : `<select id="task-property-filter" class="filter-select" aria-label="Nach Gebäude filtern"><option value="all">Alle Gebäude</option>${properties.map((property) => `<option value="${escapeHtml(property.name)}" ${taskPropertyFilter === property.name ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select>`}<select id="task-priority-filter" class="filter-select" aria-label="Nach Priorität filtern"><option value="all">Alle Prioritäten</option><option value="urgent" ${taskPriorityFilter === 'urgent' ? 'selected' : ''}>Dringend</option><option value="soon" ${taskPriorityFilter === 'soon' ? 'selected' : ''}>Wichtig</option><option value="normal" ${taskPriorityFilter === 'normal' ? 'selected' : ''}>Normal</option></select></div></div>
-        <div class="task-table-wrap"><table class="task-table"><thead><tr><th>Aufgabe</th><th>Haus / Bereich</th><th>Fälligkeit</th><th>Priorität</th><th>Status</th><th></th></tr></thead><tbody>${rows || '<tr><td colspan="6"><div class="empty">Keine Aufgaben gefunden. Erstelle eine Aufgabe oder ändere die Filter.</div></td></tr>'}</tbody></table></div></section>`;
+        <div class="section-toolbar" style="padding:0 18px"><div class="toolbar-right"><select id="task-filter" class="filter-select" aria-label="Nach Status filtern"><option value="all">Alle Status</option>${taskStatuses.map((value) => `<option ${taskFilter === value ? 'selected' : ''}>${value}</option>`).join('')}</select>${singleHouse() ? '' : `<select id="task-property-filter" class="filter-select" aria-label="Nach Gebäude filtern"><option value="all">Alle Gebäude</option>${properties.map((property) => `<option value="${escapeHtml(property.name)}" ${taskPropertyFilter === property.name ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select>`}<select id="task-priority-filter" class="filter-select" aria-label="Nach Priorität filtern"><option value="all">Alle Prioritäten</option><option value="urgent" ${taskPriorityFilter === 'urgent' ? 'selected' : ''}>Dringend</option><option value="soon" ${taskPriorityFilter === 'soon' ? 'selected' : ''}>Wichtig</option><option value="normal" ${taskPriorityFilter === 'normal' ? 'selected' : ''}>Normal</option></select><select id="task-partner-filter" class="filter-select" aria-label="Nach Servicepartner filtern"><option value="all">Alle Servicepartner</option><option value="none" ${taskPartnerFilter === 'none' ? 'selected' : ''}>Ohne Servicepartner</option>${[...new Set(tasks.map((task) => task.partnerId).filter(Boolean))].map(providerById).filter(Boolean).map((provider) => `<option value="${escapeHtml(provider.id)}" ${taskPartnerFilter === provider.id ? 'selected' : ''}>${escapeHtml(provider.name)}</option>`).join('')}</select></div><div class="view-toggle" role="tablist" aria-label="Ansicht"><button type="button" class="${taskView === 'list' ? 'active' : ''}" data-task-view="list">Liste</button><button type="button" class="${taskView === 'partners' ? 'active' : ''}" data-task-view="partners">Nach Servicepartner</button></div></div>
+        ${taskView === 'partners' ? partnerTasksView(visible) : `<div class="task-table-wrap"><table class="task-table"><thead><tr><th>Aufgabe</th><th>Haus / Bereich</th><th>Servicepartner</th><th>Fälligkeit</th><th>Priorität</th><th>Status</th><th></th></tr></thead><tbody>${rows || '<tr><td colspan="7"><div class="empty">Keine Aufgaben gefunden. Erstelle eine Aufgabe oder ändere die Filter.</div></td></tr>'}</tbody></table></div>`}</section>`;
     }
     function automationPage() {
       const today = localDateKey(new Date());
@@ -3901,9 +3971,12 @@
       document.getElementById('renovation-property-wrap').hidden = singleHouse();
       form.elements.part.innerHTML = partOptions(data.part);
       form.elements.status.innerHTML = RENOVATION_STATUS.map(([id, label]) => `<option value="${id}" ${id === data.status ? 'selected' : ''}>${label}</option>`).join('');
-      const craftsmen = providers.filter((provider) => provider.category === 'renovation' || provider.category === 'house');
       const assigned = servicePartnerAssignments[data.propertyId] || [];
-      form.elements.partnerId.innerHTML = `<option value="">Noch offen</option>${[...craftsmen].sort((a, b) => Number(assigned.includes(b.id)) - Number(assigned.includes(a.id))).map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === data.partnerId ? 'selected' : ''}>${escapeHtml(provider.name)} · ${escapeHtml(provider.town || '')}${assigned.includes(provider.id) ? ' · zugeordnet' : ''}</option>`).join('')}`;
+      const chosen = providers.filter((provider) => assigned.includes(provider.id) || provider.id === data.partnerId);
+      form.elements.partnerId.innerHTML = chosen.length
+        ? `<option value="">Noch offen</option>${chosen.map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === data.partnerId ? 'selected' : ''}>${escapeHtml(provider.name)} · ${escapeHtml(partnerCategoryLabel(provider))}</option>`).join('')}`
+        : '<option value="">Noch keine Servicepartner für dieses Haus ausgewählt</option>';
+      document.getElementById('renovation-partner-hint').hidden = chosen.length > 0;
       ['title', 'budget', 'startDate', 'endDate', 'notes'].forEach((name) => { form.elements[name].value = data[name] || ''; });
       document.getElementById('renovation-modal').classList.add('open');
       form.elements.title.focus();
@@ -4081,7 +4154,7 @@
             return `<span>${escapeHtml(control.name)} · ${count} ${count === 1 ? 'Prüfposition' : 'Prüfpositionen'}${due ? ` · spätestens bis ${escapeHtml(formatInspectionDate(due))}` : ''}</span>`;
           }).join('')}<button type="button" class="text-btn" data-action="open-inspection" data-property="${escapeHtml(property.id)}">Zur Hauskontrolle →</button></div>`
           : '';
-        return `<article class="card assigned-provider-card"><div class="assigned-provider-head"><div class="provider-avatar">${escapeHtml(provider.initials)}</div><div class="assigned-provider-main"><h3>${escapeHtml(provider.name)}</h3><p>${escapeHtml(provider.services || '')}</p></div><label class="primary-btn">${icon('plus')} Dokument hochladen<input type="file" data-provider-document-upload="${escapeHtml(provider.id)}" data-provider-property="${escapeHtml(property.id)}" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" hidden></label></div><div class="provider-details"><span class="provider-type ${provider.category === 'renovation' ? 'renovation' : ''}">${partnerCategoryLabel(provider)}</span>${provider.specialty ? `<span class="provider-specialty">${escapeHtml(provider.specialty)}</span>` : ''}</div><div class="provider-result-footer"><div class="provider-contact-links">${providerContactLinks(provider)}</div><div class="provider-location-distance"><span class="provider-town">${escapeHtml(provider.town || '')}</span>${Number.isFinite(providerDistanceKm(provider, property)) ? `<span class="provider-distance">Entfernung ${providerDistanceKm(provider, property)} km</span>` : ''}</div></div>${controlInfo}<div class="assigned-provider-documents"><strong>Dokumente</strong>${providerDocuments.length ? `<div class="document-list">${providerDocuments.map((document) => `<article class="document-row"><span class="document-icon">${icon('document')}</span><span class="document-info"><strong title="${escapeHtml(document.name)}">${escapeHtml(document.name)}</strong><small>${fileSize(document.size)} · hinzugefügt am ${escapeHtml(document.createdAt)}</small></span><span class="document-actions"><a href="${escapeHtml(document.dataUrl)}" target="_blank" rel="noopener noreferrer">Öffnen</a><button class="danger-btn" data-delete-document="${escapeHtml(document.id)}" type="button">Löschen</button></span></article>`).join('')}</div>` : '<p class="card-caption">Noch keine Dokumente für diesen Servicepartner.</p>'}</div></article>`;
+        return `<article class="card assigned-provider-card"><div class="assigned-provider-head"><div class="provider-avatar">${escapeHtml(provider.initials)}</div><div class="assigned-provider-main"><h3>${escapeHtml(provider.name)}</h3><p>${escapeHtml(provider.services || '')}</p>${(() => { const open = tasks.filter((task) => !task.done && task.partnerId === provider.id); return `<button type="button" class="text-btn inline partner-tasks-link" data-partner-tasks="${escapeHtml(provider.id)}">${open.length ? `${open.length} offene ${open.length === 1 ? 'Aufgabe' : 'Aufgaben'} ansehen →` : 'Keine offenen Aufgaben · Aufgaben zuordnen →'}</button>`; })()}</div><label class="primary-btn">${icon('plus')} Dokument hochladen<input type="file" data-provider-document-upload="${escapeHtml(provider.id)}" data-provider-property="${escapeHtml(property.id)}" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" hidden></label></div><div class="provider-details"><span class="provider-type ${provider.category === 'renovation' ? 'renovation' : ''}">${partnerCategoryLabel(provider)}</span>${provider.specialty ? `<span class="provider-specialty">${escapeHtml(provider.specialty)}</span>` : ''}</div><div class="provider-result-footer"><div class="provider-contact-links">${providerContactLinks(provider)}</div><div class="provider-location-distance"><span class="provider-town">${escapeHtml(provider.town || '')}</span>${Number.isFinite(providerDistanceKm(provider, property)) ? `<span class="provider-distance">Entfernung ${providerDistanceKm(provider, property)} km</span>` : ''}</div></div>${controlInfo}<div class="assigned-provider-documents"><strong>Dokumente</strong>${providerDocuments.length ? `<div class="document-list">${providerDocuments.map((document) => `<article class="document-row"><span class="document-icon">${icon('document')}</span><span class="document-info"><strong title="${escapeHtml(document.name)}">${escapeHtml(document.name)}</strong><small>${fileSize(document.size)} · hinzugefügt am ${escapeHtml(document.createdAt)}</small></span><span class="document-actions"><a href="${escapeHtml(document.dataUrl)}" target="_blank" rel="noopener noreferrer">Öffnen</a><button class="danger-btn" data-delete-document="${escapeHtml(document.id)}" type="button">Löschen</button></span></article>`).join('')}</div>` : '<p class="card-caption">Noch keine Dokumente für diesen Servicepartner.</p>'}</div></article>`;
       }).join('');
       return `<div class="welcome"><div><p class="eyebrow">Objektverwaltung · ${escapeHtml(property.region || 'Schweden')}</p><h1>Zugeordnete Servicepartner</h1><p class="subtitle">Dokumente je Servicepartner verwalten.</p></div><button class="primary-btn" data-action="open-provider-search" data-property="${escapeHtml(property.id)}">Servicepartner finden</button></div>
         <section class="assigned-house-bar"><div class="assigned-house-name"><span>Ferienhaus</span><strong>${escapeHtml(property.name)}</strong>${property.address ? `<small>${escapeHtml(property.address)}</small>` : ''}</div>
@@ -6210,6 +6283,18 @@
         persistAutomation(); render(); showToast('Standardfrist übernommen.');
         return;
       }
+      const partnerTasksLink = event.target.closest('[data-partner-tasks]');
+      if (partnerTasksLink) { taskPartnerFilter = tasks.some((task) => task.partnerId === partnerTasksLink.dataset.partnerTasks) ? partnerTasksLink.dataset.partnerTasks : 'all'; taskView = taskPartnerFilter === 'all' ? 'list' : 'partners'; currentPage = 'tasks'; render(); window.scrollTo(0, 0); return; }
+      const taskViewButton = event.target.closest('[data-task-view]');
+      if (taskViewButton) { taskView = taskViewButton.dataset.taskView; render(); return; }
+      const copyPartner = event.target.closest('[data-copy-partner-tasks]');
+      if (copyPartner) {
+        const partner = providerById(copyPartner.dataset.copyPartnerTasks);
+        const list = tasks.filter((task) => taskStatus(task) !== 'Erledigt' && task.partnerId === copyPartner.dataset.copyPartnerTasks).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+        const text = partnerTaskListText(partner, list);
+        (navigator.clipboard?.writeText(text) || Promise.reject()).then(() => showToast('Aufgabenliste kopiert – z. B. in WhatsApp oder SMS einfügen.')).catch(() => { window.prompt('Aufgabenliste zum Kopieren:', text); });
+        return;
+      }
       const houseGoto = event.target.closest('[data-house-goto]');
       if (houseGoto) {
         const property = properties.find((item) => item.id === houseGoto.dataset.property);
@@ -6607,6 +6692,16 @@
       if (event.target.id === 'task-filter') { taskFilter = event.target.value; render(); }
       if (event.target.id === 'task-property-filter') { taskPropertyFilter = event.target.value; render(); }
       if (event.target.id === 'task-priority-filter') { taskPriorityFilter = event.target.value; render(); }
+      if (event.target.id === 'task-partner-filter') { taskPartnerFilter = event.target.value; render(); }
+      if (event.target.dataset?.partnerTask) {
+        const task = tasks.find((item) => item.id === Number(event.target.dataset.partnerTask));
+        if (task) {
+          task.partnerId = event.target.value;
+          persistTasks();
+          render();
+          showToast(task.partnerId ? `${providerById(task.partnerId)?.name || 'Servicepartner'} zugeordnet.` : 'Zuordnung entfernt.');
+        }
+      }
       if (event.target.id === 'provider-property') { providerProperty = event.target.value; render(); }
       if (event.target.id === 'provider-category') { providerCategory = event.target.value; render(); }
       if (event.target.id === 'provider-radius') { providerRadius = Number(event.target.value); render(); }
@@ -7090,7 +7185,8 @@
         priority: String(formData.get('priority')),
         area: String(formData.get('area')).trim(),
         repeat: String(formData.get('repeat')),
-        description: String(formData.get('description')).trim()
+        description: String(formData.get('description')).trim(),
+        partnerId: String(formData.get('partnerId') || '')
       };
       if (isEditing && (updatedTask.auto === 'turnover' || updatedTask.auto === 'season')) updatedTask.pinned = true;
       const previousStatus = isEditing ? taskStatus(tasks.find((task) => task.id === editingTaskId) || {}) : 'Offen';
@@ -8041,6 +8137,9 @@
     document.getElementById('cancel-property-modal').addEventListener('click', closePropertyModal);
     document.getElementById('property-modal').addEventListener('click', (event) => {
       if (event.target.id === 'property-modal') closePropertyModal();
+    });
+    document.getElementById('task-form').addEventListener('change', (event) => {
+      if (event.target.name === 'property') event.currentTarget.elements.partnerId.innerHTML = partnerOptionsHtml(event.target.value, event.currentTarget.elements.partnerId.value);
     });
     document.getElementById('task-modal').addEventListener('click', (event) => {
       if (event.target.id === 'task-modal') closeTaskModal();
