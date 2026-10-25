@@ -1284,7 +1284,14 @@
     .swipe-back-hint.visible { opacity: calc(.35 + var(--swipe) * .65); }
     .swipe-back-hint.ready { background: var(--green); }
     @media (prefers-reduced-motion: reduce) { .swipe-back-hint { transition: none; } }
-    .import-modal { width: min(620px, 100%); }
+    .import-modal { width: min(620px, 100%); max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; overscroll-behavior: contain; padding-top: 0; }
+    .import-modal .modal-head { position: sticky; top: 0; z-index: 3; margin: 0 -23px 14px; padding: 18px 23px 12px; border-bottom: 1px solid var(--line); background: white; }
+    .import-modal .close-btn { flex-shrink: 0; }
+    .import-progress[hidden], .import-status[hidden] { display: none; }
+    .import-modal #import-text { min-height: 110px; max-height: 32vh; resize: vertical; }
+    .import-modal .form-actions { position: sticky; bottom: 0; z-index: 3; margin: 12px -23px 0; padding: 12px 23px 16px; border-top: 1px solid var(--line); background: white; }
+    .import-modal.text-mode .import-includes { display: none; }
+    @media (max-width: 560px) { #import-modal { padding: 10px; } .import-modal { max-height: calc(100dvh - 20px); padding-left: 16px; padding-right: 16px; } .import-modal .modal-head, .import-modal .form-actions { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; } }
     .import-sources { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
     .import-sources span { padding: 3px 10px; border-radius: 20px; font-size: 10.5px; font-weight: 700; }
     .import-sources .ok { color: var(--green); background: var(--green-soft); }
@@ -2061,7 +2068,36 @@
       { id: "dalarna-h039", name: "TK Tak & Ventilation", category: "renovation", specialty: "Dach / Lüftung", town: "Mora", services: "Dach- und Lüftungsarbeiten", priority: "A", hint: "Kombiniert Dach und Lüftung", region: "dalarna" },
       { id: "dalarna-h040", name: "Mora Plåtslageri AB", category: "renovation", specialty: "Dach / Metall", town: "Mora", services: "Spengler-, Blech- und Dacharbeiten", priority: "A", hint: "Lokaler Blech-/Dachbetrieb", region: "dalarna" },
       { id: "dalarna-h041", name: "Svenska Tak & Fönster", category: "renovation", specialty: "Dach / Fenster", town: "Säter", services: "Dach- und Fensterarbeiten", priority: "A", hint: "Kombination für HEMORA-Objektchecks interessant", region: "dalarna" },
-      { id: "dalarna-h042", name: "M.A Snickeri & Projektpartner AB", category: "renovation", specialty: "Schreinerei / Projekt", town: "Leksand", services: "Schreinerei und Projektarbeiten", priority: "A", hint: "Regionaler Projektpartner in Leksand", region: "dalarna" }
+      { id: "dalarna-h042", name: "M.A Snickeri & Projektpartner AB", category: "renovation", specialty: "Schreinerei / Projekt", town: "Leksand", services: "Schreinerei und Projektarbeiten", priority: "A", hint: "Regionaler Projektpartner in Leksand", region: "dalarna" },
+      // Örebro län – recherchiert über die Webseiten der Betriebe (Stand Oktober 2026)
+      { id: "orebro-h001", name: "Framstegets Alltjänst AB", category: "house", specialty: "Hausservice / Garten", town: "Örebro", services: "Gartenpflege, Schneeräumung, Reinigung", email: "info@framstegetalltjanst.se", phone: "072-299 68 84", website: "https://www.framstegetalltjanst.se/", priority: "A", hint: "Allround-Dienstleister für Privatkunden", region: "örebro" },
+      { id: "orebro-h002", name: "Trädgårdstjänst i Örebro AB", category: "house", specialty: "Garten / Winterdienst", town: "Örebro", services: "Gartenpflege, Hausmeisterdienste, Schneeräumung und Streuen", phone: "019-32 47 15", website: "https://tradgardstjanst.se/", priority: "A", hint: "Maskingatan 24 B, Örebro", region: "örebro" },
+      { id: "orebro-h003", name: "Kixon AB", category: "house", specialty: "Reinigung / Fensterputz", town: "Lindesberg / Örebro / Karlskoga / Nora", services: "Reinigung, Fensterputz, Grundreinigung", email: "info@kixon.se", phone: "0581-660 298", website: "https://www.kixon.se/", priority: "A", hint: "Mehrere Orte im Bezirk Örebro", region: "örebro" },
+      { id: "orebro-h004", name: "Rya Städ AB", category: "house", specialty: "Reinigung", town: "Lindesberg / Frövi / Nora / Örebro", services: "Haushaltsreinigung (RUT), Grundreinigung", website: "https://xn--ryastd-fua.se/", priority: "A", hint: "Nördliches Örebro län", region: "örebro" },
+      { id: "orebro-h005", name: "Städeriet i Karlskoga", category: "house", specialty: "Reinigung", town: "Karlskoga", services: "Reinigung für Privat und Firmen, Fensterputz", website: "https://staderiet.nu/", priority: "A", hint: "Seit 1995 in Karlskoga", region: "örebro" },
+      { id: "orebro-h006", name: "Gelins Städ & Allservice AB", category: "house", specialty: "Reinigung / Allservice", town: "Karlskoga / Örebro / Kumla / Nora / Degerfors", services: "Reinigung, Fensterputz, kleinere Hausarbeiten", website: "https://gelinstad.se/", priority: "A", hint: "Fährt ins ganze westliche Örebro län", region: "örebro" },
+      { id: "orebro-h007", name: "Jacob's städ & fönsterputs", category: "house", specialty: "Reinigung / Fensterputz", town: "Örebro / Karlskoga / Lindesberg / Nora", services: "Haushaltsreinigung, Fensterputz, Umzugsreinigung", website: "https://www.jacobsstad.se/", priority: "A", region: "örebro" },
+      { id: "orebro-h008", name: "AP Städ & Trädgård AB", category: "house", specialty: "Reinigung / Garten", town: "Laxå / Finnerödja / Hasselfors", services: "Reinigung, Fensterputz, Rasenmähen, Fassadenwäsche", website: "https://apstadtradgard.se/", priority: "A", hint: "Gut für Ferienhäuser im Süden des Bezirks", region: "örebro" },
+      { id: "orebro-h009", name: "Buskhaga Städ", category: "house", specialty: "Reinigung", town: "Karlskoga / Degerfors / Örebro / Kumla / Lindesberg / Nora", services: "Haushaltsreinigung, Fensterputz, Grundreinigung", phone: "020-10 41 10", website: "https://buskhagastad.se/", priority: "A", region: "örebro" },
+      { id: "orebro-h010", name: "Hemfrid Örebro", category: "house", specialty: "Reinigung", town: "Örebro", services: "Regelmäßige Haushaltsreinigung, Fensterputz, Grundreinigung", website: "https://www.hemfrid.se/en/orebro", priority: "A", hint: "Landesweite Kette mit Büro in Örebro", region: "örebro" },
+      { id: "orebro-h011", name: "Alltime Fastighetsservice", category: "house", specialty: "Winterdienst / Hausmeister", town: "Örebro", services: "Schneeräumung, Glättebekämpfung, Hausmeisterdienste", website: "https://alltime.se/fastighetsservice/orebro/", priority: "A", region: "örebro" },
+      { id: "orebro-h012", name: "Hedegården Fastighet", category: "house", specialty: "Hausmeister", town: "Örebro", services: "Objektbetreuung, auch einzelne Aufträge", website: "https://hedegardenfastighet.se/", priority: "A", region: "örebro" },
+      { id: "orebro-h013", name: "Veterankraft Örebro", category: "house", specialty: "Haus & Garten", town: "Örebro", services: "Gartenarbeit, Handwerk, Reinigung, private Hilfe im Haushalt", email: "orebro@veterankraft.se", phone: "019-277 13 00", website: "https://veterankraft.se/orebro", priority: "A", hint: "Karlslundsgatan 25–29", region: "örebro" },
+      { id: "orebro-k001", name: "Veteranpoolen Örebro", category: "inspection", specialty: "Hausaufsicht / Allround", town: "Örebro", services: "Aufsicht über das Haus (tillsyn), Handwerk, Reinigung, Garten", phone: "019-70 70 886", website: "https://veteranpoolen.se/kontor/orebro/", priority: "A", hint: "Bietet laut Webseite Aufsicht über das Haus an – Einsatzgebiet vorab bestätigen lassen", region: "örebro" },
+      { id: "orebro-k002", name: "Veteranpoolen Karlskoga", category: "inspection", specialty: "Hausaufsicht / Allround", town: "Karlskoga / Degerfors", services: "Aufsicht über das Haus (tillsyn), Handwerk, Garten", website: "https://veteranpoolen.se/kontor/karlskoga/", priority: "A", hint: "Einsatzgebiet vorab bestätigen lassen", region: "örebro" },
+      { id: "orebro-k003", name: "Örebro Sotar'n AB", category: "inspection", specialty: "Schornsteinfeger / Brandschutz", town: "Örebro / Lekeberg", services: "Kaminkehrung, Brandschutzkontrolle", phone: "019-17 00 70", priority: "A", hint: "Osmundgatan 11, Örebro", region: "örebro" },
+      { id: "orebro-k004", name: "Sydnärkesotaren AB", category: "inspection", specialty: "Schornsteinfeger / Brandschutz", town: "Åsbro / Askersund / Hallsberg / Kumla / Laxå", services: "Kaminkehrung, Brandschutzkontrolle", website: "https://www.sotaren.com/", priority: "A", hint: "Südliches Närke", region: "örebro" },
+      { id: "orebro-k005", name: "Lindesbergs Sotningsdistrikt AB", category: "inspection", specialty: "Schornsteinfeger / Brandschutz", town: "Lindesberg / Nora", services: "Kaminkehrung, Brandschutzkontrolle", phone: "0581-134 60", website: "https://soventgroup.se/om-oss/vara-foretag/lindesbergs-sotningsdistrikt/", priority: "A", hint: "Norevägen 4, Lindesberg", region: "örebro" },
+      { id: "orebro-s001", name: "Norra Bro Byggprojekt AB", category: "renovation", specialty: "Bau / Schreinerei", town: "Örebro", services: "Schreinerarbeiten, Bad, Dach, Anbau, ROT-Abzug", phone: "073-433 34 48", website: "https://www.norrabrobyggprojekt.se/", priority: "A", hint: "Pistolvägen 1, Örebro", region: "örebro" },
+      { id: "orebro-s002", name: "ERE Bygg AB", category: "renovation", specialty: "Renovierung / Fenster / Dach", town: "Örebro", services: "Renovierung, Fenstertausch, Dachsanierung, Bad und Küche, ROT", email: "info@erebygg.se", phone: "0790 992 222", website: "https://www.erebygg.se/", priority: "A", hint: "Nastagatan 2, Örebro", region: "örebro" },
+      { id: "orebro-s003", name: "Byggfirma Örebro", category: "renovation", specialty: "Bad / Dach / Maler", town: "Örebro", services: "Badsanierung (Nassraumzertifikat), Dach, Malerarbeiten, Schreinerei", website: "https://byggfirmaorebro.se/", priority: "A", region: "örebro" },
+      { id: "orebro-s004", name: "Bygg & Hemservice i Örebro AB", category: "renovation", specialty: "Bad / Fassade", town: "Örebro", services: "Badsanierung, Fassadenarbeiten", website: "https://byggfirmaorebro.nu/", priority: "A", region: "örebro" },
+      { id: "orebro-s005", name: "Nätterlund Entreprenad AB", category: "renovation", specialty: "Dach / Bad / Schadenservice", town: "Örebro", services: "Dacharbeiten, Badsanierung, Schadenservice", website: "https://www.natterlundentreprenad.se/byggfirma", priority: "A", region: "örebro" },
+      { id: "orebro-s006", name: "Snickare Örebro", category: "renovation", specialty: "Schreinerei / Fassade / Dach", town: "Örebro", services: "Fassade, Dach, Bad", website: "https://www.xn--snickarerebro-pmb.se/", priority: "A", region: "örebro" },
+      { id: "orebro-s007", name: "Badrum Örebro", category: "renovation", specialty: "Badsanierung", town: "Örebro", services: "Badrenovierung und Nassräume", website: "https://badrumorebro.se/", priority: "A", region: "örebro" },
+      { id: "orebro-s008", name: "LT Rör", category: "renovation", specialty: "Sanitär / Heizung", town: "ganz Örebro län", services: "Sanitär- und Heizungsinstallation seit 1979, ROT", website: "https://www.ltror.com/", priority: "A", hint: "Arbeitet im ganzen Bezirk", region: "örebro" },
+      { id: "orebro-s009", name: "24 Center Rörmokare Örebro", category: "renovation", specialty: "Sanitär / Notdienst", town: "Örebro", services: "Rohrnotdienst rund um die Uhr, Sanitär", phone: "020 74 24 70", website: "https://24center.se/rormokare-orebro/", priority: "A", hint: "Notdienst bei Wasserschäden", region: "örebro" },
+      { id: "orebro-s010", name: "Leijonborgs Rör", category: "renovation", specialty: "Sanitär / Heizung", town: "Örebro", services: "Sanitär- und Heizungsarbeiten", website: "https://www.leijonborgsror.com/vvs-orebro/", priority: "A", region: "örebro" }
     ];
     const varmlandDistanceByLocality = [
       ['kristinehamn', 80], ['filipstad', 78], ['säffle', 74], ['arvika', 60],
@@ -2069,7 +2105,7 @@
       ['hammarö', 63], ['karlstad', 54], ['forshaga', 48], ['deje', 43],
       ['vålberg', 55], ['grums', 50], ['kil', 35], ['värmland', 65]
     ];
-    databasePartners.filter((provider) => provider.region !== 'dalarna').forEach((provider) => {
+    databasePartners.filter((provider) => !provider.region).forEach((provider) => {
       const location = provider.town.toLocaleLowerCase('sv');
       const coveredDistances = varmlandDistanceByLocality
         .filter(([locality]) => location.includes(locality))
@@ -2078,7 +2114,7 @@
       const initials = provider.name.split(/\s+/).slice(0, 2).map((word) => word[0]).join('').toLocaleUpperCase('sv');
       providers.push({ ...provider, initials, distances: { sunne: distance } });
     });
-    databasePartners.filter((provider) => provider.region === 'dalarna').forEach((provider) => {
+    databasePartners.filter((provider) => provider.region).forEach((provider) => {
       const initials = provider.name.split(/\s+/).slice(0, 2).map((word) => word[0]).join('').toLocaleUpperCase('sv');
       providers.push({ ...provider, initials, distances: {} });
     });
@@ -2094,22 +2130,29 @@
       filipstad: [59.71, 14.17], 'säffle': [59.13, 12.92], hagfors: [60.03, 13.65], kil: [59.50, 13.31], grums: [59.35, 13.10],
       forshaga: [59.53, 13.48], 'hammarö': [59.33, 13.52], skoghall: [59.32, 13.42], 'vålberg': [59.39, 13.19], deje: [59.58, 13.47],
       branäs: [60.55, 13.0], 'sysslebäck': [60.51, 12.88],
+      'örebro': [59.274, 15.207], kumla: [59.127, 15.143], hallsberg: [59.066, 15.110], askersund: [58.880, 14.902], 'laxå': [58.986, 14.620],
+      lindesberg: [59.594, 15.230], nora: [59.519, 15.039], karlskoga: [59.327, 14.524], degerfors: [59.237, 14.430], 'frövi': [59.469, 15.367],
+      'åsbro': [58.984, 15.050], lekeberg: [59.174, 14.872], fjugesta: [59.174, 14.872], 'finnerödja': [58.917, 14.433], hasselfors: [59.10, 14.68],
+      kopparberg: [59.874, 14.995], 'hällefors': [59.783, 14.523], odensbacken: [59.165, 15.528],
       grebbestad: [58.69, 11.25], 'fjällbacka': [58.60, 11.29], hamburgsund: [58.56, 11.27], tanum: [58.72, 11.32], 'resö': [58.68, 11.28]
     };
-    const REGION_CENTERS = { dalarna: [60.9, 14.9], 'värmland': [59.9, 13.2], 'bohuslän': [58.65, 11.3] };
+    const REGION_CENTERS = { dalarna: [60.9, 14.9], 'värmland': [59.9, 13.2], 'bohuslän': [58.65, 11.3], 'örebro': [59.27, 15.21] };
     const LOCALITY_KEYS = Object.keys(LOCALITIES).sort((a, b) => b.length - a.length);
     const haversineKm = (a, b) => {
       const rad = (value) => value * Math.PI / 180;
       const h = Math.sin(rad(b[0] - a[0]) / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(rad(b[1] - a[1]) / 2) ** 2;
       return 12742 * Math.asin(Math.sqrt(h));
     };
-    const localitiesIn = (text) => LOCALITY_KEYS.filter((key) => text.includes(key)).map((key) => LOCALITIES[key]);
+    // Ortsnamen nur als ganzes Wort erkennen (z. B. „kil“ nicht in „Kilsbergen“).
+    const LOCALITY_PATTERNS = Object.fromEntries(LOCALITY_KEYS.map((key) => [key, new RegExp(`(^|[^a-zåäöéü])${key}($|[^a-zåäöéü])`)]));
+    const localitiesIn = (text) => LOCALITY_KEYS.filter((key) => LOCALITY_PATTERNS[key].test(text)).map((key) => LOCALITIES[key]);
     const regionIn = (text) => Object.keys(REGION_CENTERS).find((key) => text.includes(key)) || '';
     const propertyGeoQuery = (property) => [property.address, property.region, 'Schweden'].filter(Boolean).join(', ');
     function propertyOrigin(property) {
       const cached = geoCache[propertyGeoQuery(property)];
       const text = `${property.address || ''} ${property.name || ''} ${property.region || ''}`.toLocaleLowerCase('sv');
-      const spot = Array.isArray(cached) ? cached : (localitiesIn(text)[0] || REGION_CENTERS[regionIn(text)] || null);
+      const place = `${property.address || ''} ${property.name || ''}`.toLocaleLowerCase('sv');
+      const spot = Array.isArray(cached) ? cached : (localitiesIn(place)[0] || localitiesIn(text)[0] || REGION_CENTERS[regionIn(text)] || null);
       if (!spot) return null;
       const region = Object.entries(REGION_CENTERS).map(([key, center]) => [key, haversineKm(spot, center)]).sort((a, b) => a[1] - b[1])[0];
       return { coords: spot, region: region[1] < 160 ? region[0] : '' };
@@ -2127,7 +2170,7 @@
       const origin = propertyOrigin(property);
       if (!origin) return Infinity;
       const text = `${provider.town || ''} ${provider.region || ''}`.toLocaleLowerCase('sv');
-      const spots = localitiesIn(text);
+      const spots = localitiesIn((provider.town || '').toLocaleLowerCase('sv'));
       const providerRegion = provider.region || regionIn(text);
       const wide = !spots.length || /ganz|einsätze|regional|region/i.test(text);
       let best = spots.length ? Math.min(...spots.map((spot) => haversineKm(origin.coords, spot) * 1.25)) : Infinity;
@@ -6244,7 +6287,7 @@
       geoQueue = task.catch(() => {});
       return task;
     }
-    const REGION_WORDS = /^(värmland|dalarna|bohuslän|västra götaland|ganz värmland|regional)$/i;
+    const REGION_WORDS = /^(värmland|dalarna|bohuslän|örebro län|västra götaland|ganz värmland|regional)$/i;
     function providerPlace(provider) {
       const raw = String(provider.town || '').split('/').map((part) => part.replace(/^einsatz(gebiet|bereich)\s*/i, '').trim()).filter(Boolean);
       const place = raw.find((part) => !REGION_WORDS.test(part) && !/regional|westlich|ganz/i.test(part)) || raw[0] || '';
@@ -8260,6 +8303,7 @@
       importMethod = method === 'text' ? 'text' : 'link';
       document.querySelectorAll('[data-import-method]').forEach((tab) => { const active = tab.dataset.importMethod === importMethod; tab.classList.toggle('active', active); tab.setAttribute('aria-selected', String(active)); });
       document.getElementById('import-text-pane').hidden = importMethod !== 'text';
+      document.querySelector('.import-modal').classList.toggle('text-mode', importMethod === 'text');
       document.querySelector('#import-link-pane .form-label').textContent = importMethod === 'text' ? 'Link zum Inserat (optional, als Quelle)' : 'Link zum Inserat';
     }
     function setImportStep(step) {
