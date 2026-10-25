@@ -1579,6 +1579,28 @@
     .task-row-issue { margin-top: 4px; overflow: hidden; color: #7a5c00; font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
     .task-row-side .task-due { min-width: 44px; text-align: right; }
     @media (max-width: 520px) { .task-row { flex-wrap: wrap; padding: 10px 0; } .task-row-side { width: 100%; justify-content: flex-end; } }
+    /* Startseite: Service vor Ort – gleiche Einrückung wie „Heute im Ferienhaus“ */
+    .task-list.dash-tasks { padding: 0 18px; }
+    .dash-tasks .task-row { position: relative; gap: 10px; min-height: 0; padding: 12px 18px; border-bottom: 1px solid #f0f1ee; border-radius: 0; }
+    .dash-tasks .task-row::before { content: ''; position: absolute; top: 12px; bottom: 12px; left: 6px; width: 3px; border-radius: 3px; background: #d5dcd5; }
+    .dash-tasks .task-row.prio-urgent::before { background: var(--red); }
+    .dash-tasks .task-row.prio-soon::before { background: #d9a45b; }
+    .dash-tasks .task-row.has-issue { background: #fffbea; }
+    .dash-tasks .task-row.has-issue::before { background: #e8b800; }
+    .dash-tasks .task-row:hover { background: #f6f8f4; }
+    .dash-tasks .task-row.has-issue:hover { background: #fff6d2; }
+    .dash-tasks .task-name { margin-bottom: 4px; font-size: 12px; }
+    .dash-tasks .task-meta { gap: 5px; font-size: 10px; }
+    .dash-tasks .task-meta .task-tag { padding: 2px 6px; font-size: 9px; }
+    .dash-tasks .task-row-issue { display: flex; align-items: center; gap: 4px; margin-top: 5px; font-size: 10px; font-weight: 600; }
+    .dash-tasks .task-row-side { gap: 6px; }
+    .dash-tasks .task-issue-flag { width: 22px; height: 22px; border-radius: 6px; }
+    .dash-tasks .task-issue-flag svg { width: 12px; height: 12px; }
+    .dash-tasks .task-status-pill { padding: 3px 8px; font-size: 9px; }
+    .dash-tasks .task-due { min-width: 48px; font-size: 10px; }
+    .dash-tasks-more { display: block; width: calc(100% - 36px); margin: 0 18px 14px; padding: 9px; border: 1px dashed var(--line); border-radius: 9px; color: var(--green); background: transparent; font-size: 11px; font-weight: 700; cursor: pointer; }
+    .dash-tasks-more:hover { border-color: var(--green); background: var(--green-soft); }
+    @media (max-width: 520px) { .dash-tasks .task-row { flex-wrap: wrap; } .dash-tasks .task-row-side { width: 100%; justify-content: flex-start; } }
     .partner-tasks-link { display: inline-block; margin-top: 4px; font-size: 11.5px; }
     /* Hauskontrolle: Statuskopf, Schritte, Prüfliste mit Auffälligkeiten und Reparaturen */
     .insp-status-card { padding: 0; border-top: 4px solid #d58a1f; }
@@ -3803,8 +3825,8 @@
       const status = taskStatus(task);
       const openIssues = issues.filter((issue) => issue.taskId === task.id && (issue.status === 'open' || issue.status === 'planned'));
       const statusClass = status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open';
-      return `<div class="task-row ${task.done ? 'is-done' : ''} ${openIssues.length ? 'has-issue' : ''}">
-        <div class="task-main"><button class="task-name ${task.done ? 'completed' : ''}" type="button" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten: ${escapeHtml(task.title)}">${escapeHtml(task.title)}</button><div class="task-meta"><span>${escapeHtml(task.property)}</span><span class="task-tag ${tagClass}">${priority}</span>${extraTags}</div>${openIssues.length ? `<div class="task-row-issue">${escapeHtml(openIssues.map((issue) => issue.text).join(' · '))}</div>` : ''}</div>
+      return `<div class="task-row prio-${task.priority || 'normal'} ${task.done ? 'is-done' : ''} ${openIssues.length ? 'has-issue' : ''}">
+        <div class="task-main"><button class="task-name ${task.done ? 'completed' : ''}" type="button" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten: ${escapeHtml(task.title)}">${escapeHtml(task.title)}</button><div class="task-meta">${singleHouse() ? '' : `<span>${escapeHtml(task.property)}</span>`}<span class="task-tag ${tagClass}">${priority}</span>${extraTags}${task.area ? `<span>${escapeHtml(task.area)}</span>` : ''}</div>${openIssues.length ? `<div class="task-row-issue">${escapeHtml(openIssues.map((issue) => issue.text).join(' · '))}</div>` : ''}</div>
         <div class="task-row-side">${openIssues.length ? `<span class="task-issue-flag" title="${openIssues.length} ${openIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet" aria-label="${openIssues.length} ${openIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet">${icon('alert')}</span>` : ''}<span class="task-status-pill st-${statusClass}">${escapeHtml(status)}</span><span class="task-due ${overdue ? 'overdue' : ''}">${fmtDate(task.date)}</span></div>
       </div>`;
     }
@@ -3875,7 +3897,7 @@
           ${isPro() ? `<button class="stat" data-page="house3d"><img class="stat-art" src="assets/ferienhaus.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Hausmodell</span><span class="stat-icon">${icon('cube')}</span></div><div class="stat-value">3D</div><div class="stat-note"><em>${properties.reduce((sum, property) => sum + activeHouseParts(property).filter((part) => housePartInfo(property.id, part).status === 'due').length, 0)}</em> Bauteile mit fälliger Kontrolle</div></button>` : ''}
         </section>
         <div class="columns">
-          <section class="card"><div class="card-head"><div><h2 class="card-title">Service vor Ort</h2><p class="card-caption">${open.length} offene ${open.length === 1 ? 'Aufgabe' : 'Aufgaben'} ${singleHouse() ? 'an deinem schwedischen Ferienhaus' : 'an deinen schwedischen Ferienhäusern'}</p></div><button class="text-btn" data-page="tasks">Alle Aufgaben →</button></div><div class="task-list">${open.length ? open.slice(0, 4).map(taskRow).join('') : '<div class="empty">Alles erledigt — großartig!</div>'}</div></section>
+          <section class="card"><div class="card-head"><div><h2 class="card-title">Service vor Ort</h2><p class="card-caption">${open.length} offene ${open.length === 1 ? 'Aufgabe' : 'Aufgaben'} ${singleHouse() ? 'an deinem schwedischen Ferienhaus' : 'an deinen schwedischen Ferienhäusern'}</p></div><button class="text-btn" data-page="tasks">Alle Aufgaben →</button></div><div class="task-list dash-tasks">${open.length ? open.slice(0, 5).map(taskRow).join('') : '<div class="empty">Alles erledigt — großartig!</div>'}</div>${open.length > 5 ? `<button type="button" class="dash-tasks-more" data-page="tasks">+ ${open.length - 5} weitere ${open.length - 5 === 1 ? 'Aufgabe' : 'Aufgaben'} ansehen</button>` : ''}</section>
           <div>
             ${bookingsEnabled() ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Heute im Ferienhaus</h2><p class="card-caption">${escapeHtml(fmtLongDate())}</p></div><button class="text-btn" data-page="calendar">Kalender →</button></div><div class="house-service-list">${occupancyHtml(today)}</div></section>` : ''}
             ${bookingsEnabled() ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Nächste Buchungen</h2><p class="card-caption">Anreise, Endreinigung und Schlüssel</p></div><button class="text-btn" data-page="bookings">Buchungen →</button></div>
