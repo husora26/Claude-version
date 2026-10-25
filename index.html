@@ -1513,7 +1513,10 @@
     .tcard-controls { display: flex; align-items: flex-end; gap: 10px; }
     .tcard-field { display: grid; gap: 3px; }
     .tcard-field > span { color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-    .tcard .partner-select { width: 190px; height: 32px; font-size: 11px; }
+    .tcard .partner-select { width: 250px; max-width: none; height: 30px; padding-top: 0; padding-bottom: 0; font-size: 10px; font-weight: 600; text-overflow: ellipsis; }
+    .tcard-ptype { margin-left: 4px; padding: 1px 6px; border-radius: 10px; color: var(--green); background: var(--green-soft); font-style: normal; letter-spacing: .02em; text-transform: none; }
+    .tcard-ptype.cat-inspection { color: #2f6676; background: #e3eff2; }
+    .tcard-ptype.cat-renovation { color: #8e622b; background: var(--amber-soft); }
     .tcard .status-select { width: 132px; height: 32px; font-size: 11px; font-weight: 650; }
     .tcard .status-select.st-progress { color: #2f5f86; background-color: #eef4fa; border-color: #c9dbea; }
     .tcard .status-select.st-done { color: var(--green); background-color: var(--green-soft); border-color: transparent; }
@@ -1533,9 +1536,10 @@
       .tcard-list { padding: 4px 12px 14px; }
       .tcard { gap: 10px 11px; padding: 12px 12px 12px 15px; }
       .tcard-date { width: 42px; } .tcard-date strong { font-size: 16px; }
-      .tcard-controls { display: grid; grid-template-columns: 1fr 1fr; align-items: end; }
+      .tcard-controls { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+      .tcard-controls .tcard-field:first-child { grid-column: 1 / -1; }
       .tcard .partner-select, .tcard .status-select { width: 100%; }
-      .tcard-actions { grid-column: 1 / -1; justify-content: flex-end; }
+      .tcard-actions { margin-left: 0; }
     }
     .partner-tasks-link { display: inline-block; margin-top: 4px; font-size: 11.5px; }
     /* Hauskontrolle: Statuskopf, Schritte, Prüfliste mit Auffälligkeiten und Reparaturen */
@@ -4070,7 +4074,7 @@
       const assigned = servicePartnerAssignments[propertyIdByName(propertyName)] || [];
       const mine = providers.filter((provider) => assigned.includes(provider.id));
       const others = providers.filter((provider) => !assigned.includes(provider.id) && provider.id === selected);
-      return `<option value="">Kein Servicepartner</option>${mine.length ? `<optgroup label="Zugeordnet">${mine.map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === selected ? 'selected' : ''}>${escapeHtml(provider.name)}</option>`).join('')}</optgroup>` : ''}${others.map((provider) => `<option value="${escapeHtml(provider.id)}" selected>${escapeHtml(provider.name)}</option>`).join('')}<optgroup label="Alle Servicepartner">${providers.filter((provider) => !assigned.includes(provider.id) && provider.id !== selected).map((provider) => `<option value="${escapeHtml(provider.id)}">${escapeHtml(provider.name)} · ${escapeHtml(provider.town || '')}</option>`).join('')}</optgroup>`;
+      return `<option value="">Kein Servicepartner</option>${mine.length ? `<optgroup label="Zugeordnet">${mine.map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === selected ? 'selected' : ''}>${escapeHtml(provider.name)} · ${partnerCategoryLabel(provider)}</option>`).join('')}</optgroup>` : ''}${others.map((provider) => `<option value="${escapeHtml(provider.id)}" selected>${escapeHtml(provider.name)} · ${partnerCategoryLabel(provider)}</option>`).join('')}<optgroup label="Alle Servicepartner">${providers.filter((provider) => !assigned.includes(provider.id) && provider.id !== selected).map((provider) => `<option value="${escapeHtml(provider.id)}">${escapeHtml(provider.name)} · ${partnerCategoryLabel(provider)} · ${escapeHtml(provider.town || '')}</option>`).join('')}</optgroup>`;
     }
     // Vorschlag für automatisch erzeugte Aufgaben: zugeordneter Partner der passenden Kategorie.
     function suggestPartner(propertyId, kind) {
@@ -4136,7 +4140,7 @@
             ${task.description ? `<p class="tcard-desc">${escapeHtml(task.description)}</p>` : ''}
           </div>
           <div class="tcard-controls">
-            <label class="tcard-field"><span>Servicepartner</span><select class="filter-select partner-select ${task.partnerId ? 'has-partner' : ''}" data-partner-task="${task.id}" aria-label="Servicepartner für ${escapeHtml(task.title)}">${partnerOptionsHtml(task.property, task.partnerId || '')}</select></label>
+            <label class="tcard-field"><span>Servicepartner${providerById(task.partnerId) ? ` <i class="tcard-ptype cat-${escapeHtml(providerById(task.partnerId).category)}">${partnerCategoryLabel(providerById(task.partnerId))}</i>` : ''}</span><select class="filter-select partner-select ${task.partnerId ? 'has-partner' : ''}" data-partner-task="${task.id}" aria-label="Servicepartner für ${escapeHtml(task.title)}">${partnerOptionsHtml(task.property, task.partnerId || '')}</select></label>
             <label class="tcard-field"><span>Status</span><select class="filter-select status-select st-${status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open'}" data-status-task="${task.id}" aria-label="Status für ${escapeHtml(task.title)} ändern">${taskStatuses.map((value) => `<option ${status === value ? 'selected' : ''}>${value}</option>`).join('')}</select></label>
             <div class="tcard-actions"><button type="button" class="tcard-action" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten">${icon('note')}<span>Bearbeiten</span></button><button type="button" class="tcard-action warn" data-report-issue="${task.id}" aria-label="Auffälligkeit zu ${escapeHtml(task.title)} melden">${icon('alert')}<span>Auffälligkeit</span></button><button type="button" class="tcard-action danger" data-delete-task="${task.id}" aria-label="Aufgabe löschen">✕<span>Löschen</span></button></div>
           </div>
