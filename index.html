@@ -1549,6 +1549,11 @@
       .tcard .partner-select, .tcard .status-select { width: 100%; }
       .tcard-actions { margin-left: 0; }
     }
+    .issue-actions .order-btn { color: white; background: var(--green); border-color: var(--green); }
+    .issue-actions .order-btn:hover { color: white; background: #1f4a36; }
+    .issue-actions .order-btn svg { width: 13px; height: 13px; vertical-align: -2px; }
+    .issue-ordered { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; margin: 0; color: var(--green); font-size: 11px; font-weight: 650; }
+    .issue-ordered svg { width: 13px; height: 13px; }
     /* Mängel: Servicepartner und Rechnungen */
     .issue-extras { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 16px; padding-top: 10px; border-top: 1px dashed var(--line); }
     .issue-partner { display: grid; gap: 3px; }
@@ -1867,6 +1872,21 @@
         <p class="send-plan-note" id="view-plan-hint">Noch keine Datei ausgewählt.</p>
       </div>
       <div class="form-actions"><button type="button" class="secondary-btn" id="view-plan-cancel">Schließen</button><button type="button" class="primary-btn" id="view-plan-archive" disabled>Im Archiv der Prüfprotokolle ablegen</button></div>
+    </section>
+  </div>
+  <div class="modal-backdrop" id="repair-order-modal" role="dialog" aria-modal="true" aria-labelledby="repair-order-title">
+    <section class="modal send-plan-modal">
+      <div class="modal-head"><div><h2 id="repair-order-title">Mangel beauftragen</h2><p id="repair-order-subtitle"></p></div><button class="close-btn" type="button" data-close-repair-order aria-label="Schließen">✕</button></div>
+      <p class="send-plan-note" id="repair-order-account"></p>
+      <div class="send-plan-grid">
+        <label><span class="form-label">Empfänger (zugeordneter Servicepartner)</span><select class="form-control" id="repair-order-provider"></select></label>
+        <label id="repair-order-custom-wrap" hidden><span class="form-label">E-Mail-Adresse des Empfängers</span><input class="form-control" id="repair-order-custom" type="email" maxlength="120" placeholder="name@firma.se"></label>
+        <label><span class="form-label">Gewünschter Termin bis</span><input class="form-control" id="repair-order-date" type="date"></label>
+        <label><span class="form-label">Betreff</span><input class="form-control" id="repair-order-subject" maxlength="160"></label>
+        <label><span class="form-label">E-Mail-Text</span><textarea class="form-control" id="repair-order-body"></textarea></label>
+      </div>
+      <p class="send-plan-note ok">Im Anhang: Reparaturauftrag als PDF mit Objekt, Mangel, Dringlichkeit, Termin, Zugang und Feldern für die Rückmeldung des Handwerkers.</p>
+      <div class="form-actions"><button type="button" class="secondary-btn" data-close-repair-order>Abbrechen</button><button type="button" class="secondary-btn" id="repair-order-preview">PDF ansehen</button><button type="button" class="secondary-btn" id="repair-order-eml">Entwurf mit Anhang (.eml)</button><button type="button" class="primary-btn" id="repair-order-send">E-Mail mit Auftrag öffnen</button></div>
     </section>
   </div>
   <div class="modal-backdrop" id="send-plan-modal" role="dialog" aria-modal="true" aria-labelledby="send-plan-title">
@@ -4384,7 +4404,7 @@
         return `<article class="issue-card ${issue.status}"><div class="issue-main"><strong>${escapeHtml(issue.text)}</strong><small>${singleHouse() ? '' : `${escapeHtml(propertyName(issue.propertyId))} · `}${partLabel(issue.part) ? `${escapeHtml(partLabel(issue.part))} · ` : ''}${escapeHtml(issue.source || 'Meldung')} · ${escapeHtml(fmtDate(issue.date))}</small>${repair ? `<small class="issue-repair">${repair.done ? 'Reparatur erledigt' : `Reparatur geplant für ${escapeHtml(fmtDate(repair.date))}`}</small>` : ''}</div>
           <div class="issue-side"><span class="task-tag ${issue.priority === 'urgent' ? 'urgent' : issue.priority === 'soon' ? 'soon' : ''}">${prio}</span><span class="issue-status">${ISSUE_STATUS[issue.status] || ''}</span></div>
           ${issueExtrasHtml(issue, repair)}
-          <div class="issue-actions">${issue.status !== 'fixed' && issue.status !== 'renovation' ? `<button type="button" class="small-action" data-issue-fixed="${issue.id}">Als behoben markieren</button><button type="button" class="small-action" data-issue-renovation="${issue.id}">Als Sanierung planen</button>` : ''}<button type="button" class="small-action" data-issue-delete="${issue.id}">Löschen</button></div></article>`;
+          ${issue.orderedAt ? `<p class="issue-ordered">${icon('check')} Beauftragt am ${escapeHtml(fmtDate(issue.orderedAt))} bei ${escapeHtml(issue.orderedTo || '')}</p>` : ''}<div class="issue-actions">${issue.status !== 'fixed' && issue.status !== 'renovation' ? `<button type="button" class="small-action order-btn" data-issue-order="${issue.id}">${icon('document')} ${issue.orderedAt ? 'Erneut beauftragen' : 'Mangel beauftragen'}</button><button type="button" class="small-action" data-issue-fixed="${issue.id}">Als behoben markieren</button><button type="button" class="small-action" data-issue-renovation="${issue.id}">Als Sanierung planen</button>` : ''}<button type="button" class="small-action" data-issue-delete="${issue.id}">Löschen</button></div></article>`;
       };
       const projectCard = (project) => {
         const linked = tasks.filter((task) => task.auto === 'renovation' && task.projectId === project.id);
@@ -6323,6 +6343,189 @@
       markPlanSent('E-Mail');
       showToast('PDF wurde geladen – bitte in der geöffneten E-Mail als Anhang hinzufügen. Die Kontrolle ist als beauftragt vermerkt.');
     }
+
+    // Reparaturauftrag für einen Mangel: Anschreiben + PDF-Auftrag, Versand über das Mailprogramm.
+    const repairOrderState = { issue: null };
+    const fullDate = (key) => (key ? new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(`${key}T12:00:00`)) : '');
+    const repairOrderFile = (issue, property) => `Reparaturauftrag-${String(property?.name || 'Ferienhaus').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '')}-${String(issue.date || '').replace(/-/g, '')}.pdf`;
+    const repairOrderNo = (issue) => `R-${String(issue.date || '').replace(/-/g, '').slice(2)}-${String(issue.id).replace(/\D/g, '').slice(-4)}`;
+    function repairOrderRecipient() {
+      const select = document.getElementById('repair-order-provider');
+      if (select.value === '__custom') return { email: document.getElementById('repair-order-custom').value.trim(), name: '', id: '' };
+      const provider = providerById(select.value);
+      return { email: provider?.email || '', name: provider?.name || '', id: provider?.id || '' };
+    }
+    function repairOrderLetter(issue, partnerName) {
+      const property = properties.find((item) => item.id === issue.propertyId);
+      const prio = { urgent: 'dringend – es drohen Folgeschäden', soon: 'wichtig – bitte zeitnah', normal: 'normal – beim nächsten Einsatz' }[issue.priority] || 'zeitnah';
+      const due = document.getElementById('repair-order-date').value;
+      return `Hej${partnerName ? ` ${partnerName}` : ''},\n\nhiermit beauftrage ich Sie mit der folgenden Reparatur an meinem Ferienhaus „${property?.name || ''}“${property?.address ? ` (${property.address})` : ''}:\n\n• Mangel: ${issue.text}${partLabel(issue.part) ? `\n• Bauteil: ${partLabel(issue.part)}` : ''}\n• Dringlichkeit: ${prio}${due ? `\n• Erledigung bis: ${fullDate(due)}` : ''}\n• Auftragsnummer: ${repairOrderNo(issue)}\n\nAlle Details stehen im angehängten Reparaturauftrag (PDF). Bitte bestätigen Sie kurz den Termin und senden Sie die Rechnung nach Abschluss an diese Adresse – gern mit ROT-Abzug und ein paar Fotos vorher/nachher.\n\nTack så mycket och viele Grüße\n${profileData.name || ''}`;
+    }
+    function openRepairOrder(issueId) {
+      const issue = issues.find((item) => item.id === issueId);
+      if (!issue) return;
+      repairOrderState.issue = issue;
+      const property = properties.find((item) => item.id === issue.propertyId);
+      const repair = tasks.find((task) => task.auto === 'repair' && task.issueId === issue.id);
+      const assigned = providers.filter((provider) => (servicePartnerAssignments[issue.propertyId] || []).includes(provider.id));
+      const preferred = repair?.partnerId || issue.partnerId || '';
+      const select = document.getElementById('repair-order-provider');
+      select.innerHTML = `${assigned.map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === preferred ? 'selected' : ''}>${escapeHtml(provider.name)} · ${partnerCategoryLabel(provider)}${provider.email ? ` · ${escapeHtml(provider.email)}` : ' · keine E-Mail hinterlegt'}</option>`).join('')}<option value="__custom" ${assigned.length ? '' : 'selected'}>Andere E-Mail-Adresse eingeben …</option>`;
+      document.getElementById('repair-order-custom').value = '';
+      document.getElementById('repair-order-date').value = repair?.date || shiftDateKey(localDateKey(new Date()), REPAIR_DAYS[issue.priority] ?? 7);
+      document.getElementById('repair-order-subtitle').textContent = `${property?.name || ''} · ${issue.text.length > 70 ? `${issue.text.slice(0, 67)}…` : issue.text}`;
+      document.getElementById('repair-order-account').innerHTML = profileData.mailAccount
+        ? `Absender: <strong>${escapeHtml(profileData.mailAccount)}</strong>`
+        : 'Es ist noch kein Mailkonto verbunden – die E-Mail öffnet sich in deinem Standard-Mailprogramm. Absender hinterlegen unter Benutzerprofil → „E-Mail-Konto verbinden“.';
+      document.getElementById('repair-order-subject').value = `Reparaturauftrag ${repairOrderNo(issue)} – ${property?.name || 'Ferienhaus'}: ${partLabel(issue.part) || issue.text.slice(0, 40)}`;
+      updateRepairOrderLetter();
+      document.getElementById('repair-order-modal').classList.add('open');
+    }
+    function updateRepairOrderLetter() {
+      const select = document.getElementById('repair-order-provider');
+      const recipient = repairOrderRecipient();
+      document.getElementById('repair-order-custom-wrap').hidden = select.value !== '__custom' && Boolean(recipient.email);
+      document.getElementById('repair-order-body').value = repairOrderLetter(repairOrderState.issue, recipient.name);
+    }
+    function closeRepairOrder() { document.getElementById('repair-order-modal').classList.remove('open'); }
+    function buildRepairOrderPdf(issue, recipient) {
+      const W = 595, H = 842, M = 50;
+      const property = propertyWithDefaults(properties.find((item) => item.id === issue.propertyId) || properties[0]);
+      const partner = providerById(recipient.id);
+      const ops = [];
+      let y = H - M;
+      const f = (n) => (Math.round(n * 100) / 100).toString();
+      const text = (value, x, size, bold = false, color = '0.1 0.15 0.12') => ops.push(`BT /${bold ? 'F2' : 'F1'} ${size} Tf ${color} rg ${f(x)} ${f(y)} Td (${pdfEncode(value)}) Tj ET`);
+      const line = (x1, y1, x2, y2, color = '0.82 0.85 0.82') => ops.push(`${color} RG 0.6 w ${f(x1)} ${f(y1)} m ${f(x2)} ${f(y2)} l S`);
+      const box = (x, y0, w, h, fill) => ops.push(`${fill} rg ${f(x)} ${f(y0)} ${f(w)} ${f(h)} re f`);
+      const heading = (label) => { y -= 10; text(label, M, 12, true); y -= 7; line(M, y, W - M, y); y -= 16; };
+      const pairs = (rows) => {
+        const col = (W - 2 * M) / 2;
+        for (let i = 0; i < rows.length; i += 2) {
+          let used = 0;
+          [rows[i], rows[i + 1]].forEach((row, index) => {
+            if (!row) return;
+            const x = M + index * col;
+            const keep = y;
+            text(row[0], x, 8, false, '0.4 0.45 0.4'); y -= 12;
+            const lines = pdfWrap(String(row[1] || '–'), 10, col - 14, true).slice(0, 3);
+            lines.forEach((l) => { text(l, x, 10, true); y -= 12; });
+            used = Math.max(used, keep - y);
+            y = keep;
+          });
+          y -= used + 8;
+        }
+      };
+      const today = new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date());
+      const due = document.getElementById('repair-order-date').value;
+      const prio = { urgent: 'Dringend – Folgeschäden drohen', soon: 'Wichtig – zeitnah beheben', normal: 'Normal – beim nächsten Einsatz' }[issue.priority] || 'Wichtig';
+      box(0, H - 8, W, 8, issue.priority === 'urgent' ? '0.78 0.25 0.2' : '0.16 0.36 0.27');
+      text('HUSORA · SMART HOUSE CARE', M, 9, true, '0.29 0.39 0.32'); y -= 26;
+      text('Reparaturauftrag', M, 24, true); y -= 18;
+      text(`Auftrag ${repairOrderNo(issue)} · erstellt am ${today}`, M, 10, false, '0.4 0.45 0.4'); y -= 14;
+      heading('Auftraggeber & Auftragnehmer');
+      pairs([
+        ['Auftraggeber', [profileData.name, profileData.mailAccount || profileData.email].filter(Boolean).join(' · ')],
+        ['Auftragnehmer', [partner?.name || recipient.name || recipient.email, partner?.phone].filter(Boolean).join(' · ')],
+        ['E-Mail Auftragnehmer', recipient.email || partner?.email || '–'],
+        ['Ort des Auftragnehmers', partner?.town || '–']
+      ]);
+      heading('Objekt');
+      pairs([
+        ['Ferienhaus', property.name],
+        ['Adresse', property.address || property.region || '–'],
+        ['Baujahr / Wohnfläche', [property.yearBuilt, property.livingArea ? `${property.livingArea} m²` : ''].filter(Boolean).join(' · ') || '–'],
+        ['Heizung', [property.heatingSystem, property.heatingYear].filter(Boolean).join(' · ') || '–']
+      ]);
+      heading('Mangel');
+      const boxTop = y + 10;
+      const descLines = pdfWrap(issue.text, 11, W - 2 * M - 24, true);
+      const boxHeight = descLines.length * 15 + 34;
+      box(M, boxTop - boxHeight, W - 2 * M, boxHeight, issue.priority === 'urgent' ? '1 0.93 0.91' : '1 0.97 0.84');
+      y = boxTop - 18;
+      descLines.forEach((l) => { text(l, M + 12, 11, true); y -= 15; });
+      text(`Gemeldet am ${fullDate(issue.date)} · Quelle: ${issue.source || 'Meldung'}`, M + 12, 8.5, false, '0.4 0.36 0.2');
+      y = boxTop - boxHeight - 14;
+      pairs([
+        ['Bauteil', partLabel(issue.part) || 'Sonstiges / ganzes Haus'],
+        ['Dringlichkeit', prio],
+        ['Gewünschte Erledigung bis', due ? fullDate(due) : 'nach Absprache'],
+        ['Abrechnung', 'Rechnung an den Auftraggeber, ROT-Abzug wenn möglich']
+      ]);
+      const history = issues.filter((other) => other.id !== issue.id && other.propertyId === issue.propertyId && other.part && other.part === issue.part).slice(0, 3);
+      if (history.length) { heading('Frühere Meldungen an diesem Bauteil'); history.forEach((other) => { pdfWrap(`${fmtDate(other.fixedAt || other.date)} · ${ISSUE_STATUS[other.status] || ''}: ${other.text}`, 9.5, W - 2 * M, false).forEach((l) => { text(l, M, 9.5); y -= 12; }); }); y -= 4; }
+      heading('Hinweise');
+      ['Bitte Termin kurz per E-Mail bestätigen und den Zugang zum Haus abstimmen.', 'Bei Mehrkosten über 20 % des Angebots vorher Rücksprache halten.', 'Fotos vorher / nachher und eine kurze Beschreibung der Arbeiten mit der Rechnung senden.']
+        .forEach((hint) => { text(`•  ${hint}`, M, 9.5); y -= 13; });
+      heading('Rückmeldung des Handwerkers');
+      const fieldRow = (label) => { text(label, M, 9, false, '0.4 0.45 0.4'); line(M + 130, y - 2, W - M, y - 2, '0.6 0.64 0.6'); y -= 22; };
+      ['Termin / erledigt am', 'Durchgeführte Arbeiten', '', 'Material / Kosten', 'Unterschrift'].forEach(fieldRow);
+      ops.push(`BT /F1 8 Tf 0.5 0.55 0.5 rg ${M} 28 Td (${pdfEncode(`${property.name} · Reparaturauftrag ${repairOrderNo(issue)} · erstellt mit Husora`)}) Tj ET`);
+      const stream = (data) => `<< /Length ${data.length} >>\nstream\n${data}\nendstream`;
+      const objs = [
+        '<< /Type /Catalog /Pages 2 0 R >>',
+        '<< /Type /Pages /Count 1 /Kids [5 0 R] >>',
+        '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
+        '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>',
+        `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>`,
+        stream(ops.join('\n'))
+      ];
+      let pdf = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';
+      const offsets = [];
+      objs.forEach((body, i) => { offsets.push(pdf.length); pdf += `${i + 1} 0 obj\n${body}\nendobj\n`; });
+      const xref = pdf.length;
+      pdf += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n${offsets.map((o) => `${String(o).padStart(10, '0')} 00000 n \n`).join('')}trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+      const bytes = new Uint8Array(pdf.length);
+      for (let i = 0; i < pdf.length; i += 1) bytes[i] = pdf.charCodeAt(i) & 255;
+      return bytes;
+    }
+    function repairOrderContext() {
+      const recipient = repairOrderRecipient();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient.email)) { document.getElementById('repair-order-custom-wrap').hidden = false; document.getElementById('repair-order-provider').value = '__custom'; document.getElementById('repair-order-custom').focus(); showToast('Bitte eine gültige E-Mail-Adresse des Handwerkers angeben.'); return null; }
+      const issue = repairOrderState.issue;
+      const property = properties.find((item) => item.id === issue.propertyId);
+      return { issue, recipient, to: recipient.email, subject: document.getElementById('repair-order-subject').value.trim() || `Reparaturauftrag – ${property?.name || ''}`, body: document.getElementById('repair-order-body').value, fileName: repairOrderFile(issue, property), pdfBytes: buildRepairOrderPdf(issue, recipient) };
+    }
+    function markRepairOrdered(ctx, channel) {
+      const { issue, recipient } = ctx;
+      issue.orderedAt = localDateKey(new Date());
+      issue.orderedTo = recipient.name || recipient.email;
+      issue.orderChannel = channel;
+      if (recipient.id) issue.partnerId = recipient.id;
+      persistIssues();
+      const due = document.getElementById('repair-order-date').value;
+      tasks = tasks.map((task) => (task.auto === 'repair' && task.issueId === issue.id && !task.done ? { ...task, ...(recipient.id ? { partnerId: recipient.id } : {}), ...(due ? { date: due } : {}), status: 'In Bearbeitung' } : task));
+      persistTasks();
+      logAutomation(`Reparatur beauftragt bei ${issue.orderedTo}: ${issue.text}`);
+      closeRepairOrder();
+      render();
+    }
+    async function sendRepairOrder() {
+      const ctx = repairOrderContext();
+      if (!ctx) return;
+      const file = new File([ctx.pdfBytes], ctx.fileName, { type: 'application/pdf' });
+      const touch = window.matchMedia?.('(pointer: coarse)').matches;
+      if (touch && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: ctx.subject, text: ctx.body });
+          markRepairOrdered(ctx, 'Mail-App');
+          showToast(`Auftrag an ${ctx.recipient.name || ctx.to} übergeben – die Reparatur steht auf „In Bearbeitung“.`);
+        } catch (error) { if (error?.name !== 'AbortError') showToast('Teilen nicht möglich – bitte „Entwurf mit Anhang“ verwenden.'); }
+        return;
+      }
+      downloadFile(ctx.pdfBytes, ctx.fileName, 'application/pdf');
+      openMailUrl(webmailUrl(profileData.mailProvider || 'default', ctx.to, ctx.subject, ctx.body), ctx.body);
+      markRepairOrdered(ctx, 'E-Mail');
+      showToast('E-Mail ist geöffnet – der Auftrag wurde als PDF geladen, bitte als Anhang hinzufügen. Für einen Entwurf mit fertigem Anhang „Entwurf mit Anhang (.eml)“ nutzen.');
+    }
+    function sendRepairOrderEml() {
+      const ctx = repairOrderContext();
+      if (!ctx) return;
+      const from = profileData.mailAccount ? `${profileData.name} <${profileData.mailAccount}>` : '';
+      downloadFile(utf8Bytes(buildPlanEml({ ...ctx, from })), ctx.fileName.replace(/\.pdf$/, '.eml'), 'message/rfc822');
+      markRepairOrdered(ctx, 'E-Mail-Entwurf');
+      showToast('E-Mail-Entwurf mit PDF-Anhang erstellt – die Datei öffnen, sie erscheint in Mail/Outlook als fertige E-Mail. Die Reparatur ist als beauftragt vermerkt.');
+    }
     function closeInspectionConfirmation() {
       pendingInspection = null;
       document.getElementById('inspection-confirmation-modal').classList.remove('open');
@@ -7072,6 +7275,9 @@
       }
       const reportFromList = event.target.closest('[data-report-issue-source]');
       if (reportFromList) { openIssueModal({ propertyId: reportFromList.dataset.property, text: reportFromList.dataset.issueText || '', source: reportFromList.dataset.reportIssueSource }); return; }
+      const orderButton = event.target.closest('[data-issue-order]');
+      if (orderButton) { openRepairOrder(orderButton.dataset.issueOrder); return; }
+      if (event.target.closest('[data-close-repair-order]') || event.target.id === 'repair-order-modal') { closeRepairOrder(); return; }
       const issueAction = event.target.closest('[data-issue-fixed], [data-issue-renovation], [data-issue-delete]');
       if (issueAction) {
         const id = issueAction.dataset.issueFixed || issueAction.dataset.issueRenovation || issueAction.dataset.issueDelete;
@@ -8968,6 +9174,11 @@
       showToast(existing ? 'Kostenposition aktualisiert.' : `${formatCost(amount)} unter „${categoryLabel}“ bei ${propertyName} in die Kosten übernommen.`);
       setTimeout(nextInvoiceInQueue, 400);
     });
+    document.getElementById('repair-order-provider').addEventListener('change', updateRepairOrderLetter);
+    document.getElementById('repair-order-date').addEventListener('change', updateRepairOrderLetter);
+    document.getElementById('repair-order-send').addEventListener('click', sendRepairOrder);
+    document.getElementById('repair-order-eml').addEventListener('click', sendRepairOrderEml);
+    document.getElementById('repair-order-preview').addEventListener('click', () => { const recipient = repairOrderRecipient(); const issue = repairOrderState.issue; showPdf(buildRepairOrderPdf(issue, recipient), repairOrderFile(issue, properties.find((item) => item.id === issue.propertyId)), 'Reparaturauftrag'); });
     document.getElementById('issue-form').addEventListener('change', (event) => {
       if (event.target.name === 'propertyId') fillIssuePartners(event.currentTarget, event.target.value, suggestPartner(event.target.value, 'repair') || '');
     });
@@ -9084,6 +9295,7 @@
         closePropertyModal();
         closeInspectionConfirmation();
         closeSendPlan();
+        closeRepairOrder();
         closeInspectionPlan();
         closeControlPositions();
         closeProModal();
