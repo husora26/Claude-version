@@ -1419,6 +1419,8 @@
     .house-aside .house-info-close { top: 10px; right: 10px; }
     .house-look-grid .filter-select { width: 100%; min-width: 0; }
     .house-overview > * { min-width: 0; }
+    .house-service-row.stacked { flex-direction: column; align-items: flex-start; gap: 7px; text-align: left; }
+    .house-service-row.stacked .house-service-badges { justify-content: flex-start; }
     /* Automatisierung */
     .text-btn.inline { padding: 0; font-size: inherit; }
     .care-steps { display: grid; gap: 4px; margin: 2px 0 4px; padding: 0; list-style: none; }
@@ -3493,7 +3495,7 @@
             </section>` : ''}
             <section class="card"><div class="card-head"><div><h2 class="card-title">Hauskontrolle</h2><p class="card-caption">${singleHouse() ? 'Prüfstatus deines Ferienhauses' : 'Prüfstatus je Ferienhaus'}</p></div><button class="text-btn" data-page="inspections">Hauskontrolle →</button></div>
               <div class="house-service-list">${properties.map((property) => {
-                return `<button class="house-service-row" data-action="open-inspection" data-property="${escapeHtml(property.id)}"><span class="house-service-name">${escapeHtml(property.name)}<small>${escapeHtml(property.region || property.address)}</small></span><span class="house-service-badges">${inspectionStatusBadge(property.id)}${winterStatusBadge(property.id)}</span></button>`;
+                return `<button class="house-service-row stacked" data-action="open-inspection" data-property="${escapeHtml(property.id)}"><span class="house-service-name">${escapeHtml(property.name)}<small>${escapeHtml(property.region || property.address)}</small></span><span class="house-service-badges">${inspectionStatusBadge(property.id)}${winterStatusBadge(property.id)}</span></button>`;
               }).join('') || '<div class="empty">Noch keine Ferienhäuser vorhanden.</div>'}</div>
             </section>
             <section class="card"><div class="card-head"><div><h2 class="card-title">Reparatur & Instandhaltung</h2><p class="card-caption">Gemeldete Mängel und geplante Reparaturen</p></div><button class="text-btn" data-page="repairs">Übersicht →</button></div>
