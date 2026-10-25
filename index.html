@@ -1781,7 +1781,7 @@
   <div class="modal-backdrop" id="import-modal" role="dialog" aria-modal="true" aria-labelledby="import-modal-title">
     <section class="modal import-modal">
       <div class="modal-head"><div><h2 id="import-modal-title">Ferienhaus importieren</h2><p>Daten aus einem Immobilieninserat übernehmen</p></div><button class="close-btn" type="button" id="close-import-modal" aria-label="Schließen">✕</button></div>
-      <div class="import-sources" aria-label="Unterstützte Seiten"><span class="ok">Fastighetsbyrån</span><span class="ok">Länsförsäkringar</span><span class="text">Hemnet · per Text</span><span class="text">Andere Seiten · per Text</span></div>
+      <div class="import-sources" aria-label="Unterstützte Seiten"><span class="ok">Fastighetsbyrån</span><span class="ok">Länsförsäkringar</span><span class="ok">Booli</span><span class="ok">Svensk Fastighetsförmedling</span><span class="text">Hemnet · per Text</span><span class="text">Andere Seiten · per Text</span></div>
       <div class="import-method" role="tablist" aria-label="Importweg"><button type="button" class="active" data-import-method="link" role="tab" aria-selected="true">Link einfügen</button><button type="button" data-import-method="text" role="tab" aria-selected="false">Inseratstext einfügen</button></div>
       <div id="import-link-pane"><label><span class="form-label">Link zum Inserat</span><input class="form-control" id="import-url" type="url" inputmode="url" autocomplete="off" placeholder="z. B. https://www.fastighetsbyran.com/…"></label></div>
       <div id="import-text-pane" hidden>
@@ -1795,7 +1795,7 @@
       </fieldset>
       <ol class="import-progress" id="import-progress" hidden><li data-step="read">Inserat lesen</li><li data-step="translate">Ins Deutsche übersetzen</li><li data-step="analyze">Zustand & Sanierungen analysieren</li><li data-step="photos">Fotos laden</li></ol>
       <p class="import-status" id="import-status" role="status" aria-live="polite" hidden></p>
-      <p class="import-hint">Du kannst alles vor dem Speichern prüfen und ändern. Für die Übersetzung werden die Inseratstexte an einen Übersetzungsdienst gesendet.</p>
+      <p class="import-hint">Du kannst alles vor dem Speichern prüfen und ändern. Für die Übersetzung werden die Inseratstexte an einen Übersetzungsdienst gesendet. Inserate von Booli und Svensk Fastighetsförmedling werden über einen öffentlichen Weiterleitungsdienst abgerufen.</p>
       <div class="form-actions"><button type="button" class="secondary-btn" id="import-cancel">Abbrechen</button><button type="button" class="primary-btn" id="import-run">Daten einlesen</button></div>
     </section>
   </div>
@@ -7957,7 +7957,7 @@
     function importHeating(text) {
       const value = String(text || '').toLowerCase();
       if (!value) return '';
-      if (/värmepump|vp\b/.test(value)) return 'Wärmepumpe';
+      if (/värmepump|bergvärme|jordvärme|sjövärme|vp\b/.test(value)) return 'Wärmepumpe';
       if (/pellets/.test(value)) return 'Pelletheizung';
       if (/olja|oljepanna/.test(value)) return 'Ölheizung';
       if (/fjärrvärme/.test(value)) return 'Fernwärme';
@@ -8193,7 +8193,7 @@
       add('Kosten', 'Betriebskosten', operating.replace(/kr\/år/gi, 'kr/Jahr'), false);
       const descriptionLines = lines.filter((line) => line.length > 80 && !/cookie|integritet|annons/i.test(line));
       return {
-        sourceName: /hemnet/i.test(link || '') ? 'Hemnet (eingefügter Text)' : 'Eingefügter Inseratstext',
+        sourceName: /hemnet/i.test(link || '') ? 'Hemnet (eingefügter Text)' : /booli/i.test(link || '') ? 'Booli (eingefügter Text)' : /svenskfast/i.test(link || '') ? 'Svensk Fastighetsförmedling (eingefügter Text)' : 'Eingefügter Inseratstext',
         sourceUrl: /^https:\/\//.test(link || '') ? link : '',
         description: descriptionLines.join('\n\n'),
         photoUrls: [],
@@ -8417,6 +8417,122 @@
         }
       };
     }
+
+    // Inseratsseiten ohne offene Schnittstelle (Booli, Svensk Fastighetsförmedling):
+    // Seite über einen öffentlichen Weiterleitungsdienst abrufen und eingebettete Daten auswerten.
+    const PAGE_PROXIES = [
+      (target) => `https://api.allorigins.win/raw?url=${encodeURIComponent(target)}`,
+      (target) => `https://api.cors.lol/?url=${encodeURIComponent(target)}`,
+      (target) => `https://corsproxy.io/?url=${encodeURIComponent(target)}`
+    ];
+    const isBlockedPage = (html) => html.length < 800 || /cf-chl|challenge-platform|just a moment|attention required|captcha/i.test(html.slice(0, 6000));
+    async function fetchListingPage(link) {
+      for (const proxy of PAGE_PROXIES) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 15000);
+        try {
+          const response = await fetch(proxy(link), { signal: controller.signal });
+          if (!response.ok) continue;
+          const html = await response.text();
+          if (!isBlockedPage(html)) return html;
+        } catch (error) { /* nächsten Dienst versuchen */ } finally { clearTimeout(timer); }
+      }
+      return '';
+    }
+    function pageToText(html) {
+      const stripped = html.replace(/<(script|style|noscript|svg|template)[\s\S]*?<\/\1>/gi, ' ')
+        .replace(/<(br|hr)\b[^>]*>/gi, '\n')
+        .replace(/<\/(p|div|li|h[1-6]|dt|dd|tr|td|th|section|article|span|label|button|a)>/gi, '\n')
+        .replace(/<[^>]+>/g, ' ');
+      const box = document.createElement('textarea');
+      box.innerHTML = stripped;
+      return box.value.split('\n').map((line) => line.replace(/\s+/g, ' ').trim()).filter(Boolean).join('\n');
+    }
+    function embeddedListingData(doc) {
+      const found = {};
+      const images = [];
+      const plain = (value) => {
+        if (value == null) return '';
+        if (typeof value === 'object') return plain(value.raw ?? value.value ?? value.amount ?? value.formatted ?? value.text ?? value.name ?? '');
+        return String(value);
+      };
+      const KEYS = [
+        ['livingArea', /^(livingarea|livingspace|boarea|boyta|primaryarea|floorsize)$/i],
+        ['plotSize', /^(plotarea|plotsize|lotsize|landarea|tomtarea|tomtstorlek)$/i],
+        ['rooms', /^(rooms|numberofrooms|roomcount|antalrum)$/i],
+        ['yearBuilt', /^(constructionyear|yearbuilt|buildyear|buildingyear|byggar)$/i],
+        ['street', /^(streetaddress|street|address)$/i],
+        ['municipality', /^(municipality|municipalityname|addresslocality|city)$/i],
+        ['county', /^(county|countyname|addressregion)$/i],
+        ['energyClass', /^(energyclass|energyrating)$/i],
+        ['price', /^(listprice|askingprice|price|startprice)$/i],
+        ['operating', /^(operatingcost|runningcosts|driftkostnad)$/i],
+        ['homeType', /^(objecttype|propertytype|hometype|bostadstyp)$/i]
+      ];
+      const walk = (node, depth = 0) => {
+        if (depth > 14 || node == null) return;
+        if (typeof node === 'string') { if (/^https:\/\/[^\s"']+\.(jpe?g|webp|png)(\?[^\s"']*)?$/i.test(node) && !/logo|icon|sprite|avatar|favicon|placeholder|broker|maklare|agent/i.test(node)) images.push(node); return; }
+        if (Array.isArray(node)) { node.forEach((item) => walk(item, depth + 1)); return; }
+        if (typeof node !== 'object') return;
+        Object.entries(node).forEach(([key, value]) => {
+          const normalized = key.toLowerCase().replace(/[^a-zåäö]/g, '').replace('å', 'a');
+          const match = KEYS.find(([, pattern]) => pattern.test(normalized));
+          if (match && !found[match[0]] && (typeof value !== 'object' || value === null || !Array.isArray(value))) {
+            const text = importClean(plain(value));
+            if (text && text.length < 160) found[match[0]] = text;
+          }
+          if (/^(description|longdescription|sellingdescription|body)$/i.test(key) && typeof value === 'string' && value.length > (found.description || '').length && value.length > 120) found.description = value;
+          walk(value, depth + 1);
+        });
+      };
+      doc.querySelectorAll('script[type="application/ld+json"], script#__NEXT_DATA__, script[type="application/json"]').forEach((script) => {
+        try { walk(JSON.parse(script.textContent)); } catch (error) { /* kein JSON */ }
+      });
+      // Next.js App Router liefert Daten in self.__next_f-Schnipseln.
+      doc.querySelectorAll('script:not([src])').forEach((script) => {
+        const text = script.textContent || '';
+        if (!/__next_f|__APOLLO_STATE__|window\.__/.test(text)) return;
+        (text.match(/https:\\?\/\\?\/[^"'\s\\]+\.(?:jpe?g|webp|png)/gi) || []).forEach((url) => images.push(url.replace(/\\\//g, '/')));
+        [['livingArea', /"(?:livingArea|livingSpace)\\?"\s*:\s*\{?[^}]{0,40}?(\d+(?:[.,]\d+)?)/i], ['plotSize', /"(?:plotArea|plotSize|lotSize)\\?"\s*:\s*\{?[^}]{0,40}?(\d+(?:[.,]\d+)?)/i], ['rooms', /"(?:rooms|numberOfRooms)\\?"\s*:\s*\{?[^}]{0,40}?(\d+(?:[.,]\d+)?)/i], ['yearBuilt', /"(?:constructionYear|yearBuilt|buildYear)\\?"\s*:\s*\\?"?(\d{4})/i]]
+          .forEach(([field, pattern]) => { if (!found[field]) { const hit = text.match(pattern); if (hit) found[field] = hit[1]; } });
+      });
+      const meta = (name) => doc.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.getAttribute('content') || '';
+      if (meta('og:image')) images.unshift(meta('og:image'));
+      return { found, images: [...new Set(images)], title: meta('og:title') || doc.title || '', summary: meta('og:description') || meta('description') };
+    }
+    async function loadListingPage(link, sourceName) {
+      const html = await fetchListingPage(link);
+      if (!html) throw Object.assign(importError(`${sourceName} lässt sich gerade nicht direkt abrufen. Kopiere bitte den Text des Inserats und füge ihn hier ein – Husora wertet ihn genauso aus.`), { fallbackToText: true });
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const data = embeddedListingData(doc);
+      const { found } = data;
+      const number = (value) => { const match = String(value || '').replace(/\s/g, '').match(/\d+(?:[.,]\d+)?/); return match ? String(Math.round(Number(match[0].replace(',', '.')))) : ''; };
+      const extra = [found.livingArea && `Boarea ${found.livingArea}`, found.plotSize && `Tomtarea ${found.plotSize}`, found.rooms && `Antal rum ${found.rooms}`, found.yearBuilt && `Byggår ${found.yearBuilt}`, found.energyClass && `Energiklass ${found.energyClass}`, found.price && `Pris ${found.price}`].filter(Boolean);
+      const text = [data.title, found.street || '', ...extra, pageToText(html), found.description || data.summary].filter(Boolean).join('\n');
+      let result;
+      try { result = parsePastedListing(text, link); } catch (error) { throw Object.assign(importError(`Auf der Seite von ${sourceName} wurden keine Objektdaten gefunden. Kopiere bitte den Text des Inserats und füge ihn hier ein.`), { fallbackToText: true }); }
+      const fields = result.fields;
+      if (found.livingArea) fields.livingArea = number(found.livingArea) || fields.livingArea;
+      if (found.plotSize) fields.plotSize = number(found.plotSize) || fields.plotSize;
+      if (found.rooms) fields.rooms = number(found.rooms) || fields.rooms;
+      if (/^\d{4}$/.test(found.yearBuilt || '')) fields.yearBuilt = found.yearBuilt;
+      const street = importClean(found.street).split(',')[0];
+      if (street && street.length < 60) {
+        fields.name = [street, found.municipality].filter(Boolean).join(', ');
+        fields.address = [street, found.municipality, found.county, 'Schweden'].filter((part, index, all) => part && all.indexOf(part) === index).join(', ');
+      }
+      if (found.county && !fields.region) fields.region = found.county.replace(/s? län$/i, '');
+      if (found.energyClass && !result.energy.class) result.energy.class = (found.energyClass.match(/[A-G]/i) || [''])[0].toUpperCase();
+      if (found.description && found.description.length > result.description.length) result.description = importClean(found.description);
+      if (!fields.heatingSystem) { const hit = text.match(/[^.\n]*(värmepump|bergvärme|direktverkande|elvärme|fjärrvärme|pelletspanna|vedpanna|oljepanna)[^.\n]*/i); if (hit) { result.heatingText = result.heatingText || importClean(hit[0]); fields.heatingSystem = importHeating(hit[0]); } }
+      const floorplans = data.images.filter((url) => /planritning|floorplan|planlosning|\bplan\b/i.test(url));
+      result.photoUrls = data.images.filter((url) => !floorplans.includes(url)).slice(0, 4);
+      result.floorplanUrls = floorplans.slice(0, 2);
+      result.sourceName = sourceName;
+      result.sourceUrl = link;
+      if (!fields.livingArea && !fields.yearBuilt && !fields.rooms && !result.photoUrls.length) throw Object.assign(importError(`Auf der Seite von ${sourceName} wurden keine Objektdaten gefunden. Kopiere bitte den Text des Inserats und füge ihn hier ein.`), { fallbackToText: true });
+      return result;
+    }
     const IMPORT_SOURCES = [{
       id: 'fastighetsbyran',
       match: (url) => /(^|\.)fastighetsbyran\.(com|se)$/i.test(url.hostname),
@@ -8448,6 +8564,16 @@
         if (!response.ok) throw importError(`Das Inserat konnte nicht geladen werden (Fehler ${response.status}).`);
         return mapLansfast(await response.json(), link);
       }
+    }, {
+      id: 'booli',
+      match: (url) => /(^|\.)booli\.se$/i.test(url.hostname),
+      objectId: (url) => (url.pathname.match(/\/(?:annons|bostad|objekt)\/(\d+)/i) || url.pathname.match(/(\d{5,})\/?$/) || [])[1] || '',
+      load: (id, link) => loadListingPage(link, 'Booli')
+    }, {
+      id: 'svenskfast',
+      match: (url) => /(^|\.)svenskfast\.se$/i.test(url.hostname),
+      objectId: (url) => (url.pathname.split('/').filter(Boolean).length >= 2 ? url.pathname : ''),
+      load: (id, link) => loadListingPage(link, 'Svensk Fastighetsförmedling')
     }];
     async function importPhoto(url, { edge = 1000, quality = 0.72, width = 1200 } = {}) {
       const proxied = `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}&w=${width}&h=${width}&fit=inside&output=jpg&q=80`;
@@ -8621,6 +8747,7 @@
       } catch (error) {
         console.error('Import fehlgeschlagen:', error);
         setImportStep(null);
+        if (error.fallbackToText) { setImportMethod('text'); document.getElementById('import-text').focus(); }
         setImportStatus(error.userMessage || 'Der Import ist fehlgeschlagen. Bitte den Link prüfen und erneut versuchen.', true);
       } finally {
         run.disabled = false;
