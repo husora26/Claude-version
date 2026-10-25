@@ -1495,6 +1495,76 @@
     .inspection-status-badge.order-done { color: var(--green); background: var(--green-soft); }
     @media (max-width: 900px) { .position-row { grid-template-columns: 1fr 1fr; } .position-main { grid-column: 1 / -1; } }
     @media (max-width: 640px) { .insp-steps { grid-template-columns: 1fr; } .insp-step { border-right: 0; border-bottom: 1px solid var(--line); } .position-row { grid-template-columns: 1fr; } }
+    /* Hausdetailseite: einklappbare Karten, Galerie, Bildansicht, Kacheln */
+    .detail-section .card-head { gap: 10px; }
+    .section-toggle { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 0; border: 0; color: inherit; background: none; text-align: left; }
+    .section-chevron { width: 26px; height: 26px; flex: none; border-radius: 50%; background: #f0eee7 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23244b3d' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / 14px no-repeat; transition: transform .2s; }
+    .detail-section.collapsed .section-chevron { transform: rotate(-90deg); }
+    .detail-section.collapsed .card-head { border-bottom: 0; }
+    .detail-section.collapsed .detail-section-body { display: none; }
+    .detail-body { display: grid; gap: 14px; padding: 16px; }
+    .detail-gallery { display: grid; gap: 8px; }
+    .detail-gallery.multi { grid-template-columns: 2fr 1fr; }
+    .detail-gallery button { position: relative; display: block; overflow: hidden; padding: 0; border: 0; border-radius: 12px; background: #e9e5db; cursor: zoom-in; }
+    .detail-gallery img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+    .detail-gallery button:hover img { transform: scale(1.03); }
+    .detail-photo-main { height: 300px; }
+    .detail-photo-thumbs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .detail-photo-thumbs button { height: 146px; }
+    .detail-photo-thumbs span { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; background: rgba(0,0,0,.45); font-size: 18px; font-weight: 800; }
+    .photo-zoom { position: absolute; right: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 20px; color: #fff; background: rgba(20, 30, 25, .6); font-size: 11px; font-weight: 700; }
+    .photo-zoom svg { width: 13px; height: 13px; }
+    .photo-lightbox { position: fixed; inset: 0; z-index: 200; display: none; align-items: center; justify-content: center; padding: 50px 60px; background: rgba(12, 18, 15, .92); }
+    .photo-lightbox.open { display: flex; }
+    .photo-lightbox figure { display: grid; justify-items: center; gap: 10px; max-width: 100%; max-height: 100%; margin: 0; }
+    .photo-lightbox img { max-width: 100%; max-height: calc(100vh - 140px); border-radius: 8px; object-fit: contain; box-shadow: 0 10px 40px rgba(0,0,0,.4); background: #fff; }
+    .photo-lightbox figcaption { color: #e8ede9; font-size: 12px; }
+    .lightbox-close { position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; border: 0; border-radius: 50%; color: #fff; background: rgba(255,255,255,.14); font-size: 18px; }
+    .lightbox-nav { position: absolute; top: 50%; width: 46px; height: 46px; margin-top: -23px; border: 0; border-radius: 50%; color: #fff; background: rgba(255,255,255,.16); font-size: 30px; line-height: 1; }
+    .lightbox-nav.prev { left: 12px; } .lightbox-nav.next { right: 12px; }
+    .lightbox-nav[hidden] { display: none; }
+    .key-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+    .key-fact { display: grid; align-content: start; gap: 5px; padding: 11px 13px; border: 1px solid #ebe6da; border-radius: 12px; background: #fbfaf6; }
+    .key-fact-label { display: flex; align-items: center; gap: 5px; color: var(--muted); font-size: 9.5px; font-weight: 750; letter-spacing: .05em; text-transform: uppercase; }
+    .key-fact-label svg { width: 13px; height: 13px; color: var(--green); }
+    .key-fact strong { font-size: 13.5px; line-height: 1.35; }
+    .key-fact small { color: var(--muted); font-size: 10.5px; }
+    .key-fact.energy, .key-fact.condition { background: #fff; box-shadow: 0 2px 8px rgba(35,48,39,.05); }
+    .key-fact.condition.cond-ok strong { color: #2f7a4f; } .key-fact.condition.cond-warn strong { color: #9a6416; } .key-fact.condition.cond-alert strong { color: var(--red); }
+    .energy-scale.small i { width: 17px; height: 20px; font-size: 9px; }
+    .energy-scale.small i.on { width: 26px; height: 26px; font-size: 13px; }
+    .cost-overview { display: grid; gap: 14px; padding: 16px; }
+    .cost-figures { display: grid; grid-template-columns: 1.3fr 1fr; gap: 10px; }
+    .cost-figure { display: grid; gap: 2px; padding: 13px 15px; border: 1px solid #ebe6da; border-radius: 12px; background: #fbfaf6; }
+    .cost-figure.main { color: #fff; border: 0; background: linear-gradient(135deg, var(--green), #2f6a52); }
+    .cost-figure small { font-size: 10.5px; opacity: .8; }
+    .cost-figure strong { font-size: 22px; }
+    .cost-figure span { font-size: 11px; opacity: .8; }
+    .cost-mini-bars { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+    .cost-mini-bars li { display: grid; grid-template-columns: minmax(120px, 210px) 1fr auto; align-items: center; gap: 10px; font-size: 12px; }
+    .cost-mini-bars em { margin-left: 6px; padding: 1px 6px; border-radius: 6px; color: #7a5a23; background: var(--amber-soft); font-size: 9.5px; font-style: normal; font-weight: 700; }
+    .cost-mini-track { height: 8px; overflow: hidden; border-radius: 8px; background: #ece9e0; }
+    .cost-mini-track span { display: block; height: 100%; border-radius: inherit; }
+    .facts-more { margin: 4px 18px 14px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fbfaf6; }
+    .cost-overview .facts-more { margin: 0; }
+    .facts-more > summary { cursor: pointer; color: var(--green); font-size: 12px; font-weight: 700; }
+    .facts-more[open] > summary { margin-bottom: 8px; }
+    .facts-more .facts-group { padding-right: 0; padding-left: 0; }
+    .facts-plan-row { display: flex; flex-wrap: wrap; gap: 10px; }
+    .facts-plan-row button { padding: 0; border: 1px solid var(--line); border-radius: 10px; background: #fff; cursor: zoom-in; }
+    .facts-plan-row .facts-plan { display: block; max-height: 220px; }
+    .reno-list li { position: relative; grid-template-columns: 52px minmax(0, 1fr) auto; }
+    .reno-delete { flex: none; width: 26px; height: 26px; margin-left: auto; border: 0; border-radius: 50%; color: var(--muted); background: transparent; font-size: 12px; opacity: .55; }
+    .reno-delete:hover { color: var(--red); background: var(--red-soft); opacity: 1; }
+    .reno-list.planned .reno-year svg { width: 13px; height: 13px; }
+    .import-points li, .import-recs li { position: relative; }
+    .import-points .reno-delete, .import-recs .reno-delete { position: absolute; top: -2px; right: -4px; width: 22px; height: 22px; }
+    .import-points li { padding-right: 20px; }
+    .import-recs li { padding-right: 26px; }
+    @media (max-width: 640px) { .detail-gallery.multi { grid-template-columns: 1fr; } .detail-photo-main { height: 220px; } .detail-photo-thumbs { grid-template-columns: repeat(4, 1fr); } .detail-photo-thumbs button { height: 64px; } .cost-figures { grid-template-columns: 1fr; } .cost-mini-bars li { grid-template-columns: 1fr auto; } .cost-mini-track { grid-column: 1 / -1; order: 3; } .photo-lightbox { padding: 50px 8px; } .key-facts { grid-template-columns: 1fr 1fr; } }
+    .detail-photo-thumbs.count-1, .detail-photo-thumbs.count-2 { grid-template-columns: 1fr; }
+    .detail-photo-thumbs.count-1 button { height: 300px; }
+    @media (max-width: 640px) { .detail-photo-thumbs.count-1, .detail-photo-thumbs.count-2 { grid-template-columns: repeat(4, 1fr); } .detail-photo-thumbs.count-1 button { height: 64px; } }
     /* Automatisierung */
     .text-btn.inline { padding: 0; font-size: inherit; }
     .care-steps { display: grid; gap: 4px; margin: 2px 0 4px; padding: 0; list-style: none; }
@@ -4215,6 +4285,113 @@
           ${`<label class="assigned-house-switch"><span class="form-label">Ferienhaus wechseln</span><select id="assigned-property" class="filter-select" aria-label="Ferienhaus wechseln">${properties.map((item) => `<option value="${escapeHtml(item.id)}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)}${item.region ? ` · ${escapeHtml(item.region)}` : ''}</option>`).join('')}</select></label>`}</section>
         ${assignedPairs.length ? `<div class="assigned-provider-list">${providerCards}</div>` : '<section class="card empty">Diesem Ferienhaus sind noch keine Servicepartner zugeordnet.</section>'}`;
     }
+    // Hausdetailseite: einklappbare Karten, Bildansicht, wichtige Angaben und Kosten als Kacheln.
+    let collapsedSections = new Set();
+    try { collapsedSections = new Set(JSON.parse(localStorage.getItem('stugliv-collapsed-sections') || '[]')); } catch (error) { collapsedSections = new Set(); }
+    function toggleSection(id) {
+      if (collapsedSections.has(id)) collapsedSections.delete(id); else collapsedSections.add(id);
+      try { localStorage.setItem('stugliv-collapsed-sections', JSON.stringify([...collapsedSections])); } catch (error) { /* optional */ }
+    }
+    function detailSection(id, title, caption, body, extra = '') {
+      const collapsed = collapsedSections.has(id);
+      return `<section class="card detail-section ${collapsed ? 'collapsed' : ''}" data-section="${id}"><div class="card-head"><button type="button" class="section-toggle" data-section-toggle="${id}" aria-expanded="${!collapsed}"><span class="section-chevron" aria-hidden="true"></span><span><h2 class="card-title">${title}</h2>${caption ? `<p class="card-caption">${caption}</p>` : ''}</span></button>${extra}</div><div class="detail-section-body">${body}</div></section>`;
+    }
+    const KEY_FACT_ICONS = { 'Gebäudetyp': 'property', 'Unterkunftstyp': 'home', 'Energieklasse': 'bolt', 'Jahresenergieverbrauch': 'bolt', 'Wasser & Abwasser': 'note', 'Dienstbarkeit': 'document', 'Sonstige Rechte': 'document' };
+    function keyFactsHtml(property) {
+      const beds = Number.parseInt(property.beds, 10);
+      const fact = (label) => (property.facts || []).find((entry) => entry.label === label && entry.value && entry.value !== IMPORT_NO_DATA)?.value || '';
+      const energy = property.importSummary?.energy;
+      const energyClass = energy?.class || (fact('Energieklasse').match(/\b([A-G])\b/) || [])[1] || '';
+      const conditionClass = /dringend/i.test(property.condition) ? 'alert' : /sanierungsbedarf|kleinere/i.test(property.condition) ? 'warn' : /gut/i.test(property.condition) ? 'ok' : '';
+      const tiles = [
+        ['Gebäudetyp', fact('Gebäudetyp') || fact('Unterkunftstyp'), 'property'],
+        ['Baujahr', property.yearBuilt, 'clock'],
+        ['Wohnfläche', property.livingArea ? `${property.livingArea} m²` : '', 'home'],
+        ['Grundstück', property.plotSize ? `${Number(property.plotSize).toLocaleString('de-DE')} m²` : '', 'property'],
+        ['Zimmer / Betten', [property.rooms ? `${property.rooms} Zimmer` : '', Number.isFinite(beds) ? `${beds} Betten` : ''].filter(Boolean).join(' · '), 'users'],
+        ['Heizung', [property.heatingSystem, property.heatingYear].filter(Boolean).join(' · '), 'bolt'],
+        ['Kamin', property.fireplace === 'yes' ? [property.fireplaceType || 'Vorhanden', property.fireplaceInspection ? `Kontrolle ${fmtDate(property.fireplaceInspection)}` : ''].filter(Boolean).join(' · ') : property.fireplace === 'no' ? 'Nicht vorhanden' : '', 'moon'],
+        ['Wasser & Abwasser', fact('Wasser & Abwasser'), 'note'],
+        ['Energieverbrauch', energy?.kwh ? `${energy.kwh} kWh/m² · Jahr` : fact('Jahresenergieverbrauch'), 'bolt'],
+        ['Region', property.region, 'property']
+      ].filter(([, value]) => value);
+      const energyTile = `<div class="key-fact energy ${energyClass ? '' : 'empty'}"><span class="key-fact-label">${icon('bolt')} Energieklasse</span>${energyClass ? `<span class="energy-scale small">${'ABCDEFG'.split('').map((letter) => `<i class="e-${letter} ${letter === energyClass ? 'on' : ''}">${letter}</i>`).join('')}</span><small>${escapeHtml(energy?.rating || '')}</small>` : '<strong>Keine Angabe</strong>'}</div>`;
+      const conditionTile = `<div class="key-fact condition cond-${conditionClass}"><span class="key-fact-label">${icon('check')} Zustand</span><strong>${escapeHtml(property.condition || 'Noch nicht bewertet')}</strong></div>`;
+      return `<div class="key-facts">${energyTile}${conditionTile}${tiles.map(([label, value, name]) => `<div class="key-fact"><span class="key-fact-label">${icon(name)} ${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join('')}</div>`;
+    }
+    function propertyCostsHtml(property) {
+      const costs = annualCosts[property.id] || initialCosts[property.id] || {};
+      const plan = costCategories.map((category) => ({ ...category, value: Math.max(0, Number(costs[category.id]) || 0), imported: Boolean(costSources[property.id]?.[category.id]) })).filter((category) => category.value > 0).sort((a, b) => b.value - a.value);
+      const total = plan.reduce((sum, category) => sum + category.value, 0);
+      const year = new Date().getFullYear();
+      const actual = expensesFor(property.id, year).reduce((sum, expense) => sum + Number(expense.amount), 0);
+      const max = plan[0]?.value || 1;
+      const listingCosts = (property.facts || []).filter((fact) => /kosten|drift|ekonomi/i.test(fact.group) && fact.value && fact.value !== IMPORT_NO_DATA);
+      return `<div class="cost-overview"><div class="cost-figures"><div class="cost-figure main"><small>Geplante Jahreskosten</small><strong>${escapeHtml(formatCost(total))}</strong><span>≈ ${escapeHtml(formatCost(Math.round(total / 12)))} pro Monat</span></div><div class="cost-figure"><small>Ist-Kosten ${year}</small><strong>${escapeHtml(formatCost(actual))}</strong><span>${total ? `${Math.round((actual / total) * 100)} % vom Plan` : 'aus Rechnungen'}</span></div></div>
+        <ul class="cost-mini-bars">${plan.slice(0, 6).map((category, index) => `<li><span>${escapeHtml(category.label)}${category.imported ? '<em>Inserat</em>' : ''}</span><span class="cost-mini-track"><span style="width:${Math.round((category.value / max) * 100)}%;background:${COST_CHART_COLORS[index % COST_CHART_COLORS.length]}"></span></span><strong>${escapeHtml(formatCost(category.value))}</strong></li>`).join('')}</ul>
+        ${listingCosts.length ? `<details class="facts-more"><summary>Kostenangaben aus dem Inserat (${listingCosts.length})</summary><dl class="facts-grid">${listingCosts.map((fact) => `<div><dt>${escapeHtml(fact.label)}</dt><dd>${escapeHtml(fact.value)}</dd></div>`).join('')}</dl></details>` : ''}</div>`;
+    }
+    // Bildansicht für Hausfotos und Grundrisse.
+    let lightboxState = null;
+    function openLightbox(images, index = 0, title = '') {
+      if (!images.length) return;
+      lightboxState = { images, index: Math.max(0, Math.min(images.length - 1, index)), title };
+      let box = document.getElementById('photo-lightbox');
+      if (!box) {
+        box = document.createElement('div');
+        box.id = 'photo-lightbox';
+        box.className = 'photo-lightbox';
+        box.setAttribute('role', 'dialog');
+        box.setAttribute('aria-modal', 'true');
+        box.innerHTML = '<button type="button" class="lightbox-close" data-lightbox="close" aria-label="Schließen">✕</button><button type="button" class="lightbox-nav prev" data-lightbox="prev" aria-label="Vorheriges Bild">‹</button><figure><img alt=""><figcaption></figcaption></figure><button type="button" class="lightbox-nav next" data-lightbox="next" aria-label="Nächstes Bild">›</button>';
+        document.body.append(box);
+        box.addEventListener('click', (event) => {
+          const action = event.target.closest('[data-lightbox]')?.dataset.lightbox;
+          if (action === 'close' || event.target === box) closeLightbox();
+          if (action === 'prev') stepLightbox(-1);
+          if (action === 'next') stepLightbox(1);
+        });
+        let touchX = null;
+        box.addEventListener('touchstart', (event) => { touchX = event.touches[0]?.clientX ?? null; }, { passive: true });
+        box.addEventListener('touchend', (event) => { if (touchX === null) return; const dx = (event.changedTouches[0]?.clientX ?? touchX) - touchX; if (Math.abs(dx) > 50) stepLightbox(dx < 0 ? 1 : -1); touchX = null; }, { passive: true });
+      }
+      renderLightbox();
+      box.classList.add('open');
+      box.querySelector('.lightbox-close').focus();
+    }
+    function renderLightbox() {
+      const box = document.getElementById('photo-lightbox');
+      if (!box || !lightboxState) return;
+      const { images, index, title } = lightboxState;
+      box.querySelector('img').src = images[index];
+      box.querySelector('img').alt = `${title} – Bild ${index + 1}`;
+      box.querySelector('figcaption').textContent = `${title ? `${title} · ` : ''}${index + 1} / ${images.length}`;
+      box.querySelectorAll('.lightbox-nav').forEach((button) => { button.hidden = images.length < 2; });
+    }
+    function stepLightbox(step) {
+      if (!lightboxState) return;
+      lightboxState.index = (lightboxState.index + step + lightboxState.images.length) % lightboxState.images.length;
+      renderLightbox();
+    }
+    function closeLightbox() {
+      document.getElementById('photo-lightbox')?.classList.remove('open');
+      lightboxState = null;
+    }
+    const propertyPhotos = (property) => [...new Set([property.photo, ...(property.photos || [])].filter(Boolean))];
+    // Einzelne Sanierungspositionen (auch automatisch eingefügte) entfernen.
+    function deleteRenovationLine(property, field, index) {
+      const target = properties.find((item) => item.id === property.id);
+      if (!target) return;
+      if (field === 'lastRenovations') {
+        const entries = renovationEntries(target).filter((entry, position) => position !== index);
+        target.lastRenovations = entries.map((entry) => `${entry.year ? `${entry.year}: ` : ''}${entry.text}`).join('\n');
+      } else {
+        target.plannedRenovations = String(target.plannedRenovations || '').split(/\n|;\s*/).map((line) => line.trim()).filter(Boolean).filter((line, position) => position !== index).join('\n');
+      }
+      saveProperties();
+      render();
+      showToast('Position entfernt.');
+    }
     function propertyDetailPage() {
       const property = propertyWithDefaults(properties.find((item) => item.id === selectedPropertyId) || properties[0]);
       const beds = Number.parseInt(property.beds, 10);
@@ -4222,39 +4399,47 @@
       const partnerSummary = assignedProviders.length ? assignedProviders.map((provider) => provider.name).join(', ') : 'Keine Servicepartner zugeordnet';
       return `<div class="welcome"><div><p class="eyebrow">Objektverwaltung · ${escapeHtml(property.region || 'Schweden')}</p><h1>${escapeHtml(property.name)}</h1><p class="subtitle">${escapeHtml(property.address)}</p>${inspectionStatusBadge(property.id)}</div><button class="primary-btn" data-action="edit-property" data-property="${escapeHtml(property.id)}">Bearbeiten</button></div>
         <section class="card house-glance"><div class="card-head"><div><h2 class="card-title">Auf einen Blick</h2><p class="card-caption">Aktueller Stand – antippen für Details</p></div><div class="house-card-actions">${isPro() ? `<button type="button" class="secondary-btn" data-house-goto="house3d" data-property="${escapeHtml(property.id)}">${icon('cube')} 3D-Modell</button>` : ''}<button type="button" class="secondary-btn" data-house-goto="documents" data-property="${escapeHtml(property.id)}">${icon('document')} Dokumente</button></div></div><div class="house-glance-body">${houseTilesHtml(property)}</div></section>
-        <section class="card"><div class="card-head"><div><h2 class="card-title">Gebäude & Grundstück</h2><p class="card-caption">Stammdaten, Zustand und Kapazität</p></div><button class="text-btn" data-page="properties">${singleHouse() ? '← Mein Ferienhaus' : '← Alle Ferienhäuser'}</button></div><div style="padding:16px">${property.photo ? `<img class="property-photo" src="${escapeHtml(property.photo)}" alt="Hausfoto: ${escapeHtml(property.name)}">` : ''}${(property.photos || []).length > 1 ? `<div class="photo-strip">${property.photos.map((src) => `<img src="${escapeHtml(src)}" alt="">`).join('')}</div>` : ''}<div class="detail-grid">
-          <article class="property-card"><span class="form-label">Baujahr</span><strong>${escapeHtml(property.yearBuilt || '')}</strong></article>
-          <article class="property-card"><span class="form-label">Wohnfläche</span><strong>${property.livingArea ? `${escapeHtml(property.livingArea)} m²` : ''}</strong></article>
-          <article class="property-card"><span class="form-label">Grundstücksgröße</span><strong>${property.plotSize ? `${escapeHtml(property.plotSize)} m²` : ''}</strong></article>
-          <article class="property-card"><span class="form-label">Zimmer / Schlafplätze</span><strong>${[property.rooms ? `${escapeHtml(property.rooms)} Zimmer` : '', Number.isFinite(beds) ? `${beds} Schlafplätze` : ''].filter(Boolean).join(' · ')}</strong></article>
-          <article class="property-card"><span class="form-label">Gebäudezustand</span><strong>${escapeHtml(property.condition || '')}</strong></article>
-          <article class="property-card"><span class="form-label">Heizsystem / Baujahr</span><strong>${escapeHtml([property.heatingSystem, property.heatingYear].filter(Boolean).join(' · '))}</strong></article>
-          <article class="property-card"><span class="form-label">Kamin / Feuerstätte</span><strong>${escapeHtml(property.fireplace === 'yes' ? [property.fireplaceType || 'Vorhanden', property.fireplaceInspection ? `Kontrolle ${property.fireplaceInspection}` : ''].filter(Boolean).join(' · ') : property.fireplace === 'no' ? 'Nicht vorhanden' : '')}</strong></article>
-          <article class="property-card"><span class="form-label">Region</span><strong>${escapeHtml(property.region || '')}</strong></article>
-        </div></div></section>
-        ${property.importSummary ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Analyse aus dem Inserat</h2><p class="card-caption">Energieeffizienz, Zustand, Sanierungen und Empfehlungen · ${escapeHtml(property.importSummary.sourceName || 'Import')}</p></div><button type="button" class="text-btn" data-house-goto="renovations" data-property="${escapeHtml(property.id)}">Als Sanierung planen →</button></div>${importSummaryHtml(property.importSummary)}</section>` : ''}
+        ${(() => {
+          const photos = propertyPhotos(property);
+          const gallery = photos.length ? `<div class="detail-gallery ${photos.length > 1 ? 'multi' : ''}"><button type="button" class="detail-photo-main" data-lightbox-open="photos" data-index="0" aria-label="Foto groß anzeigen"><img src="${escapeHtml(photos[0])}" alt="Hausfoto: ${escapeHtml(property.name)}"><span class="photo-zoom">${icon('search')} Vergrößern</span></button>${photos.length > 1 ? `<div class="detail-photo-thumbs count-${Math.min(4, photos.length - 1)}">${photos.slice(1, 5).map((src, index) => `<button type="button" data-lightbox-open="photos" data-index="${index + 1}" aria-label="Foto ${index + 2} groß anzeigen"><img src="${escapeHtml(src)}" alt="">${index === 3 && photos.length > 5 ? `<span>+${photos.length - 5}</span>` : ''}</button>`).join('')}</div>` : ''}</div>` : '<p class="property-notes" style="margin:0 0 12px">Noch kein Foto – über „Bearbeiten“ hinzufügen.</p>';
+          return detailSection('building', 'Gebäude & Grundstück', 'Fotos, wichtige Angaben, Zustand und Energie', `<div class="detail-body">${gallery}${keyFactsHtml(property)}</div>`, `<button class="text-btn" data-page="properties">${singleHouse() ? '← Mein Ferienhaus' : '← Alle Ferienhäuser'}</button>`);
+        })()}
+        ${detailSection('costs', 'Kosten', `Jahresplan und Ist-Kosten ${new Date().getFullYear()}`, propertyCostsHtml(property), `<button type="button" class="text-btn" data-house-goto="costs" data-property="${escapeHtml(property.id)}">Zu den Kosten →</button>`)}
+        ${property.importSummary ? detailSection('analysis', 'Analyse aus dem Inserat', `Energieeffizienz, Zustand, Sanierungen und Empfehlungen · ${escapeHtml(property.importSummary.sourceName || 'Import')}`, importSummaryHtml(property.importSummary, { deletable: true }), `<button type="button" class="text-btn" data-house-goto="renovations" data-property="${escapeHtml(property.id)}">Als Sanierung planen →</button>`) : ''}
         ${(() => {
           if (!(property.facts || []).length && !property.description && !(property.floorplans || []).length) return '';
           const groups = [];
           (property.facts || []).forEach((fact) => {
+            if (/kosten|drift|ekonomi/i.test(fact.group) || fact.group === 'Wichtige Angaben') return;
             let group = groups.find((entry) => entry.title === fact.group);
             if (!group) { group = { title: fact.group, items: [] }; groups.push(group); }
             group.items.push(fact);
           });
+          const secondary = /räume|rum|kontakt|umgebung|strom & internet|terrasse|steuer|sonstiges|övrigt/i;
+          const main = groups.filter((group) => !secondary.test(group.title));
+          const more = groups.filter((group) => secondary.test(group.title));
+          const groupHtml = (group) => `<div class="facts-group"><h3>${escapeHtml(group.title)}</h3><dl class="facts-grid">${group.items.map((fact) => `<div><dt>${escapeHtml(fact.label)}</dt><dd>${escapeHtml(fact.value)}</dd></div>`).join('')}</dl></div>`;
           const safeSource = /^https:\/\//.test(property.sourceUrl || '') ? property.sourceUrl : '';
-          return `<section class="card"><div class="card-head"><div><h2 class="card-title">Weitere Angaben aus dem Inserat</h2><p class="card-caption">${escapeHtml(property.sourceName || 'Importiert')}</p></div>${safeSource ? `<a class="text-btn" href="${escapeHtml(safeSource)}" target="_blank" rel="noopener noreferrer">Inserat öffnen ↗</a>` : ''}</div>${property.description ? (property.importSummary ? `<details class="facts-original"><summary>Vollständige Beschreibung (übersetzt)</summary><p class="facts-description">${escapeHtml(property.description)}</p></details>` : `<p class="facts-description">${escapeHtml(property.description)}</p>`) : ''}${(property.floorplans || []).length ? `<div class="facts-plans"><h3>Grundrisse</h3>${property.floorplans.map((source) => `<img class="facts-plan" src="${escapeHtml(source)}" alt="Grundriss ${escapeHtml(property.name)}" loading="lazy">`).join('')}</div>` : ''}${groups.map((group) => `<div class="facts-group"><h3>${escapeHtml(group.title)}</h3><dl class="facts-grid">${group.items.map((fact) => `<div><dt>${escapeHtml(fact.label)}</dt><dd>${escapeHtml(fact.value)}</dd></div>`).join('')}</dl></div>`).join('')}</section>`;
+          const plans = property.floorplans || [];
+          const body = `${plans.length ? `<div class="facts-plans"><h3>Grundrisse</h3><div class="facts-plan-row">${plans.map((source, index) => `<button type="button" data-lightbox-open="plans" data-index="${index}" aria-label="Grundriss groß anzeigen"><img class="facts-plan" src="${escapeHtml(source)}" alt="Grundriss ${escapeHtml(property.name)}" loading="lazy"></button>`).join('')}</div></div>` : ''}${main.map(groupHtml).join('')}${more.length ? `<details class="facts-more"><summary>Weiteres anzeigen: ${escapeHtml(more.map((group) => group.title).join(', '))}</summary>${more.map(groupHtml).join('')}</details>` : ''}${property.description ? `<details class="facts-more"><summary>Vollständige Beschreibung${property.importSummary ? ' (übersetzt)' : ''}</summary><p class="facts-description">${escapeHtml(property.description)}</p></details>` : ''}`;
+          return detailSection('listing', 'Weitere Angaben aus dem Inserat', escapeHtml(property.sourceName || 'Importiert'), body, safeSource ? `<a class="text-btn" href="${escapeHtml(safeSource)}" target="_blank" rel="noopener noreferrer">Inserat öffnen ↗</a>` : '');
         })()}
-        <section class="card"><div class="card-head"><div><h2 class="card-title">Sanierungshistorie</h2><p class="card-caption">Bisherige Maßnahmen und Jahre</p></div></div>${(() => {
+        ${(() => {
           const entries = renovationEntries(property);
-          if (!entries.length) return '<div class="property-notes" style="margin:0;padding:17px 19px">Noch keine Sanierungen eingetragen.</div>';
-          return `<ul class="reno-list">${entries.map((entry) => `<li><span class="reno-year">${entry.year ? escapeHtml(entry.year) : '•'}</span><span class="reno-text">${escapeHtml(entry.text)}</span></li>`).join('')}</ul>${property.renovationSource ? `<p class="reno-source">Aus dem Inserat übernommen (${escapeHtml(property.renovationSource)}). Bitte prüfen.</p>` : ''}`;
-        })()}</section>
-        <section class="card"><div class="card-head"><div><h2 class="card-title">Anstehende Sanierungen</h2><p class="card-caption">Voraussichtlicher Zeitraum und nächste Schritte</p></div></div><div class="property-notes" style="margin:0;padding:17px 19px">${property.plannedRenovations ? escapeHtml(property.plannedRenovations).replace(/\n/g, '<br>') : 'Noch keine Maßnahmen geplant.'}${(() => { const projects = renovationProjects.filter((project) => project.propertyId === property.id && project.status !== 'done'); return projects.length ? `<ul class="detail-projects">${projects.map((project) => `<li><strong>${escapeHtml(project.title)}</strong><span>${escapeHtml(renovationStatusLabel(project.status))}${project.startDate ? ` · ab ${escapeHtml(fmtDate(project.startDate))}` : ''}${project.budget ? ` · ${escapeHtml(formatCost(Number(project.budget)))}` : ''}</span></li>`).join('')}</ul>` : ''; })()}<div style="margin-top:10px"><button type="button" class="text-btn" data-house-goto="renovations" data-property="${escapeHtml(property.id)}">Zu Sanierung & Renovierung →</button></div></div></section>
-        <section class="card" style="margin-top:16px"><div class="card-head"><div><h2 class="card-title">Zugeordnete Servicepartner</h2><p class="card-caption">Partner und deren Dokumente verwalten.</p></div><button class="text-btn" data-action="manage-assigned-providers" data-property="${escapeHtml(property.id)}">Servicepartner verwalten →</button></div><div class="property-notes" style="margin:0;padding:16px 19px;font-size:14px">${partnerListHtml(assignedProviders)}</div></section>
+          const body = entries.length ? `<ul class="reno-list">${entries.map((entry, index) => `<li><span class="reno-year">${entry.year ? escapeHtml(entry.year) : '•'}</span><span class="reno-text">${escapeHtml(entry.text)}</span><button type="button" class="reno-delete" data-reno-delete="lastRenovations" data-index="${index}" aria-label="Position entfernen: ${escapeHtml(entry.text)}">✕</button></li>`).join('')}</ul>${property.renovationSource ? `<p class="reno-source">Aus dem Inserat übernommen (${escapeHtml(property.renovationSource)}). Nicht zutreffende Positionen mit ✕ entfernen.</p>` : ''}` : '<div class="property-notes" style="margin:0;padding:17px 19px">Noch keine Sanierungen eingetragen.</div>';
+          return detailSection('history', 'Sanierungshistorie', 'Bisherige Maßnahmen und Jahre', body);
+        })()}
+        ${(() => {
+          const lines = String(property.plannedRenovations || '').split(/\n|;\s*/).map((line) => line.trim()).filter(Boolean);
+          const projects = renovationProjects.filter((project) => project.propertyId === property.id && project.status !== 'done');
+          const body = `${lines.length ? `<ul class="reno-list planned">${lines.map((line, index) => `<li><span class="reno-year">${icon('clock')}</span><span class="reno-text">${escapeHtml(line)}</span><button type="button" class="reno-delete" data-reno-delete="plannedRenovations" data-index="${index}" aria-label="Position entfernen: ${escapeHtml(line)}">✕</button></li>`).join('')}</ul>` : '<div class="property-notes" style="margin:0;padding:17px 19px">Noch keine Maßnahmen geplant.</div>'}${projects.length ? `<ul class="detail-projects" style="margin:0 18px 12px">${projects.map((project) => `<li><strong>${escapeHtml(project.title)}</strong><span>${escapeHtml(renovationStatusLabel(project.status))}${project.startDate ? ` · ab ${escapeHtml(fmtDate(project.startDate))}` : ''}${project.budget ? ` · ${escapeHtml(formatCost(Number(project.budget)))}` : ''}</span></li>`).join('')}</ul>` : ''}`;
+          return detailSection('planned', 'Anstehende Sanierungen', 'Voraussichtlicher Zeitraum und nächste Schritte', body, `<button type="button" class="text-btn" data-house-goto="renovations" data-property="${escapeHtml(property.id)}">Zu Sanierung & Renovierung →</button>`);
+        })()}
+        ${detailSection('partners', 'Zugeordnete Servicepartner', 'Partner und deren Dokumente verwalten.', `<div class="property-notes" style="margin:0;padding:16px 19px;font-size:14px">${partnerListHtml(assignedProviders)}</div>`, `<button class="text-btn" data-action="manage-assigned-providers" data-property="${escapeHtml(property.id)}">Servicepartner verwalten →</button>`)}
         ${(() => {
           const address = String(property.address || '').trim();
           const query = [address, ...[property.region, 'Schweden'].filter((part) => part && !address.toLocaleLowerCase('de').includes(part.toLocaleLowerCase('de')))].filter(Boolean).join(', ') || property.name;
-          return `<section class="card house-map-card"><div class="card-head"><div><h2 class="card-title">Standort & Servicepartner</h2><p class="card-caption">${escapeHtml(property.address || property.name)}</p></div><a class="text-btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}" target="_blank" rel="noopener noreferrer">In Google Maps öffnen ↗</a></div><div class="house-map" id="house-map" data-property="${escapeHtml(property.id)}"><p class="house-map-status">Karte wird geladen …</p></div><div class="house-map-legend" id="house-map-legend" hidden></div></section>`;
+          return detailSection('map', 'Standort & Servicepartner', escapeHtml(property.address || property.name), `<div class="house-map" id="house-map" data-property="${escapeHtml(property.id)}"><p class="house-map-status">Karte wird geladen …</p></div><div class="house-map-legend" id="house-map-legend" hidden></div>`, `<a class="text-btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}" target="_blank" rel="noopener noreferrer">In Google Maps öffnen ↗</a>`).replace('class="card detail-section', 'class="card house-map-card detail-section');
         })()}
         <section class="remove-property-section" aria-label="Ferienhaus entfernen"><div><strong>Ferienhaus dauerhaft entfernen</strong><p>Das Haus und die zugehörigen Aufgaben, Kosten sowie Hauskontrolldaten werden gelöscht.</p></div><button class="danger-btn" data-action="remove-property" data-property="${escapeHtml(property.id)}">Haus entfernen</button></section>`;
     }
@@ -6492,6 +6677,32 @@
       }
       const partnerTasksLink = event.target.closest('[data-partner-tasks]');
       if (partnerTasksLink) { taskPartnerFilter = tasks.some((task) => task.partnerId === partnerTasksLink.dataset.partnerTasks) ? partnerTasksLink.dataset.partnerTasks : 'all'; taskView = taskPartnerFilter === 'all' ? 'list' : 'partners'; currentPage = 'tasks'; render(); window.scrollTo(0, 0); return; }
+      const sectionToggle = event.target.closest('[data-section-toggle]');
+      if (sectionToggle) {
+        const id = sectionToggle.dataset.sectionToggle;
+        toggleSection(id);
+        const section = sectionToggle.closest('.detail-section');
+        section?.classList.toggle('collapsed', collapsedSections.has(id));
+        sectionToggle.setAttribute('aria-expanded', String(!collapsedSections.has(id)));
+        if (id === 'map' && !collapsedSections.has(id)) setTimeout(() => propertyMap?.invalidateSize?.(), 50);
+        return;
+      }
+      const lightboxOpen = event.target.closest('[data-lightbox-open]');
+      if (lightboxOpen) {
+        const property = properties.find((item) => item.id === selectedPropertyId) || properties[0];
+        const images = lightboxOpen.dataset.lightboxOpen === 'plans' ? property.floorplans || [] : propertyPhotos(property);
+        openLightbox(images, Number(lightboxOpen.dataset.index) || 0, lightboxOpen.dataset.lightboxOpen === 'plans' ? `Grundriss · ${property.name}` : property.name);
+        return;
+      }
+      const renoDelete = event.target.closest('[data-reno-delete]');
+      if (renoDelete) { const property = properties.find((item) => item.id === selectedPropertyId); if (property) deleteRenovationLine(property, renoDelete.dataset.renoDelete, Number(renoDelete.dataset.index)); return; }
+      const summaryDelete = event.target.closest('[data-summary-delete]');
+      if (summaryDelete) {
+        const property = properties.find((item) => item.id === selectedPropertyId);
+        const list = property?.importSummary?.[summaryDelete.dataset.summaryDelete];
+        if (Array.isArray(list)) { list.splice(Number(summaryDelete.dataset.index), 1); saveProperties(); render(); showToast('Position entfernt.'); }
+        return;
+      }
       const resultButton = event.target.closest('[data-position-result]');
       if (resultButton) {
         const checks = inspectionChecks[inspectionProperty] || (inspectionChecks[inspectionProperty] = {});
@@ -8066,13 +8277,14 @@
       if (!energy || energy.missing) return '<p class="import-muted">Keine Angaben zur Energieeffizienz im Inserat.</p>';
       return `<div class="energy-row">${energy.class ? `<span class="energy-scale" aria-label="Energieklasse ${energy.class}">${'ABCDEFG'.split('').map((letter) => `<i class="e-${letter} ${letter === energy.class ? 'on' : ''}">${letter}</i>`).join('')}</span>` : ''}<span class="energy-text">${energy.class ? `<strong>Klasse ${energy.class}</strong> · ${escapeHtml(energy.rating)}` : '<strong>Energieklasse nicht angegeben</strong>'}${energy.kwh ? `<small>${energy.kwh} kWh/m² und Jahr</small>` : ''}${energy.power ? `<small>Stromverbrauch ${escapeHtml(energy.power)}</small>` : ''}${energy.declaration ? `<small>Energieausweis: ${escapeHtml(energy.declaration)}</small>` : ''}</span></div>`;
     }
-    function importSummaryHtml(summary, { compact = false } = {}) {
-      const list = (items) => `<ul class="import-points">${items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`;
+    function importSummaryHtml(summary, { compact = false, deletable = false } = {}) {
+      const removeButton = (key, index) => (deletable ? `<button type="button" class="reno-delete" data-summary-delete="${key}" data-index="${index}" aria-label="Entfernen">✕</button>` : '');
+      const list = (items, key = '') => `<ul class="import-points">${items.map((item, index) => `<li>${escapeHtml(item)}${key ? removeButton(key, index) : ''}</li>`).join('')}</ul>`;
       return `<div class="import-analysis ${compact ? 'compact' : ''}">
         <section class="ia-block"><h4>${icon('bolt')} Energieeffizienz</h4>${energyBadgeHtml(summary.energy)}</section>
         <section class="ia-block"><h4>${icon('home')} Gebäudezustand</h4><p class="ia-condition cond-${/sehr gut|^gut/i.test(summary.condition.label) ? 'ok' : /dringend/i.test(summary.condition.label) ? 'alert' : 'warn'}">${escapeHtml(summary.condition.label)}</p>${summary.condition.reasons.length ? list(summary.condition.reasons) : ''}</section>
-        <section class="ia-block"><h4>${icon('check')} Sanierungen laut Inserat</h4>${summary.renovations.length ? list(summary.renovations) : '<p class="import-muted">Im Text werden keine Sanierungen erwähnt.</p>'}</section>
-        <section class="ia-block"><h4>${icon('alert')} Mögliche weitere Maßnahmen</h4>${summary.recommendations.length ? `<ul class="import-recs">${summary.recommendations.map((item) => `<li class="${IMPORT_PRIORITY_CLASS[item.priority] || ''}"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.when)} · ${escapeHtml(item.why)}</span></li>`).join('')}</ul>` : '<p class="import-muted">Keine dringenden Maßnahmen abgeleitet.</p>'}</section>
+        <section class="ia-block"><h4>${icon('check')} Sanierungen laut Inserat</h4>${summary.renovations.length ? list(summary.renovations, 'renovations') : '<p class="import-muted">Im Text werden keine Sanierungen erwähnt.</p>'}</section>
+        <section class="ia-block"><h4>${icon('alert')} Mögliche weitere Maßnahmen</h4>${summary.recommendations.length ? `<ul class="import-recs">${summary.recommendations.map((item, index) => `<li class="${IMPORT_PRIORITY_CLASS[item.priority] || ''}"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.when)} · ${escapeHtml(item.why)}</span>${removeButton('recommendations', index)}</li>`).join('')}</ul>` : '<p class="import-muted">Keine dringenden Maßnahmen abgeleitet.</p>'}</section>
         ${summary.points.length ? `<section class="ia-block wide"><h4>${icon('note')} Beschreibung in Stichpunkten</h4>${list(summary.points)}</section>` : ''}
         <p class="ia-note">Automatisch aus dem Inserat${summary.sourceName ? ` (${escapeHtml(summary.sourceName)})` : ''} abgeleitet – Einschätzungen ersetzen keine Begutachtung vor Ort.</p>
       </div>`;
@@ -8521,6 +8733,12 @@
         toggleButton.setAttribute('aria-label', 'Menü und Benutzerprofil öffnen');
       }
     });
+    document.addEventListener('keydown', (event) => {
+      if (!lightboxState) return;
+      if (event.key === 'Escape') { event.stopImmediatePropagation(); closeLightbox(); }
+      if (event.key === 'ArrowLeft') stepLightbox(-1);
+      if (event.key === 'ArrowRight') stepLightbox(1);
+    }, true);
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();
     if (isEuro()) refreshFxRate();
