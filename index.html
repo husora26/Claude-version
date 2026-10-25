@@ -1452,6 +1452,91 @@
     .partner-task-actions a.secondary-btn { display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
     .partner-hint, .form-hint { color: var(--muted); font-size: 11px; }
     .form-hint[hidden] { display: none; }
+    /* Zugeordnete Servicepartner – kompakte Karten */
+    .ap-grid > .card { margin: 0; }
+    .assigned-provider-list.ap-grid { align-items: stretch; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 12px; }
+    .assigned-provider-card.ap-card { display: flex; flex-direction: column; gap: 10px; padding: 16px; border-top: 3px solid var(--green); }
+    .ap-card.cat-renovation { border-top-color: #b7792c; }
+    .ap-card.cat-inspection { border-top-color: #3f7a8c; }
+    .ap-head { display: flex; align-items: center; gap: 11px; }
+    .ap-card .provider-avatar { width: 38px; height: 38px; flex-shrink: 0; font-size: 12px; }
+    .ap-title { min-width: 0; }
+    .ap-title h3 { margin: 0 0 4px; font-size: 14.5px; line-height: 1.25; }
+    .ap-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .ap-specialty { color: var(--muted); font-size: 10.5px; }
+    .ap-services { margin: 0; color: var(--muted); font-size: 11.5px; line-height: 1.5; }
+    .ap-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; color: var(--muted); font-size: 11px; }
+    .ap-contacts { display: flex; flex-wrap: wrap; gap: 5px; }
+    .ap-chip { padding: 3px 9px; border: 1px solid var(--line); border-radius: 20px; color: var(--green); background: white; font-size: 10.5px; font-weight: 700; text-decoration: none; }
+    .ap-chip:hover { border-color: var(--green); }
+    .ap-tasks { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; padding: 8px 11px; border: 1px solid var(--line); border-radius: 9px; color: var(--muted); background: #faf8f2; font: inherit; font-size: 11.5px; text-align: left; cursor: pointer; }
+    .ap-tasks > span:first-child { display: inline-flex; align-items: center; gap: 6px; }
+    .ap-tasks svg { width: 14px; height: 14px; }
+    .ap-tasks.has-open { color: var(--ink); background: var(--green-soft); border-color: transparent; font-weight: 600; }
+    .ap-tasks em { color: #b0412e; font-style: normal; }
+    .ap-tasks-action { flex-shrink: 0; color: var(--green); font-size: 11px; font-weight: 700; }
+    .ap-tasks:hover .ap-tasks-action { text-decoration: underline; }
+    .ap-card .assigned-control-info { margin-top: 0; }
+    .ap-card .assigned-provider-documents { margin-top: auto; padding-top: 10px; }
+    .ap-docs-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+    .ap-docs-head strong { font-size: 12px; }
+    .ap-upload { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border: 1px solid var(--green); border-radius: 7px; color: var(--green); background: white; font-size: 11px; font-weight: 700; cursor: pointer; }
+    .ap-upload svg { width: 12px; height: 12px; }
+    .ap-upload:hover { color: white; background: var(--green); }
+    .ap-empty { margin: 0; color: var(--muted); font-size: 11px; }
+    /* Serviceaufgaben als Karten */
+    .tcard-list { display: grid; gap: 10px; padding: 4px 18px 18px; }
+    .tcard { position: relative; display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 14px 16px 14px 18px; border: 1px solid var(--line); border-radius: 12px; background: white; box-shadow: 0 1px 2px rgba(30,45,35,.04); transition: box-shadow .15s, transform .15s; overflow: hidden; }
+    .tcard::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 4px; background: #cfd8cf; }
+    .tcard.prio-urgent::before { background: var(--red); }
+    .tcard.prio-soon::before { background: #d9a45b; }
+    .tcard:hover { box-shadow: 0 6px 18px rgba(30,45,35,.08); }
+    .tcard-check { display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 2px solid #c5cec6; border-radius: 50%; color: transparent; background: white; cursor: pointer; transition: all .15s; }
+    .tcard-check svg { width: 14px; height: 14px; stroke-width: 2.6; }
+    .tcard-check:hover { border-color: var(--green); color: var(--green); }
+    .tcard.is-done .tcard-check { border-color: var(--green); color: white; background: var(--green); }
+    .tcard-date { display: grid; justify-items: center; width: 50px; padding: 6px 0; border-radius: 9px; color: var(--green); background: var(--green-soft); line-height: 1.1; }
+    .tcard-date strong { font-size: 18px; }
+    .tcard-date span { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+    .tcard.is-overdue .tcard-date { color: var(--red); background: var(--red-soft); }
+    .tcard-body { min-width: 0; }
+    .tcard-title { display: block; padding: 0; border: 0; color: var(--ink); background: none; font: inherit; font-size: 13.5px; font-weight: 700; line-height: 1.35; text-align: left; cursor: pointer; }
+    .tcard-title:hover { color: var(--green); }
+    .tcard-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+    .tchip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 20px; color: #5d6b62; background: #f0f2ee; font-size: 10px; font-weight: 650; white-space: nowrap; }
+    .tchip svg { width: 11px; height: 11px; }
+    .tchip.prio.urgent, .tchip.when.late { color: var(--red); background: var(--red-soft); }
+    .tchip.prio.soon, .tchip.when.soon { color: #8e622b; background: var(--amber-soft); }
+    .tchip.auto { color: #2f5f86; background: #e6eff7; }
+    .tchip.when { color: var(--green); background: var(--green-soft); }
+    .tcard-desc { display: -webkit-box; margin: 6px 0 0; overflow: hidden; color: var(--muted); font-size: 11px; line-height: 1.5; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .tcard-controls { display: flex; align-items: flex-end; gap: 10px; }
+    .tcard-field { display: grid; gap: 3px; }
+    .tcard-field > span { color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .tcard .partner-select { width: 190px; height: 32px; font-size: 11px; }
+    .tcard .status-select { width: 132px; height: 32px; font-size: 11px; font-weight: 650; }
+    .tcard .status-select.st-progress { color: #2f5f86; background-color: #eef4fa; border-color: #c9dbea; }
+    .tcard .status-select.st-done { color: var(--green); background-color: var(--green-soft); border-color: transparent; }
+    .tcard-actions { display: flex; gap: 2px; }
+    .tcard-action { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid transparent; border-radius: 8px; color: var(--muted); background: transparent; font-size: 13px; cursor: pointer; }
+    .tcard-action svg { width: 15px; height: 15px; }
+    .tcard-action span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .tcard-action:hover { border-color: var(--line); color: var(--green); background: #f6f8f4; }
+    .tcard-action.warn:hover { color: #9a6416; background: var(--amber-soft); }
+    .tcard-action.danger:hover { color: var(--red); background: var(--red-soft); }
+    .tcard.is-done { background: #f6f7f4; box-shadow: none; }
+    .tcard.is-done .tcard-title { color: var(--muted); text-decoration: line-through; }
+    .tcard.is-done .tcard-date { color: #8a928c; background: #eceee9; }
+    .tcard.is-done::before { background: #cfd8cf; }
+    @media (max-width: 1050px) { .tcard { grid-template-columns: auto auto minmax(0, 1fr); } .tcard-controls { grid-column: 1 / -1; flex-wrap: wrap; padding-top: 10px; border-top: 1px dashed var(--line); } .tcard-actions { margin-left: auto; } }
+    @media (max-width: 560px) {
+      .tcard-list { padding: 4px 12px 14px; }
+      .tcard { gap: 10px 11px; padding: 12px 12px 12px 15px; }
+      .tcard-date { width: 42px; } .tcard-date strong { font-size: 16px; }
+      .tcard-controls { display: grid; grid-template-columns: 1fr 1fr; align-items: end; }
+      .tcard .partner-select, .tcard .status-select { width: 100%; }
+      .tcard-actions { grid-column: 1 / -1; justify-content: flex-end; }
+    }
     .partner-tasks-link { display: inline-block; margin-top: 4px; font-size: 11.5px; }
     /* Hauskontrolle: Statuskopf, Schritte, Prüfliste mit Auffälligkeiten und Reparaturen */
     .insp-status-card { padding: 0; border-top: 4px solid #d58a1f; }
@@ -4030,20 +4115,39 @@
         const status = taskStatus(task);
         const overdue = status !== 'Erledigt' && task.date && task.date < today;
         const priority = task.priority || 'normal';
-        return `<tr class="prio-${priority} ${status === 'Erledigt' ? 'is-done' : ''}"><td><button type="button" class="cell-title ${status === 'Erledigt' ? 'completed' : ''}" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten: ${escapeHtml(task.title)}">${escapeHtml(task.title)}</button>${overdue || task.auto ? `<div class="task-meta">${overdue ? '<span class="task-tag overdue">Überfällig</span>' : ''}${task.auto ? '<span class="task-tag auto">Automatisch geplant</span>' : ''}</div>` : ''}${task.repeat && task.repeat !== 'Einmalig' ? `<div class="cell-sub">Wiederholt sich ${escapeHtml(task.repeat.toLowerCase())}</div>` : ''}${task.description ? `<div class="cell-sub">${escapeHtml(task.description)}</div>` : ''}</td>
-          <td>${escapeHtml(task.property)}<div class="cell-sub">${escapeHtml(task.area || '—')}</div></td>
-          <td><select class="filter-select partner-select ${task.partnerId ? 'has-partner' : ''}" data-partner-task="${task.id}" aria-label="Servicepartner für ${escapeHtml(task.title)}">${partnerOptionsHtml(task.property, task.partnerId || '')}</select></td>
-          <td class="${overdue ? 'overdue' : ''}">${task.date ? fmtDate(task.date) : '—'}</td>
-          <td><span class="badge-wrap ${priority}">${priorityText[priority] || 'Normal'}</span></td>
-          <td><select class="filter-select status-select" data-status-task="${task.id}" aria-label="Status für ${escapeHtml(task.title)} ändern">${taskStatuses.map((value) => `<option ${status === value ? 'selected' : ''}>${value}</option>`).join('')}</select></td>
-          <td><div class="row-actions"><button type="button" class="small-action" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten">Bearbeiten</button><button type="button" class="small-action issue-btn" data-report-issue="${task.id}" aria-label="Auffälligkeit zu ${escapeHtml(task.title)} melden">${icon('alert')} Auffälligkeit</button><button type="button" class="small-action" data-delete-task="${task.id}" aria-label="Aufgabe löschen">Löschen</button></div></td></tr>`;
+        const done = status === 'Erledigt';
+        const dueDate = task.date ? new Date(`${task.date}T12:00:00`) : null;
+        const dayDiff = dueDate ? Math.round((dueDate - new Date(`${today}T12:00:00`)) / 86400000) : null;
+        const relative = dayDiff === null || done ? '' : dayDiff === 0 ? 'heute' : dayDiff === 1 ? 'morgen' : dayDiff > 1 ? `in ${dayDiff} Tagen` : `seit ${-dayDiff} ${dayDiff === -1 ? 'Tag' : 'Tagen'}`;
+        const areaIcon = /kontroll|inspekt/i.test(task.area || '') ? 'inspection' : /saison|winter|frühjahr/i.test(task.area || '') ? 'calendar' : /reinig|gäste|wechsel/i.test(task.area || '') ? 'users' : /repar|instand|sanier/i.test(task.area || '') ? 'alert' : 'home';
+        const chips = [
+          priority !== 'normal' ? `<span class="tchip prio ${priority}">${priorityText[priority]}</span>` : '',
+          task.auto ? `<span class="tchip auto">${icon('bolt')} Automatisch</span>` : '',
+          task.repeat && task.repeat !== 'Einmalig' ? `<span class="tchip">${icon('clock')} ${escapeHtml(task.repeat)}</span>` : '',
+          task.area ? `<span class="tchip">${icon(areaIcon)} ${escapeHtml(task.area)}</span>` : '',
+          singleHouse() ? '' : `<span class="tchip">${icon('property')} ${escapeHtml(task.property)}</span>`
+        ].filter(Boolean).join('');
+        return `<article class="tcard prio-${priority} ${done ? 'is-done' : ''} ${overdue ? 'is-overdue' : ''}">
+          <button type="button" class="tcard-check" data-complete-task="${task.id}" aria-pressed="${done}" aria-label="${done ? 'Wieder öffnen' : 'Als erledigt markieren'}: ${escapeHtml(task.title)}">${icon('check')}</button>
+          <div class="tcard-date">${dueDate ? `<strong>${dueDate.getDate()}</strong><span>${dueDate.toLocaleDateString('de-DE', { month: 'short' })}</span>` : '<strong>–</strong><span>offen</span>'}</div>
+          <div class="tcard-body">
+            <button type="button" class="tcard-title" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten: ${escapeHtml(task.title)}">${escapeHtml(task.title)}</button>
+            <div class="tcard-chips">${relative ? `<span class="tchip when ${overdue ? 'late' : dayDiff <= 2 ? 'soon' : ''}">${overdue ? 'Überfällig · ' : ''}${relative}</span>` : ''}${chips}</div>
+            ${task.description ? `<p class="tcard-desc">${escapeHtml(task.description)}</p>` : ''}
+          </div>
+          <div class="tcard-controls">
+            <label class="tcard-field"><span>Servicepartner</span><select class="filter-select partner-select ${task.partnerId ? 'has-partner' : ''}" data-partner-task="${task.id}" aria-label="Servicepartner für ${escapeHtml(task.title)}">${partnerOptionsHtml(task.property, task.partnerId || '')}</select></label>
+            <label class="tcard-field"><span>Status</span><select class="filter-select status-select st-${status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open'}" data-status-task="${task.id}" aria-label="Status für ${escapeHtml(task.title)} ändern">${taskStatuses.map((value) => `<option ${status === value ? 'selected' : ''}>${value}</option>`).join('')}</select></label>
+            <div class="tcard-actions"><button type="button" class="tcard-action" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten">${icon('note')}<span>Bearbeiten</span></button><button type="button" class="tcard-action warn" data-report-issue="${task.id}" aria-label="Auffälligkeit zu ${escapeHtml(task.title)} melden">${icon('alert')}<span>Auffälligkeit</span></button><button type="button" class="tcard-action danger" data-delete-task="${task.id}" aria-label="Aufgabe löschen">✕<span>Löschen</span></button></div>
+          </div>
+        </article>`;
       }).join('');
       const openCount = tasks.filter((task) => taskStatus(task) !== 'Erledigt').length;
       return `<div class="welcome"><div><p class="eyebrow">Buchungen & Instandhaltung</p><h1>Serviceaufgaben</h1><p class="subtitle">Koordiniere Reinigung, Schlüsselübergaben und saisonale Stugapflege.</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>
         <section class="card auto-task-bar"><div><label class="switch"><input type="checkbox" id="auto-task-toggle" ${autoTasks.enabled ? 'checked' : ''}><span class="switch-track"></span><span>Aufgaben automatisch erstellen</span></label><p>${packageExtras().servicePackage ? `Servicepaket ${escapeHtml(packageExtras().servicePackage.name)} · ` : ''}${autoTasks.templates.filter((template) => template.selected).length} Vorlagen ausgewählt – werden ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} automatisch angelegt.</p></div><div class="auto-task-actions"><button class="primary-btn" data-action="new-task">${icon('plus')} Aufgabe erstellen</button><button class="secondary-btn" data-action="auto-task-config">Aufgaben auswählen / erstellen</button><button class="secondary-btn" data-page="automation">${icon('bolt')} Alle Automatiken</button></div></section>
         <section class="card"><div class="card-head"><div><h2 class="card-title">Alle Serviceaufgaben</h2><p class="card-caption">${openCount} offen · ${tasks.length - openCount} erledigt</p></div></div>
         <div class="section-toolbar" style="padding:0 18px"><div class="toolbar-right"><select id="task-filter" class="filter-select" aria-label="Nach Status filtern"><option value="all">Alle Status</option>${taskStatuses.map((value) => `<option ${taskFilter === value ? 'selected' : ''}>${value}</option>`).join('')}</select>${singleHouse() ? '' : `<select id="task-property-filter" class="filter-select" aria-label="Nach Gebäude filtern"><option value="all">Alle Gebäude</option>${properties.map((property) => `<option value="${escapeHtml(property.name)}" ${taskPropertyFilter === property.name ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select>`}<select id="task-priority-filter" class="filter-select" aria-label="Nach Priorität filtern"><option value="all">Alle Prioritäten</option><option value="urgent" ${taskPriorityFilter === 'urgent' ? 'selected' : ''}>Dringend</option><option value="soon" ${taskPriorityFilter === 'soon' ? 'selected' : ''}>Wichtig</option><option value="normal" ${taskPriorityFilter === 'normal' ? 'selected' : ''}>Normal</option></select></div><div class="view-toggle" role="tablist" aria-label="Ansicht"><button type="button" class="${taskView === 'list' ? 'active' : ''}" data-task-view="list">Liste</button><button type="button" class="${taskView === 'partners' ? 'active' : ''}" data-task-view="partners">Nach Servicepartner</button></div></div>
-        ${taskView === 'partners' ? partnerTasksView(visible) : `<div class="task-table-wrap"><table class="task-table"><thead><tr><th>Aufgabe</th><th>Haus / Bereich</th><th>Servicepartner</th><th>Fälligkeit</th><th>Priorität</th><th>Status</th><th></th></tr></thead><tbody>${rows || '<tr><td colspan="7"><div class="empty">Keine Aufgaben gefunden. Erstelle eine Aufgabe oder ändere die Filter.</div></td></tr>'}</tbody></table></div>`}</section>`;
+        ${taskView === 'partners' ? partnerTasksView(visible) : `<div class="tcard-list">${rows || '<div class="empty">Keine Aufgaben gefunden. Erstelle eine Aufgabe oder ändere die Filter.</div>'}</div>`}</section>`;
     }
     function automationPage() {
       const today = localDateKey(new Date());
@@ -4319,12 +4423,27 @@
             return `<span>${escapeHtml(control.name)} · ${count} ${count === 1 ? 'Prüfposition' : 'Prüfpositionen'}${due ? ` · spätestens bis ${escapeHtml(formatInspectionDate(due))}` : ''}</span>`;
           }).join('')}<button type="button" class="text-btn" data-action="open-inspection" data-property="${escapeHtml(property.id)}">Zur Hauskontrolle →</button></div>`
           : '';
-        return `<article class="card assigned-provider-card"><div class="assigned-provider-head"><div class="provider-avatar">${escapeHtml(provider.initials)}</div><div class="assigned-provider-main"><h3>${escapeHtml(provider.name)}</h3><p>${escapeHtml(provider.services || '')}</p>${(() => { const open = tasks.filter((task) => !task.done && task.partnerId === provider.id); return `<button type="button" class="text-btn inline partner-tasks-link" data-partner-tasks="${escapeHtml(provider.id)}">${open.length ? `${open.length} offene ${open.length === 1 ? 'Aufgabe' : 'Aufgaben'} ansehen →` : 'Keine offenen Aufgaben · Aufgaben zuordnen →'}</button>`; })()}</div><label class="primary-btn">${icon('plus')} Dokument hochladen<input type="file" data-provider-document-upload="${escapeHtml(provider.id)}" data-provider-property="${escapeHtml(property.id)}" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" hidden></label></div><div class="provider-details"><span class="provider-type ${provider.category === 'renovation' ? 'renovation' : ''}">${partnerCategoryLabel(provider)}</span>${provider.specialty ? `<span class="provider-specialty">${escapeHtml(provider.specialty)}</span>` : ''}</div><div class="provider-result-footer"><div class="provider-contact-links">${providerContactLinks(provider)}</div><div class="provider-location-distance"><span class="provider-town">${escapeHtml(provider.town || '')}</span>${Number.isFinite(providerDistanceKm(provider, property)) ? `<span class="provider-distance">Entfernung ${providerDistanceKm(provider, property)} km</span>` : ''}</div></div>${controlInfo}<div class="assigned-provider-documents"><strong>Dokumente</strong>${providerDocuments.length ? `<div class="document-list">${providerDocuments.map((document) => `<article class="document-row"><span class="document-icon">${icon('document')}</span><span class="document-info"><strong title="${escapeHtml(document.name)}">${escapeHtml(document.name)}</strong><small>${fileSize(document.size)} · hinzugefügt am ${escapeHtml(document.createdAt)}</small></span><span class="document-actions"><a href="${escapeHtml(document.dataUrl)}" target="_blank" rel="noopener noreferrer">Öffnen</a><button class="danger-btn" data-delete-document="${escapeHtml(document.id)}" type="button">Löschen</button></span></article>`).join('')}</div>` : '<p class="card-caption">Noch keine Dokumente für diesen Servicepartner.</p>'}</div></article>`;
+        const distance = providerDistanceKm(provider, property);
+        const openTasks = tasks.filter((task) => !task.done && task.partnerId === provider.id);
+        const overdueTasks = openTasks.filter((task) => task.date && task.date < localDateKey(new Date())).length;
+        const contacts = [
+          provider.phone ? `<a class="ap-chip" href="tel:${encodeURIComponent(provider.phone.replace(/[^\d+]/g, ''))}">Anrufen</a>` : '',
+          provider.email ? `<a class="ap-chip" href="mailto:${encodeURIComponent(provider.email)}" title="${escapeHtml(provider.email)}">E-Mail</a>` : '',
+          provider.website ? `<a class="ap-chip" href="${escapeHtml(provider.website)}" target="_blank" rel="noopener noreferrer">Website ↗</a>` : ''
+        ].filter(Boolean).join('');
+        const uploadButton = `<label class="ap-upload">${icon('plus')} Dokument<input type="file" data-provider-document-upload="${escapeHtml(provider.id)}" data-provider-property="${escapeHtml(property.id)}" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" hidden></label>`;
+        return `<article class="card assigned-provider-card ap-card cat-${escapeHtml(provider.category)}">
+          <div class="ap-head"><div class="provider-avatar">${escapeHtml(provider.initials)}</div><div class="ap-title"><h3>${escapeHtml(provider.name)}</h3><div class="ap-tags"><span class="provider-type ${provider.category === 'renovation' ? 'renovation' : ''}">${partnerCategoryLabel(provider)}</span>${provider.specialty ? `<span class="ap-specialty">${escapeHtml(provider.specialty)}</span>` : ''}</div></div></div>
+          ${provider.services ? `<p class="ap-services">${escapeHtml(provider.services)}</p>` : ''}
+          <div class="ap-meta"><span>${escapeHtml(provider.town || '')}${Number.isFinite(distance) ? ` · ${distance} km` : ''}</span>${contacts ? `<span class="ap-contacts">${contacts}</span>` : ''}</div>
+          <button type="button" class="ap-tasks ${openTasks.length ? 'has-open' : ''}" data-partner-tasks="${escapeHtml(provider.id)}"><span>${icon('task')} ${openTasks.length ? `${openTasks.length} offene ${openTasks.length === 1 ? 'Aufgabe' : 'Aufgaben'}${overdueTasks ? ` · <em>${overdueTasks} überfällig</em>` : ''}` : 'Keine offenen Aufgaben'}</span><span class="ap-tasks-action">${openTasks.length ? 'Ansehen' : 'Aufgaben zuordnen'} →</span></button>
+          ${controlInfo}
+          <div class="assigned-provider-documents"><div class="ap-docs-head"><strong>Dokumente${providerDocuments.length ? ` (${providerDocuments.length})` : ''}</strong>${uploadButton}</div>${providerDocuments.length ? `<div class="document-list">${providerDocuments.map((document) => `<article class="document-row"><span class="document-icon">${icon('document')}</span><span class="document-info"><strong title="${escapeHtml(document.name)}">${escapeHtml(document.name)}</strong><small>${fileSize(document.size)} · hinzugefügt am ${escapeHtml(document.createdAt)}</small></span><span class="document-actions"><a href="${escapeHtml(document.dataUrl)}" target="_blank" rel="noopener noreferrer">Öffnen</a><button class="danger-btn" data-delete-document="${escapeHtml(document.id)}" type="button">Löschen</button></span></article>`).join('')}</div>` : '<p class="ap-empty">Noch keine Dokumente – Angebote, Rechnungen oder Protokolle hier ablegen.</p>'}</div></article>`;
       }).join('');
       return `<div class="welcome"><div><p class="eyebrow">Objektverwaltung · ${escapeHtml(property.region || 'Schweden')}</p><h1>Zugeordnete Servicepartner</h1><p class="subtitle">Dokumente je Servicepartner verwalten.</p></div><button class="primary-btn" data-action="open-provider-search" data-property="${escapeHtml(property.id)}">Servicepartner finden</button></div>
         <section class="assigned-house-bar"><div class="assigned-house-name"><span>Ferienhaus</span><strong>${escapeHtml(property.name)}</strong>${property.address ? `<small>${escapeHtml(property.address)}</small>` : ''}</div>
           ${`<label class="assigned-house-switch"><span class="form-label">Ferienhaus wechseln</span><select id="assigned-property" class="filter-select" aria-label="Ferienhaus wechseln">${properties.map((item) => `<option value="${escapeHtml(item.id)}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)}${item.region ? ` · ${escapeHtml(item.region)}` : ''}</option>`).join('')}</select></label>`}</section>
-        ${assignedPairs.length ? `<div class="assigned-provider-list">${providerCards}</div>` : '<section class="card empty">Diesem Ferienhaus sind noch keine Servicepartner zugeordnet.</section>'}`;
+        ${assignedPairs.length ? `<div class="assigned-provider-list ap-grid">${providerCards}</div>` : '<section class="card empty">Diesem Ferienhaus sind noch keine Servicepartner zugeordnet.</section>'}`;
     }
     // Hausdetailseite: einklappbare Karten, Bildansicht, wichtige Angaben und Kosten als Kacheln.
     let collapsedSections = new Set();
@@ -6636,6 +6755,17 @@
         calendarMonth.setMonth(calendarMonth.getMonth() + Number(calendarMonthButton.dataset.calendarMonth));
         calendarSelectedDate = `${calendarMonth.getFullYear()}-${String(calendarMonth.getMonth() + 1).padStart(2, '0')}-01`;
         render();
+        return;
+      }
+      const completeTask = event.target.closest('[data-complete-task]');
+      if (completeTask) {
+        const task = tasks.find((item) => item.id === Number(completeTask.dataset.completeTask));
+        if (task) {
+          setTaskStatus(task, taskStatus(task) === 'Erledigt' ? 'Offen' : 'Erledigt');
+          persistTasks();
+          render();
+          showToast(task.done ? 'Aufgabe als erledigt markiert.' : 'Aufgabe wieder geöffnet.');
+        }
         return;
       }
       const taskToDelete = event.target.closest('[data-delete-task]');
