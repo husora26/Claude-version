@@ -1283,6 +1283,11 @@
     .stay-kind strong { display: block; font-size: 12.5px; }
     .stay-kind small { color: var(--muted); font-size: 10.5px; }
     .owner-btn svg { width: 15px; height: 15px; }
+    .swipe-back-hint { --swipe: 0; position: fixed; top: 50%; left: 10px; z-index: 80; display: flex; align-items: center; gap: 6px; padding: 10px 14px 10px 10px; border-radius: 30px; color: #fff; background: rgba(36, 75, 61, .88); box-shadow: 0 6px 20px rgba(0,0,0,.2); font-size: 12px; font-weight: 700; opacity: 0; pointer-events: none; transform: translate(calc(-120% + var(--swipe) * 120%), -50%); transition: opacity .15s, background .15s; }
+    .swipe-back-hint svg { width: 18px; height: 18px; }
+    .swipe-back-hint.visible { opacity: calc(.35 + var(--swipe) * .65); }
+    .swipe-back-hint.ready { background: var(--green); }
+    @media (prefers-reduced-motion: reduce) { .swipe-back-hint { transition: none; } }
     /* Automatisierung */
     .text-btn.inline { padding: 0; font-size: inherit; }
     .care-steps { display: grid; gap: 4px; margin: 2px 0 4px; padding: 0; list-style: none; }
@@ -5571,38 +5576,65 @@
       if (currentPage === 'house3d') fitHouseScene();
       if (currentPage === 'propertyDetail') initPropertyMap();
     }
+    // Wischen nach links führt auf allen Touch-Geräten zur vorherigen Seite, auch wenn die Geste auf einer Karte oder einem Knopf beginnt.
     let swipeStart = null;
-    pageContent.addEventListener('touchstart', (event) => {
-      if (!window.matchMedia('(max-width: 760px)').matches || event.touches.length !== 1) {
-        swipeStart = null;
-        return;
+    let suppressClickUntil = 0;
+    const swipeHint = document.createElement('div');
+    swipeHint.className = 'swipe-back-hint';
+    swipeHint.setAttribute('aria-hidden', 'true');
+    swipeHint.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span>Zurück</span>';
+    document.body.append(swipeHint);
+    const SWIPE_DISTANCE = 70;
+    const swipeBlocked = (target) => Boolean(target.closest('input, select, textarea, [contenteditable="true"], .house-scene, .house-map, .leaflet-container, .modal-backdrop.open, .nav-menu.open'))
+      || [...document.querySelectorAll('.modal-backdrop')].some((modal) => modal.classList.contains('open'));
+    const scrollsHorizontally = (target) => {
+      for (let node = target; node && node !== document.body; node = node.parentElement) {
+        if (node.scrollWidth > node.clientWidth + 4 && /(auto|scroll)/.test(getComputedStyle(node).overflowX)) return true;
       }
-      const target = event.target;
-      if (target.closest('button, a, input, select, textarea, [contenteditable="true"], .calendar-grid, .provider-results, .task-list, .booking-inline-calendar, .house-scene')) {
-        swipeStart = null;
-        return;
-      }
+      return false;
+    };
+    const resetSwipeHint = () => { swipeHint.classList.remove('visible', 'ready'); swipeHint.style.removeProperty('--swipe'); };
+    document.addEventListener('touchstart', (event) => {
+      swipeStart = null;
+      if (event.touches.length !== 1 || currentPage === 'dashboard' || swipeBlocked(event.target) || scrollsHorizontally(event.target)) return;
       const touch = event.touches[0];
-      swipeStart = { x: touch.clientX, y: touch.clientY };
+      swipeStart = { x: touch.clientX, y: touch.clientY, time: Date.now(), horizontal: null };
     }, { passive: true });
-    pageContent.addEventListener('touchend', (event) => {
-      if (!swipeStart || event.changedTouches.length !== 1) {
-        swipeStart = null;
-        return;
-      }
-      const touch = event.changedTouches[0];
+    document.addEventListener('touchmove', (event) => {
+      if (!swipeStart || event.touches.length !== 1) return;
+      const touch = event.touches[0];
       const deltaX = touch.clientX - swipeStart.x;
       const deltaY = touch.clientY - swipeStart.y;
+      if (swipeStart.horizontal === null && (Math.abs(deltaX) > 12 || Math.abs(deltaY) > 12)) swipeStart.horizontal = Math.abs(deltaX) > Math.abs(deltaY) * 1.3 && deltaX < 0;
+      if (!swipeStart.horizontal) { resetSwipeHint(); return; }
+      const progress = Math.min(1, -deltaX / SWIPE_DISTANCE);
+      swipeHint.style.setProperty('--swipe', progress.toFixed(2));
+      swipeHint.classList.add('visible');
+      swipeHint.classList.toggle('ready', progress >= 1);
+    }, { passive: true });
+    document.addEventListener('touchend', (event) => {
+      const start = swipeStart;
       swipeStart = null;
-      if (deltaX > -70 || Math.abs(deltaX) < Math.abs(deltaY) * 1.4 || currentPage === 'dashboard') return;
+      resetSwipeHint();
+      if (!start || !start.horizontal || event.changedTouches.length !== 1) return;
+      const touch = event.changedTouches[0];
+      const deltaX = touch.clientX - start.x;
+      const deltaY = touch.clientY - start.y;
+      if (deltaX > -SWIPE_DISTANCE || Math.abs(deltaX) < Math.abs(deltaY) * 1.3 || Date.now() - start.time > 900) return;
+      suppressClickUntil = Date.now() + 450;
       goBack();
     }, { passive: true });
-    pageContent.addEventListener('touchcancel', () => { swipeStart = null; }, { passive: true });
+    document.addEventListener('touchcancel', () => { swipeStart = null; resetSwipeHint(); }, { passive: true });
+    // Nach einer Wisch-Geste den nachfolgenden Klick auf eine Karte oder einen Knopf nicht auslösen.
+    document.addEventListener('click', (event) => {
+      if (Date.now() < suppressClickUntil) { event.preventDefault(); event.stopPropagation(); }
+    }, true);
     function goBack() {
       if (currentPage === 'dashboard') return;
       currentPage = previousPageHistory.pop() || 'dashboard';
       returningToPreviousPage = true;
       render();
+      window.scrollTo(0, 0);
     }
     function toggleTask(id) {
       const task = tasks.find((item) => item.id === Number(id));
