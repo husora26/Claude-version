@@ -1888,6 +1888,68 @@
     .tile-choice:has(input:disabled) { cursor: not-allowed; opacity: .5; }
     .tile-choice:focus-within { outline: 2px solid #9db9a5; outline-offset: 2px; }
     .stat-value-sm { font-size: 18px !important; }
+    /* Kontrollplan-Rücklauf */
+    .plan-return-upload { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0 18px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .plan-return-upload label { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
+    .plan-return-upload svg { width: 15px; height: 15px; }
+    .plan-return-upload span { flex: 1; min-width: 220px; color: var(--muted); font-size: 11px; }
+    .plan-return-steps { display: grid; gap: 8px; margin: 8px 0; padding: 0; list-style: none; }
+    .plan-return-steps li { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 12.5px; }
+    .plan-return-steps li > span, .plan-return-steps li svg { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; }
+    .plan-return-steps li > span { border: 2px solid #d5dcd5; }
+    .plan-return-steps li.active { color: var(--ink); font-weight: 650; }
+    .plan-return-steps li.active > span { border-color: var(--green); border-top-color: transparent; animation: pr-spin .8s linear infinite; }
+    .plan-return-steps li.done { color: var(--green); }
+    .plan-return-steps li.done svg { padding: 3px; color: white; background: var(--green); stroke-width: 3; }
+    @keyframes pr-spin { to { transform: rotate(360deg); } }
+    .plan-return-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .pr-kpi { display: grid; gap: 2px; padding: 10px 12px; border-radius: 10px; }
+    .pr-kpi strong { font-size: 22px; }
+    .pr-kpi span { font-size: 10.5px; font-weight: 650; }
+    .pr-kpi.ok { color: var(--green); background: var(--green-soft); }
+    .pr-kpi.issue { color: #8a5a00; background: #fff4cc; }
+    .pr-kpi.open { color: #5d6b62; background: #eef1ec; }
+    .plan-return-meta { margin: 10px 0 4px; color: var(--muted); font-size: 11px; }
+    .plan-return-h { display: flex; align-items: center; gap: 6px; margin: 14px 0 6px; color: #8a5a00; font-size: 12.5px; }
+    .plan-return-h.open { color: #5d6b62; }
+    .plan-return-h svg { width: 14px; height: 14px; }
+    .plan-return-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+    .plan-return-list li { display: grid; gap: 2px; padding: 8px 11px; border-left: 3px solid #e8b800; border-radius: 8px; background: #fffbea; font-size: 11.5px; }
+    .plan-return-list.open li { border-left-color: #b9c3bb; background: #f6f7f4; }
+    .plan-return-list span { color: var(--muted); font-size: 10.5px; }
+    .plan-return-done, .plan-return-empty { display: flex; gap: 10px; margin-top: 12px; padding: 12px 14px; border-radius: 10px; font-size: 11.5px; }
+    .plan-return-done { color: var(--green); background: var(--green-soft); }
+    .plan-return-empty { color: #7a5410; background: #fff8e8; }
+    .plan-return-done svg, .plan-return-empty svg { flex-shrink: 0; width: 18px; height: 18px; }
+    .plan-return-done p, .plan-return-empty p { margin: 3px 0 0; color: var(--ink); font-size: 11px; }
+    .plan-return-remarks { margin: 12px 0 0; font-size: 11.5px; }
+    .plan-return-remarks .form-label { display: block; margin-bottom: 3px; }
+    .plan-returns { display: grid; gap: 8px; padding: 12px 18px; border-bottom: 1px solid var(--line); }
+    .plan-returns-h { margin: 0; font-size: 12px; }
+    .plan-return-card { display: grid; gap: 8px; padding: 12px 14px; border: 1px solid var(--line); border-left: 4px solid #e8b800; border-radius: 10px; background: white; }
+    .plan-return-card.complete { border-left-color: var(--green); }
+    .prc-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .prc-head strong { display: block; font-size: 12.5px; }
+    .prc-head small { color: var(--muted); font-size: 10.5px; }
+    .prc-status { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; color: #8a5a00; background: #fff4cc; font-size: 10px; font-weight: 700; }
+    .plan-return-card.complete .prc-status { color: var(--green); background: var(--green-soft); }
+    .prc-status svg { width: 11px; height: 11px; }
+    .prc-open { display: grid; gap: 5px; }
+    .prc-open-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 7px; background: #f6f7f4; font-size: 11px; }
+    .prc-open-row span { flex: 1; min-width: 140px; }
+    .prc-open-row .small-action svg { width: 11px; height: 11px; vertical-align: -1px; }
+    .prc-open-row .warn { color: #8a5a00; }
+    .prc-repairs { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: 11px; }
+    .prc-repairs li { display: flex; justify-content: space-between; gap: 8px; padding: 5px 9px; border-radius: 7px; background: #fffbea; }
+    .prc-repairs li.fixed { background: #f2f7f3; }
+    .prc-repairs li.fixed span { text-decoration: line-through; color: var(--muted); }
+    .prc-repairs em { color: var(--muted); font-style: normal; font-size: 10px; white-space: nowrap; }
+    .prc-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .prc-actions .small-action svg { width: 12px; height: 12px; vertical-align: -2px; }
+    .prc-actions .archive-ready { color: white; border-color: var(--green); background: var(--green); }
+    .prc-actions .small-action:disabled { opacity: .5; cursor: not-allowed; }
+    .prc-hint { margin: 0; color: var(--muted); font-size: 10.5px; }
+    @media (max-width: 520px) { .plan-return-summary { grid-template-columns: 1fr 1fr 1fr; } .pr-kpi strong { font-size: 18px; } }
     /* Startseite: Service vor Ort – gleiche Einrückung wie „Heute im Ferienhaus“ */
     .task-list.dash-tasks { padding: 0 18px; }
     .dash-tasks .task-row { position: relative; gap: 10px; min-height: 0; padding: 12px 18px; border-bottom: 1px solid #f0f1ee; border-radius: 0; }
@@ -2203,6 +2265,13 @@
         <p class="send-plan-note" id="view-plan-hint">Noch keine Datei ausgewählt.</p>
       </div>
       <div class="form-actions"><button type="button" class="secondary-btn" id="view-plan-cancel">Schließen</button><button type="button" class="primary-btn" id="view-plan-archive" disabled>Im Archiv der Prüfprotokolle ablegen</button></div>
+    </section>
+  </div>
+  <div class="modal-backdrop" id="plan-return-modal" role="dialog" aria-modal="true" aria-labelledby="plan-return-title">
+    <section class="modal send-plan-modal plan-return-modal">
+      <div class="modal-head"><div><h2 id="plan-return-title">Kontrollplan auswerten</h2><p id="plan-return-subtitle"></p></div><button class="close-btn" type="button" data-plan-return="close" aria-label="Schließen">✕</button></div>
+      <div id="plan-return-body"></div>
+      <div class="form-actions" id="plan-return-actions"></div>
     </section>
   </div>
   <div class="modal-backdrop" id="repair-order-modal" role="dialog" aria-modal="true" aria-labelledby="repair-order-title">
@@ -6252,7 +6321,7 @@
           ${inspectionManual ? `<div class="inspection-completion-date"><label class="form-label" for="inspection-completed-date">Durchgeführt am</label><input class="form-control" id="inspection-completed-date" type="date" max="${today}" value="${today}"><button class="primary-btn" data-action="finish-inspection" ${doneCount < items.length ? 'disabled title="Bitte jede Position bewerten"' : ''}>Kontrolle abschließen${issueCount ? ` · ${issueCount} an Reparatur` : ''}</button><button type="button" class="secondary-btn" data-action="upload-partner-pdf">Ausgefüllte PDF hochladen</button></div>` : ''}
           <div class="inspection-status">Auffällige Positionen gehen beim Abschließen automatisch an „Reparatur & Instandhaltung“. Bei akuter Gefahr, Wasserschaden oder Einbruch sofort Notdienst bzw. Eigentümer informieren.</div>
         </section>
-        ${controls.length ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Kontrollpläne</h2><p class="card-caption">Pläne mit Servicepartner und Taktung</p></div><button class="text-btn" type="button" data-action="create-inspection" data-property="${escapeHtml(property.id)}">+ Weiterer Plan</button></div><div class="house-service-list"><div class="control-list">${controls.map((control) => {
+        ${controls.length ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Kontrollpläne</h2><p class="card-caption">Pläne mit Servicepartner und Taktung</p></div><div class="control-head-actions"><button class="text-btn" type="button" data-action="create-inspection" data-property="${escapeHtml(property.id)}">+ Weiterer Plan</button></div></div><div class="plan-return-upload"><label class="primary-btn">${icon('document')} Kontrollplan als PDF einlesen<input type="file" accept="application/pdf,.pdf" data-plan-return-upload hidden></label><span>Ausgefüllten Kontrollplan vom Servicepartner hochladen – Husora prüft jede Position und legt Mängel als Reparaturauftrag an.</span></div>${planReturnsHtml(property)}<div class="house-service-list"><div class="control-list">${controls.map((control) => {
           const provider = providers.find((entry) => entry.id === control.providerId);
           const itemCount = Object.keys(control.items || {}).length;
           const due = controlDueInfo(property.id, control.items, control.createdAt).due;
@@ -6822,6 +6891,211 @@
       document.getElementById('view-plan-hint').textContent = 'Noch keine Datei ausgewählt.';
       document.getElementById('view-plan-archive').disabled = true;
       document.getElementById('view-plan-modal').classList.add('open');
+    }
+    // Rücklauf des Kontrollplans: ausgefüllte PDF einlesen, auswerten, Mängel als Reparaturaufträge anlegen, nach Reparatur archivieren.
+    let planReturns = {};
+    try { planReturns = JSON.parse(localStorage.getItem('stugliv-plan-returns') || '{}') || {}; } catch (error) { planReturns = {}; }
+    let pendingPlanReturn = null;
+    function persistPlanReturns(next) {
+      try { localStorage.setItem('stugliv-plan-returns', JSON.stringify(next)); planReturns = next; return true; }
+      catch (error) { console.error(error); showToast('Speicher voll – der Rücklauf konnte nicht gespeichert werden.'); return false; }
+    }
+    const planReturnsFor = (propertyId) => planReturns[propertyId] || [];
+    // Formularfelder aus der PDF lesen: zuerst mit pdf.js, sonst direkt aus den PDF-Objekten.
+    async function readPlanFormFields(bytes) {
+      const fields = {};
+      try {
+        const pdfjs = await loadPdfJs();
+        const pdf = await pdfjs.getDocument({ data: bytes.slice() }).promise;
+        for (let number = 1; number <= pdf.numPages; number += 1) {
+          (await (await pdf.getPage(number)).getAnnotations()).forEach((annotation) => {
+            if (!annotation.fieldName) return;
+            fields[annotation.fieldName] = annotation.checkBox ? Boolean(annotation.fieldValue && annotation.fieldValue !== 'Off') : String(annotation.fieldValue || '');
+          });
+        }
+        if (Object.keys(fields).length) return fields;
+      } catch (error) { console.warn('pdf.js konnte die Formularfelder nicht lesen:', error); }
+      const raw = Array.from(bytes, (byte) => String.fromCharCode(byte)).join('');
+      const decodeString = (token) => {
+        if (!token) return '';
+        if (token.startsWith('<')) {
+          const hex = token.slice(1, -1).replace(/\s+/g, '');
+          const pairs = hex.match(/../g) || [];
+          if (/^feff/i.test(hex)) { let out = ''; for (let index = 2; index + 1 < pairs.length; index += 2) out += String.fromCharCode(parseInt(pairs[index] + pairs[index + 1], 16)); return out; }
+          return pairs.map((pair) => String.fromCharCode(parseInt(pair, 16))).join('');
+        }
+        const text = token.slice(1, -1).replace(/\\([()\\])/g, '$1').replace(/\\(\d{3})/g, (m, octal) => String.fromCharCode(parseInt(octal, 8)));
+        return text.startsWith('\u00fe\u00ff') ? Array.from({ length: (text.length - 2) / 2 }, (_, index) => String.fromCharCode((text.charCodeAt(2 + index * 2) << 8) | text.charCodeAt(3 + index * 2))).join('') : text;
+      };
+      // Jedes Feldobjekt bis „endobj“ betrachten; bei inkrementell gespeicherten PDFs gewinnt der letzte Eintrag.
+      const pattern = /\/T\s*(\((?:\\.|[^\\)])*\)|<[0-9a-fA-F\s]*>)([\s\S]*?)endobj/g;
+      let match;
+      while ((match = pattern.exec(raw))) {
+        const name = decodeString(match[1]);
+        if (!/^(pos_.+|kontrolliert_von|datum|bemerkungen)$/.test(name)) continue;
+        const value = (match[2].match(/\/V\s*(\/[\w#]+|\((?:\\.|[^\\)])*\)|<[0-9a-fA-F\s]*>)/) || [])[1] || '';
+        fields[name] = name.endsWith('_ok') || name.endsWith('_auffaellig') ? /^\/(?!Off)/.test(value) : decodeString(value);
+      }
+      return fields;
+    }
+    function evaluatePlanFields(fields, property) {
+      const byItem = new Map();
+      Object.entries(fields).forEach(([name, value]) => {
+        const match = name.match(/^pos_\d+_(.+)_(ok|auffaellig|bemerkung)$/);
+        if (!match) return;
+        const entry = byItem.get(match[1]) || {};
+        entry[match[2]] = value;
+        byItem.set(match[1], entry);
+      });
+      const controls = controlsFor(property.id);
+      const control = controls.map((item) => ({ item, hits: [...byItem.keys()].filter((id) => item.items?.[id]).length })).sort((a, b) => b.hits - a.hits)[0]?.item || null;
+      const results = [...byItem.entries()].map(([itemId, entry]) => {
+        const item = absenceChecklist.find((position) => position.id === itemId);
+        const note = String(entry.bemerkung || '').trim();
+        const result = entry.auffaellig ? 'issue' : entry.ok ? 'ok' : 'open';
+        return { itemId, title: item?.title || itemId, result, note };
+      });
+      return { control, results, inspectedBy: String(fields.kontrolliert_von || '').trim(), date: String(fields.datum || '').trim(), remarks: String(fields.bemerkungen || '').trim() };
+    }
+    function parseGermanDate(text) {
+      const match = String(text || '').match(/(\d{1,2})\.(\d{1,2})\.(\d{2,4})/);
+      if (!match) return /^\d{4}-\d{2}-\d{2}$/.test(text) ? text : '';
+      const year = match[3].length === 2 ? `20${match[3]}` : match[3];
+      return `${year}-${match[2].padStart(2, '0')}-${match[1].padStart(2, '0')}`;
+    }
+    async function analyzePlanReturn(file) {
+      const property = properties.find((item) => item.id === inspectionProperty) || properties[0];
+      if (!file) return;
+      if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') { showToast('Bitte den ausgefüllten Kontrollplan als PDF wählen.'); return; }
+      if (file.size > 3 * 1024 * 1024) { showToast('Die PDF ist größer als 3 MB und kann lokal nicht gespeichert werden.'); return; }
+      const modal = document.getElementById('plan-return-modal');
+      const body = document.getElementById('plan-return-body');
+      document.getElementById('plan-return-subtitle').textContent = `${property.name} · ${file.name}`;
+      const steps = ['Datei lesen', 'Formularfelder prüfen', 'Ergebnis auswerten'];
+      const showStep = (index) => { body.innerHTML = `<ol class="plan-return-steps">${steps.map((label, position) => `<li class="${position < index ? 'done' : position === index ? 'active' : ''}">${position < index ? icon('check') : '<span></span>'}${label}</li>`).join('')}</ol>`; };
+      document.getElementById('plan-return-actions').innerHTML = '';
+      modal.classList.add('open');
+      showStep(0);
+      const dataUrl = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result)); reader.onerror = () => reject(reader.error); reader.readAsDataURL(file); }).catch(() => '');
+      if (!dataUrl) { body.innerHTML = '<p class="send-plan-note warn">Die Datei konnte nicht gelesen werden.</p>'; return; }
+      showStep(1);
+      const fields = await readPlanFormFields(dataUrlBytes(dataUrl));
+      showStep(2);
+      const evaluation = evaluatePlanFields(fields, property);
+      pendingPlanReturn = { property, file: { name: file.name, size: file.size, data: dataUrl }, ...evaluation };
+      renderPlanReturnResult();
+    }
+    function renderPlanReturnResult() {
+      const { property, results, inspectedBy, date, remarks, control } = pendingPlanReturn;
+      const body = document.getElementById('plan-return-body');
+      const actions = document.getElementById('plan-return-actions');
+      if (!results.length) {
+        body.innerHTML = `<div class="plan-return-empty">${icon('alert')}<div><strong>Keine ausgefüllten Prüfpositionen gefunden</strong><p>Die PDF enthält keine Formularfelder aus dem Husora-Kontrollplan – zum Beispiel, weil sie ausgedruckt und eingescannt wurde. Trage das Ergebnis über „Ergebnis eintragen“ selbst ein; die PDF kannst du trotzdem ablegen.</p></div></div>`;
+        actions.innerHTML = '<button type="button" class="secondary-btn" data-plan-return="close">Schließen</button><button type="button" class="secondary-btn" data-plan-return="store-only">Nur im Archiv ablegen</button><button type="button" class="primary-btn" data-plan-return="manual">Ergebnis eintragen</button>';
+        return;
+      }
+      const ok = results.filter((entry) => entry.result === 'ok');
+      const issues = results.filter((entry) => entry.result === 'issue');
+      const open = results.filter((entry) => entry.result === 'open');
+      body.innerHTML = `<div class="plan-return-summary">
+          <div class="pr-kpi ok"><strong>${ok.length}</strong><span>in Ordnung</span></div>
+          <div class="pr-kpi issue"><strong>${issues.length}</strong><span>auffällig</span></div>
+          <div class="pr-kpi open"><strong>${open.length}</strong><span>ohne Ergebnis</span></div>
+        </div>
+        <p class="plan-return-meta">${control ? `Kontrolle „${escapeHtml(control.name)}“ · ` : ''}${inspectedBy ? `kontrolliert von ${escapeHtml(inspectedBy)}` : 'Prüfer nicht angegeben'}${date ? ` · am ${escapeHtml(date)}` : ''}</p>
+        ${issues.length ? `<h3 class="plan-return-h">${icon('alert')} Als Reparaturauftrag anlegen (${issues.length})</h3><ul class="plan-return-list issue">${issues.map((entry) => `<li><strong>${escapeHtml(entry.title)}</strong><span>${escapeHtml(entry.note || 'Auffällig – keine Bemerkung eingetragen')}</span></li>`).join('')}</ul>` : ''}
+        ${open.length ? `<h3 class="plan-return-h open">${icon('clock')} Noch offen – nicht bewertet (${open.length})</h3><ul class="plan-return-list open">${open.map((entry) => `<li><strong>${escapeHtml(entry.title)}</strong><span>Weder „OK“ noch „Auffällig“ angekreuzt – beim Servicepartner nachfragen.</span></li>`).join('')}</ul>` : ''}
+        ${!issues.length && !open.length ? `<div class="plan-return-done">${icon('check')}<div><strong>Alle Positionen in Ordnung</strong><p>Die Kontrolle ist damit abgeschlossen und kann im Archiv gespeichert werden.</p></div></div>` : ''}
+        ${remarks ? `<p class="plan-return-remarks"><span class="form-label">Bemerkungen des Servicepartners</span>${escapeHtml(remarks)}</p>` : ''}`;
+      actions.innerHTML = `<button type="button" class="secondary-btn" data-plan-return="close">Abbrechen</button>${issues.length ? `<button type="button" class="primary-btn" data-plan-return="save">${icon('alert')} ${issues.length} ${issues.length === 1 ? 'Reparaturauftrag' : 'Reparaturaufträge'} anlegen</button>` : `<button type="button" class="primary-btn" data-plan-return="save">${open.length ? 'Ergebnis speichern' : 'Kontrolle abschließen'}</button>`}`;
+    }
+    function savePlanReturn() {
+      if (!pendingPlanReturn) return;
+      const { property, file, results, inspectedBy, date, remarks, control } = pendingPlanReturn;
+      const issueResults = results.map((entry) => {
+        if (entry.result !== 'issue') return entry;
+        const details = POSITION_DETAILS[entry.itemId];
+        const text = `${entry.title}: ${entry.note || 'Auffälligkeit laut Kontrollplan'}`;
+        const issue = createIssue({ propertyId: property.id, part: housePartDefs.find((part) => part.match.test(text))?.id || details?.parts?.[0] || '', text, priority: 'soon', source: 'Kontrollplan (PDF)', partnerId: suggestPartner(property.id, 'repair') || '' });
+        issue.positionId = entry.itemId;
+        return { ...entry, issueId: issue.id };
+      });
+      persistIssues();
+      const record = { id: `ret-${Date.now()}`, controlId: control?.id || '', controlName: control?.name || 'Kontrollplan', file, inspectedBy, date: parseGermanDate(date) || localDateKey(new Date()), remarks, results: issueResults, uploadedAt: new Date().toISOString() };
+      if (!persistPlanReturns({ ...planReturns, [property.id]: [...planReturnsFor(property.id), record] })) return;
+      results.forEach((entry) => { if (entry.result !== 'open') inspectionChecks = { ...inspectionChecks, [property.id]: { ...(inspectionChecks[property.id] || {}), [entry.itemId]: entry.result } }; });
+      try { localStorage.setItem('stugliv-inspection-checks', JSON.stringify(inspectionChecks)); } catch (error) { /* optional */ }
+      pendingPlanReturn = null;
+      document.getElementById('plan-return-modal').classList.remove('open');
+      render();
+      const count = issueResults.filter((entry) => entry.issueId).length;
+      showToast(count ? `${count} ${count === 1 ? 'Reparaturauftrag' : 'Reparaturaufträge'} angelegt – die Kontrolle wird nach der Reparatur abgeschlossen.` : 'Ergebnis gespeichert.');
+    }
+    function planReturnState(record) {
+      const linked = record.results.filter((entry) => entry.issueId).map((entry) => ({ entry, issue: issues.find((issue) => issue.id === entry.issueId) }));
+      const repaired = linked.filter(({ issue }) => !issue || issue.status === 'fixed' || issue.status === 'renovation').length;
+      const open = record.results.filter((entry) => entry.result === 'open').length;
+      return { linked, repaired, open, complete: repaired === linked.length && !open };
+    }
+    function planReturnsHtml(property) {
+      const list = planReturnsFor(property.id);
+      if (!list.length) return '';
+      return `<div class="plan-returns"><h3 class="plan-returns-h">Eingelesene Kontrollpläne</h3>${list.slice().reverse().map((record) => {
+        const state = planReturnState(record);
+        const label = state.complete ? 'Abgeschlossen' : state.linked.length > state.repaired ? `Reparatur offen · ${state.repaired} von ${state.linked.length} erledigt` : `${state.open} ${state.open === 1 ? 'Position' : 'Positionen'} ohne Ergebnis`;
+        return `<article class="plan-return-card ${state.complete ? 'complete' : 'pending'}"><div class="prc-head"><div><strong>${escapeHtml(record.controlName)} · ${escapeHtml(fmtDate(record.date))}</strong><small>${escapeHtml(record.inspectedBy || 'Prüfer nicht angegeben')} · ${record.results.filter((entry) => entry.result === 'ok').length} in Ordnung · ${record.results.filter((entry) => entry.result === 'issue').length} auffällig</small></div><span class="prc-status">${state.complete ? icon('check') : icon('clock')}${escapeHtml(label)}</span></div>
+          ${record.results.filter((entry) => entry.result === 'open').length ? `<div class="prc-open"><span class="form-label">Ohne Ergebnis – nachträglich bewerten</span>${record.results.filter((entry) => entry.result === 'open').map((entry) => `<div class="prc-open-row"><span>${escapeHtml(entry.title)}</span><button type="button" class="small-action" data-plan-return-resolve="${escapeHtml(record.id)}" data-item="${escapeHtml(entry.itemId)}" data-result="ok">${icon('check')} In Ordnung</button><button type="button" class="small-action warn" data-plan-return-resolve="${escapeHtml(record.id)}" data-item="${escapeHtml(entry.itemId)}" data-result="issue">${icon('alert')} Auffällig</button></div>`).join('')}</div>` : ''}
+          ${state.linked.length ? `<ul class="prc-repairs">${state.linked.map(({ entry, issue }) => `<li class="${!issue || issue.status === 'fixed' ? 'fixed' : ''}"><span>${escapeHtml(entry.title)}</span><em>${!issue ? 'gelöscht' : escapeHtml(ISSUE_STATUS[issue.status] || '')}${issue?.orderedAt ? ` · beauftragt ${escapeHtml(fmtDate(issue.orderedAt))}` : ''}</em></li>`).join('')}</ul>` : ''}
+          <div class="prc-actions"><button type="button" class="small-action" data-plan-return-open="${escapeHtml(record.id)}">PDF ansehen</button>${state.linked.length > state.repaired ? '<button type="button" class="small-action" data-page="repairs">Zu den Reparaturen →</button>' : ''}<button type="button" class="small-action ${state.complete ? 'archive-ready' : ''}" data-plan-return-archive="${escapeHtml(record.id)}" ${state.complete ? '' : 'disabled title="Erst nach Abschluss aller Reparaturen möglich"'}>${icon('document')} Im Archiv speichern</button><button type="button" class="small-action danger" data-plan-return-delete="${escapeHtml(record.id)}">Entfernen</button></div>
+          ${state.complete ? '' : '<p class="prc-hint">Die Kontrolle gilt erst nach der Reparatur aller auffälligen Positionen als abgeschlossen.</p>'}
+        </article>`;
+      }).join('')}</div>`;
+    }
+    function resolvePlanReturnItem(recordId, itemId, result) {
+      const propertyId = inspectionProperty;
+      const records = planReturnsFor(propertyId);
+      const record = records.find((item) => item.id === recordId);
+      const entry = record?.results.find((item) => item.itemId === itemId);
+      if (!entry) return;
+      let note = '';
+      if (result === 'issue') {
+        note = (window.prompt(`Was ist bei „${entry.title}“ aufgefallen?`, '') || '').trim();
+        const text = `${entry.title}: ${note || 'Auffälligkeit laut Rückmeldung'}`;
+        const issue = createIssue({ propertyId, part: housePartDefs.find((part) => part.match.test(text))?.id || POSITION_DETAILS[itemId]?.parts?.[0] || '', text, priority: 'soon', source: 'Kontrollplan (PDF)', partnerId: suggestPartner(propertyId, 'repair') || '' });
+        issue.positionId = itemId;
+        persistIssues();
+        entry.issueId = issue.id;
+      }
+      entry.result = result;
+      entry.note = note || entry.note;
+      persistPlanReturns({ ...planReturns, [propertyId]: records });
+      render();
+      showToast(result === 'issue' ? 'Als auffällig vermerkt – Reparaturauftrag angelegt.' : 'Als in Ordnung vermerkt.');
+    }
+    function archivePlanReturn(recordId) {
+      const propertyId = inspectionProperty;
+      const record = planReturnsFor(propertyId).find((item) => item.id === recordId);
+      if (!record || !planReturnState(record).complete) return;
+      const property = properties.find((item) => item.id === propertyId);
+      const entries = inspectionLogEntries(propertyId);
+      const findings = record.results.filter((entry) => entry.result === 'issue').map((entry) => `${entry.title}: ${entry.note || 'Auffälligkeit'} (repariert)`);
+      entries.push({ date: record.date, completedAt: new Date().toISOString(), checkedItems: record.results.map((entry) => entry.itemId), checkedItemsSnapshot: record.results.map((entry) => ({ id: entry.itemId, title: entry.title, detail: entry.result === 'issue' ? `Auffällig: ${entry.note || 'siehe Bemerkung'} · repariert` : 'In Ordnung' })), property: { id: property.id, name: property.name, address: property.address || '', region: property.region || '' }, findings, source: 'Kontrollplan (PDF)', inspectedBy: record.inspectedBy });
+      const nextLog = { ...inspectionLog, [propertyId]: entries };
+      const nextUploads = { ...planUploads, [propertyId]: [...(planUploads[propertyId] || []), { id: `u${Date.now()}`, ...record.file, uploadedAt: record.uploadedAt }] };
+      try {
+        localStorage.setItem('stugliv-inspection-log', JSON.stringify(nextLog));
+        localStorage.setItem('stugliv-plan-uploads', JSON.stringify(nextUploads));
+      } catch (error) { showToast('Speicher voll – das Protokoll konnte nicht archiviert werden.'); return; }
+      inspectionLog = nextLog;
+      planUploads = nextUploads;
+      persistPlanReturns({ ...planReturns, [propertyId]: planReturnsFor(propertyId).filter((item) => item.id !== recordId) });
+      inspectionChecks = { ...inspectionChecks, [propertyId]: {} };
+      try { localStorage.setItem('stugliv-inspection-checks', JSON.stringify(inspectionChecks)); } catch (error) { /* optional */ }
+      completeInspectionOrder(propertyId, record.date);
+      logAutomation(`Hauskontrolle aus Kontrollplan-PDF archiviert: ${property.name} vom ${fmtDate(record.date)}`);
+      persistAutomation();
+      render();
+      showToast('Kontrolle abgeschlossen und im Archiv der Prüfprotokolle gespeichert.');
     }
     function openPlanPdf() {
       const property = properties.find((item) => item.id === inspectionProperty) || properties[0];
@@ -8304,7 +8578,28 @@
       if (action === 'toggle-favorites') { onlyFavorites = !onlyFavorites; render(); }
       if (action === 'add-provider') showToast('Einladungen sind bald verfügbar.');
     });
+    document.addEventListener('change', (event) => {
+      if (!event.target.matches('[data-plan-return-upload]')) return;
+      analyzePlanReturn(event.target.files?.[0]);
+      event.target.value = '';
+    });
     document.addEventListener('click', (event) => {
+      const returnAction = event.target.closest('[data-plan-return]')?.dataset.planReturn;
+      if (returnAction) {
+        if (returnAction === 'close') { pendingPlanReturn = null; document.getElementById('plan-return-modal').classList.remove('open'); }
+        if (returnAction === 'save') savePlanReturn();
+        if (returnAction === 'manual') { pendingPlanReturn = null; document.getElementById('plan-return-modal').classList.remove('open'); inspectionManual = true; render(); }
+        if (returnAction === 'store-only' && pendingPlanReturn) { pendingPlanUpload = pendingPlanReturn.file; pendingPlanReturn = null; document.getElementById('plan-return-modal').classList.remove('open'); archivePlanUpload(); }
+        return;
+      }
+      const openReturn = event.target.closest('[data-plan-return-open]');
+      if (openReturn) { const record = planReturnsFor(inspectionProperty).find((item) => item.id === openReturn.dataset.planReturnOpen); if (record) showPdf(dataUrlBytes(record.file.data), record.file.name, 'Eingelesener Kontrollplan'); return; }
+      const resolveReturn = event.target.closest('[data-plan-return-resolve]');
+      if (resolveReturn) { resolvePlanReturnItem(resolveReturn.dataset.planReturnResolve, resolveReturn.dataset.item, resolveReturn.dataset.result); return; }
+      const archiveReturn = event.target.closest('[data-plan-return-archive]');
+      if (archiveReturn) { archivePlanReturn(archiveReturn.dataset.planReturnArchive); return; }
+      const deleteReturn = event.target.closest('[data-plan-return-delete]');
+      if (deleteReturn && window.confirm('Eingelesenen Kontrollplan entfernen? Bereits angelegte Reparaturaufträge bleiben bestehen.')) { persistPlanReturns({ ...planReturns, [inspectionProperty]: planReturnsFor(inspectionProperty).filter((item) => item.id !== deleteReturn.dataset.planReturnDelete) }); render(); return; }
       if (event.target.closest('[data-action="open-partner-map"]')) { openPartnerMap(); return; }
       if (event.target.closest('[data-close-partner-map]') || event.target.id === 'partner-map-modal') closePartnerMap();
     });
@@ -10157,7 +10452,7 @@
     document.getElementById('close-view-plan').addEventListener('click', () => document.getElementById('view-plan-modal').classList.remove('open'));
     document.getElementById('view-plan-cancel').addEventListener('click', () => document.getElementById('view-plan-modal').classList.remove('open'));
     document.getElementById('view-plan-open').addEventListener('click', openPlanPdf);
-    document.getElementById('view-plan-file').addEventListener('change', (event) => pickPlanUpload(event.target.files[0]));
+    document.getElementById('view-plan-file').addEventListener('change', (event) => { const file = event.target.files[0]; if (!file) return; document.getElementById('view-plan-modal').classList.remove('open'); analyzePlanReturn(file); event.target.value = ''; });
     document.getElementById('view-plan-archive').addEventListener('click', archivePlanUpload);
     document.getElementById('close-control-positions').addEventListener('click', closeControlPositions);
     document.getElementById('control-positions-close').addEventListener('click', closeControlPositions);
@@ -10203,6 +10498,7 @@
         closeInspectionConfirmation();
         closeSendPlan();
         closeRepairOrder();
+        document.getElementById('plan-return-modal')?.classList.remove('open');
         closePartnerMap();
         document.getElementById('issue-modal')?.classList.remove('open');
         closeInspectionPlan();
