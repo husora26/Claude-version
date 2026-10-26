@@ -1862,6 +1862,8 @@
     .partner-map-chip:focus-within { outline: 2px solid #9db9a5; outline-offset: 2px; }
     .partner-map { position: relative; z-index: 0; isolation: isolate; height: min(62vh, 560px); border-radius: 12px; overflow: hidden; background: #e8eee4; }
     .partner-map .house-map-status { display: grid; place-items: center; height: 100%; margin: 0; color: var(--muted); font-size: 12px; }
+    .map-line-icon { display: inline-block; width: 16px; height: 0; border-top: 2px dashed #1f3d2b; }
+    .partner-map-chip.links:not(.on) .map-line-icon { opacity: .35; }
     .partner-map-note { margin: 8px 0 0; color: var(--muted); font-size: 10.5px; }
     .map-popup span { max-width: 240px; }
     .map-popup-tag { display: inline-block !important; margin-top: 5px !important; padding: 2px 8px; border-radius: 10px; color: #1f3d2b !important; background: #e3efe6; font-weight: 700; }
@@ -2205,7 +2207,7 @@
       <div class="modal-head"><div><h2 id="partner-map-title">Servicepartner & Ferienhäuser in Schweden</h2><p id="partner-map-subtitle"></p></div><button class="close-btn" type="button" data-close-partner-map aria-label="Schließen">✕</button></div>
       <div class="partner-map-filters" id="partner-map-filters" role="group" aria-label="Auf der Karte anzeigen"></div>
       <div class="partner-map" id="partner-map"><p class="house-map-status">Karte wird geladen …</p></div>
-      <p class="partner-map-note">Standorte nach Ort des Betriebs, nicht nach genauer Adresse. Betriebe ohne Ortsangabe stehen in der Mitte ihrer Region. Ring = deinem Ferienhaus zugeordnet.</p>
+      <p class="partner-map-note">Standorte nach Ort des Betriebs, nicht nach genauer Adresse. Betriebe ohne Ortsangabe stehen in der Mitte ihrer Region. Ring = deinem Ferienhaus zugeordnet, gestrichelte Linie = Verbindung zum Ferienhaus.</p>
     </section>
   </div>
   <div class="modal-backdrop" id="send-plan-modal" role="dialog" aria-modal="true" aria-labelledby="send-plan-title">
@@ -7399,7 +7401,8 @@
     // Übersichtskarte: alle Servicepartner nach Ort und die eigenen Ferienhäuser.
     let partnerMap = null;
     let partnerMapLayers = {};
-    const partnerMapFilter = { house: true, inspection: true, renovation: true, homes: true, assignedOnly: false };
+    const partnerMapFilter = { house: true, inspection: true, renovation: true, homes: true, assignedOnly: false, links: true };
+    let partnerMapLinks = {};
     const PARTNER_MAP_KINDS = [['homes', 'Meine Ferienhäuser', 'house'], ['house', 'Hausservice', 'service'], ['inspection', 'Hauskontrolle', 'inspection'], ['renovation', 'Sanierung', 'renovation']];
     function providerMapCoords(provider) {
       const town = String(provider.town || '').toLocaleLowerCase('sv');
@@ -7409,7 +7412,7 @@
       return REGION_CENTERS[region] ? { coords: REGION_CENTERS[region], approximate: true } : null;
     }
     function renderPartnerMapFilters(counts) {
-      document.getElementById('partner-map-filters').innerHTML = `${PARTNER_MAP_KINDS.map(([key, label, dot]) => `<label class="partner-map-chip ${partnerMapFilter[key] ? 'on' : ''}"><input type="checkbox" data-map-filter="${key}" ${partnerMapFilter[key] ? 'checked' : ''}><span class="map-dot ${dot}"></span>${label}<em>${counts[key] || 0}</em></label>`).join('')}<label class="partner-map-chip ${partnerMapFilter.assignedOnly ? 'on' : ''}"><input type="checkbox" data-map-filter="assignedOnly" ${partnerMapFilter.assignedOnly ? 'checked' : ''}>Nur zugeordnete</label>`;
+      document.getElementById('partner-map-filters').innerHTML = `${PARTNER_MAP_KINDS.map(([key, label, dot]) => `<label class="partner-map-chip ${partnerMapFilter[key] ? 'on' : ''}"><input type="checkbox" data-map-filter="${key}" ${partnerMapFilter[key] ? 'checked' : ''}><span class="map-dot ${dot}"></span>${label}<em>${counts[key] || 0}</em></label>`).join('')}<label class="partner-map-chip ${partnerMapFilter.assignedOnly ? 'on' : ''}"><input type="checkbox" data-map-filter="assignedOnly" ${partnerMapFilter.assignedOnly ? 'checked' : ''}>Nur zugeordnete</label><label class="partner-map-chip links ${partnerMapFilter.links ? 'on' : ''}"><input type="checkbox" data-map-filter="links" ${partnerMapFilter.links ? 'checked' : ''}><span class="map-line-icon" aria-hidden="true"></span>Verbindungslinien</label>`;
     }
     async function openPartnerMap() {
       document.getElementById('partner-map-modal').classList.add('open');
@@ -7444,14 +7447,27 @@
           .bindPopup(`<div class="map-popup"><strong>${escapeHtml(property.name)}</strong><span>${escapeHtml(property.address || property.region || '')}</span><span>${(servicePartnerAssignments[property.id] || []).length} zugeordnete Servicepartner</span></div>`)
           .addTo(partnerMapLayers.homes);
       });
+      const positions = new Map();
+      partnerMapLinks = { house: L.layerGroup(), inspection: L.layerGroup(), renovation: L.layerGroup() };
       points.forEach(({ provider, place }) => {
         const assigned = assignedIds.has(provider.id);
+        const position = jitter(place.coords);
+        positions.set(provider.id, position);
         const nearest = Math.min(...properties.map((property) => providerDistanceKm(provider, property)));
-        L.circleMarker(jitter(place.coords), { radius: assigned ? 8 : 6, color: assigned ? '#1f3d2b' : '#ffffff', weight: assigned ? 3 : 1.5, fillColor: colors[provider.category] || colors.house, fillOpacity: 0.95 })
+        L.circleMarker(position, { radius: assigned ? 8 : 6, color: assigned ? '#1f3d2b' : '#ffffff', weight: assigned ? 3 : 1.5, fillColor: colors[provider.category] || colors.house, fillOpacity: 0.95 })
           .bindTooltip(escapeHtml(provider.name), { direction: 'top', offset: [0, -6] })
           .bindPopup(`<div class="map-popup"><strong>${escapeHtml(provider.name)}</strong><span>${escapeHtml(partnerCategoryLabel(provider))}${provider.specialty ? ` · ${escapeHtml(provider.specialty)}` : ''}</span><span>${escapeHtml(provider.town || '')}${place.approximate ? ' (ungefähre Lage)' : ''}${Number.isFinite(nearest) ? ` · ${nearest} km zum Ferienhaus` : ''}</span>${provider.services ? `<span>${escapeHtml(provider.services)}</span>` : ''}${assigned ? '<span class="map-popup-tag">Deinem Ferienhaus zugeordnet</span>' : ''}<div class="map-popup-links">${providerContactLinks(provider)}</div></div>`)
           .addTo(partnerMapLayers[provider.category] || partnerMapLayers.house)
           .options.assigned = assigned;
+      });
+      // Linien vom Ferienhaus zu seinen zugeordneten Servicepartnern.
+      homes.forEach(({ property, origin }) => {
+        (servicePartnerAssignments[property.id] || []).forEach((providerId) => {
+          const provider = providerById(providerId);
+          const target = positions.get(providerId);
+          if (!provider || !target) return;
+          L.polyline([origin.coords, target], { color: colors[provider.category] || colors.house, weight: 2, opacity: 0.85, dashArray: '5 5', interactive: false }).addTo(partnerMapLinks[provider.category] || partnerMapLinks.house);
+        });
       });
       applyPartnerMapFilter();
       const all = [...homes.map((entry) => entry.origin.coords), ...points.map((entry) => entry.place.coords)];
@@ -7465,6 +7481,7 @@
         layer.eachLayer((marker) => { const hide = partnerMapFilter.assignedOnly && key !== 'homes' && !marker.options.assigned; marker.setStyle?.({ opacity: hide ? 0 : 1, fillOpacity: hide ? 0 : 0.95 }); if (marker._path) marker._path.style.pointerEvents = hide ? 'none' : ''; });
         if (partnerMapFilter[key]) layer.addTo(partnerMap); else layer.remove();
       });
+      Object.entries(partnerMapLinks).forEach(([key, layer]) => { if (partnerMapFilter.links && partnerMapFilter.homes && partnerMapFilter[key]) layer.addTo(partnerMap); else layer.remove(); });
     }
     function closePartnerMap() {
       document.getElementById('partner-map-modal').classList.remove('open');
