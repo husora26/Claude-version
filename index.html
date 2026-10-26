@@ -1658,6 +1658,19 @@
     .task-due-badge.soon { color: #8e622b; background: var(--amber-soft); }
     .task-due-badge.late { color: var(--red); background: var(--red-soft); }
     .task-due-badge.done { color: #8a928c; background: #eef0ec; }
+    .insp-tile.dash-task { cursor: pointer; }
+    .insp-tile.dash-task:focus-visible { outline: 2px solid #9db9a5; outline-offset: 2px; }
+    .insp-tile.dash-task small .when.late { color: var(--red); font-weight: 600; }
+    .insp-tile.dash-task small .prio { font-weight: 650; }
+    .insp-tile.dash-task small .prio.urgent { color: var(--red); }
+    .insp-tile.dash-task small .prio.soon { color: #8e622b; }
+    .insp-tile.st-open .insp-tile-icon { color: var(--green); background: var(--green-soft); }
+    .insp-tile.st-issue { background: #fffbea; border-color: #f0dd8c; }
+    .insp-tile.st-issue::before { background: #e8b800; }
+    .insp-tile.st-issue .insp-tile-icon { color: #8a5a00; background: #ffd84d; }
+    .insp-tile.st-issue .insp-tile-icon svg { fill: #ffd84d; }
+    .insp-tile.st-issue .insp-tile-pill { color: #7a5c00; background: #fff0b3; }
+    .dash-task-issue { color: #7a5c00 !important; font-weight: 600; }
     /* Startseite: Service vor Ort – gleiche Einrückung wie „Heute im Ferienhaus“ */
     .task-list.dash-tasks { padding: 0 18px; }
     .dash-tasks .task-row { position: relative; gap: 10px; min-height: 0; padding: 12px 18px; border-bottom: 1px solid #f0f1ee; border-radius: 0; }
@@ -3996,7 +4009,7 @@
           ${isPro() ? `<button class="stat" data-page="house3d"><img class="stat-art" src="assets/ferienhaus.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Hausmodell</span><span class="stat-icon">${icon('cube')}</span></div><div class="stat-value">3D</div><div class="stat-note"><em>${properties.reduce((sum, property) => sum + activeHouseParts(property).filter((part) => housePartInfo(property.id, part).status === 'due').length, 0)}</em> Bauteile mit fälliger Kontrolle</div></button>` : ''}
         </section>
         <div class="columns">
-          <section class="card"><div class="card-head"><div><h2 class="card-title">Service vor Ort</h2><p class="card-caption">${open.length} offene ${open.length === 1 ? 'Aufgabe' : 'Aufgaben'} ${singleHouse() ? 'an deinem schwedischen Ferienhaus' : 'an deinen schwedischen Ferienhäusern'}</p></div><button class="text-btn" data-page="tasks">Alle Aufgaben →</button></div><div class="task-list dash-tasks">${open.length ? open.slice(0, 5).map((task) => taskRow(task, true)).join('') : '<div class="empty">Alles erledigt — großartig!</div>'}</div>${open.length > 5 ? `<button type="button" class="dash-tasks-more" data-page="tasks">+ ${open.length - 5} weitere ${open.length - 5 === 1 ? 'Aufgabe' : 'Aufgaben'} ansehen</button>` : ''}</section>
+          <section class="card"><div class="card-head"><div><h2 class="card-title">Service vor Ort</h2><p class="card-caption">${open.length} offene ${open.length === 1 ? 'Aufgabe' : 'Aufgaben'} ${singleHouse() ? 'an deinem schwedischen Ferienhaus' : 'an deinen schwedischen Ferienhäusern'}</p></div><button class="text-btn" data-page="tasks">Alle Aufgaben →</button></div><div class="dash-tile-list">${open.length ? open.slice(0, 5).map(dashTaskTile).join('') : '<div class="empty">Alles erledigt — großartig!</div>'}</div>${open.length > 5 ? `<button type="button" class="dash-tasks-more" data-page="tasks">+ ${open.length - 5} weitere ${open.length - 5 === 1 ? 'Aufgabe' : 'Aufgaben'} ansehen</button>` : ''}</section>
           <div>
             ${bookingsEnabled() ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Heute im Ferienhaus</h2><p class="card-caption">${escapeHtml(fmtLongDate())}</p></div><button class="text-btn" data-page="calendar">Kalender →</button></div><div class="dash-tile-list">${occupancyHtml(today)}</div></section>` : ''}
             ${bookingsEnabled() ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Nächste Buchungen</h2><p class="card-caption">Anreise, Endreinigung und Schlüssel</p></div><button class="text-btn" data-page="bookings">Buchungen →</button></div>
@@ -6825,6 +6838,22 @@
     }
 
 
+
+    // Startseite „Service vor Ort“: Aufgabe als Kachel im Stil der Hauskontrolle, Klick öffnet sie in den Serviceaufgaben.
+    function dashTaskTile(task) {
+      const today = localDateKey(new Date());
+      const status = taskStatus(task);
+      const overdue = !task.done && task.date && task.date < today;
+      const days = task.date ? Math.round((new Date(`${task.date}T12:00:00`) - new Date(`${today}T12:00:00`)) / 86400000) : null;
+      const relative = days === null ? 'ohne Datum' : days === 0 ? 'heute' : days === 1 ? 'morgen' : days > 1 ? `in ${days} Tagen` : `seit ${-days} ${days === -1 ? 'Tag' : 'Tagen'} überfällig`;
+      const openIssues = issues.filter((issue) => issue.taskId === task.id && (issue.status === 'open' || issue.status === 'planned'));
+      const area = task.area || '';
+      const iconName = task.auto === 'season' ? (task.season === 'spring' ? 'sun' : 'snow') : AUTO_KIND[task.auto]?.[0] || (/reinig|gäste|wechsel/i.test(area) ? 'users' : /schlüssel/i.test(task.title) ? 'home' : 'task');
+      const state = openIssues.length ? 'issue' : overdue ? 'overdue' : status === 'In Bearbeitung' ? 'ordered' : 'open';
+      const prio = task.priority === 'urgent' ? '<b class="prio urgent">Dringend</b>' : task.priority === 'soon' ? '<b class="prio soon">Wichtig</b>' : '';
+      const detail = [`<span class="when ${overdue ? 'late' : ''}">${task.date ? `${escapeHtml(fmtDate(task.date))} · ` : ''}${escapeHtml(relative)}</span>`, prio, area ? escapeHtml(area) : '', singleHouse() ? '' : escapeHtml(task.property)].filter(Boolean).join(' · ');
+      return `<div class="insp-tile dash-task st-${state}" data-goto-task="${task.id}" role="button" tabindex="0" aria-label="${escapeHtml(task.title)} in Serviceaufgaben anzeigen"><span class="insp-tile-icon">${icon(openIssues.length ? 'alert' : iconName)}</span><span class="insp-tile-body"><span class="insp-tile-top"><strong>${escapeHtml(task.title)}</strong><span class="insp-tile-pill">${escapeHtml(status)}</span></span><small>${detail}</small>${openIssues.length ? `<small class="dash-task-issue">Auffälligkeit: ${escapeHtml(openIssues.map((issue) => issue.text).join(' · '))}</small>` : ''}</span></div>`;
+    }
     // Automatisierung: nächste automatische Schritte als Kachel mit änderbarem Status.
     const AUTO_KIND = { turnover: ['users', 'Gästewechsel'], inspection: ['inspection', 'Hauskontrolle'], season: ['calendar', 'Saison'], repair: ['alert', 'Reparatur'], renovation: ['cube', 'Sanierung'], maintenance: ['clock', 'Wartung'] };
     function autoStepTile(task) {
