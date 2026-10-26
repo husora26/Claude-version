@@ -1755,6 +1755,78 @@
     .insp-tile.dash-task .task-pill.is-progress { color: #2f5f86; background: #e6eff7; }
     .insp-tile.dash-task .task-pill.is-done { color: var(--green); background: var(--green-soft); }
     .insp-tile.dash-task .task-pill svg { width: 10px; height: 10px; }
+    /* Hausmodell: Gestaltungsmodus */
+    .house-design-btn { display: inline-flex; align-items: center; gap: 5px; }
+    .house-look-summary { margin: 4px 0 8px; color: var(--muted); font-size: 11px; }
+    .house-design-btn svg { width: 13px; height: 13px; }
+    .house-controls .house-design-btn.active { color: white; background: var(--green); border-color: var(--green); }
+    .house-aside.editing { max-height: 560px; }
+    .house-design { display: grid; gap: 4px; padding: 12px 14px 16px; }
+    .house-design-head { position: sticky; top: -1px; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: -12px -14px 4px; padding: 12px 14px; border-bottom: 1px solid var(--line); background: #fcfbf7; }
+    .house-design-head strong { display: block; font-size: 14px; }
+    .house-design-head small { color: var(--muted); font-size: 10px; }
+    .house-design-head .primary-btn { padding: 7px 14px; font-size: 11px; }
+    .design-section { display: grid; gap: 7px; padding: 10px 0; border-bottom: 1px solid #ecefe9; }
+    .design-section h3 { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; }
+    .design-section h3 svg { width: 14px; height: 14px; color: var(--green); }
+    .design-label { color: var(--muted); font-size: 9.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+    .design-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    .design-chip { padding: 5px 10px; border: 1px solid var(--line); border-radius: 20px; color: var(--ink); background: white; font-size: 10.5px; font-weight: 600; cursor: pointer; }
+    .design-chip:hover { border-color: var(--green); }
+    .design-chip.active { color: white; border-color: var(--green); background: var(--green); }
+    .design-swatches { display: flex; flex-wrap: wrap; gap: 6px; }
+    .design-swatch { position: relative; width: 26px; height: 26px; padding: 0; border: 2px solid white; border-radius: 50%; background: var(--swatch); box-shadow: 0 0 0 1px rgba(0,0,0,.18); cursor: pointer; }
+    .design-swatch.active { box-shadow: 0 0 0 2px var(--green); }
+    .design-swatch.custom { background: conic-gradient(#e25b45, #e2c045, #5fae5a, #4a8fd1, #9a5fd1, #e25b45); }
+    .design-swatch.custom.active { background: var(--swatch); }
+    .design-swatch.custom input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .design-toggle { display: flex; align-items: center; gap: 9px; font-size: 11.5px; font-weight: 600; cursor: pointer; }
+    .design-toggle input { position: absolute; opacity: 0; }
+    .design-toggle small { display: block; color: var(--muted); font-size: 9.5px; font-weight: 400; }
+    .design-toggle .switch-track { flex-shrink: 0; }
+    .design-toggle input:focus-visible + .switch-track { outline: 2px solid #9db9a5; outline-offset: 2px; }
+    .design-stepper { display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 600; }
+    .design-stepper span { flex: 1; }
+    .design-stepper button { width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 8px; background: white; font-size: 15px; cursor: pointer; }
+    .design-stepper button:disabled { opacity: .4; cursor: default; }
+    .design-stepper strong { min-width: 16px; text-align: center; }
+    .house-design-foot { padding-top: 8px; }
+    /* Fassadenarten */
+    .fac-horizontal .house-wall, .fac-horizontal .house-wall.side, .fac-horizontal .house-wall.back { background: repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 1px, transparent 1px 9px), var(--wall); }
+    .fac-horizontal .house-wall.side { background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 9px), var(--wall-side); }
+    .fac-log .house-wall, .fac-log .house-wall.back { background: repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 2px, rgba(255,255,255,.12) 2px 4px, transparent 4px 13px), linear-gradient(rgba(0,0,0,.04), rgba(0,0,0,.04)), var(--wall); }
+    .fac-log .house-wall.side { background: repeating-linear-gradient(0deg, rgba(0,0,0,.3) 0 2px, rgba(255,255,255,.1) 2px 4px, transparent 4px 13px), var(--wall-side); }
+    .fac-plaster .house-wall, .fac-plaster .house-wall.back { background: radial-gradient(rgba(0,0,0,.05) 1px, transparent 1.2px) 0 0 / 5px 5px, var(--wall); }
+    .fac-plaster .house-wall.side { background: radial-gradient(rgba(0,0,0,.06) 1px, transparent 1.2px) 0 0 / 5px 5px, var(--wall-side); }
+    .fac-brick .house-wall, .fac-brick .house-wall.back, .fac-brick .house-wall.side { background: repeating-linear-gradient(0deg, rgba(255,255,255,.35) 0 1px, transparent 1px 7px), repeating-linear-gradient(90deg, rgba(255,255,255,.3) 0 1px, transparent 1px 16px), var(--wall); }
+    .fac-brick .house-wall.side { background-color: var(--wall-side); }
+    /* Dacharten */
+    .rt-sheet .house-roof, .rt-sheet .house-roof.back { background: repeating-linear-gradient(90deg, rgba(0,0,0,.28) 0 2px, rgba(255,255,255,.08) 2px 3px, transparent 3px 16px), linear-gradient(180deg, var(--roof), var(--roof-dark)); }
+    .rt-shingle .house-roof, .rt-shingle .house-roof.back { background: repeating-linear-gradient(0deg, rgba(0,0,0,.25) 0 1px, transparent 1px 7px), repeating-linear-gradient(90deg, rgba(0,0,0,.12) 0 1px, transparent 1px 9px), linear-gradient(180deg, var(--roof), var(--roof-dark)); }
+    /* Fenster und Tür */
+    .win-modern .house-window { border-width: 3px; border-color: #2f3437; background: linear-gradient(135deg, #7fa9c4 0%, #cfe3ef 50%, #7ea7c1 100%); }
+    .win-modern .house-window::before, .win-modern .house-window::after { display: none; }
+    .win-shutters .house-window { box-shadow: -15px 0 0 -3px var(--door), 15px 0 0 -3px var(--door), inset 0 0 0 1px rgba(0,0,0,.18); }
+    .house-door { background: linear-gradient(90deg, var(--door, #355b49), color-mix(in srgb, var(--door, #355b49) 82%, black)); }
+    .door-glass .house-door::before { content: ''; position: absolute; left: 7px; right: 7px; top: 7px; height: 24px; border: 2px solid rgba(255,255,255,.65); background: linear-gradient(135deg, #b8d6e8, #e8f3f9); }
+    .door-double .house-door { left: calc(50% - 26px); width: 52px; }
+    .door-double .house-door::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,.55); }
+    /* Gaube, Anbau und Garten */
+    .house-dormer-wall { background: repeating-linear-gradient(90deg, rgba(0,0,0,.13) 0 1px, transparent 1px 9px), var(--wall); box-shadow: inset 3px 0 var(--trim), inset -3px 0 var(--trim); }
+    .house-dormer-wall .dormer-window { left: calc(50% - 15px); top: 5px; width: 30px; height: 18px; border-width: 3px; }
+    .house-dormer-side { background: var(--wall-side); clip-path: polygon(0 0, 100% 0, 100% 100%); backface-visibility: visible; }
+    .house-dormer-side.flip { clip-path: polygon(0 0, 100% 0, 0 100%); }
+    .view-back .house-dormer-wall, .view-back .house-dormer-side, .view-back .house-dormer-roof { visibility: hidden; }
+    .house-dormer-roof { background: linear-gradient(180deg, var(--roof), var(--roof-dark)); backface-visibility: visible; }
+    .house-glass { background: linear-gradient(135deg, rgba(190,222,240,.55), rgba(240,250,255,.3) 50%, rgba(170,205,228,.5)); border: 3px solid var(--trim, #f1ebdf); backface-visibility: visible; }
+    .house-post { background: #8a6a48; }
+    .house-cover-roof { background: linear-gradient(180deg, rgba(220,235,242,.75), rgba(190,210,222,.7)); border: 3px solid #8a6a48; }
+    .house-bush { border-radius: 50%; background: radial-gradient(circle at 35% 30%, #7fae63 0%, #4f8a45 55%, #3b6e36 100%); backface-visibility: visible; pointer-events: none; }
+    .house-crown { border-radius: 50% 50% 46% 46%; background: radial-gradient(circle at 35% 30%, #6fa25a 0%, #3f7d3c 55%, #2f5f2f 100%); backface-visibility: visible; pointer-events: none; }
+    .house-trunk { background: #6b4a31; pointer-events: none; }
+    .house-fence { background: repeating-linear-gradient(90deg, #efe7d8 0 5px, transparent 5px 13px), linear-gradient(transparent 6px, #e2d7c3 6px 9px, transparent 9px 15px, #e2d7c3 15px 18px, transparent 18px); backface-visibility: visible; pointer-events: none; }
+    .house-ground.lawn { background: repeating-linear-gradient(90deg, rgba(255,255,255,.09) 0 26px, rgba(0,0,0,.05) 26px 52px), #84bd63; -webkit-mask-image: radial-gradient(closest-side, #000 72%, transparent 100%); mask-image: radial-gradient(closest-side, #000 72%, transparent 100%); }
+    @media (max-width: 860px) { .house-aside.editing { max-height: none; } }
     /* Startseite: Service vor Ort – gleiche Einrückung wie „Heute im Ferienhaus“ */
     .task-list.dash-tasks { padding: 0 18px; }
     .dash-tasks .task-row { position: relative; gap: 10px; min-height: 0; padding: 12px 18px; border-bottom: 1px solid #f0f1ee; border-radius: 0; }
@@ -5191,12 +5263,114 @@
       photoLookCache.set(src, promise);
       return promise;
     }
+    // Gestaltungsmodus des Hausmodells: Gebäudehülle, Anbauten und Garten frei einstellen.
+    let houseEditMode = false;
+    const FACADE_TYPES = { vertical: 'Holz senkrecht', horizontal: 'Holz waagerecht', log: 'Blockbohlen', plaster: 'Putz', brick: 'Klinker' };
+    const ROOF_TYPES = { tiles: 'Dachziegel', sheet: 'Blechdach', shingle: 'Schindeln' };
+    const WINDOW_TYPES = { classic: 'Sprossenfenster', modern: 'Modern ohne Sprossen', shutters: 'Mit Fensterläden' };
+    const DOOR_TYPES = { classic: 'Kassettentür', glass: 'Mit Glaseinsatz', double: 'Doppeltür' };
+    const COVER_TYPES = { none: 'Keine', roof: 'Überdachung', winter: 'Wintergarten' };
+    const TRIM_COLORS = { '#f1ebdf': 'Cremeweiß', '#ffffff': 'Weiß', '#2f3437': 'Anthrazit', '#6b4a31': 'Holzbraun', '#4f6b55': 'Grün' };
+    const DOOR_COLORS = { '#355b49': 'Tannengrün', '#a23d2e': 'Falunrot', '#2f4a68': 'Blau', '#f1ebdf': 'Cremeweiß', '#3a3532': 'Anthrazit', '#8a5a34': 'Holz' };
+    const DEFAULT_DESIGN = { facade: 'vertical', roofType: 'tiles', windows: 'classic', door: 'classic', trimColor: '', doorColor: '#355b49', frontDeck: true, backDeck: false, dormer: false, cover: 'none', lawn: false, bushes: 0, trees: 0, fence: false };
+    const houseDesign = (property) => ({ ...DEFAULT_DESIGN, ...(property.modelDesign || {}) });
+    const shadeHex = (hex, factor) => {
+      const value = String(hex || '').replace('#', '');
+      if (!/^[0-9a-f]{6}$/i.test(value)) return hex;
+      const channel = (index) => Math.max(0, Math.min(255, Math.round(parseInt(value.slice(index, index + 2), 16) * factor))).toString(16).padStart(2, '0');
+      return `#${channel(0)}${channel(2)}${channel(4)}`;
+    };
+    function setHouseDesign(key, value) {
+      const target = properties.find((item) => item.id === houseModelProperty) || properties[0];
+      if (!target) return;
+      if (key === 'wall' || key === 'roof') target.modelLook = { ...(target.modelLook || {}), [key]: value };
+      else if (key === 'wallColor' || key === 'roofColor') { target.modelLook = { ...(target.modelLook || {}), [key === 'wallColor' ? 'wall' : 'roof']: 'custom' }; target.modelDesign = { ...houseDesign(target), [key]: value }; }
+      else target.modelDesign = { ...houseDesign(target), [key]: value };
+      saveProperties();
+      render();
+    }
+    function houseDesignEditorHtml(property) {
+      const design = houseDesign(property);
+      const look = houseLook(property);
+      const chips = (key, options, current) => `<div class="design-chips">${Object.entries(options).map(([value, label]) => `<button type="button" class="design-chip ${String(current) === String(value) ? 'active' : ''}" data-design-set="${key}" data-value="${escapeHtml(value)}" aria-pressed="${String(current) === String(value)}">${escapeHtml(label)}</button>`).join('')}</div>`;
+      const swatches = (key, options, current, customKey, customValue) => `<div class="design-swatches">${Object.entries(options).map(([value, item]) => `<button type="button" class="design-swatch ${current === value ? 'active' : ''}" data-design-set="${key}" data-value="${escapeHtml(value)}" style="--swatch:${escapeHtml(item.color)}" title="${escapeHtml(item.label)}" aria-label="${escapeHtml(item.label)}" aria-pressed="${current === value}"></button>`).join('')}${customKey ? `<label class="design-swatch custom ${current === 'custom' ? 'active' : ''}" title="Eigene Farbe" style="--swatch:${escapeHtml(customValue || '#ffffff')}"><input type="color" data-design-input="${customKey}" value="${escapeHtml(customValue || '#888888')}" aria-label="Eigene Farbe wählen"></label>` : ''}</div>`;
+      const toggle = (key, label, hint = '') => `<label class="switch design-toggle"><input type="checkbox" data-design-toggle="${key}" ${design[key] ? 'checked' : ''}><span class="switch-track"></span><span>${escapeHtml(label)}${hint ? `<small>${escapeHtml(hint)}</small>` : ''}</span></label>`;
+      const stepper = (key, label, max) => `<div class="design-stepper"><span>${escapeHtml(label)}</span><button type="button" data-design-set="${key}" data-value="${Math.max(0, design[key] - 1)}" aria-label="${escapeHtml(label)} weniger" ${design[key] <= 0 ? 'disabled' : ''}>−</button><strong>${design[key]}</strong><button type="button" data-design-set="${key}" data-value="${Math.min(max, design[key] + 1)}" aria-label="${escapeHtml(label)} mehr" ${design[key] >= max ? 'disabled' : ''}>+</button></div>`;
+      const section = (title, iconName, body) => `<section class="design-section"><h3>${icon(iconName)} ${escapeHtml(title)}</h3>${body}</section>`;
+      const wallOptions = Object.fromEntries(Object.entries(WALL_LOOKS).map(([key, value]) => [key, { label: value.label, color: value.wall }]));
+      const roofOptions = Object.fromEntries(Object.entries(ROOF_LOOKS).map(([key, value]) => [key, { label: value.label, color: value.roof }]));
+      const trimOptions = Object.fromEntries(Object.entries(TRIM_COLORS).map(([color, label]) => [color, { label, color }]));
+      const doorOptions = Object.fromEntries(Object.entries(DOOR_COLORS).map(([color, label]) => [color, { label, color }]));
+      return `<div class="house-design">
+        <div class="house-design-head"><div><strong>Gestalten</strong><small>Änderungen werden sofort im Modell gezeigt und gespeichert.</small></div><button type="button" class="primary-btn" data-house-action="design-done">Fertig</button></div>
+        ${section('Fassade', 'home', `${chips('facade', FACADE_TYPES, design.facade)}<span class="design-label">Farbe · ${escapeHtml(look.wall.label)}</span>${swatches('wall', wallOptions, look.wallKey, 'wallColor', design.wallColor)}`)}
+        ${section('Dach', 'property', `${chips('roofType', ROOF_TYPES, design.roofType)}<span class="design-label">Farbe · ${escapeHtml(look.roof.label)}</span>${swatches('roof', roofOptions, look.roofKey, 'roofColor', design.roofColor)}${toggle('dormer', 'Dachgaube anbringen', 'Schleppgaube mit Fenster zur Vorderseite')}`)}
+        ${section('Fenster & Haustür', 'document', `${chips('windows', WINDOW_TYPES, design.windows)}<span class="design-label">Rahmenfarbe</span>${swatches('trimColor', trimOptions, design.trimColor || look.wall.trim)}<span class="design-label">Haustür</span>${chips('door', DOOR_TYPES, design.door)}${swatches('doorColor', doorOptions, design.doorColor)}`)}
+        ${section('Terrasse & Anbau', 'cube', `${toggle('frontDeck', 'Terrasse vor dem Haus')}${toggle('backDeck', 'Terrasse hinter dem Haus anlegen')}<span class="design-label">Anbau hinten</span>${chips('cover', COVER_TYPES, design.cover)}`)}
+        ${section('Garten', 'sun', `${toggle('lawn', 'Rasen anlegen', 'gemähter Rasen mit Streifen')}${toggle('fence', 'Gartenzaun', 'Holzzaun rund ums Grundstück mit Tor')}${stepper('bushes', 'Büsche', 6)}${stepper('trees', 'Bäume', 4)}`)}
+        <div class="house-design-foot"><button type="button" class="text-btn" data-house-action="design-reset">Gestaltung zurücksetzen</button></div>
+      </div>`;
+    }
+    // Zusätzliche Bauteile für den Gestaltungsmodus (Gaube, Anbau, Garten).
+    function houseExtrasHtml(property, shape, face, box) {
+      const design = houseDesign(property);
+      const { W, D, H, R } = shape;
+      const ground = H / 2;
+      let html = '';
+      if (design.dormer) {
+        const t = 0.2;
+        const dw = Math.min(70, W * 0.32), dh = 27;
+        const zf = (D / 2) * (1 - t), yb = -H / 2 - t * R;
+        const depth = Math.round(dh / ((2 * R) / D));
+        const cy = yb - dh / 2;
+        html += face('house-dormer-wall', dw, dh, `translate3d(${-W * 0.12}px,${cy}px,${zf}px)`, '<span class="house-window dormer-window"></span>');
+        html += face('house-dormer-side', depth, dh, `translate3d(${-W * 0.12 - dw / 2}px,${cy}px,${zf - depth / 2}px) rotateY(-90deg)`);
+        html += face('house-dormer-side flip', depth, dh, `translate3d(${-W * 0.12 + dw / 2}px,${cy}px,${zf - depth / 2}px) rotateY(90deg)`);
+        html += face('house-dormer-roof', dw + 10, depth + 8, `translate3d(${-W * 0.12}px,${yb - dh - 1}px,${zf - depth / 2 + 3}px) rotateX(${(90 - Math.atan2(4, depth) * 180 / Math.PI).toFixed(1)}deg)`);
+      }
+      if (design.backDeck) {
+        const deckW = Math.min(W - 30, 200);
+        html += face('house-deck', deckW, 64, `translate3d(0,${ground - 7}px,${-(D / 2 + 32)}px) rotateX(90deg)`)
+          + face('house-deck-edge', deckW, 7, `rotateY(180deg) translate3d(0,${ground - 3.5}px,${D / 2 + 64}px)`);
+      }
+      if (design.cover !== 'none') {
+        const cw = Math.min(W - 30, 200), cd = 62, ch = H - 14;
+        const zc = -(D / 2 + cd / 2);
+        if (design.cover === 'winter') {
+          html += box('house-glass', 0, ground - ch / 2, zc, cw, ch, cd, '');
+        } else {
+          [-1, 1].forEach((side) => { html += box('house-post', side * (cw / 2 - 4), ground - ch / 2, -(D / 2 + cd - 4), 6, ch, 6, ''); });
+          html += face('house-cover-roof', cw + 10, cd + 8, `translate3d(0,${ground - ch - 2}px,${zc}px) rotateX(${(90 - 8)}deg)`);
+          html += face('house-cover-roof', cw + 10, cd + 8, `translate3d(0,${ground - ch - 2}px,${zc}px) rotateX(${(-90 - 8)}deg)`);
+        }
+      }
+      const blob = (cls, x, y, z, size) => face(cls, size, size, `translate3d(${x}px,${y}px,${z}px)`) + face(cls, size, size, `translate3d(${x}px,${y}px,${z}px) rotateY(90deg)`);
+      const bushSpots = [[-W / 2 - 18, D / 2 - 10], [W / 2 + 18, D / 2 - 10], [-W / 2 - 18, -D / 2 + 20], [W / 2 + 18, -D / 2 + 20], [-W / 2 + 22, D / 2 + 70], [W / 2 - 22, D / 2 + 70]];
+      bushSpots.slice(0, design.bushes).forEach(([x, z], index) => { const size = 30 + (index % 3) * 5; html += blob('house-bush', x, ground - size / 2 + 4, z, size); });
+      const treeSpots = [[-W / 2 - 95, -D / 2 - 40], [W / 2 + 100, D / 2 + 55], [W / 2 + 95, -D / 2 - 60], [-W / 2 - 100, D / 2 + 80]];
+      treeSpots.slice(0, design.trees).forEach(([x, z], index) => {
+        const trunk = 46 + index * 6, crown = 84 + (index % 2) * 16;
+        html += box('house-trunk', x, ground - trunk / 2, z, 9, trunk, 9, '');
+        html += blob('house-crown', x, ground - trunk - crown / 2 + 18, z, crown);
+      });
+      if (design.fence) {
+        const fx = 236, fz = 216, fh = 22, fy = ground - fh / 2;
+        html += face('house-fence', 2 * fz, fh, `translate3d(${-fx}px,${fy}px,0) rotateY(90deg)`) + face('house-fence', 2 * fz, fh, `translate3d(${fx}px,${fy}px,0) rotateY(90deg)`);
+        html += face('house-fence', 2 * fx, fh, `translate3d(0,${fy}px,${-fz}px)`);
+        const gate = 70;
+        html += face('house-fence', fx - gate / 2, fh, `translate3d(${-(fx + gate / 2) / 2}px,${fy}px,${fz}px)`) + face('house-fence', fx - gate / 2, fh, `translate3d(${(fx + gate / 2) / 2}px,${fy}px,${fz}px)`);
+      }
+      return html;
+    }
     function houseLook(property) {
       const choice = property.modelLook || {};
       const fromPhoto = property.photoLook || {};
       const wallKey = choice.wall && choice.wall !== 'auto' ? choice.wall : fromPhoto.wall || 'red';
       const roofKey = choice.roof && choice.roof !== 'auto' ? choice.roof : fromPhoto.roof || 'anthracite';
-      return { wallKey, roofKey, wall: WALL_LOOKS[wallKey] || WALL_LOOKS.red, roof: ROOF_LOOKS[roofKey] || ROOF_LOOKS.anthracite, fromPhoto: Boolean(property.photoLook && (!choice.wall || choice.wall === 'auto')) };
+      const design = property.modelDesign || {};
+      const wall = wallKey === 'custom' && design.wallColor ? { label: 'Eigene Farbe', wall: design.wallColor, side: shadeHex(design.wallColor, 0.86), trim: '#f1ebdf' } : WALL_LOOKS[wallKey] || WALL_LOOKS.red;
+      const roof = roofKey === 'custom' && design.roofColor ? { label: 'Eigene Farbe', roof: design.roofColor, dark: shadeHex(design.roofColor, 0.72) } : ROOF_LOOKS[roofKey] || ROOF_LOOKS.anthracite;
+      return { wallKey, roofKey, wall: design.trimColor ? { ...wall, trim: design.trimColor } : wall, roof, fromPhoto: Boolean(property.photoLook && (!choice.wall || choice.wall === 'auto')) };
     }
     function ensurePhotoLook(property) {
       if (!property?.photo || (property.photoLook && property.photoLook.src === property.photo.length)) return;
@@ -5254,7 +5428,8 @@
       const pipes = [-1, 1].map((side) => face('house-pipe', 6, pipeH, `translate3d(${side * (W / 2 - 8)}px,${pipeY}px,${D / 2 + 3}px)`, '', 'gutter')).join('');
       const deckY = H / 2 - 7;
       const deckW = Math.min(W - 40, 190);
-      const deck = face('house-deck', deckW, 60, `translate3d(0,${deckY}px,${D / 2 + 30}px) rotateX(90deg)`, pin('terrace', 'left:50%;top:50%'), 'terrace')
+      const design = houseDesign(property);
+      const deck = !design.frontDeck ? '' : face('house-deck', deckW, 60, `translate3d(0,${deckY}px,${D / 2 + 30}px) rotateX(90deg)`, pin('terrace', 'left:50%;top:50%'), 'terrace')
         + face('house-deck-edge', deckW, 7, `translate3d(0,${deckY + 3.5}px,${D / 2 + 60}px)`, '', 'terrace')
         + face('house-deck-edge', 60, 7, `rotateY(-90deg) translate3d(${D / 2 + 30}px,${deckY + 3.5}px,${deckW / 2}px)`, '', 'terrace')
         + face('house-deck-edge', 60, 7, `rotateY(90deg) translate3d(${-(D / 2 + 30)}px,${deckY + 3.5}px,${deckW / 2}px)`, '', 'terrace');
@@ -5270,7 +5445,7 @@
       const smoke = options.occupied && chimney && showFireplace
         ? face('house-smoke', 70, 110, `translate3d(${cx}px,${chimneyTop - 57}px,0)`, smokePuffs) + face('house-smoke', 70, 110, `translate3d(${cx}px,${chimneyTop - 57}px,0) rotateY(90deg)`, smokePuffs)
         : '';
-      const ground = face('house-ground', 520, 480, `translate3d(0,${H / 2}px,0) rotateX(90deg)`);
+      const ground = face(`house-ground${design.lawn ? ' lawn' : ''}`, 520, 480, `translate3d(0,${H / 2}px,0) rotateX(90deg)`);
       const shadow = face('house-shadow', W + 44, D + 44, `translate3d(0,${H / 2 - 0.6}px,0) rotateX(90deg)`);
       const roofParts = `${gables}${roofFront}${roofBack}${chimney}`.replace(/class="house-face /g, 'class="house-face house-rooftop ');
       const box = (cls, bx, by, bz, w, h, d, part, extras = {}) => [
@@ -5316,7 +5491,8 @@
         interiorHeating = box('house-boiler', -W / 2 + 40, 24, -D / 2 + 24, 34, 52, 24, 'heating', { front: `<span class="house-boiler-panel"></span>${pin('heating', 'left:50%;top:70%')}` });
       }
       const interior = `${interiorShell}${partitions}${furniture}${fireplace}${interiorHeating}`.replace(/class="house-face /g, 'class="house-face house-interior ');
-      return { html: `${ground}${shadow}${front}${back}${right}${left}${roofParts}${smoke}${gutterFront}${gutterBack}${pipes}${deck}${exteriorHeating}${interior}`, floorplan: plan };
+      const extras = houseExtrasHtml(property, { W, D, H, R }, face, box);
+      return { html: `${ground}${shadow}${front}${back}${right}${left}${roofParts}${smoke}${gutterFront}${gutterBack}${pipes}${deck}${exteriorHeating}${extras}${interior}`, floorplan: plan };
     }
     function houseOverviewHtml(property) {
       const parts = activeHouseParts(property);
@@ -5336,10 +5512,7 @@
         ${facts.length ? `<dl class="house-mini-facts">${facts.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl>` : ''}
         <div class="house-counts"><span class="st-ok">${counts.ok} aktuell</span><span class="st-due">${counts.due} fällig</span><span class="st-never">${counts.never} offen</span>${counts.issue ? `<span class="st-issue">${counts.issue} Mängel</span>` : ''}<span class="reno">${Object.values(renovated).filter(Boolean).length} saniert</span></div>
         <ul class="house-part-list">${parts.map((part, index) => `<li><button type="button" data-part="${part.id}" class="${part.id === selectedHousePart ? 'selected' : ''}"><i class="house-dot st-${statuses[part.id]}"></i><span>${index + 1}. ${escapeHtml(part.label)}</span>${renovated[part.id] ? '<em class="house-reno-tag">✦ saniert</em>' : ''}${statuses[part.id] === 'issue' ? '<em class="house-issue-tag">Mangel</em>' : ''}</button></li>`).join('')}</ul>
-        <div class="house-look"><span class="form-label">Aussehen ${look.fromPhoto ? '<em>· aus dem Hausfoto erkannt</em>' : property.photo ? '' : '<em>· Standard (kein Foto)</em>'}</span>
-          <div class="house-look-grid"><label><small>Fassade</small><select class="filter-select" data-house-look="wall"><option value="auto">Automatisch${property.photoLook ? ` (${escapeHtml(WALL_LOOKS[property.photoLook.wall]?.label || '')})` : ''}</option>${Object.entries(WALL_LOOKS).map(([key, value]) => `<option value="${key}" ${(property.modelLook?.wall || 'auto') === key ? 'selected' : ''}>${escapeHtml(value.label)}</option>`).join('')}</select></label>
-          <label><small>Dach</small><select class="filter-select" data-house-look="roof"><option value="auto">Automatisch${property.photoLook ? ` (${escapeHtml(ROOF_LOOKS[property.photoLook.roof]?.label || '')})` : ''}</option>${Object.entries(ROOF_LOOKS).map(([key, value]) => `<option value="${key}" ${(property.modelLook?.roof || 'auto') === key ? 'selected' : ''}>${escapeHtml(value.label)}</option>`).join('')}</select></label></div>
-        </div>
+        <div class="house-look"><span class="form-label">Aussehen ${look.fromPhoto ? '<em>· aus dem Hausfoto erkannt</em>' : ''}</span><p class="house-look-summary">${escapeHtml(FACADE_TYPES[houseDesign(property).facade])} · ${escapeHtml(look.wall.label)} · ${escapeHtml(ROOF_TYPES[houseDesign(property).roofType])} ${escapeHtml(look.roof.label)}</p><button type="button" class="secondary-btn house-design-btn" data-house-action="design">${icon('note')} Haus & Garten gestalten</button></div>
       </div>`;
     }
     function house3dPage() {
@@ -5352,14 +5525,16 @@
       const look = houseLook(property);
       const floorplan = (property.floorplans || [])[0] || '';
       const model = houseModelHtml(statuses, property, renovated, { occupied: Boolean(guest), heatingKind: houseHeatingKind(property), floorplan });
-      const stageStyle = `transform:rotateX(${houseRotation.x}deg) rotateY(${houseRotation.y}deg);--wall:${look.wall.wall};--wall-side:${look.wall.side};--trim:${look.wall.trim};--roof:${look.roof.roof};--roof-dark:${look.roof.dark}${floorplan ? `;--plan:url('${floorplan}')` : ''}`;
+      const design = houseDesign(property);
+      const stageStyle = `transform:rotateX(${houseRotation.x}deg) rotateY(${houseRotation.y}deg);--wall:${look.wall.wall};--wall-side:${look.wall.side};--trim:${look.wall.trim};--roof:${look.roof.roof};--roof-dark:${look.roof.dark};--door:${design.doorColor}${floorplan ? `;--plan:url('${floorplan}')` : ''}`;
+      const stageClass = `fac-${design.facade} rt-${design.roofType} win-${design.windows} door-${design.door}${Math.cos(houseRotation.y * Math.PI / 180) < -0.1 ? ' view-back' : ''}`;
       const selector = singleHouse() ? '' : `<div class="section-toolbar"><label><span class="form-label">Ferienhaus</span><select id="house-property" class="filter-select" aria-label="Ferienhaus für das Hausmodell wählen">${properties.map((item) => `<option value="${escapeHtml(item.id)}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)} · ${escapeHtml(item.region)}</option>`).join('')}</select></label></div>`;
       return `<div class="welcome"><div><p class="eyebrow">Gebäudehülle · ${escapeHtml(property.region || 'Schweden')}</p><h1>Hausmodell</h1><p class="subtitle">Dreh ${singleHouse() ? 'dein Ferienhaus' : 'das Haus'} mit Finger oder Maus, öffne das Dach für den Blick ins Innere und wähle ein Bauteil für Kontrolle, Zustand und Sanierung.</p></div></div>
         ${selector}
-        <section class="card house-card"><div class="card-head"><div><h2 class="card-title">${escapeHtml(property.name)}</h2><p class="card-caption">${escapeHtml(look.wall.label)} · ${escapeHtml(look.roof.label)}${floorplan ? ' · mit Grundriss' : ''} · ziehen zum Drehen · Mausrad oder zwei Finger zum Zoomen</p></div><div class="house-controls"><button type="button" id="house-open-btn" data-house-action="toggle-open" aria-pressed="${houseOpen}">${houseOpen ? 'Dach schließen' : 'Innenansicht'}</button><button type="button" data-house-action="zoom-in" aria-label="Näher heranzoomen">+</button><button type="button" data-house-action="zoom-out" aria-label="Herauszoomen">−</button><button type="button" data-house-action="rotate-left" aria-label="Nach links drehen">⟲</button><button type="button" data-house-action="rotate-right" aria-label="Nach rechts drehen">⟳</button><button type="button" data-house-action="reset">Zurücksetzen</button></div></div>
+        <section class="card house-card"><div class="card-head"><div><h2 class="card-title">${escapeHtml(property.name)}</h2><p class="card-caption">${escapeHtml(look.wall.label)} · ${escapeHtml(look.roof.label)}${floorplan ? ' · mit Grundriss' : ''} · ziehen zum Drehen · Mausrad oder zwei Finger zum Zoomen</p></div><div class="house-controls"><button type="button" class="house-design-btn ${houseEditMode ? 'active' : ''}" data-house-action="design" aria-pressed="${houseEditMode}">${icon('note')} Gestalten</button><button type="button" id="house-open-btn" data-house-action="toggle-open" aria-pressed="${houseOpen}">${houseOpen ? 'Dach schließen' : 'Innenansicht'}</button><button type="button" data-house-action="zoom-in" aria-label="Näher heranzoomen">+</button><button type="button" data-house-action="zoom-out" aria-label="Herauszoomen">−</button><button type="button" data-house-action="rotate-left" aria-label="Nach links drehen">⟲</button><button type="button" data-house-action="rotate-right" aria-label="Nach rechts drehen">⟳</button><button type="button" data-house-action="reset">Zurücksetzen</button></div></div>
           <div class="house3d-layout">
-            <div class="house-scene ${houseOpen ? 'open' : ''} ${guest ? 'occupied' : ''}" id="house-scene" tabindex="0" aria-label="3D-Modell des Ferienhauses. Mit den Pfeiltasten drehen, mit Plus und Minus zoomen.">${guest ? `<span class="house-scene-badge ${isOwnerStay(guest) ? 'owner' : ''}">${isOwnerStay(guest) ? 'Eigennutzung' : 'Belegt'} · ${escapeHtml(guest.guestName)}</span>` : ''}<div class="house-stage-wrap" id="house-stage-wrap"><div class="house-stage" id="house-stage" style="${stageStyle}">${model.html}</div></div>${houseOpen ? `<span class="house-scene-note">${floorplan ? 'Innenansicht mit Grundriss aus dem Inserat' : 'Innenansicht – Räume angedeutet (kein Grundriss vorhanden)'} · Heizung: ${escapeHtml(property.heatingSystem || 'nicht angegeben')}</span>` : ''}</div>
-            <aside class="house-aside" id="house-info-slot">${selected ? houseInfoHtml(property.id, selected) : houseOverviewHtml(property)}</aside>
+            <div class="house-scene ${houseOpen ? 'open' : ''} ${guest ? 'occupied' : ''}" id="house-scene" tabindex="0" aria-label="3D-Modell des Ferienhauses. Mit den Pfeiltasten drehen, mit Plus und Minus zoomen.">${guest ? `<span class="house-scene-badge ${isOwnerStay(guest) ? 'owner' : ''}">${isOwnerStay(guest) ? 'Eigennutzung' : 'Belegt'} · ${escapeHtml(guest.guestName)}</span>` : ''}<div class="house-stage-wrap" id="house-stage-wrap"><div class="house-stage ${stageClass}" id="house-stage" style="${stageStyle}">${model.html}</div></div>${houseOpen ? `<span class="house-scene-note">${floorplan ? 'Innenansicht mit Grundriss aus dem Inserat' : 'Innenansicht – Räume angedeutet (kein Grundriss vorhanden)'} · Heizung: ${escapeHtml(property.heatingSystem || 'nicht angegeben')}</span>` : ''}</div>
+            <aside class="house-aside ${houseEditMode ? 'editing' : ''}" id="house-info-slot">${houseEditMode ? houseDesignEditorHtml(property) : selected ? houseInfoHtml(property.id, selected) : houseOverviewHtml(property)}</aside>
           </div>
           <div class="house-key"><span><i class="house-dot st-ok"></i>Aktuell</span><span><i class="house-dot st-due"></i>Kontrolle fällig</span><span><i class="house-dot st-never"></i>Noch nicht kontrolliert</span><span><i class="house-dot st-issue"></i>Mangel offen</span><span><i class="house-dot reno-key"></i>✦ Saniert – frisch dargestellt</span></div>
         </section>`;
@@ -5376,7 +5551,11 @@
     }
     function applyHouseRotation() {
       const stage = document.getElementById('house-stage');
-      if (stage) stage.style.transform = `rotateX(${houseRotation.x}deg) rotateY(${houseRotation.y}deg)`;
+      if (stage) {
+        stage.style.transform = `rotateX(${houseRotation.x}deg) rotateY(${houseRotation.y}deg)`;
+        // Die Gaube sitzt auf der Vorderseite; von hinten wird sie ausgeblendet, damit sie nicht durch den First scheint.
+        stage.classList.toggle('view-back', Math.cos(houseRotation.y * Math.PI / 180) < -0.1);
+      }
     }
     function setHouseOpen(open) {
       houseOpen = open;
@@ -5396,7 +5575,7 @@
       document.querySelectorAll('#house-scene [data-part], .house-legend [data-part]').forEach((node) => node.classList.toggle('selected', node.dataset.part === partId));
       const slot = document.getElementById('house-info-slot');
       const modelProperty = properties.find((item) => item.id === houseModelProperty) || properties[0];
-      if (slot) slot.innerHTML = part ? houseInfoHtml(modelProperty.id, part) : houseOverviewHtml(modelProperty);
+      if (slot && !houseEditMode) slot.innerHTML = part ? houseInfoHtml(modelProperty.id, part) : houseOverviewHtml(modelProperty);
     }
     const COST_CHART_COLORS = ['#315c49', '#c17b4a', '#6f8d70', '#d1a64a', '#728da1', '#b66a60', '#9b805b', '#788c83', '#a27691'];
     function costImportBannerHtml(propertyId) {
@@ -7939,6 +8118,8 @@
         showToast(`Frist für die ${season === 'winter' ? 'Wintercheckliste' : 'Frühjahrscheckliste'} auf ${fmtDate(value)} gesetzt${event.target.id === 'season-due-input' ? '' : ' (Standard für alle Häuser)'}.`);
         return;
       }
+      if (event.target.dataset?.designToggle) { setHouseDesign(event.target.dataset.designToggle, event.target.checked); return; }
+      if (event.target.dataset?.designInput) { setHouseDesign(event.target.dataset.designInput, event.target.value); return; }
       if (event.target.dataset?.houseLook) {
         const target = properties.find((item) => item.id === houseModelProperty) || properties[0];
         target.modelLook = { ...(target.modelLook || {}), [event.target.dataset.houseLook]: event.target.value };
@@ -9724,9 +9905,17 @@
     }, { passive: false });
     window.addEventListener('resize', fitHouseScene);
     document.addEventListener('click', (event) => {
+      const designSet = event.target.closest('[data-design-set]');
+      if (designSet) { const key = designSet.dataset.designSet; const raw = designSet.dataset.value; setHouseDesign(key, /^\d+$/.test(raw) && ['bushes', 'trees'].includes(key) ? Number(raw) : raw); return; }
       const houseAction = event.target.closest('[data-house-action]');
       if (houseAction) {
         const type = houseAction.dataset.houseAction;
+        if (type === 'design' || type === 'design-done') { houseEditMode = type === 'design' ? !houseEditMode : false; selectedHousePart = null; render(); return; }
+        if (type === 'design-reset') {
+          const target = properties.find((item) => item.id === houseModelProperty) || properties[0];
+          if (target && window.confirm('Gestaltung des Hausmodells auf Standard zurücksetzen?')) { delete target.modelDesign; target.modelLook = {}; saveProperties(); render(); }
+          return;
+        }
         if (type === 'close') selectHousePart(null);
         if (type === 'toggle-open') setHouseOpen(!houseOpen);
         if (type === 'rotate-left') houseRotation = { ...houseRotation, y: houseRotation.y - 30 };
