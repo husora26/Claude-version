@@ -1545,7 +1545,7 @@
       .tcard { gap: 10px 11px; padding: 12px 12px 12px 15px; }
       .tcard-date { width: 42px; } .tcard-date strong { font-size: 16px; }
       .tcard-controls { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
-      .tcard-controls .tcard-field:first-child { grid-column: 1 / -1; }
+      .tcard-controls > .tcard-field:nth-child(2) { grid-column: 1 / -1; }
       .tcard .partner-select, .tcard .status-select { width: 100%; }
       .tcard-actions { margin-left: 0; }
     }
@@ -1827,6 +1827,15 @@
     .house-fence { background: repeating-linear-gradient(90deg, #efe7d8 0 5px, transparent 5px 13px), linear-gradient(transparent 6px, #e2d7c3 6px 9px, transparent 9px 15px, #e2d7c3 15px 18px, transparent 18px); backface-visibility: visible; pointer-events: none; }
     .house-ground.lawn { background: repeating-linear-gradient(90deg, rgba(255,255,255,.09) 0 26px, rgba(0,0,0,.05) 26px 52px), #84bd63; -webkit-mask-image: radial-gradient(closest-side, #000 72%, transparent 100%); mask-image: radial-gradient(closest-side, #000 72%, transparent 100%); }
     @media (max-width: 860px) { .house-aside.editing { max-height: none; } }
+    .self-toggle { align-self: flex-end; margin-bottom: 5px; font-size: 10.5px; }
+    .self-toggle .switch-track { width: 28px; height: 16px; }
+    .self-toggle .switch-track::after { width: 12px; height: 12px; }
+    .self-toggle input:checked + .switch-track::after { transform: translateX(12px); }
+    .self-badge { display: inline-flex; align-items: center; gap: 6px; width: 210px; height: 30px; padding: 0 11px; border: 1px dashed #b9c9bd; border-radius: 8px; color: var(--green); background: var(--green-soft); font-size: 11px; font-weight: 700; }
+    .self-badge svg { width: 14px; height: 14px; }
+    .tcard-field > .self-badge { color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: 0; text-transform: none; }
+    .self-text { color: var(--green); font-weight: 650; }
+    @media (max-width: 560px) { .tcard-controls .self-toggle { grid-column: 1 / -1; justify-self: start; margin-bottom: 0; } .self-badge { width: 100%; } }
     /* Startseite: Service vor Ort – gleiche Einrückung wie „Heute im Ferienhaus“ */
     .task-list.dash-tasks { padding: 0 18px; }
     .dash-tasks .task-row { position: relative; gap: 10px; min-height: 0; padding: 12px 18px; border-bottom: 1px solid #f0f1ee; border-radius: 0; }
@@ -4514,15 +4523,16 @@
     function partnerTasksView(visible) {
       const open = visible.filter((task) => taskStatus(task) !== 'Erledigt');
       const groups = new Map();
-      open.forEach((task) => { const key = task.partnerId && providerById(task.partnerId) ? task.partnerId : ''; groups.set(key, [...(groups.get(key) || []), task]); });
+      open.forEach((task) => { const key = task.selfService ? '__self' : task.partnerId && providerById(task.partnerId) ? task.partnerId : ''; groups.set(key, [...(groups.get(key) || []), task]); });
       const today = localDateKey(new Date());
-      const cards = [...groups.entries()].sort((a, b) => (a[0] ? 0 : 1) - (b[0] ? 0 : 1) || b[1].length - a[1].length).map(([partnerId, list]) => {
+      const rankGroup = (key) => (key === '__self' ? 1 : key ? 0 : 2);
+      const cards = [...groups.entries()].sort((a, b) => rankGroup(a[0]) - rankGroup(b[0]) || b[1].length - a[1].length).map(([partnerId, list]) => {
         const partner = providerById(partnerId);
         const overdue = list.filter((task) => task.date && task.date < today).length;
         const sorted = [...list].sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999'));
-        return `<article class="partner-task-card ${partner ? '' : 'unassigned'}"><div class="partner-task-head"><span class="provider-avatar">${escapeHtml(partner ? partner.initials || partner.name.slice(0, 2).toUpperCase() : '?')}</span><div><strong>${escapeHtml(partner ? partner.name : 'Noch ohne Servicepartner')}</strong><small>${list.length} offen${overdue ? ` · <b>${overdue} überfällig</b>` : ''}${partner ? ` · ${escapeHtml(partnerCategoryLabel(partner))}` : ''}</small></div></div>
+        return `<article class="partner-task-card ${partner ? '' : 'unassigned'}"><div class="partner-task-head"><span class="provider-avatar">${escapeHtml(partner ? partner.initials || partner.name.slice(0, 2).toUpperCase() : partnerId === '__self' ? 'EL' : '?')}</span><div><strong>${escapeHtml(partner ? partner.name : partnerId === '__self' ? 'Eigenleistung' : 'Noch ohne Servicepartner')}</strong><small>${list.length} offen${overdue ? ` · <b>${overdue} überfällig</b>` : ''}${partner ? ` · ${escapeHtml(partnerCategoryLabel(partner))}` : ''}</small></div></div>
           <ul class="partner-task-list">${sorted.map((task) => `<li class="${task.date && task.date < today ? 'overdue' : ''}"><span>${task.date ? escapeHtml(fmtDate(task.date)) : '—'}</span><button type="button" data-edit-task="${task.id}">${escapeHtml(task.title)}<small>${escapeHtml(task.property)}</small></button></li>`).join('')}</ul>
-          <div class="partner-task-actions">${partner ? `${partner.email ? `<a class="secondary-btn" href="mailto:${encodeURIComponent(partner.email)}?subject=${encodeURIComponent(`Aufgaben für ${singleHouse() ? properties[0]?.name || 'unser Ferienhaus' : 'unsere Ferienhäuser'}`)}&body=${encodeURIComponent(partnerTaskListText(partner, sorted))}">${icon('note')} Liste per E-Mail</a>` : ''}<button type="button" class="secondary-btn" data-copy-partner-tasks="${escapeHtml(partnerId)}">Liste kopieren</button>${partner.phone ? `<a class="secondary-btn" href="tel:${encodeURIComponent(partner.phone.replace(/[^\d+]/g, ''))}">Anrufen</a>` : ''}` : '<span class="partner-hint">In der Liste je Aufgabe einen Servicepartner wählen.</span>'}</div></article>`;
+          <div class="partner-task-actions">${partner ? `${partner.email ? `<a class="secondary-btn" href="mailto:${encodeURIComponent(partner.email)}?subject=${encodeURIComponent(`Aufgaben für ${singleHouse() ? properties[0]?.name || 'unser Ferienhaus' : 'unsere Ferienhäuser'}`)}&body=${encodeURIComponent(partnerTaskListText(partner, sorted))}">${icon('note')} Liste per E-Mail</a>` : ''}<button type="button" class="secondary-btn" data-copy-partner-tasks="${escapeHtml(partnerId)}">Liste kopieren</button>${partner.phone ? `<a class="secondary-btn" href="tel:${encodeURIComponent(partner.phone.replace(/[^\d+]/g, ''))}">Anrufen</a>` : ''}` : partnerId === '__self' ? '<span class="partner-hint">Diese Aufgaben erledigst du selbst – kein Servicepartner beauftragt.</span>' : '<span class="partner-hint">In der Liste je Aufgabe einen Servicepartner wählen oder „Selbst“ einschalten.</span>'}</div></article>`;
       }).join('');
       return cards ? `<div class="partner-task-grid">${cards}</div>` : '<div class="empty">Keine offenen Aufgaben für diese Auswahl.</div>';
     }
@@ -4564,7 +4574,8 @@
             ${issueNote}
           </div>
           <div class="tcard-controls">
-            <label class="tcard-field"><span>Servicepartner${providerById(task.partnerId) ? ` <i class="tcard-ptype cat-${escapeHtml(providerById(task.partnerId).category)}">${partnerCategoryLabel(providerById(task.partnerId))}</i>` : ''}</span><select class="filter-select partner-select ${task.partnerId ? 'has-partner' : ''}" data-partner-task="${task.id}" aria-label="Servicepartner für ${escapeHtml(task.title)}">${partnerOptionsHtml(task.property, task.partnerId || '')}</select></label>
+            <label class="switch self-toggle" title="Aufgabe selbst erledigen statt Servicepartner"><input type="checkbox" data-self-task="${task.id}" ${task.selfService ? 'checked' : ''}><span class="switch-track"></span><span>Selbst</span></label>
+            ${task.selfService ? `<div class="tcard-field"><span>Umsetzung</span><span class="self-badge">${icon('users')} Eigenleistung</span></div>` : `<label class="tcard-field"><span>Servicepartner${providerById(task.partnerId) ? ` <i class="tcard-ptype cat-${escapeHtml(providerById(task.partnerId).category)}">${partnerCategoryLabel(providerById(task.partnerId))}</i>` : ''}</span><select class="filter-select partner-select ${task.partnerId ? 'has-partner' : ''}" data-partner-task="${task.id}" aria-label="Servicepartner für ${escapeHtml(task.title)}">${partnerOptionsHtml(task.property, task.partnerId || '')}</select></label>`}
             <label class="tcard-field"><span>Status</span><select class="filter-select status-select st-${status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open'}" data-status-task="${task.id}" aria-label="Status für ${escapeHtml(task.title)} ändern">${taskStatuses.map((value) => `<option ${status === value ? 'selected' : ''}>${value}</option>`).join('')}</select></label>
             <div class="tcard-actions"><button type="button" class="tcard-action" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten">${icon('note')}<span>Bearbeiten</span></button><button type="button" class="tcard-action warn ${taskIssues.some((issue) => issue.status === 'open' || issue.status === 'planned') ? 'active' : ''}" data-report-issue="${task.id}" aria-label="Auffälligkeit zu ${escapeHtml(task.title)} melden${taskIssues.length ? ` (${taskIssues.length} gemeldet)` : ''}" title="${taskIssues.length ? `${taskIssues.length} ${taskIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet` : 'Auffälligkeit melden'}">${icon('alert')}<span>Auffälligkeit</span></button><button type="button" class="tcard-action danger" data-delete-task="${task.id}" aria-label="Aufgabe löschen">✕<span>Löschen</span></button></div>
           </div>
@@ -5976,7 +5987,7 @@
       inspectionOrders = { ...inspectionOrders, [property.id]: [...(inspectionOrders[property.id] || []), order].slice(-20) };
       persistInspectionOrders();
       const openTask = tasks.find((task) => task.auto === 'inspection' && task.propertyId === property.id && !task.done);
-      if (openTask) { openTask.status = 'In Bearbeitung'; if (order.partnerId) openTask.partnerId = order.partnerId; persistTasks(); }
+      if (openTask) { openTask.status = 'In Bearbeitung'; if (order.partnerId) { openTask.partnerId = order.partnerId; openTask.selfService = false; } persistTasks(); }
       logAutomation(`Hauskontrolle beauftragt: ${property.name} bei ${order.partnerName}`);
       persistAutomation();
       return order;
@@ -7153,7 +7164,7 @@
       const iconName = task.auto === 'season' ? (task.season === 'spring' ? 'sun' : 'snow') : AUTO_KIND[task.auto]?.[0] || (/reinig|gäste|wechsel/i.test(area) ? 'users' : /schlüssel/i.test(task.title) ? 'home' : 'task');
       const state = openIssues.length ? 'issue' : overdue ? 'overdue' : status === 'In Bearbeitung' ? 'ordered' : 'open';
       const prio = task.priority === 'urgent' ? '<b class="prio urgent">Dringend</b>' : task.priority === 'soon' ? '<b class="prio soon">Wichtig</b>' : '';
-      const detail = [`<span class="when ${overdue ? 'late' : ''}">${task.date ? `${escapeHtml(fmtDate(task.date))} · ` : ''}${escapeHtml(relative)}</span>`, prio, area ? escapeHtml(area) : '', singleHouse() ? '' : escapeHtml(task.property)].filter(Boolean).join(' · ');
+      const detail = [`<span class="when ${overdue ? 'late' : ''}">${task.date ? `${escapeHtml(fmtDate(task.date))} · ` : ''}${escapeHtml(relative)}</span>`, prio, area ? escapeHtml(area) : '', singleHouse() ? '' : escapeHtml(task.property), task.selfService ? '<b class="self-text">Eigenleistung</b>' : ''].filter(Boolean).join(' · ');
       return `<div class="insp-tile dash-task st-${state}" data-goto-task="${task.id}" role="button" tabindex="0" aria-label="${escapeHtml(task.title)} in Serviceaufgaben anzeigen"><span class="insp-tile-icon">${icon(openIssues.length ? 'alert' : iconName)}</span><span class="insp-tile-body"><span class="insp-tile-top"><strong>${escapeHtml(task.title)}</strong><span class="insp-tile-pill task-pill ${status === 'Erledigt' ? 'is-done' : status === 'In Bearbeitung' ? 'is-progress' : 'is-open'}">${status === 'Erledigt' ? icon('check') : status === 'In Bearbeitung' ? icon('clock') : ''}${escapeHtml(status)}</span></span><small>${detail}</small>${openIssues.length ? `<small class="dash-task-issue">Auffälligkeit: ${escapeHtml(openIssues.map((issue) => issue.text).join(' · '))}</small>` : ''}</span></div>`;
     }
     // Automatisierung: nächste automatische Schritte als Kachel mit änderbarem Status.
@@ -7168,7 +7179,7 @@
       const partner = providerById(task.partnerId);
       const state = status === 'Erledigt' ? 'done' : overdue ? 'overdue' : status === 'In Bearbeitung' ? 'ordered' : 'due';
       const when = days === null ? 'ohne Datum' : days === 0 ? 'heute' : days === 1 ? 'morgen' : days > 1 ? `in ${days} Tagen` : `seit ${-days} ${days === -1 ? 'Tag' : 'Tagen'} überfällig`;
-      const detail = [`${escapeHtml(fmtDate(task.date))} · ${when}`, escapeHtml(kindLabel), singleHouse() ? '' : escapeHtml(task.property), partner ? escapeHtml(partner.name) : ''].filter(Boolean).join(' · ');
+      const detail = [`${escapeHtml(fmtDate(task.date))} · ${when}`, escapeHtml(kindLabel), singleHouse() ? '' : escapeHtml(task.property), task.selfService ? 'Eigenleistung' : partner ? escapeHtml(partner.name) : ''].filter(Boolean).join(' · ');
       return `<div class="insp-tile auto-step st-${state} ${openIssues.length ? 'has-issue' : ''}"><span class="insp-tile-icon">${icon(iconName)}</span><span class="insp-tile-body"><span class="insp-tile-top"><button type="button" class="auto-step-title" data-edit-task="${task.id}">${escapeHtml(task.title)}</button>${openIssues.length ? `<span class="task-issue-flag" title="${openIssues.length} Auffälligkeit gemeldet">${icon('alert')}</span>` : ''}</span><small>${detail}</small>${openIssues.length ? `<small class="auto-step-issue">${escapeHtml(openIssues.map((issue) => issue.text).join(' · '))}</small>` : ''}</span><select class="filter-select auto-step-status st-${state}" data-status-task="${task.id}" aria-label="Status für ${escapeHtml(task.title)} ändern">${taskStatuses.map((value) => `<option ${status === value ? 'selected' : ''}>${value}</option>`).join('')}</select></div>`;
     }
     // Startseite: einheitliche Statuskachel (Symbol, Titel, Status, Detail, optional Fortschritt).
@@ -8183,6 +8194,18 @@
         }
         return;
       }
+      if (event.target.dataset?.selfTask) {
+        const task = tasks.find((item) => item.id === Number(event.target.dataset.selfTask));
+        if (task) {
+          task.selfService = event.target.checked;
+          if (task.selfService) { task.previousPartnerId = task.partnerId || ''; task.partnerId = ''; }
+          else { task.partnerId = task.previousPartnerId || ''; delete task.previousPartnerId; }
+          persistTasks();
+          render();
+          showToast(task.selfService ? 'Als Eigenleistung markiert – kein Servicepartner beauftragt.' : `Wieder an den Servicepartner${providerById(task.partnerId) ? ` (${providerById(task.partnerId).name})` : ''} übergeben.`);
+        }
+        return;
+      }
       if (event.target.dataset?.partnerTask) {
         const task = tasks.find((item) => item.id === Number(event.target.dataset.partnerTask));
         if (task) {
@@ -8698,6 +8721,7 @@
         description: String(formData.get('description')).trim(),
         partnerId: String(formData.get('partnerId') || '')
       };
+      if (updatedTask.partnerId) updatedTask.selfService = false;
       if (isEditing && (updatedTask.auto === 'turnover' || updatedTask.auto === 'season')) updatedTask.pinned = true;
       const previousStatus = isEditing ? taskStatus(tasks.find((task) => task.id === editingTaskId) || {}) : 'Offen';
       updatedTask.status = previousStatus;
