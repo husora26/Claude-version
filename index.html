@@ -1851,6 +1851,23 @@
     .no-partner-link:hover { border-style: solid; background: #fff2d4; }
     .tcard-field > .no-partner-link { width: 250px; color: #7a5410; font-size: 11px; letter-spacing: 0; text-transform: none; }
     #repair-order-account .no-partner-link, #inspection-plan-provider-note .no-partner-link { margin-top: 8px; max-width: none; }
+    /* Übersichtskarte Servicepartner */
+    .partner-map-modal { width: min(1000px, 100%); max-height: calc(100dvh - 24px); overflow-y: auto; }
+    .partner-map-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .partner-map-chip { position: relative; display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border: 1px solid var(--line); border-radius: 20px; color: var(--muted); background: white; font-size: 11px; font-weight: 650; cursor: pointer; user-select: none; }
+    .partner-map-chip input { position: absolute; opacity: 0; pointer-events: none; }
+    .partner-map-chip em { color: #8a948d; font-style: normal; font-weight: 600; }
+    .partner-map-chip.on { color: var(--ink); border-color: #9db9a5; background: var(--green-soft); }
+    .partner-map-chip:not(.on) .map-dot { opacity: .35; }
+    .partner-map-chip:focus-within { outline: 2px solid #9db9a5; outline-offset: 2px; }
+    .partner-map { position: relative; z-index: 0; isolation: isolate; height: min(62vh, 560px); border-radius: 12px; overflow: hidden; background: #e8eee4; }
+    .partner-map .house-map-status { display: grid; place-items: center; height: 100%; margin: 0; color: var(--muted); font-size: 12px; }
+    .partner-map-note { margin: 8px 0 0; color: var(--muted); font-size: 10.5px; }
+    .map-popup span { max-width: 240px; }
+    .map-popup-tag { display: inline-block !important; margin-top: 5px !important; padding: 2px 8px; border-radius: 10px; color: #1f3d2b !important; background: #e3efe6; font-weight: 700; }
+    .map-popup-links { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 6px; }
+    .map-popup-links a { font-size: 11px; }
+    @media (max-width: 560px) { .partner-map { height: 58vh; } }
     /* Startseite: Service vor Ort – gleiche Einrückung wie „Heute im Ferienhaus“ */
     .task-list.dash-tasks { padding: 0 18px; }
     .dash-tasks .task-row { position: relative; gap: 10px; min-height: 0; padding: 12px 18px; border-bottom: 1px solid #f0f1ee; border-radius: 0; }
@@ -2183,6 +2200,14 @@
       <div class="form-actions"><button type="button" class="secondary-btn" data-close-repair-order>Abbrechen</button><button type="button" class="secondary-btn" id="repair-order-preview">PDF ansehen</button><button type="button" class="secondary-btn" id="repair-order-eml">Entwurf mit Anhang (.eml)</button><button type="button" class="primary-btn" id="repair-order-send">E-Mail mit Auftrag öffnen</button></div>
     </section>
   </div>
+  <div class="modal-backdrop" id="partner-map-modal" role="dialog" aria-modal="true" aria-labelledby="partner-map-title">
+    <section class="modal partner-map-modal">
+      <div class="modal-head"><div><h2 id="partner-map-title">Servicepartner & Ferienhäuser in Schweden</h2><p id="partner-map-subtitle"></p></div><button class="close-btn" type="button" data-close-partner-map aria-label="Schließen">✕</button></div>
+      <div class="partner-map-filters" id="partner-map-filters" role="group" aria-label="Auf der Karte anzeigen"></div>
+      <div class="partner-map" id="partner-map"><p class="house-map-status">Karte wird geladen …</p></div>
+      <p class="partner-map-note">Standorte nach Ort des Betriebs, nicht nach genauer Adresse. Betriebe ohne Ortsangabe stehen in der Mitte ihrer Region. Ring = deinem Ferienhaus zugeordnet.</p>
+    </section>
+  </div>
   <div class="modal-backdrop" id="send-plan-modal" role="dialog" aria-modal="true" aria-labelledby="send-plan-title">
     <section class="modal send-plan-modal">
       <div class="modal-head"><div><h2 id="send-plan-title">Kontrollplan an Servicepartner schicken</h2><p id="send-plan-subtitle"></p></div><button class="close-btn" type="button" id="close-send-plan" aria-label="Schließen">✕</button></div>
@@ -2341,6 +2366,7 @@
         plus: '<path d="M12 5v14M5 12h14"/>',
         users: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6M18 14.4c1.9.8 3 2.6 3 5.6"/>',
         moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/>',
+        map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
         snow: '<path d="M12 2v20M4.9 6l14.2 12M19.1 6 4.9 18"/><path d="m9 4 3 2 3-2M9 20l3-2 3 2M3.5 9.5l3.4.9-.9 3.4M20.5 14.5l-3.4-.9.9-3.4M3.5 14.5l3.4-.9-.9-3.4M20.5 9.5l-3.4.9.9 3.4"/>',
         sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
         clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>',
@@ -5117,7 +5143,7 @@
           <div class="provider-result-footer"><div class="provider-contact-links">${providerContactLinks(provider)}</div><div class="provider-location-distance"><span class="provider-town">${escapeHtml(provider.town)}</span><span class="provider-distance">Entfernung ${providerDistanceKm(provider, property)} km</span></div></div>
         </article>`;
       }).join('');
-      return `<div class="welcome"><div><p class="eyebrow">Schwedische Betriebe vor Ort</p><h1>Servicepartner finden</h1><p class="subtitle">Hausservice und Sanierungsunternehmen im Umkreis ${singleHouse() ? 'deines Ferienhauses' : 'deiner Ferienhäuser'}.</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>
+      return `<div class="welcome"><div><p class="eyebrow">Schwedische Betriebe vor Ort</p><h1>Servicepartner finden</h1><p class="subtitle">Hausservice und Sanierungsunternehmen im Umkreis ${singleHouse() ? 'deines Ferienhauses' : 'deiner Ferienhäuser'}.</p></div><div class="welcome-actions"><button type="button" class="primary-btn" data-action="open-partner-map">${icon('map')} Karte aller Standorte</button></div></div>
         <section class="card"><div class="card-head"><div><h2 class="card-title">Betriebe im Umkreis von ${providerRadius} km</h2><p class="card-caption">${matches.length} passende Betriebe · nächstgelegene zuerst</p></div><button class="secondary-btn" data-action="toggle-favorites">${onlyFavorites ? 'Alle anzeigen' : `☆ Favoriten (${favorites.length})`}</button></div>
           <div class="provider-filters">
             ${singleHouse() ? '' : `<label><span class="form-label">Ferienhaus</span><select id="provider-property" class="filter-select" aria-label="Ferienhaus wählen">${properties.map((item) => `<option value="${item.id}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)} · ${escapeHtml(item.region)}</option>`).join('')}</select></label>`}
@@ -7307,6 +7333,81 @@
       const place = raw.find((part) => !REGION_WORDS.test(part) && !/regional|westlich|ganz/i.test(part)) || raw[0] || '';
       return { place, approximate: !place || REGION_WORDS.test(place) || /einsatz/i.test(String(provider.town || '')) };
     }
+
+    // Übersichtskarte: alle Servicepartner nach Ort und die eigenen Ferienhäuser.
+    let partnerMap = null;
+    let partnerMapLayers = {};
+    const partnerMapFilter = { house: true, inspection: true, renovation: true, homes: true, assignedOnly: false };
+    const PARTNER_MAP_KINDS = [['homes', 'Meine Ferienhäuser', 'house'], ['house', 'Hausservice', 'service'], ['inspection', 'Hauskontrolle', 'inspection'], ['renovation', 'Sanierung', 'renovation']];
+    function providerMapCoords(provider) {
+      const town = String(provider.town || '').toLocaleLowerCase('sv');
+      const spot = localitiesIn(town)[0];
+      if (spot) return { coords: spot, approximate: false };
+      const region = provider.region || regionIn(town) || (Number.isFinite(provider.distances?.sunne) ? 'värmland' : '');
+      return REGION_CENTERS[region] ? { coords: REGION_CENTERS[region], approximate: true } : null;
+    }
+    function renderPartnerMapFilters(counts) {
+      document.getElementById('partner-map-filters').innerHTML = `${PARTNER_MAP_KINDS.map(([key, label, dot]) => `<label class="partner-map-chip ${partnerMapFilter[key] ? 'on' : ''}"><input type="checkbox" data-map-filter="${key}" ${partnerMapFilter[key] ? 'checked' : ''}><span class="map-dot ${dot}"></span>${label}<em>${counts[key] || 0}</em></label>`).join('')}<label class="partner-map-chip ${partnerMapFilter.assignedOnly ? 'on' : ''}"><input type="checkbox" data-map-filter="assignedOnly" ${partnerMapFilter.assignedOnly ? 'checked' : ''}>Nur zugeordnete</label>`;
+    }
+    async function openPartnerMap() {
+      document.getElementById('partner-map-modal').classList.add('open');
+      const container = document.getElementById('partner-map');
+      let L;
+      try { L = await loadLeaflet(); } catch (error) { container.innerHTML = '<p class="house-map-status">Die Karte ist gerade nicht erreichbar. Bitte Internetverbindung prüfen.</p>'; return; }
+      if (!document.getElementById('partner-map-modal').classList.contains('open')) return;
+      const assignedIds = new Set(Object.values(servicePartnerAssignments).flat());
+      const used = new Map();
+      const jitter = (coords) => {
+        const key = coords.map((value) => value.toFixed(3)).join(',');
+        const count = used.get(key) || 0;
+        used.set(key, count + 1);
+        if (!count) return coords;
+        const angle = count * 2.4, radius = 0.012 * Math.sqrt(count);
+        return [coords[0] + radius * Math.sin(angle), coords[1] + radius * 1.9 * Math.cos(angle)];
+      };
+      const homes = properties.map((property) => ({ property, origin: propertyOrigin(property) })).filter((entry) => entry.origin);
+      const points = providers.map((provider) => ({ provider, place: providerMapCoords(provider) })).filter((entry) => entry.place);
+      const counts = { homes: homes.length, house: points.filter((entry) => entry.provider.category === 'house').length, inspection: points.filter((entry) => entry.provider.category === 'inspection').length, renovation: points.filter((entry) => entry.provider.category === 'renovation').length };
+      document.getElementById('partner-map-subtitle').textContent = `${points.length} Servicepartner · ${homes.length} ${homes.length === 1 ? 'Ferienhaus' : 'Ferienhäuser'}${providers.length > points.length ? ` · ${providers.length - points.length} ohne Ortsangabe` : ''}`;
+      renderPartnerMapFilters(counts);
+      if (partnerMap) { partnerMap.remove(); partnerMap = null; }
+      container.innerHTML = '';
+      partnerMap = L.map(container, { scrollWheelZoom: true });
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>' }).addTo(partnerMap);
+      const colors = { house: '#2e7d5b', inspection: '#c27a1c', renovation: '#8a5a3c' };
+      partnerMapLayers = { homes: L.layerGroup(), house: L.layerGroup(), inspection: L.layerGroup(), renovation: L.layerGroup() };
+      const houseSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>';
+      homes.forEach(({ property, origin }) => {
+        L.marker(origin.coords, { title: property.name, zIndexOffset: 1000, icon: L.divIcon({ className: '', html: `<div class="map-pin house">${houseSvg}</div>`, iconSize: [36, 36], iconAnchor: [18, 18] }) })
+          .bindPopup(`<div class="map-popup"><strong>${escapeHtml(property.name)}</strong><span>${escapeHtml(property.address || property.region || '')}</span><span>${(servicePartnerAssignments[property.id] || []).length} zugeordnete Servicepartner</span></div>`)
+          .addTo(partnerMapLayers.homes);
+      });
+      points.forEach(({ provider, place }) => {
+        const assigned = assignedIds.has(provider.id);
+        const nearest = Math.min(...properties.map((property) => providerDistanceKm(provider, property)));
+        L.circleMarker(jitter(place.coords), { radius: assigned ? 8 : 6, color: assigned ? '#1f3d2b' : '#ffffff', weight: assigned ? 3 : 1.5, fillColor: colors[provider.category] || colors.house, fillOpacity: 0.95 })
+          .bindTooltip(escapeHtml(provider.name), { direction: 'top', offset: [0, -6] })
+          .bindPopup(`<div class="map-popup"><strong>${escapeHtml(provider.name)}</strong><span>${escapeHtml(partnerCategoryLabel(provider))}${provider.specialty ? ` · ${escapeHtml(provider.specialty)}` : ''}</span><span>${escapeHtml(provider.town || '')}${place.approximate ? ' (ungefähre Lage)' : ''}${Number.isFinite(nearest) ? ` · ${nearest} km zum Ferienhaus` : ''}</span>${provider.services ? `<span>${escapeHtml(provider.services)}</span>` : ''}${assigned ? '<span class="map-popup-tag">Deinem Ferienhaus zugeordnet</span>' : ''}<div class="map-popup-links">${providerContactLinks(provider)}</div></div>`)
+          .addTo(partnerMapLayers[provider.category] || partnerMapLayers.house)
+          .options.assigned = assigned;
+      });
+      applyPartnerMapFilter();
+      const all = [...homes.map((entry) => entry.origin.coords), ...points.map((entry) => entry.place.coords)];
+      if (all.length) partnerMap.fitBounds(L.latLngBounds(all), { padding: [30, 30], maxZoom: 9 });
+      else partnerMap.setView([62, 15.5], 5);
+      setTimeout(() => partnerMap?.invalidateSize(), 160);
+    }
+    function applyPartnerMapFilter() {
+      if (!partnerMap) return;
+      Object.entries(partnerMapLayers).forEach(([key, layer]) => {
+        layer.eachLayer((marker) => { const hide = partnerMapFilter.assignedOnly && key !== 'homes' && !marker.options.assigned; marker.setStyle?.({ opacity: hide ? 0 : 1, fillOpacity: hide ? 0 : 0.95 }); if (marker._path) marker._path.style.pointerEvents = hide ? 'none' : ''; });
+        if (partnerMapFilter[key]) layer.addTo(partnerMap); else layer.remove();
+      });
+    }
+    function closePartnerMap() {
+      document.getElementById('partner-map-modal').classList.remove('open');
+      if (partnerMap) { partnerMap.remove(); partnerMap = null; }
+    }
     async function initPropertyMap() {
       const container = document.getElementById('house-map');
       if (!container) return;
@@ -8058,6 +8159,17 @@
       }
       if (action === 'toggle-favorites') { onlyFavorites = !onlyFavorites; render(); }
       if (action === 'add-provider') showToast('Einladungen sind bald verfügbar.');
+    });
+    document.addEventListener('click', (event) => {
+      if (event.target.closest('[data-action="open-partner-map"]')) { openPartnerMap(); return; }
+      if (event.target.closest('[data-close-partner-map]') || event.target.id === 'partner-map-modal') closePartnerMap();
+    });
+    document.addEventListener('change', (event) => {
+      const filter = event.target.dataset?.mapFilter;
+      if (!filter) return;
+      partnerMapFilter[filter] = event.target.checked;
+      event.target.closest('.partner-map-chip')?.classList.toggle('on', event.target.checked);
+      applyPartnerMapFilter();
     });
     document.addEventListener('click', (event) => {
       const link = event.target.closest('[data-goto-assigned]');
@@ -9936,6 +10048,7 @@
         closeInspectionConfirmation();
         closeSendPlan();
         closeRepairOrder();
+        closePartnerMap();
         document.getElementById('issue-modal')?.classList.remove('open');
         closeInspectionPlan();
         closeControlPositions();
