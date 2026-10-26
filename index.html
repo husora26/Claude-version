@@ -1619,6 +1619,18 @@
     .insp-tile.st-overdue .insp-tile-bar { color: var(--red); }
     .insp-tile.st-later { background: #fbfbf9; }
     .insp-tile.st-later .insp-tile-icon { color: #9aa39c; }
+    .dash-tile-list { display: grid; gap: 7px; padding: 14px 18px; }
+    .dash-tile-list > .insp-overview { padding: 0; border: 0; }
+    .dash-tile-list > .insp-overview + .insp-overview { padding-top: 12px; border-top: 1px solid #f0f1ee; }
+    .insp-tile-icon.date { display: flex; flex-direction: column; width: 36px; height: 38px; line-height: 1.05; }
+    .insp-tile-icon.date b { font-size: 14px; }
+    .insp-tile-icon.date small { margin-top: 2px; font-size: 7.5px; font-weight: 700; text-transform: uppercase; }
+    .insp-tile small em { color: #8a948d; font-style: normal; font-size: 9px; }
+    div.insp-tile { cursor: default; }
+    .insp-tile.st-owner::before { background: #8a6fb5; }
+    .insp-tile.st-owner .insp-tile-icon, .insp-tile.st-owner .insp-tile-pill { color: #6a4f96; background: #efe9f7; }
+    .insp-tile.st-owner .insp-tile-bar { color: #8a6fb5; }
+    .insp-tile.st-later .insp-tile-bar { color: #9aa39c; }
     /* Startseite: Service vor Ort – gleiche Einrückung wie „Heute im Ferienhaus“ */
     .task-list.dash-tasks { padding: 0 18px; }
     .dash-tasks .task-row { position: relative; gap: 10px; min-height: 0; padding: 12px 18px; border-bottom: 1px solid #f0f1ee; border-radius: 0; }
@@ -3888,7 +3900,7 @@
         else if (departureToday) { state = 'turnover'; text = `Abreise heute · ${departureToday.guestName}`; }
         else if (nextArrival) { const days = dayDiff(today, nextArrival.startDate); text = `Frei · nächste Anreise ${days === 1 ? 'morgen' : `in ${days} Tagen`}`; }
         const label = state === 'owner' ? 'Eigennutzung' : state === 'busy' ? 'Belegt' : state === 'turnover' ? 'Gästewechsel' : 'Frei';
-        return `<button class="house-service-row" data-page="bookings"><span class="house-service-name">${escapeHtml(property.name)}<small>${escapeHtml(text)}</small></span><span class="occupancy-pill ${state}">${label}</span></button>`;
+        return dashTile({ attrs: 'data-page="bookings"', iconName: state === 'free' ? 'home' : state === 'turnover' ? 'clock' : 'users', title: escapeHtml(property.name), state: { free: 'done', busy: 'ordered', owner: 'owner', turnover: 'due' }[state], label, detail: escapeHtml(text) });
       }).join('');
     }
     function dashboard() {
@@ -3941,37 +3953,50 @@
         <div class="columns">
           <section class="card"><div class="card-head"><div><h2 class="card-title">Service vor Ort</h2><p class="card-caption">${open.length} offene ${open.length === 1 ? 'Aufgabe' : 'Aufgaben'} ${singleHouse() ? 'an deinem schwedischen Ferienhaus' : 'an deinen schwedischen Ferienhäusern'}</p></div><button class="text-btn" data-page="tasks">Alle Aufgaben →</button></div><div class="task-list dash-tasks">${open.length ? open.slice(0, 5).map(taskRow).join('') : '<div class="empty">Alles erledigt — großartig!</div>'}</div>${open.length > 5 ? `<button type="button" class="dash-tasks-more" data-page="tasks">+ ${open.length - 5} weitere ${open.length - 5 === 1 ? 'Aufgabe' : 'Aufgaben'} ansehen</button>` : ''}</section>
           <div>
-            ${bookingsEnabled() ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Heute im Ferienhaus</h2><p class="card-caption">${escapeHtml(fmtLongDate())}</p></div><button class="text-btn" data-page="calendar">Kalender →</button></div><div class="house-service-list">${occupancyHtml(today)}</div></section>` : ''}
+            ${bookingsEnabled() ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Heute im Ferienhaus</h2><p class="card-caption">${escapeHtml(fmtLongDate())}</p></div><button class="text-btn" data-page="calendar">Kalender →</button></div><div class="dash-tile-list">${occupancyHtml(today)}</div></section>` : ''}
             ${bookingsEnabled() ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Nächste Buchungen</h2><p class="card-caption">Anreise, Endreinigung und Schlüssel</p></div><button class="text-btn" data-page="bookings">Buchungen →</button></div>
-              ${dashboardBookings.length ? dashboardBookings.map((event) => {
-                const appointment = `<div class="date-tile"><b>${fmtDate(event.date).split(' ')[0]}</b><small>${fmtDate(event.date).split(' ')[1]}</small></div><div class="appointment-info"><strong>${escapeHtml(event.title)}</strong><small>${escapeHtml(event.isPast ? 'Gast hat ausgecheckt' : [event.detail, event.time].filter(Boolean).join(' · '))}</small></div>`;
-                return event.bookingId
-                  ? `<button type="button" class="appointment ${event.isPast ? 'past' : ''}" data-edit-booking="${escapeHtml(event.bookingId)}" aria-label="${event.isPast ? 'Vergangene Buchung, Gast hat ausgecheckt. Buchung bearbeiten' : 'Buchung bearbeiten'}: ${escapeHtml(event.title)}, ${escapeHtml(event.date)}">${appointment}</button>`
-                  : `<div class="appointment">${appointment}</div>`;
-              }).join('') : `<div class="empty">Für ${singleHouse() ? 'dein Ferienhaus' : 'deine Ferienhäuser'} sind keine Buchungen eingetragen.</div>`}
+              ${dashboardBookings.length ? `<div class="dash-tile-list">${dashboardBookings.map((event) => {
+                const [day, month] = fmtDate(event.date).split(' ');
+                const kind = /check-out|abreise|endreinigung|reinigung|wechsel/i.test(event.title) ? 'due' : /check-in|anreise|schlüssel/i.test(event.title) ? 'ordered' : 'owner';
+                return dashTile({ tag: event.bookingId ? 'button' : 'div', attrs: event.bookingId ? `data-edit-booking="${escapeHtml(event.bookingId)}" aria-label="${event.isPast ? 'Vergangene Buchung, Gast hat ausgecheckt. Buchung bearbeiten' : 'Buchung bearbeiten'}: ${escapeHtml(event.title)}, ${escapeHtml(event.date)}"` : '', iconHtml: `<b>${escapeHtml(day || '')}</b><small>${escapeHtml(month || '')}</small>`, title: escapeHtml(event.title), state: event.isPast ? 'later' : kind, label: event.isPast ? 'Ausgecheckt' : event.time || '', detail: escapeHtml(event.isPast ? 'Gast hat ausgecheckt' : event.detail || '') });
+              }).join('')}</div>` : `<div class="empty">Für ${singleHouse() ? 'dein Ferienhaus' : 'deine Ferienhäuser'} sind keine Buchungen eingetragen.</div>`}
             </section>` : ''}
             <section class="card"><div class="card-head"><div><h2 class="card-title">Hauskontrolle</h2><p class="card-caption">${singleHouse() ? 'Prüfstatus deines Ferienhauses' : 'Prüfstatus je Ferienhaus'}</p></div><button class="text-btn" data-page="inspections">Hauskontrolle →</button></div>
-              <div class="house-service-list">${properties.map((property) => {
+              <div class="dash-tile-list">${properties.map((property) => {
                 return `<div class="insp-overview">${singleHouse() ? '' : `<div class="insp-overview-house">${escapeHtml(property.name)}<small>${escapeHtml(property.region || property.address || '')}</small></div>`}<div class="insp-tiles">${inspectionOverviewTiles(property.id)}</div></div>`;
               }).join('') || '<div class="empty">Noch keine Ferienhäuser vorhanden.</div>'}</div>
             </section>
             <section class="card"><div class="card-head"><div><h2 class="card-title">Reparatur & Instandhaltung</h2><p class="card-caption">Gemeldete Mängel und geplante Reparaturen</p></div><button class="text-btn" data-page="repairs">Übersicht →</button></div>
-              <div class="house-service-list">${properties.map((property) => {
+              <div class="dash-tile-list">${properties.map((property) => {
                 const houseIssues = openIssues(property.id);
                 const nextRepair = tasks.filter((task) => task.auto === 'repair' && !task.done && task.propertyId === property.id).sort((a, b) => a.date.localeCompare(b.date))[0];
-                return `<button class="house-service-row" data-house-goto="repairs" data-property="${escapeHtml(property.id)}"><span class="house-service-name">${escapeHtml(property.name)}<small>${nextRepair ? `Nächste Reparatur ${escapeHtml(fmtDate(nextRepair.date))}: ${escapeHtml(nextRepair.title.replace(/^Reparatur[^:]*:\s*/, ''))}` : 'Keine Reparatur geplant'}</small></span><span class="occupancy-pill ${houseIssues.length ? 'busy' : 'free'}">${houseIssues.length ? `${houseIssues.length} offen` : 'Keine Mängel'}</span></button>`;
+                const urgent = houseIssues.filter((issue) => issue.priority === 'urgent' && !issue.orderedAt).length;
+                const unordered = houseIssues.filter((issue) => !issue.orderedAt).length;
+                const state = !houseIssues.length ? 'done' : urgent ? 'overdue' : unordered ? 'due' : 'ordered';
+                const label = !houseIssues.length ? 'Keine Mängel' : urgent ? `${urgent} dringend` : unordered ? `${houseIssues.length} offen` : 'Beauftragt';
+                const detail = !houseIssues.length ? 'Alles in Ordnung' : `${houseIssues.length - unordered ? `${houseIssues.length - unordered} beauftragt · ` : ''}${nextRepair ? `nächste Reparatur ${escapeHtml(fmtDate(nextRepair.date))}: ${escapeHtml(nextRepair.title.replace(/^Reparatur[^:]*:\s*/, ''))}` : 'Reparatur noch nicht geplant'}`;
+                return dashTile({ attrs: `data-house-goto="repairs" data-property="${escapeHtml(property.id)}"`, iconName: 'alert', title: singleHouse() ? 'Mängel & Reparaturen' : escapeHtml(property.name), state, label, detail });
               }).join('')}</div>
             </section>
             <section class="card"><div class="card-head"><div><h2 class="card-title">Sanierung & Renovierung</h2><p class="card-caption">Laufende Projekte</p></div><button class="text-btn" data-page="renovations">Übersicht →</button></div>
-              <div class="house-service-list">${properties.map((property) => {
+              <div class="dash-tile-list">${properties.map((property) => {
                 const projects = renovationProjects.filter((project) => project.propertyId === property.id && project.status !== 'done');
-                return `<button class="house-service-row" data-house-goto="renovations" data-property="${escapeHtml(property.id)}"><span class="house-service-name">${escapeHtml(property.name)}<small>${projects.length ? escapeHtml(projects.map((project) => `${project.title} (${renovationStatusLabel(project.status)})`).join(', ')) : 'Kein Projekt geplant'}</small></span><span class="occupancy-pill ${projects.length ? 'turnover' : 'free'}">${projects.length ? `${projects.length} ${projects.length === 1 ? 'Projekt' : 'Projekte'}` : '—'}</span></button>`;
+                const finished = renovationProjects.filter((project) => project.propertyId === property.id && project.status === 'done').length;
+                const stage = (project) => RENOVATION_STATUS.findIndex(([id]) => id === project.status);
+                const lead = [...projects].sort((a, b) => stage(b) - stage(a))[0];
+                const state = !projects.length ? (finished ? 'done' : 'later') : projects.some((project) => ['ordered', 'active'].includes(project.status)) ? 'ordered' : 'due';
+                const label = projects.length ? `${projects.length} ${projects.length === 1 ? 'Projekt' : 'Projekte'}` : finished ? `${finished} abgeschlossen` : 'Kein Projekt';
+                const detail = projects.length ? escapeHtml(projects.map((project) => `${project.title} (${renovationStatusLabel(project.status)})`).join(', ')) : 'Kein Projekt geplant – Vorschläge aus dem Inserat unter „Sanierung & Renovierung“';
+                return dashTile({ attrs: `data-house-goto="renovations" data-property="${escapeHtml(property.id)}"`, iconName: 'cube', title: singleHouse() ? 'Sanierungsprojekte' : escapeHtml(property.name), state, label, detail, progress: lead ? Math.round(stage(lead) / (RENOVATION_STATUS.length - 1) * 100) : 0 });
               }).join('')}</div>
             </section>
             <section class="card"><div class="card-head"><div><h2 class="card-title">Servicepartner</h2><p class="card-caption">${singleHouse() ? 'Ausgewählte Partner für dein Ferienhaus' : 'Ausgewählte Partner je Ferienhaus'}</p></div><button class="text-btn" data-action="manage-assigned-providers" data-property="${escapeHtml(properties[0]?.id || '')}">Servicepartner →</button></div>
-              <div class="house-service-list">${properties.map((property) => {
+              <div class="dash-tile-list">${properties.map((property) => {
                 const assigned = providers.filter((provider) => (servicePartnerAssignments[property.id] || []).includes(provider.id));
-                return `<button class="house-service-row" data-action="manage-assigned-providers" data-property="${escapeHtml(property.id)}"><span class="house-service-name">${escapeHtml(property.name)}<small class="house-service-partners">${assigned.length ? assigned.map((provider) => escapeHtml(provider.name)).join(' · ') : 'Noch keine Servicepartner ausgewählt'}</small></span></button>`;
+                const missing = [['house', 'Hausservice'], ['inspection', 'Hauskontrolle'], ['renovation', 'Sanierung']].filter(([category]) => !assigned.some((provider) => provider.category === category)).map(([, label]) => label);
+                const state = assigned.length ? 'done' : 'due';
+                const detail = assigned.length ? `${assigned.map((provider) => `${escapeHtml(provider.name)} <em>${partnerCategoryLabel(provider)}</em>`).join(' · ')}${missing.length ? `<br>Es fehlt: ${missing.join(', ')}` : ''}` : 'Noch keine Servicepartner ausgewählt – jetzt in der Nähe finden';
+                return dashTile({ attrs: `data-action="manage-assigned-providers" data-property="${escapeHtml(property.id)}"`, iconName: 'users', title: singleHouse() ? 'Zugeordnete Partner' : escapeHtml(property.name), state, label: assigned.length ? `${assigned.length} zugeordnet` : 'Keine Partner', detail });
               }).join('') || '<div class="empty">Noch keine Ferienhäuser vorhanden.</div>'}</div>
             </section>
           </div>
@@ -6754,10 +6779,14 @@
       return winterChecklist.every((item) => checked[item.id]);
     }
 
+    // Startseite: einheitliche Statuskachel (Symbol, Titel, Status, Detail, optional Fortschritt).
+    function dashTile({ attrs = '', iconName = 'home', iconHtml = '', title, state = 'later', label = '', detail = '', progress = 0, tag = 'button' }) {
+      return `<${tag} ${tag === 'button' ? 'type="button" ' : ''}class="insp-tile st-${state}" ${attrs}><span class="insp-tile-icon ${iconHtml ? 'date' : ''}">${iconHtml || icon(iconName)}</span><span class="insp-tile-body"><span class="insp-tile-top"><strong>${title}</strong>${label ? `<span class="insp-tile-pill">${state === 'done' ? icon('check') : ''}${escapeHtml(label)}</span>` : ''}</span>${detail ? `<small>${detail}</small>` : ''}${progress ? `<span class="insp-tile-bar"><i style="width:${progress}%"></i></span>` : ''}</span></${tag}>`;
+    }
     // Startseite: Status der Abwesenheitskontrolle und der Saisonvorbereitung als Kacheln.
     function inspectionOverviewTiles(propertyId) {
       const today = localDateKey(new Date());
-      const tile = ({ view, iconName, title, state, label, detail, progress }) => `<button type="button" class="insp-tile st-${state}" data-action="open-inspection" data-property="${escapeHtml(propertyId)}" data-view="${view}"><span class="insp-tile-icon">${icon(iconName)}</span><span class="insp-tile-body"><span class="insp-tile-top"><strong>${title}</strong><span class="insp-tile-pill">${state === 'done' ? icon('check') : ''}${escapeHtml(label)}</span></span><small>${detail}</small>${progress ? `<span class="insp-tile-bar"><i style="width:${progress}%"></i></span>` : ''}</span></button>`;
+      const tile = ({ view, ...rest }) => dashTile({ ...rest, attrs: `data-action="open-inspection" data-property="${escapeHtml(propertyId)}" data-view="${view}"` });
       const last = lastAbsenceInspection(propertyId);
       const order = inspectionOrderText(propertyId);
       let absence;
