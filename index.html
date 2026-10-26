@@ -935,6 +935,8 @@
     .profile-form { max-width: 650px; padding: 20px; }
     .profile-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
     .profile-grid .full { grid-column: 1 / -1; }
+    .profile-grid > * { min-width: 0; }
+    .profile-form .form-actions { flex-wrap: wrap; }
     .profile-notice { margin-top: 16px; padding: 13px 15px; border-radius: 9px; color: #745a35; background: #fff8e9; font-size: 11px; line-height: 1.6; }
     .profile-heading { display: flex; align-items: center; gap: 14px; padding: 18px; border-bottom: 1px solid var(--line); background: linear-gradient(120deg, #f4f1e5, #eef2e9); }
     .profile-large-avatar { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 17px; color: white; background: var(--green); font-size: 15px; font-weight: 750; }
@@ -990,7 +992,8 @@
       .calendar-day { min-height: 53px; padding: 5px; }
       .calendar-dots { margin-top: 5px; }
       .calendar-toolbar strong { min-width: 120px; font-size: 11px; }
-      .profile-grid { grid-template-columns: 1fr; }
+      .profile-grid { grid-template-columns: minmax(0, 1fr); }
+      .profile-form .form-actions button { flex: 1 1 auto; }
       .inspection-settings { grid-template-columns: 1fr; }
       .inspection-settings-list { grid-template-columns: 1fr; }
       .inspection-archive-row { align-items: flex-start; flex-direction: column; }
@@ -3650,6 +3653,8 @@
         </details>`;
     }
     let currentPage = 'dashboard';
+    // Aktuell gewähltes Ferienhaus für Detailseite und zugeordnete Servicepartner.
+    let selectedPropertyId = null;
     let lastRenderedPage = currentPage;
     const previousPageHistory = [];
     // Scrollposition je Eintrag, damit „Zurück“ wieder an derselben Stelle landet.
