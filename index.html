@@ -1888,6 +1888,26 @@
     .tile-choice:has(input:disabled) { cursor: not-allowed; opacity: .5; }
     .tile-choice:focus-within { outline: 2px solid #9db9a5; outline-offset: 2px; }
     .stat-value-sm { font-size: 18px !important; }
+    /* Hauskontrolle Schritt 3: Schieberegler manuell / Servicepartner */
+    .result-mode { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: 3px; border-radius: 10px; background: #e9ede7; }
+    .insp-step > .result-mode { grid-column: 2; justify-self: stretch; max-width: 340px; margin-top: 6px; }
+    @media (max-width: 1100px) { .result-mode button[role] { white-space: normal; text-align: center; line-height: 1.2; } }
+    @media (max-width: 640px) { .result-mode button[role] { padding: 7px 6px; font-size: 10px; } .result-mode button[role] svg { display: none; } }
+    .result-mode-thumb { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 8px; background: white; box-shadow: 0 1px 4px rgba(30,45,35,.18); transition: transform .2s ease; }
+    .result-mode.is-manual .result-mode-thumb { transform: translateX(100%); }
+    .result-mode button { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 7px 10px; border: 0; color: var(--muted); background: transparent; font: inherit; font-size: 10.5px; font-weight: 700; white-space: nowrap; cursor: pointer; }
+    .result-mode button[aria-checked="true"] { color: var(--green); }
+    .result-mode button svg { width: 13px; height: 13px; }
+    .result-mode button:focus-visible { outline: 2px solid #9db9a5; outline-offset: -2px; border-radius: 8px; }
+    @media (prefers-reduced-motion: reduce) { .result-mode-thumb { transition: none; } }
+    .control-return { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: -4px 0 10px; padding: 10px 14px; border: 1px dashed #b9c9bd; border-top: 0; border-radius: 0 0 10px 10px; background: #f6f9f5; }
+    .control-return label { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 11px; cursor: pointer; }
+    .control-return svg { width: 14px; height: 14px; }
+    .control-return > span { flex: 1; min-width: 200px; color: var(--muted); font-size: 10.5px; }
+    .control-return.locked > span { display: inline-flex; align-items: center; gap: 6px; }
+    .control-return.locked svg { color: #9aa39c; }
+    .control-list .plan-returns { padding: 0 0 10px; border: 0; }
+    .issue-details { display: block; margin-top: 4px; padding: 5px 8px; border-left: 2px solid #e8b800; border-radius: 4px; color: #6b5a2a; background: #fffbea; font-size: 10.5px; line-height: 1.45; }
     /* Kontrollplan-Rücklauf */
     .plan-return-upload { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0 18px; padding: 14px 0; border-bottom: 1px solid var(--line); }
     .plan-return-upload label { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
@@ -4976,7 +4996,7 @@
       const issueRow = (issue) => {
         const repair = tasks.find((task) => task.auto === 'repair' && task.issueId === issue.id);
         const prio = { urgent: 'Dringend', soon: 'Wichtig', normal: 'Normal' }[issue.priority] || 'Wichtig';
-        return `<article class="issue-card ${issue.status}"><div class="issue-main"><strong>${escapeHtml(issue.text)}</strong><small>${singleHouse() ? '' : `${escapeHtml(propertyName(issue.propertyId))} · `}${partLabel(issue.part) ? `${escapeHtml(partLabel(issue.part))} · ` : ''}${escapeHtml(issue.source || 'Meldung')} · ${escapeHtml(fmtDate(issue.date))}</small>${repair ? `<small class="issue-repair">${repair.done ? 'Reparatur erledigt' : `Reparatur geplant für ${escapeHtml(fmtDate(repair.date))}`}</small>` : ''}</div>
+        return `<article class="issue-card ${issue.status}"><div class="issue-main"><strong>${escapeHtml(issue.text)}</strong><small>${singleHouse() ? '' : `${escapeHtml(propertyName(issue.propertyId))} · `}${partLabel(issue.part) ? `${escapeHtml(partLabel(issue.part))} · ` : ''}${escapeHtml(issue.source || 'Meldung')} · ${escapeHtml(fmtDate(issue.date))}</small>${repair ? `<small class="issue-repair">${repair.done ? 'Reparatur erledigt' : `Reparatur geplant für ${escapeHtml(fmtDate(repair.date))}`}</small>` : ''}${issue.details ? `<small class="issue-details">${escapeHtml(issue.details).replace(/\n/g, '<br>')}</small>` : ''}</div>
           <div class="issue-side"><span class="task-tag ${issue.priority === 'urgent' ? 'urgent' : issue.priority === 'soon' ? 'soon' : ''}">${prio}</span><span class="issue-status">${ISSUE_STATUS[issue.status] || ''}</span></div>
           ${issueExtrasHtml(issue, repair)}
           ${issue.orderedAt ? `<p class="issue-ordered">${icon('check')} Beauftragt am ${escapeHtml(fmtDate(issue.orderedAt))} bei ${escapeHtml(issue.orderedTo || '')}</p>` : ''}<div class="issue-actions">${issue.status !== 'fixed' && issue.status !== 'renovation' ? `<button type="button" class="small-action order-btn" data-issue-order="${issue.id}">${icon('document')} ${issue.orderedAt ? 'Erneut beauftragen' : 'Mangel beauftragen'}</button><button type="button" class="small-action" data-issue-fixed="${issue.id}">Als behoben markieren</button><button type="button" class="small-action" data-issue-renovation="${issue.id}">Als Sanierung planen</button>` : ''}<button type="button" class="small-action" data-issue-delete="${issue.id}">Löschen</button></div></article>`;
@@ -6314,18 +6334,19 @@
           <div class="insp-steps">
             ${step(1, 'Prüfpositionen festlegen', `${items.length} Positionen${controls.length ? ` · ${controls.length === 1 ? `Plan „${escapeHtml(controls[0].name)}“` : `${controls.length} Pläne`}` : ' · Standardliste'}`, `<button type="button" class="secondary-btn" data-action="${controls.length ? 'edit-first-control' : 'create-inspection'}" data-property="${escapeHtml(property.id)}">${controls.length ? 'Anpassen' : 'Plan anlegen'}</button>`, controls.length ? 'done' : '')}
             ${step(2, 'Servicepartner beauftragen', order.state === 'ordered' ? escapeHtml(order.text) : partner ? `Vorschlag: ${escapeHtml(partner.name)}` : 'Noch kein Partner für Hauskontrolle zugeordnet', `<button type="button" class="${order.state === 'ordered' ? 'secondary-btn' : 'primary-btn'}" data-action="quick-send-plan" data-property="${escapeHtml(property.id)}">${icon('document')} ${order.state === 'ordered' ? 'Erneut beauftragen' : 'Service beauftragen'}</button>`, order.state === 'ordered' || order.state === 'done' ? 'done' : '')}
-            ${step(3, 'Ergebnis eintragen', inspectionManual ? `${doneCount} von ${items.length} Positionen bewertet${issueCount ? ` · ${issueCount} auffällig` : ''}` : 'Rückmeldung des Partners oder eigene Prüfung erfassen', `<button type="button" class="${inspectionManual ? 'secondary-btn' : 'primary-btn'}" data-action="toggle-manual-check">${inspectionManual ? 'Schließen' : 'Ergebnis eintragen'}</button>`, last.current && !inspectionManual ? 'done' : '')}
+            ${step(3, 'Ergebnis eintragen', inspectionManual ? `Manuell · ${doneCount} von ${items.length} Positionen bewertet${issueCount ? ` · ${issueCount} auffällig` : ''}` : 'Prüfprotokoll des Servicepartners einlesen – oder selbst prüfen', `<div class="result-mode ${inspectionManual ? 'is-manual' : ''}" role="radiogroup" aria-label="Art der Ergebniseingabe"><span class="result-mode-thumb" aria-hidden="true"></span><button type="button" role="radio" aria-checked="${!inspectionManual}" data-result-mode="partner">${icon('document')} Vom Servicepartner einlesen</button><button type="button" role="radio" aria-checked="${inspectionManual}" data-result-mode="manual">${icon('note')} Manuell eingeben</button></div>`, last.current && !inspectionManual ? 'done' : '')}
           </div></section>
-        <section class="card"><div class="card-head"><div><h2 class="card-title">Prüfliste · ${escapeHtml(property.name)}</h2><p class="card-caption">Je Position: worauf zu achten ist, bisherige Mängel und Reparaturen${inspectionManual ? ' · jetzt bewerten' : ''}</p></div>${inspectionManual ? `<div class="winter-progress"><progress max="${items.length}" value="${doneCount}"></progress><strong>${items.length ? Math.round(doneCount / items.length * 100) : 0} %</strong></div>` : `<button type="button" class="text-btn" data-action="view-plan-pdf" data-property="${escapeHtml(property.id)}">Als PDF ansehen →</button>`}</div>
+        ${inspectionManual ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Prüfliste · ${escapeHtml(property.name)}</h2><p class="card-caption">Je Position: worauf zu achten ist, bisherige Mängel und Reparaturen${inspectionManual ? ' · jetzt bewerten' : ''}</p></div>${inspectionManual ? `<div class="winter-progress"><progress max="${items.length}" value="${doneCount}"></progress><strong>${items.length ? Math.round(doneCount / items.length * 100) : 0} %</strong></div>` : `<button type="button" class="text-btn" data-action="view-plan-pdf" data-property="${escapeHtml(property.id)}">Als PDF ansehen →</button>`}</div>
           <div class="position-list">${rows || '<div class="empty">Keine Prüfpositionen ausgewählt.</div>'}</div>
-          ${inspectionManual ? `<div class="inspection-completion-date"><label class="form-label" for="inspection-completed-date">Durchgeführt am</label><input class="form-control" id="inspection-completed-date" type="date" max="${today}" value="${today}"><button class="primary-btn" data-action="finish-inspection" ${doneCount < items.length ? 'disabled title="Bitte jede Position bewerten"' : ''}>Kontrolle abschließen${issueCount ? ` · ${issueCount} an Reparatur` : ''}</button><button type="button" class="secondary-btn" data-action="upload-partner-pdf">Ausgefüllte PDF hochladen</button></div>` : ''}
+          ${inspectionManual ? `<div class="inspection-completion-date"><label class="form-label" for="inspection-completed-date">Durchgeführt am</label><input class="form-control" id="inspection-completed-date" type="date" max="${today}" value="${today}"><button class="primary-btn" data-action="finish-inspection" ${doneCount < items.length ? 'disabled title="Bitte jede Position bewerten"' : ''}>Kontrolle abschließen${issueCount ? ` · ${issueCount} an Reparatur` : ''}</button></div>` : ''}
           <div class="inspection-status">Auffällige Positionen gehen beim Abschließen automatisch an „Reparatur & Instandhaltung“. Bei akuter Gefahr, Wasserschaden oder Einbruch sofort Notdienst bzw. Eigentümer informieren.</div>
-        </section>
-        ${controls.length ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Kontrollpläne</h2><p class="card-caption">Pläne mit Servicepartner und Taktung</p></div><div class="control-head-actions"><button class="text-btn" type="button" data-action="create-inspection" data-property="${escapeHtml(property.id)}">+ Weiterer Plan</button></div></div><div class="plan-return-upload"><label class="primary-btn">${icon('document')} Kontrollplan als PDF einlesen<input type="file" accept="application/pdf,.pdf" data-plan-return-upload hidden></label><span>Ausgefüllten Kontrollplan vom Servicepartner hochladen – Husora prüft jede Position und legt Mängel als Reparaturauftrag an.</span></div>${planReturnsHtml(property)}<div class="house-service-list"><div class="control-list">${controls.map((control) => {
+        </section>` : ''}
+        ${!inspectionManual && !controls.length ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Kontrollpläne</h2><p class="card-caption">Prüfprotokoll vom Servicepartner</p></div></div><div class="empty">Noch kein Kontrollplan angelegt. Lege einen Plan an und beauftrage deinen Servicepartner – den ausgefüllten Plan liest du danach hier ein.<br><button type="button" class="primary-btn" style="margin-top:12px" data-action="create-inspection" data-property="${escapeHtml(property.id)}">Plan anlegen</button></div></section>` : ''}
+        ${!inspectionManual && controls.length ? `<section class="card"><div class="card-head"><div><h2 class="card-title">Kontrollpläne</h2><p class="card-caption">Pläne mit Servicepartner und Taktung</p></div><div class="control-head-actions"><button class="text-btn" type="button" data-action="create-inspection" data-property="${escapeHtml(property.id)}">+ Weiterer Plan</button></div></div>${planReturnsHtml(property, '__unmatched')}<div class="house-service-list"><div class="control-list">${controls.map((control) => {
           const provider = providers.find((entry) => entry.id === control.providerId);
           const itemCount = Object.keys(control.items || {}).length;
           const due = controlDueInfo(property.id, control.items, control.createdAt).due;
-          return `<article class="control-card"><div class="control-card-main"><strong>${escapeHtml(control.name)}</strong><span class="control-card-partner"><em>Servicepartner:</em> ${provider ? escapeHtml(provider.name) : 'nicht mehr verfügbar'}</span><small>${itemCount} Positionen${due ? ` · nächste Kontrolle spätestens ${escapeHtml(fmtDate(due))}` : ''}</small>${(() => { const sent = (inspectionOrders[property.id] || []).filter((entry) => entry.controlId === control.id).pop(); return sent ? `<span class="control-order sent">${icon('check')} Beauftragt am ${escapeHtml(fmtDate(String(sent.sentAt).slice(0, 10)))} bei ${escapeHtml(sent.partnerName)}${sent.status === 'done' ? ' · erledigt' : ''}</span>` : '<span class="control-order">' + icon('clock') + ' Noch nicht an den Servicepartner gesendet</span>'; })()}</div><div class="control-card-actions"><button type="button" class="control-order-btn" data-action="send-inspection-plan" data-control="${escapeHtml(control.id)}">${icon('document')} ${(inspectionOrders[property.id] || []).some((entry) => entry.controlId === control.id) ? 'Erneut beauftragen' : 'Service beauftragen'}</button><button type="button" data-action="view-inspection-plan" data-control="${escapeHtml(control.id)}">PDF / Rücklauf</button><button type="button" data-action="edit-control" data-control="${escapeHtml(control.id)}">Bearbeiten</button><button type="button" class="danger" data-action="delete-control" data-control="${escapeHtml(control.id)}">Löschen</button></div></article>`;
+          return `<article class="control-card"><div class="control-card-main"><strong>${escapeHtml(control.name)}</strong><span class="control-card-partner"><em>Servicepartner:</em> ${provider ? escapeHtml(provider.name) : 'nicht mehr verfügbar'}</span><small>${itemCount} Positionen${due ? ` · nächste Kontrolle spätestens ${escapeHtml(fmtDate(due))}` : ''}</small>${(() => { const sent = (inspectionOrders[property.id] || []).filter((entry) => entry.controlId === control.id).pop(); return sent ? `<span class="control-order sent">${icon('check')} Beauftragt am ${escapeHtml(fmtDate(String(sent.sentAt).slice(0, 10)))} bei ${escapeHtml(sent.partnerName)}${sent.status === 'done' ? ' · erledigt' : ''}</span>` : '<span class="control-order">' + icon('clock') + ' Noch nicht an den Servicepartner gesendet</span>'; })()}</div><div class="control-card-actions"><button type="button" class="control-order-btn" data-action="send-inspection-plan" data-control="${escapeHtml(control.id)}">${icon('document')} ${(inspectionOrders[property.id] || []).some((entry) => entry.controlId === control.id) ? 'Erneut beauftragen' : 'Service beauftragen'}</button><button type="button" data-action="view-inspection-plan" data-control="${escapeHtml(control.id)}">PDF / Rücklauf</button><button type="button" data-action="edit-control" data-control="${escapeHtml(control.id)}">Bearbeiten</button><button type="button" class="danger" data-action="delete-control" data-control="${escapeHtml(control.id)}">Löschen</button></div></article>${(() => { const sent = (inspectionOrders[property.id] || []).filter((entry) => entry.controlId === control.id).pop(); return `<div class="control-return ${sent ? '' : 'locked'}">${sent ? `<label class="primary-btn">${icon('document')} Kontrollplan als PDF einlesen<input type="file" accept="application/pdf,.pdf" data-plan-return-upload data-control="${escapeHtml(control.id)}" hidden></label><span>Ausgefüllten Plan von ${escapeHtml(sent.partnerName)} hochladen – Husora liest jede Position aus, prüft sie und legt Mängel samt Anmerkungen als Reparaturauftrag an.</span>` : `<span>${icon('clock')} Nach der Beauftragung liest du hier den ausgefüllten Kontrollplan des Servicepartners ein.</span>`}</div>${planReturnsHtml(property, control.id)}`; })()}`;
         }).join('')}</div></div></section>` : ''}`;
     }
     function inspectionsPage() {
@@ -6938,7 +6959,7 @@
       }
       return fields;
     }
-    function evaluatePlanFields(fields, property) {
+    function evaluatePlanFields(fields, property, controlId = '') {
       const byItem = new Map();
       Object.entries(fields).forEach(([name, value]) => {
         const match = name.match(/^pos_\d+_(.+)_(ok|auffaellig|bemerkung)$/);
@@ -6948,7 +6969,7 @@
         byItem.set(match[1], entry);
       });
       const controls = controlsFor(property.id);
-      const control = controls.map((item) => ({ item, hits: [...byItem.keys()].filter((id) => item.items?.[id]).length })).sort((a, b) => b.hits - a.hits)[0]?.item || null;
+      const control = controls.find((item) => item.id === controlId) || controls.map((item) => ({ item, hits: [...byItem.keys()].filter((id) => item.items?.[id]).length })).sort((a, b) => b.hits - a.hits)[0]?.item || null;
       const results = [...byItem.entries()].map(([itemId, entry]) => {
         const item = absenceChecklist.find((position) => position.id === itemId);
         const note = String(entry.bemerkung || '').trim();
@@ -6963,7 +6984,7 @@
       const year = match[3].length === 2 ? `20${match[3]}` : match[3];
       return `${year}-${match[2].padStart(2, '0')}-${match[1].padStart(2, '0')}`;
     }
-    async function analyzePlanReturn(file) {
+    async function analyzePlanReturn(file, controlId = '') {
       const property = properties.find((item) => item.id === inspectionProperty) || properties[0];
       if (!file) return;
       if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') { showToast('Bitte den ausgefüllten Kontrollplan als PDF wählen.'); return; }
@@ -6981,7 +7002,7 @@
       showStep(1);
       const fields = await readPlanFormFields(dataUrlBytes(dataUrl));
       showStep(2);
-      const evaluation = evaluatePlanFields(fields, property);
+      const evaluation = evaluatePlanFields(fields, property, controlId);
       pendingPlanReturn = { property, file: { name: file.name, size: file.size, data: dataUrl }, ...evaluation };
       renderPlanReturnResult();
     }
@@ -7018,6 +7039,7 @@
         const text = `${entry.title}: ${entry.note || 'Auffälligkeit laut Kontrollplan'}`;
         const issue = createIssue({ propertyId: property.id, part: housePartDefs.find((part) => part.match.test(text))?.id || details?.parts?.[0] || '', text, priority: 'soon', source: 'Kontrollplan (PDF)', partnerId: suggestPartner(property.id, 'repair') || '' });
         issue.positionId = entry.itemId;
+        issue.details = [entry.note ? `Anmerkung zur Position: ${entry.note}` : '', remarks ? `Bemerkungen des Servicepartners: ${remarks}` : '', `Laut Kontrollplan${date ? ` vom ${date}` : ''}${inspectedBy ? `, kontrolliert von ${inspectedBy}` : ''}`].filter(Boolean).join('\n');
         return { ...entry, issueId: issue.id };
       });
       persistIssues();
@@ -7037,10 +7059,11 @@
       const open = record.results.filter((entry) => entry.result === 'open').length;
       return { linked, repaired, open, complete: repaired === linked.length && !open };
     }
-    function planReturnsHtml(property) {
-      const list = planReturnsFor(property.id);
+    function planReturnsHtml(property, controlId = null) {
+      const known = new Set(controlsFor(property.id).map((control) => control.id));
+      const list = planReturnsFor(property.id).filter((record) => controlId === null || (controlId === '__unmatched' ? !known.has(record.controlId) : record.controlId === controlId));
       if (!list.length) return '';
-      return `<div class="plan-returns"><h3 class="plan-returns-h">Eingelesene Kontrollpläne</h3>${list.slice().reverse().map((record) => {
+      return `<div class="plan-returns"><h3 class="plan-returns-h">${controlId && controlId !== '__unmatched' ? 'Eingelesene Prüfprotokolle' : 'Eingelesene Kontrollpläne'}</h3>${list.slice().reverse().map((record) => {
         const state = planReturnState(record);
         const label = state.complete ? 'Abgeschlossen' : state.linked.length > state.repaired ? `Reparatur offen · ${state.repaired} von ${state.linked.length} erledigt` : `${state.open} ${state.open === 1 ? 'Position' : 'Positionen'} ohne Ergebnis`;
         return `<article class="plan-return-card ${state.complete ? 'complete' : 'pending'}"><div class="prc-head"><div><strong>${escapeHtml(record.controlName)} · ${escapeHtml(fmtDate(record.date))}</strong><small>${escapeHtml(record.inspectedBy || 'Prüfer nicht angegeben')} · ${record.results.filter((entry) => entry.result === 'ok').length} in Ordnung · ${record.results.filter((entry) => entry.result === 'issue').length} auffällig</small></div><span class="prc-status">${state.complete ? icon('check') : icon('clock')}${escapeHtml(label)}</span></div>
@@ -7282,7 +7305,7 @@
       const property = properties.find((item) => item.id === issue.propertyId);
       const prio = { urgent: 'dringend – es drohen Folgeschäden', soon: 'wichtig – bitte zeitnah', normal: 'normal – beim nächsten Einsatz' }[issue.priority] || 'zeitnah';
       const due = document.getElementById('repair-order-date').value;
-      return `Hej${partnerName ? ` ${partnerName}` : ''},\n\nhiermit beauftrage ich Sie mit der folgenden Reparatur an meinem Ferienhaus „${property?.name || ''}“${property?.address ? ` (${property.address})` : ''}:\n\n• Mangel: ${issue.text}${partLabel(issue.part) ? `\n• Bauteil: ${partLabel(issue.part)}` : ''}\n• Dringlichkeit: ${prio}${due ? `\n• Erledigung bis: ${fullDate(due)}` : ''}\n• Auftragsnummer: ${repairOrderNo(issue)}\n\nAlle Details stehen im angehängten Reparaturauftrag (PDF). Bitte bestätigen Sie kurz den Termin und senden Sie die Rechnung nach Abschluss an diese Adresse – gern mit ROT-Abzug und ein paar Fotos vorher/nachher.\n\nTack så mycket och viele Grüße\n${profileData.name || ''}`;
+      return `Hej${partnerName ? ` ${partnerName}` : ''},\n\nhiermit beauftrage ich Sie mit der folgenden Reparatur an meinem Ferienhaus „${property?.name || ''}“${property?.address ? ` (${property.address})` : ''}:\n\n• Mangel: ${issue.text}${partLabel(issue.part) ? `\n• Bauteil: ${partLabel(issue.part)}` : ''}\n• Dringlichkeit: ${prio}${due ? `\n• Erledigung bis: ${fullDate(due)}` : ''}\n• Auftragsnummer: ${repairOrderNo(issue)}${issue.details ? `\n\nHinweise aus der Kontrolle:\n${issue.details.split('\n').map((line) => `• ${line}`).join('\n')}` : ''}\n\nAlle Details stehen im angehängten Reparaturauftrag (PDF). Bitte bestätigen Sie kurz den Termin und senden Sie die Rechnung nach Abschluss an diese Adresse – gern mit ROT-Abzug und ein paar Fotos vorher/nachher.\n\nTack så mycket och viele Grüße\n${profileData.name || ''}`;
     }
     function openRepairOrder(issueId) {
       const issue = issues.find((item) => item.id === issueId);
@@ -7364,10 +7387,12 @@
       heading('Mangel');
       const boxTop = y + 10;
       const descLines = pdfWrap(issue.text, 11, W - 2 * M - 24, true);
-      const boxHeight = descLines.length * 15 + 34;
+      const detailLines = String(issue.details || '').split('\n').filter(Boolean).flatMap((line) => pdfWrap(line, 9, W - 2 * M - 24, false));
+      const boxHeight = descLines.length * 15 + detailLines.length * 12 + 34;
       box(M, boxTop - boxHeight, W - 2 * M, boxHeight, issue.priority === 'urgent' ? '1 0.93 0.91' : '1 0.97 0.84');
       y = boxTop - 18;
       descLines.forEach((l) => { text(l, M + 12, 11, true); y -= 15; });
+      detailLines.forEach((l) => { text(l, M + 12, 9, false, '0.3 0.3 0.25'); y -= 12; });
       text(`Gemeldet am ${fullDate(issue.date)} · Quelle: ${issue.source || 'Meldung'}`, M + 12, 8.5, false, '0.4 0.36 0.2');
       y = boxTop - boxHeight - 14;
       pairs([
@@ -8484,6 +8509,8 @@
       }
       if (action === 'show-control-positions') openControlPositions();
       if (action === 'toggle-manual-check') { inspectionManual = !inspectionManual; render(); }
+      const resultMode = event.target.closest('[data-result-mode]')?.dataset.resultMode;
+      if (resultMode) { inspectionManual = resultMode === 'manual'; const scroll = window.scrollY; render(); window.scrollTo(0, scroll); return; }
       if (action === 'edit-first-control') { const first = controlsFor(inspectionProperty)[0]; if (first) openInspectionPlan(inspectionProperty, first.id); }
       if (action === 'quick-send-plan') { const control = ensureDefaultControl(inspectionProperty); if (control) openSendPlan(control.id); }
       if (action === 'view-plan-pdf') { const control = ensureDefaultControl(inspectionProperty, false); if (control) { viewPlanControlId = control.id; openPlanPdf(); } }
@@ -8580,7 +8607,7 @@
     });
     document.addEventListener('change', (event) => {
       if (!event.target.matches('[data-plan-return-upload]')) return;
-      analyzePlanReturn(event.target.files?.[0]);
+      analyzePlanReturn(event.target.files?.[0], event.target.dataset.control || '');
       event.target.value = '';
     });
     document.addEventListener('click', (event) => {
