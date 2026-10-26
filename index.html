@@ -1867,6 +1867,7 @@
     .partner-map-note { margin: 8px 0 0; color: var(--muted); font-size: 10.5px; }
     .map-popup span { max-width: 240px; }
     .map-popup-tag { display: inline-block !important; margin-top: 5px !important; padding: 2px 8px; border-radius: 10px; color: #1f3d2b !important; background: #e3efe6; font-weight: 700; }
+    .map-popup-tag.fav { margin-left: 4px; color: #8e622b !important; background: #fbf0d9; }
     .map-popup-links { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 6px; }
     .map-popup-links a { font-size: 11px; }
     @media (max-width: 560px) { .partner-map { height: 58vh; } }
@@ -7401,7 +7402,7 @@
     // Übersichtskarte: alle Servicepartner nach Ort und die eigenen Ferienhäuser.
     let partnerMap = null;
     let partnerMapLayers = {};
-    const partnerMapFilter = { house: true, inspection: true, renovation: true, homes: true, assignedOnly: false, links: true };
+    const partnerMapFilter = { house: true, inspection: true, renovation: true, homes: true, assignedOnly: false, favoritesOnly: false, links: true };
     let partnerMapLinks = {};
     const PARTNER_MAP_KINDS = [['homes', 'Meine Ferienhäuser', 'house'], ['house', 'Hausservice', 'service'], ['inspection', 'Hauskontrolle', 'inspection'], ['renovation', 'Sanierung', 'renovation']];
     function providerMapCoords(provider) {
@@ -7412,7 +7413,7 @@
       return REGION_CENTERS[region] ? { coords: REGION_CENTERS[region], approximate: true } : null;
     }
     function renderPartnerMapFilters(counts) {
-      document.getElementById('partner-map-filters').innerHTML = `${PARTNER_MAP_KINDS.map(([key, label, dot]) => `<label class="partner-map-chip ${partnerMapFilter[key] ? 'on' : ''}"><input type="checkbox" data-map-filter="${key}" ${partnerMapFilter[key] ? 'checked' : ''}><span class="map-dot ${dot}"></span>${label}<em>${counts[key] || 0}</em></label>`).join('')}<label class="partner-map-chip ${partnerMapFilter.assignedOnly ? 'on' : ''}"><input type="checkbox" data-map-filter="assignedOnly" ${partnerMapFilter.assignedOnly ? 'checked' : ''}>Nur zugeordnete</label><label class="partner-map-chip links ${partnerMapFilter.links ? 'on' : ''}"><input type="checkbox" data-map-filter="links" ${partnerMapFilter.links ? 'checked' : ''}><span class="map-line-icon" aria-hidden="true"></span>Verbindungslinien</label>`;
+      document.getElementById('partner-map-filters').innerHTML = `${PARTNER_MAP_KINDS.map(([key, label, dot]) => `<label class="partner-map-chip ${partnerMapFilter[key] ? 'on' : ''}"><input type="checkbox" data-map-filter="${key}" ${partnerMapFilter[key] ? 'checked' : ''}><span class="map-dot ${dot}"></span>${label}<em>${counts[key] || 0}</em></label>`).join('')}<label class="partner-map-chip ${partnerMapFilter.assignedOnly ? 'on' : ''}"><input type="checkbox" data-map-filter="assignedOnly" ${partnerMapFilter.assignedOnly ? 'checked' : ''}>Nur zugeordnete</label><label class="partner-map-chip ${partnerMapFilter.favoritesOnly ? 'on' : ''}" title="${favorites.length ? '' : 'Noch keine Favoriten – mit ☆ in der Liste markieren'}"><input type="checkbox" data-map-filter="favoritesOnly" ${partnerMapFilter.favoritesOnly ? 'checked' : ''}>★ Nur Favoriten<em>${favorites.length}</em></label><label class="partner-map-chip links ${partnerMapFilter.links ? 'on' : ''}"><input type="checkbox" data-map-filter="links" ${partnerMapFilter.links ? 'checked' : ''}><span class="map-line-icon" aria-hidden="true"></span>Verbindungslinien</label>`;
     }
     async function openPartnerMap() {
       document.getElementById('partner-map-modal').classList.add('open');
@@ -7454,11 +7455,13 @@
         const position = jitter(place.coords);
         positions.set(provider.id, position);
         const nearest = Math.min(...properties.map((property) => providerDistanceKm(provider, property)));
-        L.circleMarker(position, { radius: assigned ? 8 : 6, color: assigned ? '#1f3d2b' : '#ffffff', weight: assigned ? 3 : 1.5, fillColor: colors[provider.category] || colors.house, fillOpacity: 0.95 })
-          .bindTooltip(escapeHtml(provider.name), { direction: 'top', offset: [0, -6] })
-          .bindPopup(`<div class="map-popup"><strong>${escapeHtml(provider.name)}</strong><span>${escapeHtml(partnerCategoryLabel(provider))}${provider.specialty ? ` · ${escapeHtml(provider.specialty)}` : ''}</span><span>${escapeHtml(provider.town || '')}${place.approximate ? ' (ungefähre Lage)' : ''}${Number.isFinite(nearest) ? ` · ${nearest} km zum Ferienhaus` : ''}</span>${provider.services ? `<span>${escapeHtml(provider.services)}</span>` : ''}${assigned ? '<span class="map-popup-tag">Deinem Ferienhaus zugeordnet</span>' : ''}<div class="map-popup-links">${providerContactLinks(provider)}</div></div>`)
-          .addTo(partnerMapLayers[provider.category] || partnerMapLayers.house)
-          .options.assigned = assigned;
+        const favorite = favorites.includes(provider.id);
+        const marker = L.circleMarker(position, { radius: assigned ? 8 : 6, color: assigned ? '#1f3d2b' : '#ffffff', weight: assigned ? 3 : 1.5, fillColor: colors[provider.category] || colors.house, fillOpacity: 0.95 })
+          .bindTooltip(`${favorite ? '★ ' : ''}${escapeHtml(provider.name)}`, { direction: 'top', offset: [0, -6] })
+          .bindPopup(`<div class="map-popup"><strong>${escapeHtml(provider.name)}</strong><span>${escapeHtml(partnerCategoryLabel(provider))}${provider.specialty ? ` · ${escapeHtml(provider.specialty)}` : ''}</span><span>${escapeHtml(provider.town || '')}${place.approximate ? ' (ungefähre Lage)' : ''}${Number.isFinite(nearest) ? ` · ${nearest} km zum Ferienhaus` : ''}</span>${provider.services ? `<span>${escapeHtml(provider.services)}</span>` : ''}${assigned ? '<span class="map-popup-tag">Deinem Ferienhaus zugeordnet</span>' : ''}${favorite ? '<span class="map-popup-tag fav">★ Favorit</span>' : ''}<div class="map-popup-links">${providerContactLinks(provider)}</div></div>`)
+          .addTo(partnerMapLayers[provider.category] || partnerMapLayers.house);
+        marker.options.assigned = assigned;
+        marker.options.favorite = favorite;
       });
       // Linien vom Ferienhaus zu seinen zugeordneten Servicepartnern.
       homes.forEach(({ property, origin }) => {
@@ -7478,7 +7481,7 @@
     function applyPartnerMapFilter() {
       if (!partnerMap) return;
       Object.entries(partnerMapLayers).forEach(([key, layer]) => {
-        layer.eachLayer((marker) => { const hide = partnerMapFilter.assignedOnly && key !== 'homes' && !marker.options.assigned; marker.setStyle?.({ opacity: hide ? 0 : 1, fillOpacity: hide ? 0 : 0.95 }); if (marker._path) marker._path.style.pointerEvents = hide ? 'none' : ''; });
+        layer.eachLayer((marker) => { const hide = key !== 'homes' && ((partnerMapFilter.assignedOnly && !marker.options.assigned) || (partnerMapFilter.favoritesOnly && !marker.options.favorite)); marker.setStyle?.({ opacity: hide ? 0 : 1, fillOpacity: hide ? 0 : 0.95 }); if (marker._path) marker._path.style.pointerEvents = hide ? 'none' : ''; });
         if (partnerMapFilter[key]) layer.addTo(partnerMap); else layer.remove();
       });
       Object.entries(partnerMapLinks).forEach(([key, layer]) => { if (partnerMapFilter.links && partnerMapFilter.homes && partnerMapFilter[key]) layer.addTo(partnerMap); else layer.remove(); });
