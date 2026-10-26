@@ -1836,6 +1836,13 @@
     .tcard-field > .self-badge { color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: 0; text-transform: none; }
     .self-text { color: var(--green); font-weight: 650; }
     @media (max-width: 560px) { .tcard-controls .self-toggle { grid-column: 1 / -1; justify-self: start; margin-bottom: 0; } .self-badge { width: 100%; } }
+    .no-partner-link { display: inline-flex; align-items: center; gap: 8px; width: 100%; max-width: 360px; padding: 7px 11px; border: 1px dashed #e0b866; border-radius: 9px; color: #7a5410; background: #fff8e8; font: inherit; font-size: 11px; text-align: left; cursor: pointer; }
+    .no-partner-link svg { flex-shrink: 0; width: 15px; height: 15px; }
+    .no-partner-link span { display: grid; gap: 1px; letter-spacing: 0; text-transform: none; font-weight: 600; }
+    .no-partner-link b { color: var(--green); font-size: 11px; }
+    .no-partner-link:hover { border-style: solid; background: #fff2d4; }
+    .tcard-field > .no-partner-link { width: 250px; color: #7a5410; font-size: 11px; letter-spacing: 0; text-transform: none; }
+    #repair-order-account .no-partner-link, #inspection-plan-provider-note .no-partner-link { margin-top: 8px; max-width: none; }
     /* Startseite: Service vor Ort – gleiche Einrückung wie „Heute im Ferienhaus“ */
     .task-list.dash-tasks { padding: 0 18px; }
     .dash-tasks .task-row { position: relative; gap: 10px; min-height: 0; padding: 12px 18px; border-bottom: 1px solid #f0f1ee; border-radius: 0; }
@@ -2121,7 +2128,7 @@
       <div class="send-plan-grid">
         <label><span class="form-label">Name der Kontrolle</span><input class="form-control" id="inspection-plan-name" maxlength="80" placeholder="z. B. Monatliche Sichtkontrolle"></label>
         <label><span class="form-label">Servicepartner für diese Kontrolle</span><select class="form-control" id="inspection-plan-provider"></select></label>
-        <p class="send-plan-note" id="inspection-plan-provider-note" hidden>Diesem Ferienhaus ist noch kein Servicepartner zugeordnet. Ordne zuerst unter „Servicepartner“ einen Betrieb zu.</p>
+        <div id="inspection-plan-provider-note" hidden></div>
       </div>
       <span class="form-label">Zu prüfende Positionen und Kontrolltaktung</span>
       <p class="send-plan-note ok" id="plan-due-note"></p>
@@ -2209,7 +2216,7 @@
         <label><span class="form-label">Priorität</span><select class="form-control" name="priority"><option value="normal">Normal</option><option value="soon">Wichtig</option><option value="urgent">Dringend</option></select></label>
         <label><span class="form-label">Bereich</span><input class="form-control" name="area" maxlength="60" placeholder="z. B. Heizungsraum, Außenbereich"></label>
         <label><span class="form-label">Status</span><select class="form-control" name="status"><option>Offen</option><option>In Bearbeitung</option><option>Erledigt</option></select></label>
-        <label><span class="form-label">Servicepartner</span><select class="form-control" name="partnerId"></select></label>
+        <label><span class="form-label">Servicepartner</span><select class="form-control" name="partnerId"></select><small class="form-hint" id="task-partner-hint" hidden></small></label>
         <label><span class="form-label">Wiederholung</span><select class="form-control" name="repeat"><option>Einmalig</option><option>Wöchentlich</option><option>Monatlich</option><option>Jährlich</option></select></label>
         <label style="grid-column:1/-1"><span class="form-label">Beschreibung</span><textarea class="form-control" name="description" rows="2" maxlength="300" placeholder="Optionale Hinweise zur Aufgabe"></textarea></label>
       </div>
@@ -3774,6 +3781,7 @@
       const propertySelect = document.querySelector('#task-form [name="property"]');
       propertySelect.innerHTML = `${properties.map((property) => `<option>${escapeHtml(property.name)}</option>`).join('')}${singleHouse() ? '' : '<option>Alle Ferienhäuser</option>'}`;
       form.elements.partnerId.innerHTML = partnerOptionsHtml(propertySelect.value || properties[0]?.name || '', '');
+      updateTaskPartnerHint(propertySelect.value || properties[0]?.name || '');
       document.getElementById('modal-title').textContent = 'Aufgabe erstellen';
       form.querySelector('[type="submit"]').textContent = 'Aufgabe speichern';
       document.getElementById('task-modal').classList.add('open');
@@ -3797,6 +3805,7 @@
       form.elements.repeat.value = task.repeat || 'Einmalig';
       form.elements.description.value = task.description || '';
       form.elements.partnerId.innerHTML = partnerOptionsHtml(task.property, task.partnerId || '');
+      updateTaskPartnerHint(task.property);
       document.getElementById('modal-title').textContent = 'Aufgabe bearbeiten';
       form.querySelector('[type="submit"]').textContent = 'Änderungen speichern';
       document.getElementById('task-modal').classList.add('open');
@@ -4499,6 +4508,18 @@
     // Servicepartner je Aufgabe: Auswahl (zugeordnete Partner des Hauses zuerst), Filter und Übersicht je Partner.
     const providerById = (id) => providers.find((provider) => provider.id === id) || null;
     const propertyIdByName = (name) => properties.find((property) => property.name === name)?.id || '';
+    // Hinweis mit Link zu „Zugeordnete Servicepartner“, wenn einem Haus noch kein Partner zugeordnet ist.
+    const assignedPartnerCount = (propertyId) => providers.filter((provider) => (servicePartnerAssignments[propertyId] || []).includes(provider.id)).length;
+    function noPartnerLinkHtml(propertyId, text = 'Noch kein Servicepartner zugeordnet') {
+      return `<button type="button" class="no-partner-link" data-goto-assigned="${escapeHtml(propertyId || '')}">${icon('users')}<span>${escapeHtml(text)}<b>Jetzt zuordnen →</b></span></button>`;
+    }
+    function updateTaskPartnerHint(propertyName) {
+      const hint = document.getElementById('task-partner-hint');
+      if (!hint) return;
+      const propertyId = propertyIdByName(propertyName);
+      hint.hidden = Boolean(assignedPartnerCount(propertyId));
+      hint.innerHTML = hint.hidden ? '' : noPartnerLinkHtml(propertyId);
+    }
     function partnerOptionsHtml(propertyName, selected = '') {
       // Nur die dem Ferienhaus zugeordneten Servicepartner stehen zur Auswahl.
       const assigned = servicePartnerAssignments[propertyIdByName(propertyName)] || [];
@@ -4575,7 +4596,7 @@
           </div>
           <div class="tcard-controls">
             <label class="switch self-toggle" title="Aufgabe selbst erledigen statt Servicepartner"><input type="checkbox" data-self-task="${task.id}" ${task.selfService ? 'checked' : ''}><span class="switch-track"></span><span>Selbst</span></label>
-            ${task.selfService ? `<div class="tcard-field"><span>Umsetzung</span><span class="self-badge">${icon('users')} Eigenleistung</span></div>` : `<label class="tcard-field"><span>Servicepartner${providerById(task.partnerId) ? ` <i class="tcard-ptype cat-${escapeHtml(providerById(task.partnerId).category)}">${partnerCategoryLabel(providerById(task.partnerId))}</i>` : ''}</span><select class="filter-select partner-select ${task.partnerId ? 'has-partner' : ''}" data-partner-task="${task.id}" aria-label="Servicepartner für ${escapeHtml(task.title)}">${partnerOptionsHtml(task.property, task.partnerId || '')}</select></label>`}
+            ${task.selfService ? `<div class="tcard-field"><span>Umsetzung</span><span class="self-badge">${icon('users')} Eigenleistung</span></div>` : !task.partnerId && !assignedPartnerCount(propertyIdByName(task.property)) ? `<div class="tcard-field"><span>Servicepartner</span>${noPartnerLinkHtml(propertyIdByName(task.property))}</div>` : `<label class="tcard-field"><span>Servicepartner${providerById(task.partnerId) ? ` <i class="tcard-ptype cat-${escapeHtml(providerById(task.partnerId).category)}">${partnerCategoryLabel(providerById(task.partnerId))}</i>` : ''}</span><select class="filter-select partner-select ${task.partnerId ? 'has-partner' : ''}" data-partner-task="${task.id}" aria-label="Servicepartner für ${escapeHtml(task.title)}">${partnerOptionsHtml(task.property, task.partnerId || '')}</select></label>`}
             <label class="tcard-field"><span>Status</span><select class="filter-select status-select st-${status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open'}" data-status-task="${task.id}" aria-label="Status für ${escapeHtml(task.title)} ändern">${taskStatuses.map((value) => `<option ${status === value ? 'selected' : ''}>${value}</option>`).join('')}</select></label>
             <div class="tcard-actions"><button type="button" class="tcard-action" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten">${icon('note')}<span>Bearbeiten</span></button><button type="button" class="tcard-action warn ${taskIssues.some((issue) => issue.status === 'open' || issue.status === 'planned') ? 'active' : ''}" data-report-issue="${task.id}" aria-label="Auffälligkeit zu ${escapeHtml(task.title)} melden${taskIssues.length ? ` (${taskIssues.length} gemeldet)` : ''}" title="${taskIssues.length ? `${taskIssues.length} ${taskIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet` : 'Auffälligkeit melden'}">${icon('alert')}<span>Auffälligkeit</span></button><button type="button" class="tcard-action danger" data-delete-task="${task.id}" aria-label="Aufgabe löschen">✕<span>Löschen</span></button></div>
           </div>
@@ -4653,7 +4674,7 @@
       const name = properties.find((property) => property.id === propertyId)?.name || '';
       form.elements.partnerId.innerHTML = partnerOptionsHtml(name, selected);
       const assigned = (servicePartnerAssignments[propertyId] || []).length;
-      document.getElementById('issue-partner-hint').textContent = assigned ? 'Zur Auswahl stehen die Servicepartner, die diesem Ferienhaus zugeordnet sind.' : 'Diesem Ferienhaus sind noch keine Servicepartner zugeordnet – das geht unter „Servicepartner finden“.';
+      document.getElementById('issue-partner-hint').innerHTML = assigned ? 'Zur Auswahl stehen die Servicepartner, die diesem Ferienhaus zugeordnet sind.' : noPartnerLinkHtml(propertyId, 'Diesem Ferienhaus ist noch kein Servicepartner zugeordnet');
     }
     function openIssueModal({ propertyId = properties[0]?.id, part = '', text = '', source = 'Meldung', taskId = '', partnerId = '' } = {}) {
       const form = document.getElementById('issue-form');
@@ -4690,6 +4711,7 @@
         ? `<option value="">Noch offen</option>${chosen.map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === data.partnerId ? 'selected' : ''}>${escapeHtml(provider.name)} · ${escapeHtml(partnerCategoryLabel(provider))}</option>`).join('')}`
         : '<option value="">Noch keine Servicepartner für dieses Haus ausgewählt</option>';
       document.getElementById('renovation-partner-hint').hidden = chosen.length > 0;
+      document.getElementById('renovation-partner-hint').innerHTML = chosen.length ? '' : noPartnerLinkHtml(data.propertyId, 'Diesem Ferienhaus ist noch kein Handwerker zugeordnet');
       ['title', 'budget', 'startDate', 'endDate', 'notes'].forEach((name) => { form.elements[name].value = data[name] || ''; });
       document.getElementById('renovation-modal').classList.add('open');
       form.elements.title.focus();
@@ -4706,7 +4728,7 @@
       const invoices = documents.filter((doc) => doc.issueId === issue.id);
       const total = invoices.reduce((sum, doc) => sum + Number(expenses.find((expense) => expense.id === doc.expenseId)?.amount || 0), 0);
       return `<div class="issue-extras">
-        <label class="issue-partner"><span>Servicepartner${partner ? ` <i class="tcard-ptype cat-${escapeHtml(partner.category)}">${partnerCategoryLabel(partner)}</i>` : ''}</span><select class="filter-select partner-select ${partnerId ? 'has-partner' : ''}" data-issue-partner="${escapeHtml(issue.id)}" aria-label="Servicepartner für diesen Mangel">${partnerOptionsHtml(propertyName, partnerId)}</select></label>
+        ${!partnerId && !assignedPartnerCount(issue.propertyId) ? `<div class="issue-partner"><span>Servicepartner</span>${noPartnerLinkHtml(issue.propertyId)}</div>` : `<label class="issue-partner"><span>Servicepartner${partner ? ` <i class="tcard-ptype cat-${escapeHtml(partner.category)}">${partnerCategoryLabel(partner)}</i>` : ''}</span><select class="filter-select partner-select ${partnerId ? 'has-partner' : ''}" data-issue-partner="${escapeHtml(issue.id)}" aria-label="Servicepartner für diesen Mangel">${partnerOptionsHtml(propertyName, partnerId)}</select></label>`}
         <div class="issue-invoices"><span class="issue-invoices-head">Rechnungen${invoices.length ? ` (${invoices.length})` : ''}${total ? ` · <b>${escapeHtml(formatCost(total))}</b>` : ''}</span>
           ${invoices.map((doc) => { const expense = expenses.find((entry) => entry.id === doc.expenseId); return `<span class="issue-invoice"><button type="button" class="issue-invoice-name" data-open-document="${escapeHtml(doc.id)}" title="${escapeHtml(doc.name)}">${icon('document')} ${escapeHtml(doc.name)}</button>${expense ? `<em>${escapeHtml(formatCost(Number(expense.amount)))}</em>` : `<button type="button" class="issue-invoice-read" data-invoice-read="${escapeHtml(doc.id)}">Auslesen</button>`}</span>`; }).join('')}
           <label class="ap-upload">${icon('plus')} Rechnung hochladen<input type="file" data-issue-invoice="${escapeHtml(issue.id)}" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" hidden></label></div>
@@ -6325,6 +6347,7 @@
         : '<option value="">Kein Servicepartner zugeordnet</option>';
       providerSelect.disabled = !candidates.length;
       document.getElementById('inspection-plan-provider-note').hidden = candidates.length > 0;
+      document.getElementById('inspection-plan-provider-note').innerHTML = candidates.length ? '' : noPartnerLinkHtml(property.id, 'Diesem Ferienhaus ist noch kein Servicepartner zugeordnet');
       document.getElementById('inspection-plan-name').value = control ? control.name : `Kontrolle ${controls.length + 1}`;
       document.getElementById('inspection-plan-title').textContent = control ? 'Kontrolle bearbeiten' : 'Kontrolle erstellen';
       document.getElementById('inspection-plan-subtitle').textContent = property.name;
@@ -6841,6 +6864,7 @@
       document.getElementById('repair-order-account').innerHTML = profileData.mailAccount
         ? `Absender: <strong>${escapeHtml(profileData.mailAccount)}</strong>`
         : 'Es ist noch kein Mailkonto verbunden – die E-Mail öffnet sich in deinem Standard-Mailprogramm. Absender hinterlegen unter Benutzerprofil → „E-Mail-Konto verbinden“.';
+      if (!assigned.length) document.getElementById('repair-order-account').innerHTML += noPartnerLinkHtml(issue.propertyId, 'Noch kein Servicepartner zugeordnet – oder unten eine E-Mail-Adresse eingeben');
       document.getElementById('repair-order-subject').value = `Reparaturauftrag ${repairOrderNo(issue)} – ${property?.name || 'Ferienhaus'}: ${partLabel(issue.part) || issue.text.slice(0, 40)}`;
       updateRepairOrderLetter();
       document.getElementById('repair-order-modal').classList.add('open');
@@ -8005,6 +8029,17 @@
       if (action === 'toggle-favorites') { onlyFavorites = !onlyFavorites; render(); }
       if (action === 'add-provider') showToast('Einladungen sind bald verfügbar.');
     });
+    document.addEventListener('click', (event) => {
+      const link = event.target.closest('[data-goto-assigned]');
+      if (!link) return;
+      event.preventDefault();
+      event.stopPropagation();
+      document.querySelectorAll('.modal-backdrop.open').forEach((modal) => modal.classList.remove('open'));
+      selectedPropertyId = link.dataset.gotoAssigned || properties[0]?.id;
+      currentPage = 'assignedProviders';
+      render();
+      window.scrollTo(0, 0);
+    }, true);
     document.addEventListener('keydown', (event) => {
       const propertyCard = event.target.closest('.property-card[data-action="view-property"], [data-goto-task]');
       if (propertyCard && (event.key === 'Enter' || event.key === ' ')) {
@@ -9813,7 +9848,7 @@
       if (event.target.id === 'property-modal') closePropertyModal();
     });
     document.getElementById('task-form').addEventListener('change', (event) => {
-      if (event.target.name === 'property') event.currentTarget.elements.partnerId.innerHTML = partnerOptionsHtml(event.target.value, event.currentTarget.elements.partnerId.value);
+      if (event.target.name === 'property') { event.currentTarget.elements.partnerId.innerHTML = partnerOptionsHtml(event.target.value, event.currentTarget.elements.partnerId.value); updateTaskPartnerHint(event.target.value); }
     });
     document.getElementById('task-modal').addEventListener('click', (event) => {
       if (event.target.id === 'task-modal') closeTaskModal();
@@ -9871,6 +9906,7 @@
         closeInspectionConfirmation();
         closeSendPlan();
         closeRepairOrder();
+        document.getElementById('issue-modal')?.classList.remove('open');
         closeInspectionPlan();
         closeControlPositions();
         closeProModal();
