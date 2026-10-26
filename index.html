@@ -1554,6 +1554,13 @@
     .issue-actions .order-btn svg { width: 13px; height: 13px; vertical-align: -2px; }
     .issue-ordered { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; margin: 0; color: var(--green); font-size: 11px; font-weight: 650; }
     .issue-ordered svg { width: 13px; height: 13px; }
+    /* Kontrollpläne: Beauftragen deutlich machen */
+    .control-order { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; padding: 3px 9px; border-radius: 20px; color: #8e622b; background: var(--amber-soft); font-size: 10.5px; font-weight: 650; }
+    .control-order.sent { color: var(--green); background: var(--green-soft); }
+    .control-order svg { width: 12px; height: 12px; }
+    .control-card-actions .control-order-btn { display: inline-flex; align-items: center; gap: 5px; color: white !important; background: var(--green) !important; border-color: var(--green) !important; font-weight: 700; }
+    .control-card-actions .control-order-btn:hover { background: #1f4a36 !important; }
+    .control-order-btn svg, .send-order-btn svg, .insp-step .primary-btn svg { width: 14px; height: 14px; }
     /* Mängel: Servicepartner und Rechnungen */
     .issue-extras { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 16px; padding-top: 10px; border-top: 1px dashed var(--line); }
     .issue-partner { display: grid; gap: 3px; }
@@ -1873,7 +1880,7 @@
         <span class="form-label">Eigene Position ergänzen</span>
         <div class="plan-custom-grid"><input class="form-control" id="plan-custom-title" maxlength="80" placeholder="z. B. Regenwassertonne leeren"><input class="form-control" id="plan-custom-detail" maxlength="200" placeholder="Beschreibung (optional)"><button type="button" class="secondary-btn" id="plan-custom-add">Hinzufügen</button></div>
       </div>
-      <div class="form-actions"><button type="button" class="secondary-btn" id="inspection-plan-cancel">Abbrechen</button><button type="button" class="primary-btn" id="inspection-plan-save">Kontrolle speichern</button></div>
+      <div class="form-actions"><button type="button" class="secondary-btn" id="inspection-plan-cancel">Abbrechen</button><button type="button" class="secondary-btn" id="inspection-plan-save">Nur speichern</button><button type="button" class="primary-btn send-order-btn" id="inspection-plan-save-send">Speichern & Service beauftragen</button></div>
     </section>
   </div>
   <div class="modal-backdrop" id="pdf-viewer-modal" role="dialog" aria-modal="true" aria-labelledby="pdf-viewer-title">
@@ -1922,7 +1929,7 @@
         <label><span class="form-label">Anschreiben</span><textarea class="form-control" id="send-plan-body"></textarea></label>
       </div>
       <p class="send-plan-note ok">Der Anhang ist eine PDF mit den Angaben zum Gebäude und allen Prüfpositionen. Vor jeder Position steht ein Kästchen, das sich digital ankreuzen lässt.</p>
-      <div class="form-actions"><button type="button" class="secondary-btn" id="send-plan-cancel">Abbrechen</button><button type="button" class="secondary-btn" id="send-plan-pdf">Nur PDF laden</button><button type="button" class="secondary-btn" id="send-plan-share">Teilen (WhatsApp, SMS …)</button><button type="button" class="secondary-btn" id="send-plan-web">Im Mailkonto öffnen</button><button type="button" class="primary-btn" id="send-plan-eml">E-Mail mit PDF öffnen</button></div>
+      <div class="form-actions"><button type="button" class="secondary-btn" id="send-plan-cancel">Abbrechen</button><button type="button" class="secondary-btn" id="send-plan-pdf">Nur PDF laden</button><button type="button" class="secondary-btn" id="send-plan-share">Teilen (WhatsApp, SMS …)</button><button type="button" class="primary-btn send-order-btn" id="send-plan-send">Auftrag senden</button></div>
     </section>
   </div>
   <div class="modal-backdrop" id="auto-task-modal" role="dialog" aria-modal="true" aria-labelledby="auto-task-title">
@@ -5622,7 +5629,7 @@
       return `<section class="card insp-status-card ${last.current ? 'ok' : 'due'}"><div class="insp-status-head"><div><span class="insp-status-label">${last.current ? 'Abwesenheitskontrolle aktuell' : 'Abwesenheitskontrolle fällig'}</span><h2>${last.current ? `Gültig bis ${escapeHtml(formatInspectionDate(last.validUntil))}` : last.entry ? `Seit ${escapeHtml(formatInspectionDate(last.validUntil))} fällig` : 'Noch nie durchgeführt'}</h2><p>${last.entry ? `Letzte Kontrolle am ${escapeHtml(formatInspectionDate(last.entry.date))}` : 'Lege fest, was geprüft wird, und beauftrage deinen Servicepartner.'}</p></div><div class="insp-order order-${order.state}">${order.state === 'done' ? icon('check') : icon('clock')}<div><strong>${escapeHtml(order.short)}</strong><small>${escapeHtml(order.text)}</small></div></div></div>
           <div class="insp-steps">
             ${step(1, 'Prüfpositionen festlegen', `${items.length} Positionen${controls.length ? ` · ${controls.length === 1 ? `Plan „${escapeHtml(controls[0].name)}“` : `${controls.length} Pläne`}` : ' · Standardliste'}`, `<button type="button" class="secondary-btn" data-action="${controls.length ? 'edit-first-control' : 'create-inspection'}" data-property="${escapeHtml(property.id)}">${controls.length ? 'Anpassen' : 'Plan anlegen'}</button>`, controls.length ? 'done' : '')}
-            ${step(2, 'Servicepartner beauftragen', order.state === 'ordered' ? escapeHtml(order.text) : partner ? `Vorschlag: ${escapeHtml(partner.name)}` : 'Noch kein Partner für Hauskontrolle zugeordnet', `<button type="button" class="${order.state === 'ordered' ? 'secondary-btn' : 'primary-btn'}" data-action="quick-send-plan" data-property="${escapeHtml(property.id)}">${order.state === 'ordered' ? 'Erneut senden' : 'Liste senden'}</button>`, order.state === 'ordered' || order.state === 'done' ? 'done' : '')}
+            ${step(2, 'Servicepartner beauftragen', order.state === 'ordered' ? escapeHtml(order.text) : partner ? `Vorschlag: ${escapeHtml(partner.name)}` : 'Noch kein Partner für Hauskontrolle zugeordnet', `<button type="button" class="${order.state === 'ordered' ? 'secondary-btn' : 'primary-btn'}" data-action="quick-send-plan" data-property="${escapeHtml(property.id)}">${icon('document')} ${order.state === 'ordered' ? 'Erneut beauftragen' : 'Service beauftragen'}</button>`, order.state === 'ordered' || order.state === 'done' ? 'done' : '')}
             ${step(3, 'Ergebnis eintragen', inspectionManual ? `${doneCount} von ${items.length} Positionen bewertet${issueCount ? ` · ${issueCount} auffällig` : ''}` : 'Rückmeldung des Partners oder eigene Prüfung erfassen', `<button type="button" class="${inspectionManual ? 'secondary-btn' : 'primary-btn'}" data-action="toggle-manual-check">${inspectionManual ? 'Schließen' : 'Ergebnis eintragen'}</button>`, last.current && !inspectionManual ? 'done' : '')}
           </div></section>
         <section class="card"><div class="card-head"><div><h2 class="card-title">Prüfliste · ${escapeHtml(property.name)}</h2><p class="card-caption">Je Position: worauf zu achten ist, bisherige Mängel und Reparaturen${inspectionManual ? ' · jetzt bewerten' : ''}</p></div>${inspectionManual ? `<div class="winter-progress"><progress max="${items.length}" value="${doneCount}"></progress><strong>${items.length ? Math.round(doneCount / items.length * 100) : 0} %</strong></div>` : `<button type="button" class="text-btn" data-action="view-plan-pdf" data-property="${escapeHtml(property.id)}">Als PDF ansehen →</button>`}</div>
@@ -5634,7 +5641,7 @@
           const provider = providers.find((entry) => entry.id === control.providerId);
           const itemCount = Object.keys(control.items || {}).length;
           const due = controlDueInfo(property.id, control.items, control.createdAt).due;
-          return `<article class="control-card"><div class="control-card-main"><strong>${escapeHtml(control.name)}</strong><span class="control-card-partner"><em>Servicepartner:</em> ${provider ? escapeHtml(provider.name) : 'nicht mehr verfügbar'}</span><small>${itemCount} Positionen${due ? ` · nächste Kontrolle spätestens ${escapeHtml(fmtDate(due))}` : ''}</small></div><div class="control-card-actions"><button type="button" data-action="send-inspection-plan" data-control="${escapeHtml(control.id)}">Senden</button><button type="button" data-action="view-inspection-plan" data-control="${escapeHtml(control.id)}">PDF / Rücklauf</button><button type="button" data-action="edit-control" data-control="${escapeHtml(control.id)}">Bearbeiten</button><button type="button" class="danger" data-action="delete-control" data-control="${escapeHtml(control.id)}">Löschen</button></div></article>`;
+          return `<article class="control-card"><div class="control-card-main"><strong>${escapeHtml(control.name)}</strong><span class="control-card-partner"><em>Servicepartner:</em> ${provider ? escapeHtml(provider.name) : 'nicht mehr verfügbar'}</span><small>${itemCount} Positionen${due ? ` · nächste Kontrolle spätestens ${escapeHtml(fmtDate(due))}` : ''}</small>${(() => { const sent = (inspectionOrders[property.id] || []).filter((entry) => entry.controlId === control.id).pop(); return sent ? `<span class="control-order sent">${icon('check')} Beauftragt am ${escapeHtml(fmtDate(String(sent.sentAt).slice(0, 10)))} bei ${escapeHtml(sent.partnerName)}${sent.status === 'done' ? ' · erledigt' : ''}</span>` : '<span class="control-order">' + icon('clock') + ' Noch nicht an den Servicepartner gesendet</span>'; })()}</div><div class="control-card-actions"><button type="button" class="control-order-btn" data-action="send-inspection-plan" data-control="${escapeHtml(control.id)}">${icon('document')} ${(inspectionOrders[property.id] || []).some((entry) => entry.controlId === control.id) ? 'Erneut beauftragen' : 'Service beauftragen'}</button><button type="button" data-action="view-inspection-plan" data-control="${escapeHtml(control.id)}">PDF / Rücklauf</button><button type="button" data-action="edit-control" data-control="${escapeHtml(control.id)}">Bearbeiten</button><button type="button" class="danger" data-action="delete-control" data-control="${escapeHtml(control.id)}">Löschen</button></div></article>`;
         }).join('')}</div></div></section>` : ''}`;
     }
     function inspectionsPage() {
@@ -5883,7 +5890,7 @@
       const candidates = providers.filter((provider) => assignedIds.includes(provider.id) || provider.id === control?.providerId);
       const providerSelect = document.getElementById('inspection-plan-provider');
       providerSelect.innerHTML = candidates.length
-        ? candidates.map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === control?.providerId ? 'selected' : ''}>${escapeHtml(provider.name)} · ${partnerCategoryLabel(provider)}</option>`).join('')
+        ? candidates.map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === (control?.providerId || suggestPartner(property.id, 'inspection')) ? 'selected' : ''}>${escapeHtml(provider.name)} · ${partnerCategoryLabel(provider)}</option>`).join('')
         : '<option value="">Kein Servicepartner zugeordnet</option>';
       providerSelect.disabled = !candidates.length;
       document.getElementById('inspection-plan-provider-note').hidden = candidates.length > 0;
@@ -5934,7 +5941,7 @@
       else delete next[propertyId];
       return next;
     }
-    function saveInspectionPlan() {
+    function saveInspectionPlan(andSend = false) {
       const propertyId = planEditProperty;
       if (!propertyId) return;
       const items = {};
@@ -5952,7 +5959,8 @@
       if (!persistControls({ ...inspectionControls, [propertyId]: nextControls }, selectionsForControls(propertyId, nextControls))) return;
       closeInspectionPlan();
       render();
-      showToast(existing ? 'Kontrolle wurde aktualisiert.' : 'Kontrolle wurde gespeichert.');
+      if (andSend) { openSendPlan(control.id); return; }
+      showToast(existing ? 'Kontrolle wurde aktualisiert.' : 'Kontrolle gespeichert – mit „Service beauftragen“ schickst du sie an den Servicepartner.');
     }
     function deleteControl(controlId) {
       const propertyId = inspectionProperty;
@@ -6325,12 +6333,12 @@
         window.removeEventListener('blur', onBlur);
         if (left || document.hidden) return;
         navigator.clipboard?.writeText(fallbackText || '').catch(() => {});
-        showToast('Kein Mailprogramm geöffnet. Stelle unter „Anbieter“ Gmail oder Outlook ein oder nutze die .eml-Datei. Inhalt wurde kopiert.');
+        showToast('Kein Mailprogramm geöffnet. Stelle im Benutzerprofil unter „E-Mail-Konto verbinden“ Gmail oder Outlook als Anbieter ein. Der E-Mail-Text wurde kopiert.');
       }, 1500);
     }
     function markPlanSent(channel) {
       const recipient = selectedPlanRecipient();
-      const name = recipient?.name || providers.find((provider) => provider.email === recipient?.email)?.name || recipient?.email || '';
+      const name = recipient?.name || providers.find((provider) => provider.email === recipient?.email)?.name || providerById(sendPlanState.control?.providerId)?.name || recipient?.email || '';
       recordInspectionOrder(sendPlanState.property, sendPlanState.control, name, channel);
       closeSendPlan();
       render();
@@ -6349,23 +6357,26 @@
         render();
       } catch (error) { if (error?.name !== 'AbortError') showToast('Teilen nicht möglich.'); }
     }
-    function sendPlanAsEml() {
+    // Auftrag senden: am Handy über die Mail-App mit PDF-Anhang, am Computer im Mailprogramm/Mailkonto.
+    async function sendPlanOrder() {
       const ctx = planMailContext();
       if (!ctx) return;
-      const from = profileData.mailAccount ? `${profileData.name} <${profileData.mailAccount}>` : '';
-      downloadFile(utf8Bytes(buildPlanEml({ ...ctx, from })), ctx.fileName.replace(/\.pdf$/, '.eml'), 'message/rfc822');
-      markPlanSent('E-Mail');
-      showToast('E-Mail-Entwurf mit PDF-Anhang erstellt – die Datei im Mailprogramm öffnen. Die Kontrolle ist als beauftragt vermerkt.');
-    }
-    function sendPlanViaWebmail() {
-      const ctx = planMailContext();
-      if (!ctx) return;
+      const file = new File([ctx.pdfBytes], ctx.fileName, { type: 'application/pdf' });
+      const touch = window.matchMedia?.('(pointer: coarse)').matches;
+      const partnerName = selectedPlanRecipient().name || ctx.to;
+      if (touch && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: ctx.subject, text: ctx.body });
+          markPlanSent('Mail-App');
+          showToast(`Auftrag an ${partnerName} gesendet – die Hauskontrolle ist als beauftragt vermerkt.`);
+        } catch (error) { if (error?.name !== 'AbortError') showToast('Senden über die Mail-App nicht möglich.'); }
+        return;
+      }
       downloadFile(ctx.pdfBytes, ctx.fileName, 'application/pdf');
       openMailUrl(webmailUrl(profileData.mailProvider || 'default', ctx.to, ctx.subject, ctx.body), ctx.body);
       markPlanSent('E-Mail');
-      showToast('PDF wurde geladen – bitte in der geöffneten E-Mail als Anhang hinzufügen. Die Kontrolle ist als beauftragt vermerkt.');
+      showToast(`E-Mail an ${partnerName} ist geöffnet – der Kontrollplan wurde als PDF geladen, bitte anhängen und absenden. Die Hauskontrolle ist als beauftragt vermerkt.`);
     }
-
     // Reparaturauftrag für einen Mangel: Anschreiben + PDF-Auftrag, Versand über das Mailprogramm.
     const repairOrderState = { issue: null };
     const fullDate = (key) => (key ? new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(`${key}T12:00:00`)) : '');
@@ -9279,7 +9290,8 @@
     document.getElementById('control-positions-modal').addEventListener('click', (event) => { if (event.target.id === 'control-positions-modal') closeControlPositions(); });
     document.getElementById('close-inspection-plan').addEventListener('click', closeInspectionPlan);
     document.getElementById('inspection-plan-cancel').addEventListener('click', closeInspectionPlan);
-    document.getElementById('inspection-plan-save').addEventListener('click', saveInspectionPlan);
+    document.getElementById('inspection-plan-save').addEventListener('click', () => saveInspectionPlan(false));
+    document.getElementById('inspection-plan-save-send').addEventListener('click', () => saveInspectionPlan(true));
     document.getElementById('inspection-plan-modal').addEventListener('click', (event) => { if (event.target.id === 'inspection-plan-modal') closeInspectionPlan(); });
     document.getElementById('plan-custom-add').addEventListener('click', addCustomPosition);
     document.getElementById('plan-custom-title').addEventListener('keydown', (event) => { if (event.key === 'Enter') { event.preventDefault(); addCustomPosition(); } });
@@ -9298,9 +9310,8 @@
     document.getElementById('close-send-plan').addEventListener('click', closeSendPlan);
     document.getElementById('send-plan-cancel').addEventListener('click', closeSendPlan);
     document.getElementById('send-plan-provider').addEventListener('change', updatePlanLetter);
-    document.getElementById('send-plan-eml').addEventListener('click', sendPlanAsEml);
+    document.getElementById('send-plan-send').addEventListener('click', sendPlanOrder);
     document.getElementById('send-plan-share').addEventListener('click', sharePlan);
-    document.getElementById('send-plan-web').addEventListener('click', sendPlanViaWebmail);
     document.getElementById('send-plan-pdf').addEventListener('click', () => {
       const { property, items, control } = sendPlanState;
       showPdf(buildPlanPdf(property, items, 'monthly', control), planFileName(property), 'Kontrollplan', planPreviewHtml(property, items, control));
