@@ -1586,6 +1586,39 @@
     .task-row-issue { margin-top: 4px; overflow: hidden; color: #7a5c00; font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
     .task-row-side .task-due { min-width: 44px; text-align: right; }
     @media (max-width: 520px) { .task-row { flex-wrap: wrap; padding: 10px 0; } .task-row-side { width: 100%; justify-content: flex-end; } }
+    /* Startseite: Hauskontrolle als Statuskacheln */
+    .insp-overview { display: grid; gap: 8px; padding: 14px 0; border-bottom: 1px solid #f0f1ee; }
+    .insp-overview:last-child { border-bottom: 0; }
+    .insp-overview-house { font-size: 12px; font-weight: 700; }
+    .insp-overview-house small { margin-left: 6px; color: var(--muted); font-size: 10px; font-weight: 400; }
+    .insp-tiles { display: grid; gap: 7px; }
+    .insp-tile { position: relative; display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; color: inherit; background: white; text-align: left; cursor: pointer; overflow: hidden; transition: box-shadow .15s, transform .15s; }
+    .insp-tile::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: #cfd8cf; }
+    .insp-tile:hover { box-shadow: 0 4px 14px rgba(30,45,35,.09); transform: translateY(-1px); }
+    .insp-tile-icon { display: grid; flex-shrink: 0; place-items: center; width: 32px; height: 32px; border-radius: 9px; color: #5d6b62; background: #eef1ec; }
+    .insp-tile-icon svg { width: 17px; height: 17px; }
+    .insp-tile-body { display: grid; flex: 1; gap: 3px; min-width: 0; }
+    .insp-tile-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .insp-tile-top strong { font-size: 12px; }
+    .insp-tile small { color: var(--muted); font-size: 10px; line-height: 1.45; }
+    .insp-tile-pill { display: inline-flex; flex-shrink: 0; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 20px; color: #5d6b62; background: #eef1ec; font-size: 9.5px; font-weight: 700; white-space: nowrap; }
+    .insp-tile-pill svg { width: 10px; height: 10px; stroke-width: 2.6; }
+    .insp-tile-bar { display: block; height: 4px; margin-top: 3px; border-radius: 4px; background: #eef1ec; overflow: hidden; }
+    .insp-tile-bar i { display: block; height: 100%; border-radius: 4px; background: currentColor; }
+    .insp-tile.st-done::before { background: var(--green); }
+    .insp-tile.st-done .insp-tile-icon, .insp-tile.st-done .insp-tile-pill { color: var(--green); background: var(--green-soft); }
+    .insp-tile.st-ordered::before { background: #3f78a8; }
+    .insp-tile.st-ordered .insp-tile-icon, .insp-tile.st-ordered .insp-tile-pill { color: #2f5f86; background: #e6eff7; }
+    .insp-tile.st-ordered .insp-tile-bar { color: #3f78a8; }
+    .insp-tile.st-due::before { background: #d9a45b; }
+    .insp-tile.st-due .insp-tile-icon, .insp-tile.st-due .insp-tile-pill { color: #8e622b; background: var(--amber-soft); }
+    .insp-tile.st-due .insp-tile-bar { color: #d9a45b; }
+    .insp-tile.st-overdue::before { background: var(--red); }
+    .insp-tile.st-overdue { background: #fffafa; }
+    .insp-tile.st-overdue .insp-tile-icon, .insp-tile.st-overdue .insp-tile-pill { color: var(--red); background: var(--red-soft); }
+    .insp-tile.st-overdue .insp-tile-bar { color: var(--red); }
+    .insp-tile.st-later { background: #fbfbf9; }
+    .insp-tile.st-later .insp-tile-icon { color: #9aa39c; }
     /* Startseite: Service vor Ort – gleiche Einrückung wie „Heute im Ferienhaus“ */
     .task-list.dash-tasks { padding: 0 18px; }
     .dash-tasks .task-row { position: relative; gap: 10px; min-height: 0; padding: 12px 18px; border-bottom: 1px solid #f0f1ee; border-radius: 0; }
@@ -2076,6 +2109,8 @@
         plus: '<path d="M12 5v14M5 12h14"/>',
         users: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6M18 14.4c1.9.8 3 2.6 3 5.6"/>',
         moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/>',
+        snow: '<path d="M12 2v20M4.9 6l14.2 12M19.1 6 4.9 18"/><path d="m9 4 3 2 3-2M9 20l3-2 3 2M3.5 9.5l3.4.9-.9 3.4M20.5 14.5l-3.4-.9.9-3.4M3.5 14.5l3.4-.9-.9-3.4M20.5 9.5l-3.4.9.9 3.4"/>',
+        sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
         clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>',
         note: '<path d="M5 4h14a1 1 0 0 1 1 1v10l-5 5H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M15 20v-4a1 1 0 0 1 1-1h4M8 9h8M8 13h4"/>',
         edit: '<path d="M4 20h4L19 9a2.1 2.1 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
@@ -3917,7 +3952,7 @@
             </section>` : ''}
             <section class="card"><div class="card-head"><div><h2 class="card-title">Hauskontrolle</h2><p class="card-caption">${singleHouse() ? 'Prüfstatus deines Ferienhauses' : 'Prüfstatus je Ferienhaus'}</p></div><button class="text-btn" data-page="inspections">Hauskontrolle →</button></div>
               <div class="house-service-list">${properties.map((property) => {
-                return `<button class="house-service-row stacked" data-action="open-inspection" data-property="${escapeHtml(property.id)}"><span class="house-service-name">${escapeHtml(property.name)}<small>${escapeHtml(property.region || property.address)}</small></span><span class="house-service-badges">${inspectionStatusBadge(property.id)}${inspectionOrderBadge(property.id)}${winterStatusBadge(property.id)}</span></button>`;
+                return `<div class="insp-overview">${singleHouse() ? '' : `<div class="insp-overview-house">${escapeHtml(property.name)}<small>${escapeHtml(property.region || property.address || '')}</small></div>`}<div class="insp-tiles">${inspectionOverviewTiles(property.id)}</div></div>`;
               }).join('') || '<div class="empty">Noch keine Ferienhäuser vorhanden.</div>'}</div>
             </section>
             <section class="card"><div class="card-head"><div><h2 class="card-title">Reparatur & Instandhaltung</h2><p class="card-caption">Gemeldete Mängel und geplante Reparaturen</p></div><button class="text-btn" data-page="repairs">Übersicht →</button></div>
@@ -6718,6 +6753,37 @@
       const checked = winterChecks[`${new Date().getFullYear()}:${propertyId}`] || {};
       return winterChecklist.every((item) => checked[item.id]);
     }
+
+    // Startseite: Status der Abwesenheitskontrolle und der Saisonvorbereitung als Kacheln.
+    function inspectionOverviewTiles(propertyId) {
+      const today = localDateKey(new Date());
+      const tile = ({ view, iconName, title, state, label, detail, progress }) => `<button type="button" class="insp-tile st-${state}" data-action="open-inspection" data-property="${escapeHtml(propertyId)}" data-view="${view}"><span class="insp-tile-icon">${icon(iconName)}</span><span class="insp-tile-body"><span class="insp-tile-top"><strong>${title}</strong><span class="insp-tile-pill">${state === 'done' ? icon('check') : ''}${escapeHtml(label)}</span></span><small>${detail}</small>${progress ? `<span class="insp-tile-bar"><i style="width:${progress}%"></i></span>` : ''}</span></button>`;
+      const last = lastAbsenceInspection(propertyId);
+      const order = inspectionOrderText(propertyId);
+      let absence;
+      if (last.current) absence = { state: 'done', label: 'Erledigt', detail: `Kontrolle am ${escapeHtml(fmtDate(last.entry.date))} · gültig bis ${escapeHtml(fmtDate(last.validUntil))}` };
+      else if (order.state === 'ordered') absence = { state: 'ordered', label: 'Beauftragt', detail: escapeHtml(order.text) };
+      else absence = { state: last.entry ? 'overdue' : 'due', label: 'Fällig', detail: last.entry ? `Seit ${escapeHtml(fmtDate(last.validUntil))} fällig · noch nicht beauftragt` : 'Noch nie durchgeführt · noch nicht beauftragt' };
+      const season = (key) => {
+        const config = SEASON_CHECKLISTS[key];
+        const checked = winterChecks[config.key(propertyId)] || {};
+        const done = config.items.filter((item) => checked[item.id]).length;
+        const total = config.items.length;
+        const { due, ready, days, overdue } = seasonDueState(key, propertyId);
+        const task = tasks.find((entry) => entry.auto === 'season' && entry.season === key && entry.propertyId === propertyId && !entry.done);
+        const partner = providerById(task?.partnerId);
+        const base = { view: key, iconName: key === 'winter' ? 'snow' : 'sun', title: key === 'winter' ? 'Wintervorbereitung' : 'Frühjahrsöffnung' };
+        if (ready) return { ...base, state: 'done', label: 'Erledigt', detail: `Alle ${total} Punkte abgehakt` };
+        // Außerhalb der Saison (mehr als zwei Monate nach der Frist) gilt die nächste Saison.
+        if (days < -60) return { ...base, state: 'later', label: 'Nächste Saison', detail: `Fällig bis ${escapeHtml(fmtDate(`${Number(due.slice(0, 4)) + 1}${due.slice(4)}`))} ${Number(due.slice(0, 4)) + 1}` };
+        if (days > 75) return { ...base, state: 'later', label: 'Später', detail: `Fällig bis ${escapeHtml(fmtDate(due))} · Start etwa 6 Wochen vorher` };
+        const progressText = done ? `${done} von ${total} Punkten erledigt` : `${total} Punkte offen`;
+        const when = overdue ? `seit ${escapeHtml(fmtDate(due))} überfällig` : days === 0 ? 'Frist heute' : `bis ${escapeHtml(fmtDate(due))} · noch ${days} ${days === 1 ? 'Tag' : 'Tage'}`;
+        if (task && taskStatus(task) === 'In Bearbeitung') return { ...base, state: 'ordered', label: 'Beauftragt', detail: `${partner ? `${escapeHtml(partner.name)} · ` : ''}${progressText} · ${when}`, progress: Math.round(done / total * 100) };
+        return { ...base, state: overdue ? 'overdue' : 'due', label: overdue ? 'Überfällig' : done ? 'In Arbeit' : 'Fällig', detail: `${progressText} · ${when}`, progress: Math.round(done / total * 100) };
+      };
+      return [tile({ view: 'absence', iconName: 'inspection', title: 'Abwesenheitskontrolle', ...absence }), tile(season('winter')), tile(season('spring'))].join('');
+    }
     function winterStatusBadge(propertyId) {
       return winterIsReady(propertyId)
         ? `<span class="inspection-status-badge current">${icon('check')}Wintervorbereitung getroffen</span>`
@@ -7421,6 +7487,7 @@
       if (action === 'delete-control') deleteControl(event.target.closest('[data-action]').dataset.control);
       if (action === 'open-inspection') {
         inspectionProperty = event.target.closest('[data-action]').dataset.property;
+        if (event.target.closest('[data-action]').dataset.view) inspectionView = event.target.closest('[data-action]').dataset.view;
         currentPage = 'inspections';
         render();
       }
