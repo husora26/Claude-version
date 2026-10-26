@@ -1067,6 +1067,11 @@
     .inspection-findings[hidden] { display: none; }
     .automation-links { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
     .welcome-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .back-link { display: inline-flex; align-items: center; gap: 4px; margin: 0 0 10px; padding: 3px 9px 3px 7px; border: 1px solid var(--line); border-radius: 20px; color: var(--muted); background: rgba(255,255,255,.7); font: inherit; font-size: 11px; font-weight: 650; cursor: pointer; }
+    .back-link:hover { color: var(--green); border-color: var(--green); background: white; }
+    .back-link:focus-visible { outline: 2px solid #9db9a5; outline-offset: 2px; }
+    .welcome > div:first-child > .back-link + .eyebrow { margin-top: 0; }
+
     .issue-list { display: grid; gap: 10px; padding: 14px 18px 16px; }
     .issue-card { display: grid; grid-template-columns: 1fr auto; gap: 8px 14px; padding: 12px 14px; border: 1px solid var(--line); border-left: 4px solid #d58a1f; border-radius: 10px; background: #fffdf8; }
     .issue-card.fixed { border-left-color: var(--green); opacity: .8; }
@@ -7417,22 +7422,22 @@
     }
     // Jede Unterseite bekommt im Kopfbereich einen Zurück-Button, falls die Seite selbst keinen setzt.
     function ensureBackButton() {
-      if (currentPage === 'dashboard' || pageContent.querySelector('[data-action="go-back"]')) return;
+      if (currentPage === 'dashboard') return;
       const welcome = pageContent.querySelector('.welcome');
       if (!welcome) return;
+      // Vorhandene große Zurück-Buttons der Seiten entfernen, damit überall derselbe kleine Button steht.
+      welcome.querySelectorAll('[data-action="go-back"]').forEach((button) => {
+        const parent = button.parentElement;
+        button.remove();
+        if (parent !== welcome && parent.classList.contains('welcome-actions') && !parent.children.length) parent.remove();
+      });
       const back = document.createElement('button');
       back.type = 'button';
-      back.className = 'secondary-btn back-btn';
+      back.className = 'back-link';
       back.dataset.action = 'go-back';
-      back.textContent = '← Zurück';
-      let actions = welcome.querySelector(':scope > .welcome-actions');
-      if (!actions) {
-        actions = document.createElement('div');
-        actions.className = 'welcome-actions';
-        [...welcome.children].slice(1).forEach((child) => actions.append(child));
-        welcome.append(actions);
-      }
-      actions.prepend(back);
+      back.setAttribute('aria-label', 'Zurück zur vorherigen Seite');
+      back.innerHTML = '<span aria-hidden="true">←</span> Zurück';
+      (welcome.firstElementChild || welcome).prepend(back);
     }
     // Wischen nach links führt auf allen Touch-Geräten zur vorherigen Seite, auch wenn die Geste auf einer Karte oder einem Knopf beginnt.
     let swipeStart = null;
