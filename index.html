@@ -1929,6 +1929,24 @@
     .pr-kpi.ok { color: var(--green); background: var(--green-soft); }
     .pr-kpi.issue { color: #8a5a00; background: #fff4cc; }
     .pr-kpi.open { color: #5d6b62; background: #eef1ec; }
+    .protocol-meta { margin: 12px 0 6px; padding: 10px 12px; border: 1px solid #dbe5dd; border-radius: 10px; background: #f6faf7; }
+    .protocol-meta-h { display: flex; align-items: center; gap: 6px; margin-bottom: 7px; color: var(--green); font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+    .protocol-meta-h svg { width: 14px; height: 14px; }
+    .protocol-meta dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 6px 14px; margin: 0; }
+    .protocol-meta dl div { min-width: 0; }
+    .protocol-meta dt { color: var(--muted); font-size: 9px; }
+    .protocol-meta dd { margin: 1px 0 0; font-size: 12px; font-weight: 700; overflow-wrap: anywhere; }
+    .protocol-meta .missing dd { color: #a26a1c; font-weight: 600; font-style: italic; }
+    .protocol-meta.compact { margin: 8px 0 4px; padding: 7px 10px; }
+    .control-order.archived { color: var(--green); background: var(--green-soft); }
+    .control-return.locked > svg { flex: 0 0 auto; width: 15px; height: 15px; color: var(--green); }
+    .control-return.archived > span { display: block; flex: 1; }
+    .prc-ready { display: flex; gap: 9px; align-items: flex-start; margin-top: 9px; padding: 9px 11px; border-radius: 9px; color: #1f6b41; background: var(--green-soft); }
+    .prc-ready svg { flex: 0 0 auto; width: 16px; height: 16px; margin-top: 1px; }
+    .prc-ready strong { display: block; font-size: 12px; }
+    .prc-ready span { display: block; font-size: 11px; }
+    .archive-responsible { display: flex; align-items: center; gap: 5px; margin-top: 2px; color: var(--green); font-size: 11px; font-weight: 700; }
+    .archive-responsible svg { width: 13px; height: 13px; }
     .plan-return-meta { margin: 10px 0 4px; color: var(--muted); font-size: 11px; }
     .plan-return-h { display: flex; align-items: center; gap: 6px; margin: 14px 0 6px; color: #8a5a00; font-size: 12.5px; }
     .plan-return-h.open { color: #5d6b62; }
@@ -2043,6 +2061,11 @@
     .position-history em { padding: 0 5px; border-radius: 6px; background: rgba(0,0,0,.05); font-size: 9.5px; font-style: normal; font-weight: 700; }
     .position-result { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
     .position-result .form-control { flex: 1 1 240px; min-height: 36px; }
+    .position-repair-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 13px; border: 1px solid #e3c766; border-radius: 9px; color: #6f5200; background: #fff3c4; font-size: 11.5px; font-weight: 750; cursor: pointer; animation: repairIn .18s ease-out; }
+    .position-repair-btn:hover { background: #ffe998; }
+    .position-repair-btn svg { width: 14px; height: 14px; }
+    .position-repair-btn.ordered { color: var(--green); border-color: #bcd8c5; background: var(--green-soft); }
+    @keyframes repairIn { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
     .result-toggle { display: inline-flex; gap: 6px; }
     .result-toggle button { display: inline-flex; align-items: center; gap: 5px; min-height: 36px; padding: 0 12px; border: 1.5px solid var(--line); border-radius: 9px; color: #49544c; background: #fff; font-size: 12px; font-weight: 700; }
     .result-toggle svg { width: 14px; height: 14px; }
@@ -2406,6 +2429,7 @@
     <section class="modal inspection-confirmation-modal">
       <div class="modal-head"><div><h2 id="inspection-confirmation-title">Prüfprotokoll</h2><p id="inspection-confirmation-subtitle">Abwesenheitskontrolle</p></div><button class="close-btn" type="button" id="close-inspection-confirmation" aria-label="Schließen">✕</button></div>
       <p class="inspection-report-summary" id="inspection-report-summary"></p>
+      <div id="inspection-report-protocol" hidden></div>
       <h3 class="card-title">Angaben zum Haus</h3>
       <dl class="inspection-report-house" id="inspection-report-house"></dl>
       <h3 class="card-title">Geprüfte Positionen</h3>
@@ -4389,7 +4413,7 @@
           isPast: true
         }));
       const dashboardBookings = upcomingChanges.length ? upcomingChanges.slice(0, 4) : pastBookings.slice(0, 2);
-      const currentInspections = properties.filter((property) => inspectionIsCurrent(property.id)).length;
+      const currentInspections = properties.filter((property) => activePlanReturn(property.id)?.state.complete || (!activePlanReturn(property.id) && inspectionIsCurrent(property.id))).length;
       const plannedAnnualCost = properties.reduce((total, property) => {
         const costs = annualCosts[property.id] || initialCosts[property.id] || {};
         return total + costCategories.reduce((sum, category) => sum + Math.max(0, Number(costs[category.id]) || 0), 0);
@@ -6299,6 +6323,30 @@
     let inspectionNotes = {};
     try { inspectionNotes = JSON.parse(localStorage.getItem('stugliv-inspection-notes') || '{}') || {}; } catch (error) { inspectionNotes = {}; }
     function persistInspectionNotes() { try { localStorage.setItem('stugliv-inspection-notes', JSON.stringify(inspectionNotes)); } catch (error) { console.error(error); } }
+    // Manuelle Prüfliste: direkt aus einer auffälligen Position angelegter Reparaturauftrag.
+    function manualRepairIssue(propertyId, itemId) {
+      const id = (inspectionNotes[propertyId] || {})[`__issue:${itemId}`];
+      return id ? issues.find((issue) => issue.id === id) || null : null;
+    }
+    function writePositionRepair(itemId) {
+      const propertyId = inspectionProperty;
+      const item = absenceChecklist.find((entry) => entry.id === itemId);
+      if (!item) return;
+      const input = document.querySelector(`[data-position-note="${CSS.escape(itemId)}"]`);
+      const note = (input ? input.value : (inspectionNotes[propertyId] || {})[itemId] || '').trim();
+      const text = `${item.title}: ${note || 'Auffälligkeit bei der Hauskontrolle'}`;
+      let issue = manualRepairIssue(propertyId, itemId);
+      if (!issue) {
+        issue = createIssue({ propertyId, part: housePartDefs.find((part) => part.match.test(text))?.id || POSITION_DETAILS[itemId]?.parts?.[0] || '', text, priority: 'soon', source: 'Hauskontrolle', partnerId: suggestPartner(propertyId, 'repair') || '' });
+        issue.positionId = itemId;
+      } else if (note) issue.text = text;
+      issue.details = `Festgestellt bei der Hauskontrolle am ${fmtDate(localDateKey(new Date()))} – Position „${item.title}“${note ? `\nAnmerkung: ${note}` : ''}`;
+      persistIssues();
+      inspectionNotes = { ...inspectionNotes, [propertyId]: { ...(inspectionNotes[propertyId] || {}), [itemId]: note, [`__issue:${itemId}`]: issue.id } };
+      persistInspectionNotes();
+      render();
+      openRepairOrder(issue.id);
+    }
     const positionResult = (propertyId, itemId) => { const value = (inspectionChecks[propertyId] || {})[itemId]; return value === 'issue' ? 'issue' : value ? 'ok' : ''; };
     function ensureDefaultControl(propertyId, create = true) {
       const existing = controlsFor(propertyId)[0];
@@ -6338,7 +6386,7 @@
           </div>
           <div class="position-hints"><span class="form-label">Mögliche Auffälligkeiten</span><ul>${history.details.hints.map((hint) => `<li>${escapeHtml(hint)}</li>`).join('')}</ul></div>
           <div class="position-history"><span class="form-label">Mängel & Reparaturen</span>${history.open.length || history.repairs.length || history.projects.length ? `<ul>${history.open.map((issue) => `<li class="open">${escapeHtml(fmtDate(issue.date))}: ${escapeHtml(issue.text)} <em>offen</em></li>`).join('')}${history.repairs.slice(0, 3).map((issue) => `<li class="fixed">${escapeHtml(fmtDate(issue.fixedAt || issue.date))}: ${escapeHtml(issue.text)} <em>repariert</em></li>`).join('')}${history.projects.map((project) => `<li class="fixed">${escapeHtml(project.endDate ? fmtDate(project.endDate) : '')} ${escapeHtml(project.title)} <em>saniert</em></li>`).join('')}</ul>` : '<p>Keine bekannt</p>'}</div>
-          ${inspectionManual ? `<div class="position-result"><div class="result-toggle" role="group" aria-label="Ergebnis ${escapeHtml(item.title)}"><button type="button" class="${result === 'ok' ? 'active ok' : ''}" data-position-result="ok" data-item="${item.id}">${icon('check')} In Ordnung</button><button type="button" class="${result === 'issue' ? 'active issue' : ''}" data-position-result="issue" data-item="${item.id}">${icon('alert')} Auffällig</button></div>${result === 'issue' ? `<input class="form-control" data-position-note="${item.id}" maxlength="200" value="${escapeHtml(note)}" placeholder="Was ist aufgefallen?">` : ''}</div>` : ''}
+          ${inspectionManual ? `<div class="position-result"><div class="result-toggle" role="group" aria-label="Ergebnis ${escapeHtml(item.title)}"><button type="button" class="${result === 'ok' ? 'active ok' : ''}" data-position-result="ok" data-item="${item.id}">${icon('check')} In Ordnung</button><button type="button" class="${result === 'issue' ? 'active issue' : ''}" data-position-result="issue" data-item="${item.id}">${icon('alert')} Auffällig</button></div>${result === 'issue' ? `<input class="form-control" data-position-note="${item.id}" maxlength="200" value="${escapeHtml(note)}" placeholder="Was ist aufgefallen?">${(() => { const linked = manualRepairIssue(property.id, item.id); return linked ? `<button type="button" class="position-repair-btn ordered" data-position-repair="${item.id}">${icon('check')} ${linked.orderedAt ? `Beauftragt am ${escapeHtml(fmtDate(linked.orderedAt))}` : 'Reparaturauftrag angelegt'} · öffnen</button>` : `<button type="button" class="position-repair-btn" data-position-repair="${item.id}">${icon('alert')} Reparaturauftrag schreiben</button>`; })()}` : ''}</div>` : ''}
         </article>`;
       }).join('');
       return `<section class="card insp-status-card ${last.current ? 'ok' : 'due'}"><div class="insp-status-head"><div><span class="insp-status-label">${last.current ? 'Abwesenheitskontrolle aktuell' : 'Abwesenheitskontrolle fällig'}</span><h2>${last.current ? `Gültig bis ${escapeHtml(formatInspectionDate(last.validUntil))}` : last.entry ? `Seit ${escapeHtml(formatInspectionDate(last.validUntil))} fällig` : 'Noch nie durchgeführt'}</h2><p>${last.entry ? `Letzte Kontrolle am ${escapeHtml(formatInspectionDate(last.entry.date))}` : 'Lege fest, was geprüft wird, und beauftrage deinen Servicepartner.'}</p></div><div class="insp-order order-${order.state}">${order.state === 'done' ? icon('check') : icon('clock')}<div><strong>${escapeHtml(order.short)}</strong><small>${escapeHtml(order.text)}</small></div></div></div>
@@ -6357,7 +6405,7 @@
           const provider = providers.find((entry) => entry.id === control.providerId);
           const itemCount = Object.keys(control.items || {}).length;
           const due = controlDueInfo(property.id, control.items, control.createdAt).due;
-          return `<article class="control-card"><div class="control-card-main"><strong>${escapeHtml(control.name)}</strong><span class="control-card-partner"><em>Servicepartner:</em> ${provider ? escapeHtml(provider.name) : 'nicht mehr verfügbar'}</span><small>${itemCount} Positionen${due ? ` · nächste Kontrolle spätestens ${escapeHtml(fmtDate(due))}` : ''}</small>${(() => { const sent = (inspectionOrders[property.id] || []).filter((entry) => entry.controlId === control.id).pop(); return sent ? `<span class="control-order sent">${icon('check')} Beauftragt am ${escapeHtml(fmtDate(String(sent.sentAt).slice(0, 10)))} bei ${escapeHtml(sent.partnerName)}${sent.status === 'done' ? ' · erledigt' : ''}</span>` : '<span class="control-order">' + icon('clock') + ' Noch nicht an den Servicepartner gesendet</span>'; })()}</div><div class="control-card-actions"><button type="button" class="control-order-btn" data-action="send-inspection-plan" data-control="${escapeHtml(control.id)}">${icon('document')} ${(inspectionOrders[property.id] || []).some((entry) => entry.controlId === control.id) ? 'Erneut beauftragen' : 'Service beauftragen'}</button><button type="button" data-action="view-inspection-plan" data-control="${escapeHtml(control.id)}">PDF / Rücklauf</button><button type="button" data-action="edit-control" data-control="${escapeHtml(control.id)}">Bearbeiten</button><button type="button" class="danger" data-action="delete-control" data-control="${escapeHtml(control.id)}">Löschen</button></div></article>${(() => { const sent = (inspectionOrders[property.id] || []).filter((entry) => entry.controlId === control.id).pop(); return `<div class="control-return ${sent ? '' : 'locked'}">${sent ? `<label class="primary-btn">${icon('document')} Kontrollplan als PDF einlesen<input type="file" accept="application/pdf,.pdf" data-plan-return-upload data-control="${escapeHtml(control.id)}" hidden></label><span>Ausgefüllten Plan von ${escapeHtml(sent.partnerName)} hochladen – Husora liest jede Position aus, prüft sie und legt Mängel samt Anmerkungen als Reparaturauftrag an.</span>` : `<span>${icon('clock')} Nach der Beauftragung liest du hier den ausgefüllten Kontrollplan des Servicepartners ein.</span>`}</div>${planReturnsHtml(property, control.id)}`; })()}`;
+          return `<article class="control-card"><div class="control-card-main"><strong>${escapeHtml(control.name)}</strong><span class="control-card-partner"><em>Servicepartner:</em> ${provider ? escapeHtml(provider.name) : 'nicht mehr verfügbar'}</span><small>${itemCount} Positionen${due ? ` · nächste Kontrolle spätestens ${escapeHtml(fmtDate(due))}` : ''}</small>${(() => { const sent = (inspectionOrders[property.id] || []).filter((entry) => entry.controlId === control.id).pop(); if (sent?.archivedAt) return `<span class="control-order archived">${icon('check')} Kontrolle vom ${escapeHtml(fmtDate(sent.completedAt))} archiviert · nächste Kontrolle bis ${escapeHtml(fmtDate(due))}</span>`; return sent ? `<span class="control-order sent">${icon('check')} Beauftragt am ${escapeHtml(fmtDate(String(sent.sentAt).slice(0, 10)))} bei ${escapeHtml(sent.partnerName)}${sent.status === 'done' ? ' · erledigt' : ''}</span>` : '<span class="control-order">' + icon('clock') + ' Noch nicht an den Servicepartner gesendet</span>'; })()}</div><div class="control-card-actions"><button type="button" class="control-order-btn" data-action="send-inspection-plan" data-control="${escapeHtml(control.id)}">${icon('document')} ${(() => { const sent = (inspectionOrders[property.id] || []).filter((entry) => entry.controlId === control.id).pop(); return sent?.archivedAt ? 'Nächste Kontrolle beauftragen' : sent ? 'Erneut beauftragen' : 'Service beauftragen'; })()}</button><button type="button" data-action="edit-control" data-control="${escapeHtml(control.id)}">Bearbeiten</button><button type="button" class="danger" data-action="delete-control" data-control="${escapeHtml(control.id)}">Löschen</button></div></article>${(() => { const sent = (inspectionOrders[property.id] || []).filter((entry) => entry.controlId === control.id).pop(); if (sent?.archivedAt) return `<div class="control-return locked archived">${icon('check')}<span>Prüfprotokoll archiviert, der Kontrollplan ist zurückgesetzt. Die nächste Kontrolle ist bis ${escapeHtml(fmtDate(due))} fällig – beauftrage dafür den Servicepartner erneut.</span></div>${planReturnsHtml(property, control.id)}`; return `<div class="control-return ${sent ? '' : 'locked'}">${sent ? `<label class="primary-btn">${icon('document')} Kontrollplan als PDF einlesen<input type="file" accept="application/pdf,.pdf" data-plan-return-upload data-control="${escapeHtml(control.id)}" hidden></label><span>Ausgefüllten Plan von ${escapeHtml(sent.partnerName)} hochladen – Husora liest jede Position aus, prüft sie und legt Mängel samt Anmerkungen als Reparaturauftrag an.</span>` : `<span>${icon('clock')} Nach der Beauftragung liest du hier den ausgefüllten Kontrollplan des Servicepartners ein.</span>`}</div>${planReturnsHtml(property, control.id)}`; })()}`;
         }).join('')}</div></div></section>` : ''}`;
     }
     function inspectionsPage() {
@@ -6401,7 +6449,7 @@
           ${(planUploads[property.id] || []).length ? `<div class="inspection-archive-list">${(planUploads[property.id] || []).slice().reverse().map((upload) => `<article class="inspection-archive-row"><div class="inspection-archive-main"><strong>Hochgeladene PDF · ${escapeHtml(upload.name)}</strong><small>Archiviert ${escapeHtml(new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(upload.uploadedAt)))} · ${Math.max(1, Math.round(upload.size / 1024))} KB</small></div><div class="inspection-archive-actions"><button class="secondary-btn" type="button" data-open-upload="${escapeHtml(upload.id)}">PDF anzeigen</button><button class="secondary-btn" type="button" data-delete-upload="${escapeHtml(upload.id)}">Löschen</button></div></article>`).join('')}</div>` : ''}
           ${archiveEntries.length ? `<div class="inspection-archive-list">${archiveEntries.map(({ entry, index }) => {
             const checkedItems = Array.isArray(entry.checkedItemsSnapshot) ? entry.checkedItemsSnapshot.length : entry.checkedItems?.length || 0;
-            return `<article class="inspection-archive-row"><div class="inspection-archive-main"><strong>Abwesenheitskontrolle · ${escapeHtml(formatInspectionDate(entry.date))}</strong><small>${checkedItems} geprüfte ${checkedItems === 1 ? 'Position' : 'Positionen'}${entry.completedAt ? ` · gespeichert ${escapeHtml(new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(entry.completedAt)))}` : ''}</small></div><div class="inspection-archive-actions"><button class="secondary-btn" type="button" data-inspection-archive="${index}">Protokoll ansehen / PDF</button><button class="secondary-btn" type="button" data-delete-protocol="${index}">Löschen</button></div></article>`;
+            return `<article class="inspection-archive-row"><div class="inspection-archive-main"><strong>Abwesenheitskontrolle · ${escapeHtml(formatInspectionDate(entry.date))}</strong>${entry.inspectedBy || entry.source ? `<span class="archive-responsible">${icon('inspection')}${entry.inspectedBy ? `Verantwortlich: ${escapeHtml(entry.inspectedBy)}` : 'Verantwortlich: nicht eingetragen'}${entry.source ? ` · ${escapeHtml(entry.source)}` : ''}</span>` : ''}<small>${checkedItems} geprüfte ${checkedItems === 1 ? 'Position' : 'Positionen'}${entry.findings?.length ? ` · ${entry.findings.length} ${entry.findings.length === 1 ? 'Mangel' : 'Mängel'} behoben` : ''}${entry.completedAt ? ` · gespeichert ${escapeHtml(new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(entry.completedAt)))}` : ''}</small></div><div class="inspection-archive-actions"><button class="secondary-btn" type="button" data-inspection-archive="${index}">Protokoll ansehen / PDF</button><button class="secondary-btn" type="button" data-delete-protocol="${index}">Löschen</button></div></article>`;
           }).join('')}</div><p class="inspection-archive-note">Das Archiv wird lokal in diesem Browser gespeichert. Für eine externe Ablage kannst du ein Protokoll öffnen und als PDF sichern.</p>` : (planUploads[property.id] || []).length ? '' : '<div class="empty">Für dieses Ferienhaus sind noch keine Prüfprotokolle archiviert.</div>'}
         </section>`;
     }
@@ -6449,6 +6497,9 @@
       document.getElementById('save-inspection-report').hidden = archived;
       document.getElementById('inspection-findings-wrap').hidden = archived;
       document.getElementById('inspection-findings').value = '';
+      const protocolBox = document.getElementById('inspection-report-protocol');
+      protocolBox.hidden = !inspection.protocol;
+      protocolBox.innerHTML = inspection.protocol ? `<h3 class="card-title">Durchführung</h3><dl class="inspection-report-house">${inspection.protocol.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl>` : '';
       document.getElementById('inspection-report-house').innerHTML = inspection.houseDetails
         .map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('');
       document.getElementById('inspection-report-list').innerHTML = inspection.checkedItems
@@ -6483,7 +6534,8 @@
         houseDetails: inspectionHouseDetails(property),
         date: entry.date,
         checkedItemIds: checkedItems.map((item) => item.id),
-        checkedItems
+        checkedItems,
+        protocol: entry.inspectedBy || entry.source ? [['Verantwortlich', entry.inspectedBy || 'nicht eingetragen'], ['Kontrolliert am', fmtDate(entry.date)], ...(entry.source ? [['Grundlage', entry.source]] : []), ...(entry.findings?.length ? [['Mängel', `${entry.findings.length} festgestellt · alle behoben`]] : [])] : null
       }, true);
     }
 
@@ -7034,10 +7086,10 @@
           <div class="pr-kpi issue"><strong>${issues.length}</strong><span>auffällig</span></div>
           <div class="pr-kpi open"><strong>${open.length}</strong><span>ohne Ergebnis</span></div>
         </div>
-        <p class="plan-return-meta">${control ? `Kontrolle „${escapeHtml(control.name)}“ · ` : ''}${inspectedBy ? `kontrolliert von ${escapeHtml(inspectedBy)}` : 'Prüfer nicht angegeben'}${date ? ` · am ${escapeHtml(date)}` : ''}</p>
+        ${protocolMetaHtml({ inspectedBy, date: parseGermanDate(date) || date, controlName: control?.name || '', readAt: new Date().toISOString() })}
         ${issues.length ? `<h3 class="plan-return-h">${icon('alert')} Als Reparaturauftrag anlegen (${issues.length})</h3><ul class="plan-return-list issue">${issues.map((entry) => `<li><strong>${escapeHtml(entry.title)}</strong><span>${escapeHtml(entry.note || 'Auffällig – keine Bemerkung eingetragen')}</span></li>`).join('')}</ul>` : ''}
         ${open.length ? `<h3 class="plan-return-h open">${icon('clock')} Noch offen – nicht bewertet (${open.length})</h3><ul class="plan-return-list open">${open.map((entry) => `<li><strong>${escapeHtml(entry.title)}</strong><span>Weder „OK“ noch „Auffällig“ angekreuzt – beim Servicepartner nachfragen.</span></li>`).join('')}</ul>` : ''}
-        ${!issues.length && !open.length ? `<div class="plan-return-done">${icon('check')}<div><strong>Alle Positionen in Ordnung</strong><p>Die Kontrolle ist damit abgeschlossen und kann im Archiv gespeichert werden.</p></div></div>` : ''}
+        ${!issues.length && !open.length ? `<div class="plan-return-done">${icon('check')}<div><strong>Alle Positionen in Ordnung</strong><p>Die Kontrolle ist damit abgeschlossen. Nach dem Speichern kannst du das Prüfprotokoll direkt im Archiv ablegen.</p></div></div>` : ''}
         ${remarks ? `<p class="plan-return-remarks"><span class="form-label">Bemerkungen des Servicepartners</span>${escapeHtml(remarks)}</p>` : ''}`;
       actions.innerHTML = `<button type="button" class="secondary-btn" data-plan-return="close">Abbrechen</button>${issues.length ? `<button type="button" class="primary-btn" data-plan-return="save">${icon('alert')} ${issues.length} ${issues.length === 1 ? 'Reparaturauftrag' : 'Reparaturaufträge'} anlegen</button>` : `<button type="button" class="primary-btn" data-plan-return="save">${open.length ? 'Ergebnis speichern' : 'Kontrolle abschließen'}</button>`}`;
     }
@@ -7064,6 +7116,28 @@
       const count = issueResults.filter((entry) => entry.issueId).length;
       showToast(count ? `${count} ${count === 1 ? 'Reparaturauftrag' : 'Reparaturaufträge'} angelegt – die Kontrolle wird nach der Reparatur abgeschlossen.` : 'Ergebnis gespeichert.');
     }
+    // Prüfprotokoll-Kopf: wer hat wann kontrolliert, wann wurde der Plan eingelesen.
+    function protocolMetaHtml({ inspectedBy = '', date = '', controlName = '', readAt = '', compact = false }) {
+      const day = /^\d{4}-\d{2}-\d{2}$/.test(date) ? fmtDate(date) : date;
+      const cell = (label, value, missing) => `<div class="${value ? '' : 'missing'}"><dt>${label}</dt><dd>${value ? escapeHtml(value) : missing}</dd></div>`;
+      return `<div class="protocol-meta ${compact ? 'compact' : ''}">${compact ? '' : `<span class="protocol-meta-h">${icon('inspection')} Prüfprotokoll</span>`}<dl>
+        ${cell('Verantwortlich', inspectedBy, 'nicht eingetragen')}
+        ${cell('Kontrolliert am', day, 'nicht eingetragen')}
+        ${controlName && !compact ? cell('Kontrollplan', controlName, '') : ''}
+        ${readAt ? cell('Eingelesen am', new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(readAt)), '') : ''}
+      </dl></div>`;
+    }
+    function latestPlanReturn(propertyId) {
+      const list = planReturnsFor(propertyId);
+      return list.length ? list.reduce((latest, record) => (`${record.date}${record.uploadedAt}` > `${latest.date}${latest.uploadedAt}` ? record : latest)) : null;
+    }
+    // Eingelesenes Prüfprotokoll, das neuer ist als der letzte Archiveintrag.
+    function activePlanReturn(propertyId) {
+      const record = latestPlanReturn(propertyId);
+      const last = lastAbsenceInspection(propertyId);
+      if (!record || (last.entry && record.date < last.entry.date)) return null;
+      return { record, state: planReturnState(record) };
+    }
     function planReturnState(record) {
       const linked = record.results.filter((entry) => entry.issueId).map((entry) => ({ entry, issue: issues.find((issue) => issue.id === entry.issueId) }));
       const repaired = linked.filter(({ issue }) => !issue || issue.status === 'fixed' || issue.status === 'renovation').length;
@@ -7076,12 +7150,13 @@
       if (!list.length) return '';
       return `<div class="plan-returns"><h3 class="plan-returns-h">${controlId && controlId !== '__unmatched' ? 'Eingelesene Prüfprotokolle' : 'Eingelesene Kontrollpläne'}</h3>${list.slice().reverse().map((record) => {
         const state = planReturnState(record);
-        const label = state.complete ? 'Abgeschlossen' : state.linked.length > state.repaired ? `Reparatur offen · ${state.repaired} von ${state.linked.length} erledigt` : `${state.open} ${state.open === 1 ? 'Position' : 'Positionen'} ohne Ergebnis`;
-        return `<article class="plan-return-card ${state.complete ? 'complete' : 'pending'}"><div class="prc-head"><div><strong>${escapeHtml(record.controlName)} · ${escapeHtml(fmtDate(record.date))}</strong><small>${escapeHtml(record.inspectedBy || 'Prüfer nicht angegeben')} · ${record.results.filter((entry) => entry.result === 'ok').length} in Ordnung · ${record.results.filter((entry) => entry.result === 'issue').length} auffällig</small></div><span class="prc-status">${state.complete ? icon('check') : icon('clock')}${escapeHtml(label)}</span></div>
+        const label = state.complete ? (state.linked.length ? 'Mängel behoben' : 'Abgeschlossen') : state.linked.length > state.repaired ? `Reparatur offen · ${state.repaired} von ${state.linked.length} erledigt` : `${state.open} ${state.open === 1 ? 'Position' : 'Positionen'} ohne Ergebnis`;
+        return `<article class="plan-return-card ${state.complete ? 'complete' : 'pending'}"><div class="prc-head"><div><strong>Prüfprotokoll · ${escapeHtml(record.controlName)}</strong><small>${record.results.filter((entry) => entry.result === 'ok').length} in Ordnung · ${record.results.filter((entry) => entry.result === 'issue').length} auffällig</small></div><span class="prc-status">${state.complete ? icon('check') : icon('clock')}${escapeHtml(label)}</span></div>
+          ${protocolMetaHtml({ inspectedBy: record.inspectedBy, date: record.date, readAt: record.uploadedAt, compact: true })}
           ${record.results.filter((entry) => entry.result === 'open').length ? `<div class="prc-open"><span class="form-label">Ohne Ergebnis – nachträglich bewerten</span>${record.results.filter((entry) => entry.result === 'open').map((entry) => `<div class="prc-open-row"><span>${escapeHtml(entry.title)}</span><button type="button" class="small-action" data-plan-return-resolve="${escapeHtml(record.id)}" data-item="${escapeHtml(entry.itemId)}" data-result="ok">${icon('check')} In Ordnung</button><button type="button" class="small-action warn" data-plan-return-resolve="${escapeHtml(record.id)}" data-item="${escapeHtml(entry.itemId)}" data-result="issue">${icon('alert')} Auffällig</button></div>`).join('')}</div>` : ''}
           ${state.linked.length ? `<ul class="prc-repairs">${state.linked.map(({ entry, issue }) => `<li class="${!issue || issue.status === 'fixed' ? 'fixed' : ''}"><span>${escapeHtml(entry.title)}</span><em>${!issue ? 'gelöscht' : escapeHtml(ISSUE_STATUS[issue.status] || '')}${issue?.orderedAt ? ` · beauftragt ${escapeHtml(fmtDate(issue.orderedAt))}` : ''}</em></li>`).join('')}</ul>` : ''}
           <div class="prc-actions"><button type="button" class="small-action" data-plan-return-open="${escapeHtml(record.id)}">PDF ansehen</button>${state.linked.length > state.repaired ? '<button type="button" class="small-action" data-page="repairs">Zu den Reparaturen →</button>' : ''}<button type="button" class="small-action ${state.complete ? 'archive-ready' : ''}" data-plan-return-archive="${escapeHtml(record.id)}" ${state.complete ? '' : 'disabled title="Erst nach Abschluss aller Reparaturen möglich"'}>${icon('document')} Im Archiv speichern</button><button type="button" class="small-action danger" data-plan-return-delete="${escapeHtml(record.id)}">Entfernen</button></div>
-          ${state.complete ? '' : '<p class="prc-hint">Die Kontrolle gilt erst nach der Reparatur aller auffälligen Positionen als abgeschlossen.</p>'}
+          ${state.complete ? `<div class="prc-ready">${icon('check')}<div><strong>${state.linked.length ? `${state.linked.length === 1 ? 'Mangel' : `Alle ${state.linked.length} Mängel`} behoben` : 'Alle Positionen in Ordnung'}</strong><span>Die Kontrolle ist abgeschlossen – das Prüfprotokoll kann jetzt im Archiv abgelegt werden.</span></div></div>` : '<p class="prc-hint">Die Kontrolle gilt erst nach der Reparatur aller auffälligen Positionen als abgeschlossen. Danach kannst du das Prüfprotokoll im Archiv ablegen.</p>'}
         </article>`;
       }).join('')}</div>`;
     }
@@ -7126,10 +7201,17 @@
       inspectionChecks = { ...inspectionChecks, [propertyId]: {} };
       try { localStorage.setItem('stugliv-inspection-checks', JSON.stringify(inspectionChecks)); } catch (error) { /* optional */ }
       completeInspectionOrder(propertyId, record.date);
-      logAutomation(`Hauskontrolle aus Kontrollplan-PDF archiviert: ${property.name} vom ${fmtDate(record.date)}`);
+      // Kontrollplan zurücksetzen: Beauftragung abschließen und ältere Rückläufe derselben Kontrolle entfernen.
+      const archivedAt = new Date().toISOString();
+      inspectionOrders = { ...inspectionOrders, [propertyId]: (inspectionOrders[propertyId] || []).map((order) => (order.controlId === record.controlId || (!record.controlId && order.status !== 'done') ? { ...order, status: 'done', completedAt: order.completedAt || record.date, archivedAt } : order)) };
+      persistInspectionOrders();
+      persistPlanReturns({ ...planReturns, [propertyId]: planReturnsFor(propertyId).filter((item) => item.controlId !== record.controlId || item.date > record.date) });
+      const control = controlById(propertyId, record.controlId);
+      const nextDue = control ? controlDueInfo(propertyId, control.items, control.createdAt).due : lastAbsenceInspection(propertyId).validUntil;
+      logAutomation(`Hauskontrolle aus Kontrollplan-PDF archiviert: ${property.name} vom ${fmtDate(record.date)} · nächste Kontrolle bis ${fmtDate(nextDue)}`);
       persistAutomation();
       render();
-      showToast('Kontrolle abgeschlossen und im Archiv der Prüfprotokolle gespeichert.');
+      showToast(`Prüfprotokoll archiviert, Kontrollplan zurückgesetzt – nächste Kontrolle fällig bis ${fmtDate(nextDue)}`);
     }
     function openPlanPdf() {
       const property = properties.find((item) => item.id === inspectionProperty) || properties[0];
@@ -7492,12 +7574,13 @@
     }
     function exportInspectionPdf() {
       if (!pendingInspection) return;
-      const { property, houseDetails, checkedItems, date } = pendingInspection;
+      const { property, houseDetails, checkedItems, date, protocol } = pendingInspection;
       const createdDate = new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date());
       document.getElementById('inspection-print-area').innerHTML = `<main class="inspection-print-page">
         <p class="inspection-print-eyebrow">Husora · Hauskontrolle</p>
         <h1>Prüfprotokoll</h1>
         <p class="inspection-print-meta">Abwesenheitskontrolle · durchgeführt am ${escapeHtml(formatInspectionDate(date))}</p>
+        ${protocol ? `<h2>Durchführung</h2><dl class="inspection-print-house">${protocol.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl>` : ''}
         <h2>Angaben zum Haus</h2>
         <dl class="inspection-print-house">${houseDetails.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl>
         <h2>Geprüfte Positionen</h2>
@@ -7538,6 +7621,7 @@
       }
       findings.forEach((text) => {
         const position = absenceChecklist.find((item) => text.startsWith(`${item.title}:`));
+        if (position && manualRepairIssue(property.id, position.id)) return; // Reparaturauftrag wurde bereits direkt geschrieben.
         const issue = createIssue({ propertyId: property.id, part: housePartDefs.find((part) => part.match.test(text))?.id || POSITION_DETAILS[position?.id]?.parts?.[0] || '', text: position ? text.slice(position.title.length + 1).trim() || text : text, priority: 'soon', source: 'Hauskontrolle' });
         if (position) { issue.positionId = position.id; issue.text = `${position.title}: ${issue.text}`; persistIssues(); }
       });
@@ -7685,8 +7769,11 @@
     // Fortschritt je Ferienhaus: Positionen der Abwesenheitskontrolle plus laufende Saison-Checklisten.
     function inspectionProgress(propertyId) {
       const selectedIds = Array.isArray(inspectionSelections[propertyId]) ? inspectionSelections[propertyId] : absenceChecklist.map((item) => item.id);
-      const absenceTotal = selectedIds.length;
-      const absenceDone = inspectionIsCurrent(propertyId) ? absenceTotal : selectedIds.filter((id) => (inspectionChecks[propertyId] || {})[id]).length;
+      const active = activePlanReturn(propertyId);
+      const absenceTotal = active ? active.record.results.length : selectedIds.length;
+      const absenceDone = active
+        ? (active.state.complete ? absenceTotal : active.record.results.filter((entry) => entry.result === 'ok').length + active.state.repaired)
+        : inspectionIsCurrent(propertyId) ? absenceTotal : selectedIds.filter((id) => (inspectionChecks[propertyId] || {})[id]).length;
       let total = absenceTotal;
       let done = absenceDone;
       ['winter', 'spring'].forEach((key) => {
@@ -7707,7 +7794,14 @@
       const last = lastAbsenceInspection(propertyId);
       const order = inspectionOrderText(propertyId);
       let absence;
-      if (last.current) absence = { state: 'done', label: 'Erledigt', detail: `Kontrolle am ${escapeHtml(fmtDate(last.entry.date))} · gültig bis ${escapeHtml(fmtDate(last.validUntil))}` };
+      const active = activePlanReturn(propertyId);
+      if (active) {
+        const { record, state } = active;
+        const protocol = `Prüfprotokoll vom ${escapeHtml(fmtDate(record.date))}${record.inspectedBy ? ` · ${escapeHtml(record.inspectedBy)}` : ''}`;
+        if (state.complete) absence = { state: 'done', label: state.linked.length ? 'Mängel behoben' : 'Erledigt', detail: `${protocol} · ${state.linked.length ? `${state.linked.length} ${state.linked.length === 1 ? 'Mangel' : 'Mängel'} behoben · ` : ''}bereit fürs Archiv` };
+        else if (state.linked.length > state.repaired) absence = { state: 'issue', iconName: 'alert', label: 'Mängel in Reparatur', detail: `${protocol} · ${state.repaired} von ${state.linked.length} ${state.linked.length === 1 ? 'Mangel' : 'Mängeln'} behoben`, progress: Math.max(4, Math.round(state.repaired / state.linked.length * 100)) };
+        else absence = { state: 'ordered', label: 'Eingelesen', detail: `${protocol} · ${state.open} ${state.open === 1 ? 'Position' : 'Positionen'} ohne Ergebnis` };
+      } else if (last.current) absence = { state: 'done', label: 'Erledigt', detail: `Kontrolle am ${escapeHtml(fmtDate(last.entry.date))}${last.entry.inspectedBy ? ` · ${escapeHtml(last.entry.inspectedBy)}` : ''} · gültig bis ${escapeHtml(fmtDate(last.validUntil))}` };
       else if (order.state === 'ordered') absence = { state: 'ordered', label: 'Beauftragt', detail: escapeHtml(order.text) };
       else absence = { state: last.entry ? 'overdue' : 'due', label: 'Fällig', detail: last.entry ? `Seit ${escapeHtml(fmtDate(last.validUntil))} fällig · noch nicht beauftragt` : 'Noch nie durchgeführt · noch nicht beauftragt' };
       const season = (key) => {
@@ -7728,7 +7822,7 @@
         if (task && taskStatus(task) === 'In Bearbeitung') return { ...base, state: 'ordered', label: 'Beauftragt', detail: `${partner ? `${escapeHtml(partner.name)} · ` : ''}${progressText} · ${when}`, progress: Math.round(done / total * 100) };
         return { ...base, state: overdue ? 'overdue' : 'due', label: overdue ? 'Überfällig' : done ? 'In Arbeit' : 'Fällig', detail: `${progressText} · ${when}`, progress: Math.round(done / total * 100) };
       };
-      return [tile({ view: 'absence', iconName: 'inspection', title: 'Abwesenheitskontrolle', ...absence }), tile(season('winter')), tile(season('spring'))].join('');
+      return [tile({ view: 'absence', title: 'Abwesenheitskontrolle', ...absence, iconName: absence.iconName || 'inspection' }), tile(season('winter')), tile(season('spring'))].join('');
     }
     function winterStatusBadge(propertyId) {
       return winterIsReady(propertyId)
@@ -8368,6 +8462,8 @@
         if (Array.isArray(list)) { list.splice(Number(summaryDelete.dataset.index), 1); saveProperties(); render(); showToast('Position entfernt.'); }
         return;
       }
+      const positionRepair = event.target.closest('[data-position-repair]');
+      if (positionRepair) { writePositionRepair(positionRepair.dataset.positionRepair); return; }
       const resultButton = event.target.closest('[data-position-result]');
       if (resultButton) {
         const checks = inspectionChecks[inspectionProperty] || (inspectionChecks[inspectionProperty] = {});
@@ -8449,7 +8545,9 @@
           issue.status = 'fixed';
           issue.fixedAt = localDateKey(new Date());
           tasks = tasks.map((task) => (task.auto === 'repair' && task.issueId === id && !task.done ? { ...task, status: 'Erledigt', done: true } : task));
-          persistTasks(); persistIssues(); render(); showToast('Auffälligkeit als behoben markiert.');
+          persistTasks(); persistIssues(); render();
+          const finished = planReturnsFor(issue.propertyId).find((record) => record.results.some((entry) => entry.issueId === id) && planReturnState(record).complete);
+          showToast(finished ? 'Alle Mängel aus dem Prüfprotokoll behoben – die Kontrolle kann jetzt unter Hauskontrolle im Archiv abgelegt werden.' : 'Auffälligkeit als behoben markiert.');
         } else if (issueAction.dataset.issueRenovation) {
           openRenovationModal(null, { propertyId: issue.propertyId, part: issue.part, title: issue.text.length > 100 ? issue.text.slice(0, 100) : issue.text, notes: `Aus Auffälligkeit (${issue.source}, ${fmtDate(issue.date)}): ${issue.text}`, issueId: issue.id });
         } else if (window.confirm('Auffälligkeit und offenen Reparaturauftrag löschen?')) {
