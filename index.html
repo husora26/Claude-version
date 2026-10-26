@@ -7411,8 +7411,28 @@
       document.querySelectorAll('.nav [data-page]').forEach((button) => button.classList.toggle('active', button.dataset.page === currentPage || (currentPage === 'propertyDetail' && button.dataset.page === 'properties')));
       updateProfileSummary();
       pageContent.innerHTML = pages[currentPage]();
+      ensureBackButton();
       if (currentPage === 'house3d') fitHouseScene();
       if (currentPage === 'propertyDetail') initPropertyMap();
+    }
+    // Jede Unterseite bekommt im Kopfbereich einen Zurück-Button, falls die Seite selbst keinen setzt.
+    function ensureBackButton() {
+      if (currentPage === 'dashboard' || pageContent.querySelector('[data-action="go-back"]')) return;
+      const welcome = pageContent.querySelector('.welcome');
+      if (!welcome) return;
+      const back = document.createElement('button');
+      back.type = 'button';
+      back.className = 'secondary-btn back-btn';
+      back.dataset.action = 'go-back';
+      back.textContent = '← Zurück';
+      let actions = welcome.querySelector(':scope > .welcome-actions');
+      if (!actions) {
+        actions = document.createElement('div');
+        actions.className = 'welcome-actions';
+        [...welcome.children].slice(1).forEach((child) => actions.append(child));
+        welcome.append(actions);
+      }
+      actions.prepend(back);
     }
     // Wischen nach links führt auf allen Touch-Geräten zur vorherigen Seite, auch wenn die Geste auf einer Karte oder einem Knopf beginnt.
     let swipeStart = null;
