@@ -3559,6 +3559,8 @@
     let currentPage = 'dashboard';
     let lastRenderedPage = currentPage;
     const previousPageHistory = [];
+    // Scrollposition je Eintrag, damit „Zurück“ wieder an derselben Stelle landet.
+    const previousScrollHistory = [];
     let returningToPreviousPage = false;
     let profileData = { name: 'Max Mustermann', username: 'Alex', email: '', usage: 'rental', houseCount: 1 };
     const bookingsEnabled = () => profileData.usage !== 'self';
@@ -7175,7 +7177,8 @@
           returningToPreviousPage = false;
         } else {
           previousPageHistory.push(lastRenderedPage);
-          if (previousPageHistory.length > 30) previousPageHistory.shift();
+          previousScrollHistory.push(window.scrollY);
+          if (previousPageHistory.length > 30) { previousPageHistory.shift(); previousScrollHistory.shift(); }
         }
         lastRenderedPage = currentPage;
       }
@@ -7243,9 +7246,11 @@
     function goBack() {
       if (currentPage === 'dashboard') return;
       currentPage = previousPageHistory.pop() || 'dashboard';
+      const scrollY = previousScrollHistory.pop() || 0;
       returningToPreviousPage = true;
       render();
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: scrollY, behavior: 'instant' });
+      requestAnimationFrame(() => window.scrollTo({ top: scrollY, behavior: 'instant' }));
     }
     function toggleTask(id) {
       const task = tasks.find((item) => item.id === Number(id));
