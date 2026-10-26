@@ -118,6 +118,8 @@
     button.stat-icon { padding: 0; border: 0; cursor: pointer; }
     button.stat-icon:hover, button.stat-icon:focus-visible { outline: 2px solid #9db9a5; outline-offset: 2px; }
     .stat-icon.amber { color: var(--amber); background: var(--amber-soft); }
+    .stat-icon.red { color: var(--red); background: var(--red-soft); }
+    .stat-note .stat-alert { color: #ff9b8a; }
     .stat-icon svg { width: 15px; height: 15px; }
     .stat-open-word { font-size: .62em; font-weight: 400; }
     .stat-value { margin-top: 13px; color: #fff; font-size: 19px; font-weight: 730; letter-spacing: -.2px; text-shadow: 0 1px 3px rgba(0,0,0,.55); }
@@ -1871,6 +1873,21 @@
     .map-popup-links { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 6px; }
     .map-popup-links a { font-size: 11px; }
     @media (max-width: 560px) { .partner-map { height: 58vh; } }
+    /* Profil: Kacheln der Startseite wählen */
+    .tile-count { padding: 3px 10px; border-radius: 20px; color: var(--green); background: var(--green-soft); font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .tile-count.full { color: #8e622b; background: var(--amber-soft); }
+    .tile-choices { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; padding-top: 14px; }
+    .tile-choice { position: relative; display: flex; align-items: center; gap: 9px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; background: white; font-size: 11.5px; font-weight: 600; cursor: pointer; }
+    .tile-choice input { position: absolute; opacity: 0; pointer-events: none; }
+    .tile-check { display: grid; flex-shrink: 0; place-items: center; width: 20px; height: 20px; border: 2px solid #c5cec6; border-radius: 6px; color: transparent; }
+    .tile-check svg { width: 12px; height: 12px; stroke-width: 3; }
+    .tile-choice.on { border-color: #9db9a5; background: var(--green-soft); }
+    .tile-choice.on .tile-check { border-color: var(--green); color: white; background: var(--green); }
+    .tile-choice small { display: block; color: var(--muted); font-size: 9.5px; font-weight: 400; }
+    .tile-choice.unavailable { opacity: .75; }
+    .tile-choice:has(input:disabled) { cursor: not-allowed; opacity: .5; }
+    .tile-choice:focus-within { outline: 2px solid #9db9a5; outline-offset: 2px; }
+    .stat-value-sm { font-size: 18px !important; }
     /* Startseite: Service vor Ort – gleiche Einrückung wie „Heute im Ferienhaus“ */
     .task-list.dash-tasks { padding: 0 18px; }
     .dash-tasks .task-row { position: relative; gap: 10px; min-height: 0; padding: 12px 18px; border-bottom: 1px solid #f0f1ee; border-radius: 0; }
@@ -4281,15 +4298,31 @@
       const formattedCost = formatCost(plannedAnnualCost);
       const firstName = profileData.name.trim().split(/\s+/)[0] || 'Willkommen';
       return `<div class="welcome"><div><p class="eyebrow eyebrow-lg">Husora · Das Managementsystem für deine Stuga</p><p class="subtitle">${bookingsEnabled() ? 'Buchungen, Stugapflege' : 'Stugapflege'} und Serviceeinsätze für ${singleHouse() ? 'dein Ferienhaus' : 'deine Ferienhäuser'}.</p></div></div>
-        <section class="stats" aria-label="Kennzahlen">
-          <button class="stat ${singleHouse() ? 'stat-wide' : ''}" data-page="properties"><img class="stat-art" src="${escapeHtml((singleHouse() && properties[0]?.photo) || properties.find((item) => item.photo)?.photo || 'assets/meine-haeuser.jpg')}" alt="" aria-hidden="true"><div class="stat-head"><span>${singleHouse() ? 'Mein Haus' : 'Meine Häuser'}</span><span class="stat-icon">${icon('property')}</span></div><div class="stat-value">${singleHouse() ? escapeHtml(properties[0]?.name || '1') : properties.length}</div><div class="stat-note"><em>${singleHouse() ? escapeHtml(properties[0]?.region || 'Schweden') : 'Värmland · Dalarna · Bohuslän'}</em></div></button>
-          <button class="stat" data-page="tasks"><img class="stat-art" src="assets/hausservice.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Serviceaufgaben</span><span class="stat-icon amber">${icon('task')}</span></div><div class="stat-value">${open.filter((task) => taskStatus(task) !== 'In Bearbeitung').length} <span class="stat-open-word">offen</span></div><div class="stat-note"><em class="stat-urgent">${overdueCount ? `${overdueCount} überfällig` : `${open.filter((task) => task.priority === 'urgent').length} dringend`}</em></div></button>
-          ${bookingsEnabled() ? `<button class="stat" data-page="bookings"><img class="stat-art" src="assets/booking-planer.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Buchungen</span><span class="stat-icon">${icon('calendar')}</span></div><div class="stat-value">${upcomingChanges.length} <span class="stat-open-word">kommend</span></div><div class="stat-note">${guestInHouseCount(today) ? `<em>${guestInHouseCount(today)} ${guestInHouseCount(today) === 1 ? 'Haus' : 'Häuser'} belegt</em>` : `${bookings.length} gesamt · <em>verwalten</em>`}</div></button>` : ''}
-          <button class="stat stat-inspection" data-page="inspections"><img class="stat-art" src="assets/hauskontrolle.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Hauskontrolle</span><span class="stat-icon">${icon('inspection')}</span></div><div class="stat-value">${properties.length - currentInspections} <span class="stat-open-word">offen</span></div></button>
-          ${(() => { const assignedCount = new Set(properties.flatMap((property) => servicePartnerAssignments[property.id] || []).filter((id) => providerById(id))).size; const missing = [['house', 'Hausservice'], ['inspection', 'Hauskontrolle'], ['renovation', 'Sanierung']].filter(([category]) => !properties.some((property) => (servicePartnerAssignments[property.id] || []).some((id) => providerById(id)?.category === category))).map(([, label]) => label); return `<button class="stat" data-page="assignedProviders"><img class="stat-art" src="assets/schweden-landschaft.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Servicepartner</span><span class="stat-icon">${icon('users')}</span></div><div class="stat-value">${assignedCount} <span class="stat-open-word">zugeordnet</span></div><div class="stat-note">${assignedCount ? (missing.length ? `<em>Es fehlt:</em> ${escapeHtml(missing.join(', '))}` : '<em>Alle Bereiche</em> abgedeckt') : '<em>Jetzt</em> Partner in der Nähe finden'}</div></button>`; })()}
-          <button class="stat" data-page="costs"><img class="stat-art" src="assets/kosten.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Kosten</span><span class="stat-icon">${icon('cost')}</span></div><div class="stat-value">${formattedCost}</div><div class="stat-note"><em>Planwerte</em> pro Jahr${singleHouse() ? '' : ' · alle Häuser'}</div></button>
-          <button class="stat" data-page="automation"><img class="stat-art" src="assets/gaestewechsel.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Automatisierung</span><span class="stat-icon">${icon('bolt')}</span></div><div class="stat-value">${automationActiveCount()} <span class="stat-open-word">aktiv</span></div><div class="stat-note"><em>${tasks.filter((task) => task.auto && !task.done).length}</em> geplante Schritte</div></button>
-          ${isPro() ? `<button class="stat" data-page="house3d"><img class="stat-art" src="assets/ferienhaus.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Hausmodell</span><span class="stat-icon">${icon('cube')}</span></div><div class="stat-value">3D</div><div class="stat-note"><em>${properties.reduce((sum, property) => sum + activeHouseParts(property).filter((part) => housePartInfo(property.id, part).status === 'due').length, 0)}</em> Bauteile mit fälliger Kontrolle</div></button>` : ''}
+        <section class="stats" aria-label="Kennzahlen">${(() => {
+        const weekEnd = shiftDateKey(today, 7);
+        const weekItems = tasks.filter((task) => !task.done && task.date && task.date >= today && task.date <= weekEnd).length + (bookingsEnabled() ? bookings.filter((booking) => booking.startDate >= today && booking.startDate <= weekEnd).length : 0);
+        const activeIssueCount = openIssues().length;
+        const urgentIssues = openIssues().filter((issue) => issue.priority === 'urgent').length;
+        const openProjects = renovationProjects.filter((project) => project.status !== 'done');
+        const tileHtml = {
+          properties: `<button class="stat ${singleHouse() ? 'stat-wide' : ''}" data-page="properties"><img class="stat-art" src="${escapeHtml((singleHouse() && properties[0]?.photo) || properties.find((item) => item.photo)?.photo || 'assets/meine-haeuser.jpg')}" alt="" aria-hidden="true"><div class="stat-head"><span>${singleHouse() ? 'Mein Haus' : 'Meine Häuser'}</span><span class="stat-icon">${icon('property')}</span></div><div class="stat-value">${singleHouse() ? escapeHtml(properties[0]?.name || '1') : properties.length}</div><div class="stat-note"><em>${singleHouse() ? escapeHtml(properties[0]?.region || 'Schweden') : 'Värmland · Dalarna · Bohuslän'}</em></div></button>`,
+          tasks: `<button class="stat" data-page="tasks"><img class="stat-art" src="assets/hausservice.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Serviceaufgaben</span><span class="stat-icon amber">${icon('task')}</span></div><div class="stat-value">${open.filter((task) => taskStatus(task) !== 'In Bearbeitung').length} <span class="stat-open-word">offen</span></div><div class="stat-note"><em class="stat-urgent">${overdueCount ? `${overdueCount} überfällig` : `${open.filter((task) => task.priority === 'urgent').length} dringend`}</em></div></button>`,
+          bookings: bookingsEnabled() ? `<button class="stat" data-page="bookings"><img class="stat-art" src="assets/booking-planer.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Buchungen</span><span class="stat-icon">${icon('calendar')}</span></div><div class="stat-value">${upcomingChanges.length} <span class="stat-open-word">kommend</span></div><div class="stat-note">${guestInHouseCount(today) ? `<em>${guestInHouseCount(today)} ${guestInHouseCount(today) === 1 ? 'Haus' : 'Häuser'} belegt</em>` : `${bookings.length} gesamt · <em>verwalten</em>`}</div></button>` : '',
+          inspections: `<button class="stat stat-inspection" data-page="inspections"><img class="stat-art" src="assets/hauskontrolle.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Hauskontrolle</span><span class="stat-icon">${icon('inspection')}</span></div><div class="stat-value">${properties.length - currentInspections} <span class="stat-open-word">offen</span></div></button>`,
+          partners: (() => { const assignedCount = new Set(properties.flatMap((property) => servicePartnerAssignments[property.id] || []).filter((id) => providerById(id))).size; const missing = [['house', 'Hausservice'], ['inspection', 'Hauskontrolle'], ['renovation', 'Sanierung']].filter(([category]) => !properties.some((property) => (servicePartnerAssignments[property.id] || []).some((id) => providerById(id)?.category === category))).map(([, label]) => label); return `<button class="stat" data-page="assignedProviders"><img class="stat-art" src="assets/schweden-landschaft.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Servicepartner</span><span class="stat-icon">${icon('users')}</span></div><div class="stat-value">${assignedCount} <span class="stat-open-word">zugeordnet</span></div><div class="stat-note">${assignedCount ? (missing.length ? `<em>Es fehlt:</em> ${escapeHtml(missing.join(', '))}` : '<em>Alle Bereiche</em> abgedeckt') : '<em>Jetzt</em> Partner in der Nähe finden'}</div></button>`; })(),
+          costs: `<button class="stat" data-page="costs"><img class="stat-art" src="assets/kosten.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Kosten</span><span class="stat-icon">${icon('cost')}</span></div><div class="stat-value">${formattedCost}</div><div class="stat-note"><em>Planwerte</em> pro Jahr${singleHouse() ? '' : ' · alle Häuser'}</div></button>`,
+          automation: `<button class="stat" data-page="automation"><img class="stat-art" src="assets/gaestewechsel.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Automatisierung</span><span class="stat-icon">${icon('bolt')}</span></div><div class="stat-value">${automationActiveCount()} <span class="stat-open-word">aktiv</span></div><div class="stat-note"><em>${tasks.filter((task) => task.auto && !task.done).length}</em> geplante Schritte</div></button>`,
+          house3d: isPro() ? `<button class="stat" data-page="house3d"><img class="stat-art" src="assets/ferienhaus.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Hausmodell</span><span class="stat-icon">${icon('cube')}</span></div><div class="stat-value">3D</div><div class="stat-note"><em>${properties.reduce((sum, property) => sum + activeHouseParts(property).filter((part) => housePartInfo(property.id, part).status === 'due').length, 0)}</em> Bauteile mit fälliger Kontrolle</div></button>` : '',
+          calendar: `<button class="stat" data-page="calendar"><img class="stat-art" src="assets/booking-planer.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Kalender</span><span class="stat-icon">${icon('calendar')}</span></div><div class="stat-value">${weekItems} <span class="stat-open-word">${weekItems === 1 ? 'Termin' : 'Termine'}</span></div><div class="stat-note"><em>nächste 7 Tage</em> · Buchungen & Aufgaben</div></button>`,
+          repairs: `<button class="stat" data-page="repairs"><img class="stat-art" src="assets/hausservice.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Reparatur & Instandhaltung</span><span class="stat-icon ${urgentIssues ? 'red' : ''}">${icon('alert')}</span></div><div class="stat-value">${activeIssueCount} <span class="stat-open-word">${activeIssueCount === 1 ? 'Mangel' : 'Mängel'}</span></div><div class="stat-note">${urgentIssues ? `<em class="stat-alert">${urgentIssues} dringend</em>` : activeIssueCount ? '<em>Reparatur</em> wird geplant' : '<em>Alles</em> in Ordnung'}</div></button>`,
+          renovations: `<button class="stat" data-page="renovations"><img class="stat-art" src="assets/ferienhaus.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Sanierung & Renovierung</span><span class="stat-icon">${icon('cube')}</span></div><div class="stat-value">${openProjects.length} <span class="stat-open-word">${openProjects.length === 1 ? 'Projekt' : 'Projekte'}</span></div><div class="stat-note">${openProjects.length ? `<em>Budget</em> ${escapeHtml(formatCost(openProjects.reduce((sum, project) => sum + (Number(project.budget) || 0), 0)))}` : '<em>Kein Projekt</em> geplant'}</div></button>`,
+          providers: `<button class="stat" data-page="providers"><img class="stat-art" src="assets/schweden-landschaft.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Servicepartner finden</span><span class="stat-icon">${icon('search')}</span></div><div class="stat-value">${providers.length} <span class="stat-open-word">Betriebe</span></div><div class="stat-note"><em>Datenbank</em> mit Karte · ${favorites.length} Favoriten</div></button>`,
+          documents: `<button class="stat" data-page="documents"><img class="stat-art" src="assets/dokumente.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Dokumente</span><span class="stat-icon">${icon('document')}</span></div><div class="stat-value">${documents.length}</div><div class="stat-note"><em>${documents.length === 1 ? 'Datei' : 'Dateien'}</em> gespeichert</div></button>`,
+          plans: `<button class="stat" data-page="plans"><img class="stat-art" src="assets/meine-haeuser.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Versionen</span><span class="stat-icon">${icon('bolt')}</span></div><div class="stat-value">${isPro() ? 'Pro' : 'Free'}</div><div class="stat-note"><em>${isPro() ? 'Alle Funktionen' : 'Pro-Funktionen'}</em> ${isPro() ? 'freigeschaltet' : 'ansehen'}</div></button>`,
+          profile: `<button class="stat" data-page="profile"><img class="stat-art" src="assets/meine-haeuser.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Benutzerprofil</span><span class="stat-icon">${icon('users')}</span></div><div class="stat-value stat-value-sm">${escapeHtml(profileData.name || 'Profil')}</div><div class="stat-note">${profileData.mailAccount ? '<em>Mailkonto</em> verbunden' : '<em>Mailkonto</em> noch nicht verbunden'}</div></button>`
+        };
+        return dashboardTileIds().map((id) => tileHtml[id] || '').join('');
+      })()}
         </section>
         <div class="columns">
           <section class="card"><div class="card-head"><div><h2 class="card-title">Service vor Ort</h2><p class="card-caption">${open.length} offene ${open.length === 1 ? 'Aufgabe' : 'Aufgaben'} ${singleHouse() ? 'an deinem schwedischen Ferienhaus' : 'an deinen schwedischen Ferienhäusern'}</p></div><button class="text-btn" data-page="tasks">Alle Aufgaben →</button></div><div class="dash-tile-list">${open.length ? open.slice(0, 5).map(dashTaskTile).join('') : '<div class="empty">Alles erledigt — großartig!</div>'}</div>${open.length > 5 ? `<button type="button" class="dash-tasks-more" data-page="tasks">+ ${open.length - 5} weitere ${open.length - 5 === 1 ? 'Aufgabe' : 'Aufgaben'} ansehen</button>` : ''}</section>
@@ -4580,6 +4613,32 @@
       return `<div class="welcome"><div><p class="eyebrow">Husora</p><h1>Versionen</h1><p class="subtitle">Wähle die Version, die zu dir und deinen Ferienhäusern passt.</p></div></div>
         <div class="plan-grid">${cards}<article class="card plan-card plan-soon"><h2>Weitere Versionen</h2><p class="plan-tagline">Folgen später. Hier erscheinen neue Angebote, sobald sie verfügbar sind.</p></article></div>${license}`;
     }
+    // Kacheln der Startseite: zu jedem Menüpunkt eine Kachel, im Profil frei wählbar (höchstens 10).
+    const DASHBOARD_TILES = [
+      ['properties', 'Mein Haus / Ferienhäuser'], ['tasks', 'Serviceaufgaben'], ['bookings', 'Buchungen', () => bookingsEnabled(), 'nur bei Vermietung'], ['calendar', 'Kalender'],
+      ['inspections', 'Hauskontrolle'], ['repairs', 'Reparatur & Instandhaltung'], ['renovations', 'Sanierung & Renovierung'], ['partners', 'Zugeordnete Servicepartner'],
+      ['providers', 'Servicepartner finden'], ['documents', 'Dokumente'], ['costs', 'Kosten'], ['automation', 'Automatisierung'],
+      ['house3d', 'Hausmodell (3D)', () => isPro(), 'nur mit Pro'], ['plans', 'Versionen'], ['profile', 'Benutzerprofil']
+    ];
+    const DASHBOARD_TILE_LIMIT = 10;
+    const DEFAULT_DASHBOARD_TILES = ['properties', 'tasks', 'bookings', 'inspections', 'partners', 'costs', 'automation', 'house3d'];
+    const dashboardTileSelection = () => (Array.isArray(profileData.dashboardTiles) ? profileData.dashboardTiles : DEFAULT_DASHBOARD_TILES).filter((id) => DASHBOARD_TILES.some(([key]) => key === id));
+    const dashboardTileIds = () => {
+      const chosen = dashboardTileSelection();
+      return DASHBOARD_TILES.filter(([id, , available]) => chosen.includes(id) && (!available || available())).map(([id]) => id).slice(0, DASHBOARD_TILE_LIMIT);
+    };
+    function dashboardTilesSettingsHtml() {
+      const chosen = dashboardTileSelection();
+      const full = chosen.length >= DASHBOARD_TILE_LIMIT;
+      return `<section class="card profile-form"><div class="card-head" style="padding:0 0 4px"><div><h2 class="card-title">Kacheln auf der Startseite</h2><p class="card-caption">Wähle bis zu ${DASHBOARD_TILE_LIMIT} Kacheln, die auf der Übersicht erscheinen.</p></div><span class="tile-count ${full ? 'full' : ''}" id="tile-count">${chosen.length} von ${DASHBOARD_TILE_LIMIT}</span></div>
+        <div class="tile-choices">${DASHBOARD_TILES.map(([id, label, available, hint]) => { const on = chosen.includes(id); const off = available && !available(); return `<label class="tile-choice ${on ? 'on' : ''} ${off ? 'unavailable' : ''}"><input type="checkbox" data-dashboard-tile="${id}" ${on ? 'checked' : ''} ${!on && full ? 'disabled' : ''}><span class="tile-check">${icon('check')}</span><span>${escapeHtml(label)}${off ? `<small>${escapeHtml(hint)}</small>` : ''}</span></label>`; }).join('')}</div>
+        <div class="form-actions" style="justify-content:space-between;margin-top:12px"><span class="card-caption">${full ? 'Maximum erreicht – entferne eine Kachel, um eine andere zu wählen.' : 'Die Reihenfolge folgt dem Menü.'}</span><button type="button" class="text-btn" data-action="reset-dashboard-tiles">Standard wiederherstellen</button></div>
+      </section>`;
+    }
+    function saveDashboardTiles(next) {
+      profileData = { ...profileData, dashboardTiles: next };
+      try { localStorage.setItem('stugliv-profile', JSON.stringify(profileData)); } catch (error) { console.error(error); }
+    }
     function profilePage() {
       return `<div class="welcome"><div><p class="eyebrow">Persönliche Einstellungen</p><h1>Benutzerprofil</h1><p class="subtitle">Verwalte die Angaben für dein Husora-Konto.</p></div></div>
         <section class="card profile-form"><div class="profile-heading"><div class="profile-large-avatar">${escapeHtml(initialsFor(profileData.name))}</div><div><strong>${escapeHtml(profileData.name)}</strong><small>@${escapeHtml(profileData.username)}</small></div></div>
@@ -4590,6 +4649,8 @@
             <div class="full profile-notice" style="margin-top:0">Nutzung der Immobilie und Anzahl der Ferienhäuser stellst du jetzt unter <button type="button" class="text-btn" data-page="properties" style="padding:0">Mein Ferienhaus</button> ein.</div>
 </div><div class="profile-notice">Diese App speichert ihre Daten nur lokal in diesem Browser.</div><div class="form-actions"><button type="submit" class="primary-btn">Benutzerprofil speichern</button></div></form>
         </section>
+        <div style="height:16px"></div>
+        ${dashboardTilesSettingsHtml()}
         <div style="height:16px"></div>
         <section class="card profile-form"><div class="card-head" style="padding:0 0 4px"><div><h2 class="card-title">E-Mail-Konto verbinden</h2><p class="card-caption">Absender für Nachrichten an deine Servicepartner</p></div><span class="mail-status ${profileData.mailAccount ? 'connected' : ''}">${profileData.mailAccount ? '● Verbunden' + (profileData.mailConnectedAt ? ' seit ' + new Date(profileData.mailConnectedAt).toLocaleDateString('de-DE') : '') : 'Nicht verbunden'}</span></div>
           <form id="mail-form" style="padding-top:14px"><div class="profile-grid">
@@ -8239,6 +8300,7 @@
         currentPage = 'propertyDetail';
         render();
       }
+      if (action === 'reset-dashboard-tiles') { saveDashboardTiles([...DEFAULT_DASHBOARD_TILES]); const scroll = window.scrollY; render(); window.scrollTo(0, scroll); showToast('Standard-Kacheln wiederhergestellt.'); return; }
       if (action === 'toggle-favorites') { onlyFavorites = !onlyFavorites; render(); }
       if (action === 'add-provider') showToast('Einladungen sind bald verfügbar.');
     });
@@ -8297,6 +8359,17 @@
       }
     });
     pageContent.addEventListener('change', async (event) => {
+      if (event.target.dataset?.dashboardTile) {
+        const id = event.target.dataset.dashboardTile;
+        const chosen = dashboardTileSelection();
+        const next = event.target.checked ? (chosen.length >= DASHBOARD_TILE_LIMIT ? chosen : [...chosen, id]) : chosen.filter((entry) => entry !== id);
+        if (event.target.checked && chosen.length >= DASHBOARD_TILE_LIMIT) { event.target.checked = false; showToast(`Höchstens ${DASHBOARD_TILE_LIMIT} Kacheln möglich.`); return; }
+        saveDashboardTiles(next);
+        const scroll = window.scrollY;
+        render();
+        window.scrollTo(0, scroll);
+        return;
+      }
       if (event.target.closest('#expense-entry') && event.target.name === 'category') {
         const project = event.target.form.querySelector('.expense-project');
         if (project) project.hidden = event.target.value !== 'renovation';
