@@ -1651,6 +1651,13 @@
     .tcard.flash { animation: tcard-flash 2.2s ease-out; }
     @keyframes tcard-flash { 0%, 35% { box-shadow: 0 0 0 3px var(--green), 0 8px 24px rgba(30,45,35,.18); } 100% { box-shadow: 0 1px 2px rgba(30,45,35,.04); } }
     @media (prefers-reduced-motion: reduce) { .tcard.flash { animation: none; box-shadow: 0 0 0 3px var(--green); } }
+    .task-due-badge { display: grid; justify-items: center; min-width: 62px; padding: 4px 8px; border-radius: 9px; color: var(--green); background: var(--green-soft); line-height: 1.15; text-align: center; }
+    .task-due-badge .tdb-date { display: flex; align-items: baseline; gap: 3px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; }
+    .task-due-badge .tdb-date b { font-size: 15px; letter-spacing: 0; }
+    .task-due-badge small { color: inherit; font-size: 9px; font-weight: 600; opacity: .85; white-space: nowrap; }
+    .task-due-badge.soon { color: #8e622b; background: var(--amber-soft); }
+    .task-due-badge.late { color: var(--red); background: var(--red-soft); }
+    .task-due-badge.done { color: #8a928c; background: #eef0ec; }
     /* Startseite: Service vor Ort – gleiche Einrückung wie „Heute im Ferienhaus“ */
     .task-list.dash-tasks { padding: 0 18px; }
     .dash-tasks .task-row { position: relative; gap: 10px; min-height: 0; padding: 12px 18px; border-bottom: 1px solid #f0f1ee; border-radius: 0; }
@@ -3909,13 +3916,17 @@
       const priority = task.priority === 'urgent' ? 'Dringend' : task.priority === 'soon' ? 'Wichtig' : 'Aufgabe';
       const tagClass = task.priority === 'urgent' ? 'urgent' : task.priority === 'soon' ? 'soon' : '';
       const overdue = !task.done && task.date && task.date < localDateKey(new Date());
-      const extraTags = `${overdue ? '<span class="task-tag overdue">Überfällig</span>' : ''}${task.auto ? '<span class="task-tag auto">Automatisch</span>' : ''}`;
+      const extraTags = link ? '' : `${overdue ? '<span class="task-tag overdue">Überfällig</span>' : ''}${task.auto ? '<span class="task-tag auto">Automatisch</span>' : ''}`;
+      const days = task.date ? Math.round((new Date(`${task.date}T12:00:00`) - new Date(`${localDateKey(new Date())}T12:00:00`)) / 86400000) : null;
+      const dueDate = task.date ? new Date(`${task.date}T12:00:00`) : null;
+      const relative = days === null ? 'ohne Datum' : days === 0 ? 'heute' : days === 1 ? 'morgen' : days > 1 ? `in ${days} Tagen` : `${-days} ${days === -1 ? 'Tag' : 'Tage'} überfällig`;
+      const dueBadge = `<span class="task-due-badge ${task.done ? 'done' : overdue ? 'late' : days !== null && days <= 2 ? 'soon' : ''}">${dueDate ? `<span class="tdb-date"><b>${dueDate.getDate()}</b>${escapeHtml(dueDate.toLocaleDateString('de-DE', { month: 'short' }))}</span>` : ''}<small>${escapeHtml(task.done ? 'erledigt' : relative)}</small></span>`;
       const status = taskStatus(task);
       const openIssues = issues.filter((issue) => issue.taskId === task.id && (issue.status === 'open' || issue.status === 'planned'));
       const statusClass = status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open';
       return `<div class="task-row prio-${task.priority || 'normal'} ${task.done ? 'is-done' : ''} ${openIssues.length ? 'has-issue' : ''} ${link ? 'is-link' : ''}" ${link ? `data-goto-task="${task.id}" role="button" tabindex="0" aria-label="${escapeHtml(task.title)} in Serviceaufgaben anzeigen"` : ''}>
         <div class="task-main">${link ? `<span class="task-name ${task.done ? 'completed' : ''}">${escapeHtml(task.title)}</span>` : `<button class="task-name ${task.done ? 'completed' : ''}" type="button" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten: ${escapeHtml(task.title)}">${escapeHtml(task.title)}</button>`}<div class="task-meta">${singleHouse() ? '' : `<span>${escapeHtml(task.property)}</span>`}<span class="task-tag ${tagClass}">${priority}</span>${extraTags}${task.area ? `<span>${escapeHtml(task.area)}</span>` : ''}</div>${openIssues.length ? `<div class="task-row-issue">${escapeHtml(openIssues.map((issue) => issue.text).join(' · '))}</div>` : ''}</div>
-        <div class="task-row-side">${openIssues.length ? `<span class="task-issue-flag" title="${openIssues.length} ${openIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet" aria-label="${openIssues.length} ${openIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet">${icon('alert')}</span>` : ''}<span class="task-status-pill st-${statusClass}">${escapeHtml(status)}</span><span class="task-due ${overdue ? 'overdue' : ''}">${fmtDate(task.date)}</span></div>
+        <div class="task-row-side">${openIssues.length ? `<span class="task-issue-flag" title="${openIssues.length} ${openIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet" aria-label="${openIssues.length} ${openIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet">${icon('alert')}</span>` : ''}<span class="task-status-pill st-${statusClass}">${escapeHtml(status)}</span>${link ? dueBadge : `<span class="task-due ${overdue ? 'overdue' : ''}">${fmtDate(task.date)}</span>`}</div>
       </div>`;
     }
     function escapeHtml(value) {
