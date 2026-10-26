@@ -1750,6 +1750,11 @@
       .expense-entry-fields { grid-template-columns: 1fr 1fr; }
       .expense-entry-fields label:nth-child(n+3) { grid-column: 1 / -1; }
     }
+    /* Service vor Ort: Statusschild immer nach Status gefärbt */
+    .insp-tile.dash-task .task-pill.is-open { color: #8e622b; background: var(--amber-soft); }
+    .insp-tile.dash-task .task-pill.is-progress { color: #2f5f86; background: #e6eff7; }
+    .insp-tile.dash-task .task-pill.is-done { color: var(--green); background: var(--green-soft); }
+    .insp-tile.dash-task .task-pill svg { width: 10px; height: 10px; }
     /* Startseite: Service vor Ort – gleiche Einrückung wie „Heute im Ferienhaus“ */
     .task-list.dash-tasks { padding: 0 18px; }
     .dash-tasks .task-row { position: relative; gap: 10px; min-height: 0; padding: 12px 18px; border-bottom: 1px solid #f0f1ee; border-radius: 0; }
@@ -6970,7 +6975,7 @@
       const state = openIssues.length ? 'issue' : overdue ? 'overdue' : status === 'In Bearbeitung' ? 'ordered' : 'open';
       const prio = task.priority === 'urgent' ? '<b class="prio urgent">Dringend</b>' : task.priority === 'soon' ? '<b class="prio soon">Wichtig</b>' : '';
       const detail = [`<span class="when ${overdue ? 'late' : ''}">${task.date ? `${escapeHtml(fmtDate(task.date))} · ` : ''}${escapeHtml(relative)}</span>`, prio, area ? escapeHtml(area) : '', singleHouse() ? '' : escapeHtml(task.property)].filter(Boolean).join(' · ');
-      return `<div class="insp-tile dash-task st-${state}" data-goto-task="${task.id}" role="button" tabindex="0" aria-label="${escapeHtml(task.title)} in Serviceaufgaben anzeigen"><span class="insp-tile-icon">${icon(openIssues.length ? 'alert' : iconName)}</span><span class="insp-tile-body"><span class="insp-tile-top"><strong>${escapeHtml(task.title)}</strong><span class="insp-tile-pill">${escapeHtml(status)}</span></span><small>${detail}</small>${openIssues.length ? `<small class="dash-task-issue">Auffälligkeit: ${escapeHtml(openIssues.map((issue) => issue.text).join(' · '))}</small>` : ''}</span></div>`;
+      return `<div class="insp-tile dash-task st-${state}" data-goto-task="${task.id}" role="button" tabindex="0" aria-label="${escapeHtml(task.title)} in Serviceaufgaben anzeigen"><span class="insp-tile-icon">${icon(openIssues.length ? 'alert' : iconName)}</span><span class="insp-tile-body"><span class="insp-tile-top"><strong>${escapeHtml(task.title)}</strong><span class="insp-tile-pill task-pill ${status === 'Erledigt' ? 'is-done' : status === 'In Bearbeitung' ? 'is-progress' : 'is-open'}">${status === 'Erledigt' ? icon('check') : status === 'In Bearbeitung' ? icon('clock') : ''}${escapeHtml(status)}</span></span><small>${detail}</small>${openIssues.length ? `<small class="dash-task-issue">Auffälligkeit: ${escapeHtml(openIssues.map((issue) => issue.text).join(' · '))}</small>` : ''}</span></div>`;
     }
     // Automatisierung: nächste automatische Schritte als Kachel mit änderbarem Status.
     const AUTO_KIND = { turnover: ['users', 'Gästewechsel'], inspection: ['inspection', 'Hauskontrolle'], season: ['calendar', 'Saison'], repair: ['alert', 'Reparatur'], renovation: ['cube', 'Sanierung'], maintenance: ['clock', 'Wartung'] };
