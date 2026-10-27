@@ -2513,6 +2513,17 @@
       .breadcrumb-brand { font-size: 17px; letter-spacing: .2em; }
     }
     @media (max-width: 380px) { .brand-region { display: none; } }
+    /* Menü-Button oben rechts entfällt: Navigation über die Leiste (Handy) bzw. die Bereiche im Kopf (Computer) */
+    #menu-toggle { display: none !important; }
+    .notify-panel { right: 0; }
+    .top-tabs { display: flex; align-items: center; gap: 4px; margin-right: 6px; }
+    .top-tabs .tab { position: relative; display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 13px; border: 1px solid transparent; border-radius: 20px; color: #f3efe4; background: transparent; font-size: 13.5px; font-weight: 650; cursor: pointer; }
+    .top-tabs .tab svg { width: 18px; height: 18px; }
+    .top-tabs .tab:hover { background: rgba(255, 253, 248, .14); }
+    .top-tabs .tab.active, .top-tabs .tab.active-more { color: var(--green-dark, #1d3a2c); background: #fffdf8; }
+    .top-tabs .tab-badge { min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px; color: #1f2a22; background: #ffd84d; font-size: 11px; font-style: normal; font-weight: 800; line-height: 19px; text-align: center; }
+    @media (max-width: 1180px) { .top-tabs .tab span { display: none; } .top-tabs .tab { padding: 0 11px; } }
+    @media (max-width: 760px) { .top-tabs { display: none; } }
   </style>
 </head>
 <body>
@@ -2522,6 +2533,7 @@
         <div class="breadcrumb"><button class="breadcrumb-home" data-page="dashboard" aria-label="Zur Übersicht" title="Zur Übersicht"><svg viewBox="0 0 42 36" aria-hidden="true"><path d="M3 19 16 7l13 12M6 17v14h19V17M11 23h3v3h-3zm7 0h3v3h-3z" fill="none" stroke="#fff9eb" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3"/><path d="M34 2 29 10h3l-5 6h4l-4 7h6v8h3v-8h6l-4-7h4l-5-6h3z" fill="#b9955f"/></svg></button><span class="brand-lockup"><span class="brand-wordmark"><span class="breadcrumb-brand">HUSORA</span><span class="brand-region">Smart House Care</span></span></span><span class="breadcrumb-separator" aria-hidden="true">/</span><b id="breadcrumb">Übersicht</b></div>
         <div class="top-actions">
           <div class="plan-info" id="plan-info"></div>
+          <nav class="top-tabs" id="top-tabs" aria-label="Hauptbereiche"></nav>
           <div class="notify-wrap"><button type="button" class="notify-btn" id="notify-toggle" aria-label="Erinnerungen anzeigen" title="Erinnerungen" aria-haspopup="true" aria-expanded="false" aria-controls="notify-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span class="notify-count" id="notify-count" hidden>0</span></button><div class="notify-panel" id="notify-panel" role="region" aria-label="Erinnerungen"></div></div>
           <div class="nav-menu-wrap"><button class="icon-btn avatar-btn" id="menu-toggle" aria-label="Menü und Benutzerprofil öffnen" title="Menü und Benutzerprofil" aria-haspopup="true" aria-expanded="false" aria-controls="main-menu"><span id="user-avatar">MM</span></button>
         <div class="nav-menu" id="main-menu">
@@ -12022,13 +12034,14 @@
     buildGroupedNav();
     const TABBAR_ITEMS = [['dashboard', 'Übersicht', 'home'], ['tasks', 'Aufgaben', 'task'], ['inspections', 'Kontrolle', 'inspection'], ['calendar', 'Kalender', 'calendar']];
     function renderTabbar() {
-      const bar = document.getElementById('tabbar');
-      if (!bar) return;
+      const bars = [document.getElementById('tabbar'), document.getElementById('top-tabs')].filter(Boolean);
+      if (!bars.length) return;
       const active = TABBAR_ITEMS.some(([page]) => page === currentPage) ? currentPage : (currentPage === 'bookings' ? 'calendar' : '');
       const openCount = tasks.filter((task) => !task.done).length;
       const menuOpen = document.getElementById('main-menu')?.classList.contains('open');
-      bar.innerHTML = TABBAR_ITEMS.map(([page, label, iconName]) => `<button type="button" class="tab ${active === page ? 'active' : ''}" data-page="${page}" ${active === page ? 'aria-current="page"' : ''}>${icon(iconName)}<span>${label}</span>${page === 'tasks' && openCount ? `<i class="tab-badge">${openCount > 99 ? '99+' : openCount}</i>` : ''}</button>`).join('')
+      const html = TABBAR_ITEMS.map(([page, label, iconName]) => `<button type="button" class="tab ${active === page ? 'active' : ''}" data-page="${page}" ${active === page ? 'aria-current="page"' : ''}>${icon(iconName)}<span>${label}</span>${page === 'tasks' && openCount ? `<i class="tab-badge">${openCount > 99 ? '99+' : openCount}</i>` : ''}</button>`).join('')
         + `<button type="button" class="tab ${!active || menuOpen ? 'active-more' : ''}" data-tab-more aria-haspopup="true" aria-expanded="${menuOpen ? 'true' : 'false'}" aria-controls="main-menu">${icon('menu')}<span>Mehr</span></button>`;
+      bars.forEach((bar) => { bar.innerHTML = html; });
     }
 
     // --- Bereiche der Startseite ---
@@ -12139,7 +12152,7 @@
         renderTabbar();
         return;
       }
-      if (target.closest('#tabbar [data-page]')) setTimeout(renderTabbar, 0);
+      if (target.closest('#tabbar [data-page], #top-tabs [data-page]')) setTimeout(renderTabbar, 0);
       const toggle = target.closest('[data-dash-toggle]');
       if (toggle) { setDashOpen(toggle.dataset.dashToggle, toggle.getAttribute('aria-expanded') !== 'true'); return; }
       const head = target.closest('.dash-section > .card-head');
