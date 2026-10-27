@@ -12009,7 +12009,7 @@ html.dark .pkg-remove { background: #1c1c1c; }
     const APP_VERSION = '1.0.0';
     const APP_BUILD = '2026-10-27';
     // Angaben des Anbieters für Impressum und Datenschutz – vor der Veröffentlichung ausfüllen.
-    const LEGAL_INFO = { company: '', owner: '', street: '', zip: '', city: '', country: 'Deutschland', email: '', phone: '', vatId: '', supportEmail: '' };
+    const LEGAL_INFO = { company: 'Alexander Schäle', owner: 'Alexander Schäle', street: 'Mansfelder Weg 6', zip: '31311', city: 'Uetze', country: 'Deutschland', email: 'info@husora.de', phone: '', vatId: '', supportEmail: 'info@husora.de' };
     const legalValue = (key, label) => (LEGAL_INFO[key] ? escapeHtml(LEGAL_INFO[key]) : `<mark class="legal-todo">[${label}]</mark>`);
     const STORAGE_PREFIX = 'stugliv-';
     const STORAGE_LIMIT = 5 * 1024 * 1024;
@@ -12103,9 +12103,9 @@ html.dark .pkg-remove { background: #1c1c1c; }
 
     const LEGAL_SECTIONS = {
       imprint: { title: 'Impressum', html: () => `<p class="legal-lead">Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG)</p>
-        <p>${legalValue('company', 'Firma oder Name')}<br>${legalValue('owner', 'Inhaber / vertretungsberechtigte Person')}<br>${legalValue('street', 'Straße und Hausnummer')}<br>${legalValue('zip', 'PLZ')} ${legalValue('city', 'Ort')}<br>${escapeHtml(LEGAL_INFO.country)}</p>
-        <h3>Kontakt</h3><p>E-Mail: ${legalValue('email', 'E-Mail-Adresse')}<br>Telefon: ${legalValue('phone', 'Telefonnummer')}</p>
-        <h3>Umsatzsteuer</h3><p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: ${legalValue('vatId', 'USt-IdNr., falls vorhanden – sonst Abschnitt entfernen')}</p>
+        <p>${legalValue('owner', 'Name')}<br>${legalValue('street', 'Straße und Hausnummer')}<br>${legalValue('zip', 'PLZ')} ${legalValue('city', 'Ort')}<br>${escapeHtml(LEGAL_INFO.country)}</p>
+        <h3>Kontakt</h3><p>E-Mail: <a href="mailto:${escapeHtml(LEGAL_INFO.email)}">${legalValue('email', 'E-Mail-Adresse')}</a>${LEGAL_INFO.phone ? `<br>Telefon: ${escapeHtml(LEGAL_INFO.phone)}` : ''}</p>
+        ${LEGAL_INFO.vatId ? `<h3>Umsatzsteuer</h3><p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: ${escapeHtml(LEGAL_INFO.vatId)}</p>` : ''}
         <h3>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h3><p>${legalValue('owner', 'Name')}, Anschrift wie oben</p>
         <h3>Verbraucherstreitbeilegung</h3><p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>` },
       privacy: { title: 'Datenschutzerklärung', html: () => `<p class="legal-lead">Stand: ${escapeHtml(fmtDateFull(APP_BUILD))}</p>
@@ -12143,7 +12143,7 @@ html.dark .pkg-remove { background: #1c1c1c; }
           <li><strong>Tesseract.js</strong> – Apache License 2.0</li>
           <li><strong>Kartendaten</strong> – © OpenStreetMap-Mitwirkende, Open Database License (ODbL)</li>
           <li><strong>Wetterdaten</strong> – Open-Meteo.com, CC BY 4.0</li>
-          <li><strong>Fotos in der App</strong> – <mark class="legal-todo">[Bildnachweise ergänzen]</mark></li>
+          <li><strong>Fotos und Bilder in der App</strong> – KI-generiert</li>
         </ul><p>Husora ${APP_VERSION} · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}</p>` }
     };
     let legalTab = 'imprint';
