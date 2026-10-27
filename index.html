@@ -2695,6 +2695,40 @@
   
   
   
+    /* Paket-Fenster */
+    .package-label { display: block; margin: 16px 0 8px; }
+    .package-card .package-open { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; color: var(--green); font-size: 12.5px; font-style: normal; font-weight: 700; }
+    .package-card .package-open svg { width: 13px; height: 13px; }
+    .season-package .package-name { display: inline-flex; align-items: center; justify-content: flex-start; gap: 6px; }
+    .season-package .package-name svg { width: 16px; height: 16px; color: var(--green); }
+    .package-modal { width: min(760px, 100%); }
+    .pkg-intro { margin: 0 0 14px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+    .pkg-h { display: flex; align-items: baseline; gap: 8px; margin: 18px 0 8px; font-size: 14px; }
+    .pkg-h small { color: var(--muted); font-size: 12px; font-weight: 500; }
+    .pkg-list { display: grid; gap: 8px; }
+    .pkg-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 11px; background: #fbfaf6; }
+    .pkg-row.off { opacity: .6; }
+    .pkg-check { position: relative; display: grid; place-items: center; width: 26px; height: 44px; cursor: pointer; }
+    .pkg-check input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .pkg-check input:checked + .season-check-box { color: white; border-color: var(--green); background: var(--green); }
+    .pkg-fields { flex: 1; min-width: 0; display: grid; gap: 6px; }
+    .pkg-fields .form-control { min-height: 40px; font-size: 14px; }
+    .pkg-fields .pkg-detail { font-size: 13px; color: #4d5a51; }
+    .pkg-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+    .pkg-meta .form-control { min-height: 36px; font-size: 13px; }
+    .pkg-row .pkg-meta:only-child, .pkg-fields .pkg-meta:has(select:only-child) { grid-template-columns: minmax(0, 200px); }
+    .pkg-remove { display: grid; flex: 0 0 auto; place-items: center; width: 38px; height: 40px; border: 1px solid var(--line); border-radius: 9px; color: var(--red); background: white; cursor: pointer; }
+    .pkg-remove svg { width: 16px; height: 16px; }
+    .pkg-empty { margin: 0; color: var(--muted); font-size: 13px; }
+    .pkg-add { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .pkg-add-grid { display: grid; grid-template-columns: 1fr 180px auto; gap: 8px; margin-top: 6px; }
+    .pkg-add-grid .form-control { min-height: 44px; }
+    .pkg-add-grid .secondary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
+    .pkg-add-grid svg { width: 15px; height: 15px; }
+    .pkg-spacer { flex: 1; }
+    @media (max-width: 600px) { .pkg-meta { grid-template-columns: 1fr; } .pkg-add-grid { grid-template-columns: 1fr; } }
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3308,6 +3342,10 @@ html.dark .auto-groups { background: #28251d; }
 html.dark .auto-groups button { color: #c0c8c3; }
 html.dark .auto-groups button.active { background: #1c1c1c; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.23); }
 html.dark .auto-groups button span { color: #b1b7b3; background: #2e2d28; }
+html.dark .pkg-row { background: #25231a; }
+html.dark .pkg-check input:checked + .season-check-box { background: var(--green-solid); }
+html.dark .pkg-fields .pkg-detail { color: #c0c8c3; }
+html.dark .pkg-remove { background: #1c1c1c; }
     }
     /* DARK-MODE-END */
   </style>
@@ -3630,6 +3668,13 @@ html.dark .auto-groups button span { color: #b1b7b3; background: #2e2d28; }
   <div class="inspection-print-area" id="inspection-print-area" aria-hidden="true"></div>
   <div class="modal-backdrop" id="onboarding-modal" role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
     <section class="modal onboarding-modal"><div id="onboarding-body"></div></section>
+  </div>
+  <div class="modal-backdrop" id="package-modal" role="dialog" aria-modal="true" aria-labelledby="package-modal-title">
+    <section class="modal editor-modal package-modal">
+      <div class="modal-head"><div><h2 id="package-modal-title">Paket</h2><p id="package-modal-subtitle"></p></div><button class="close-btn" type="button" data-package-close aria-label="Schließen">✕</button></div>
+      <div id="package-modal-body"></div>
+      <div class="form-actions editor-actions" id="package-modal-actions"></div>
+    </section>
   </div>
   <div class="modal-backdrop" id="legal-modal" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title">
     <section class="modal legal-modal">
@@ -5035,19 +5080,17 @@ html.dark .auto-groups button span { color: #b1b7b3; background: #2e2d28; }
       const cards = SERVICE_PACKAGES.map((item) => {
         const active = servicePackage?.id === item.id;
         const yearly = item.templates.reduce((sum, id) => sum + (byId(id) ? templateYearlyCount(byId(id)) : 0), 0);
-        return `<button type="button" class="package-card ${active ? 'active' : ''}" data-service-package="${item.id}" aria-pressed="${active}"><span class="package-name">${escapeHtml(item.name)}${active ? '<i>Gewählt</i>' : ''}</span><small>${escapeHtml(item.tagline)}</small><strong>${item.templates.length} Aufgaben</strong><small>≈ ${yearly} Einsätze pro Jahr und Haus</small></button>`;
+        return `<button type="button" class="package-card ${active ? 'active' : ''}" data-package-open="${item.id}" aria-haspopup="dialog"><span class="package-name">${escapeHtml(item.name)}${active ? '<i>Gewählt</i>' : ''}</span><small>${escapeHtml(item.tagline)}</small><strong>${item.templates.length} Aufgaben</strong><small>≈ ${yearly} Einsätze pro Jahr und Haus</small><em class="package-open">Aufgaben ansehen ${icon('arrow')}</em></button>`;
       }).join('');
       const selected = autoTasks.templates.filter((template) => template.selected);
       const yearlyTotal = selected.reduce((sum, template) => sum + templateYearlyCount(template), 0);
       const summary = servicePackage
         ? `Paket <strong>${escapeHtml(servicePackage.name)}</strong>${extras.length ? ` + ${extras.length} ${extras.length === 1 ? 'Zusatzaufgabe' : 'Zusatzaufgaben'}` : ''}${missing.length ? ` · ${missing.length} abgewählt` : ''}`
         : `<strong>Eigene Zusammenstellung</strong>`;
-      return `<div class="package-grid">${cards}</div>
+      return `<span class="form-label package-label">Servicepakete</span><div class="package-grid">${cards}</div>
         <p class="package-summary">${summary} · ${selected.length} Aufgaben aktiv · ≈ ${yearlyTotal} Einsätze pro Jahr${singleHouse() ? '' : ' je Haus'}</p>
-        <details class="package-details" ${servicePackage ? '' : 'open'}><summary>Aufgaben auswählen und Paket individuell erweitern</summary>
-          <div class="template-list">${templateListHtml()}</div>
-          <form id="auto-inline-form" class="auto-inline-form"><span class="form-label">Eigene Jahresaufgabe ergänzen</span><div class="auto-inline-grid"><input class="form-control" name="title" required maxlength="90" placeholder="z. B. Bootsmotor warten lassen" aria-label="Aufgabe"><select class="form-control" name="interval" aria-label="Wiederholung">${[[14, 'Alle 2 Wochen'], [30, 'Monatlich'], [90, 'Vierteljährlich'], [180, 'Halbjährlich'], [365, 'Jährlich']].map(([value, label]) => `<option value="${value}" ${value === 365 ? 'selected' : ''}>${label}</option>`).join('')}</select><select class="form-control" name="season" aria-label="Zeitraum">${Object.entries(SEASONS).map(([key, value]) => `<option value="${key}">${escapeHtml(value.label)}</option>`).join('')}</select><select class="form-control" name="priority" aria-label="Priorität"><option value="normal">Normal</option><option value="soon">Wichtig</option><option value="urgent">Dringend</option></select><button type="submit" class="primary-btn">${icon('plus')} Hinzufügen</button></div></form>
-        </details>`;
+        <span class="form-label package-label">Saison-Checklisten</span><div class="package-grid season-packages">${seasonPackageCardsHtml()}</div>
+        <p class="package-summary">Ein Klick auf ein Paket öffnet seine Aufgaben – dort kannst du sie anpassen und um eigene erweitern.</p>`;
     }
     let currentPage = 'dashboard';
     // Aktuell gewähltes Ferienhaus für Detailseite und zugeordnete Servicepartner.
@@ -5108,6 +5151,7 @@ html.dark .auto-groups button span { color: #b1b7b3; background: #2e2d28; }
     let taskPropertyFilter = 'all';
     let taskPriorityFilter = 'all';
     let taskView = 'list';
+    // Frühere Ansicht „Eigene“ gibt es nicht mehr.
     let providerProperty = properties[0].id;
     let providerCategory = 'all';
     let providerSearch = '';
@@ -5526,7 +5570,7 @@ html.dark .auto-groups button span { color: #b1b7b3; background: #2e2d28; }
       const priority = task.priority === 'urgent' ? 'Dringend' : task.priority === 'soon' ? 'Wichtig' : 'Aufgabe';
       const tagClass = task.priority === 'urgent' ? 'urgent' : task.priority === 'soon' ? 'soon' : '';
       const overdue = !task.done && task.date && task.date < localDateKey(new Date());
-      const extraTags = link ? '' : `${overdue ? '<span class="task-tag overdue">Überfällig</span>' : ''}${task.auto ? '<span class="task-tag auto">Automatisch</span>' : ''}`;
+      const extraTags = link ? '' : `${overdue ? '<span class="task-tag overdue">Überfällig</span>' : ''}`;
       const days = task.date ? Math.round((new Date(`${task.date}T12:00:00`) - new Date(`${localDateKey(new Date())}T12:00:00`)) / 86400000) : null;
       const dueDate = task.date ? new Date(`${task.date}T12:00:00`) : null;
       const relative = days === null ? 'ohne Datum' : days === 0 ? 'heute' : days === 1 ? 'morgen' : days > 1 ? `in ${days} Tagen` : `${-days} ${days === -1 ? 'Tag' : 'Tage'} überfällig`;
@@ -6028,7 +6072,7 @@ html.dark .auto-groups button span { color: #b1b7b3; background: #2e2d28; }
         const matchesStatus = taskFilter === 'all' || taskStatus(task) === taskFilter;
         const matchesProperty = taskPropertyFilter === 'all' || task.property === taskPropertyFilter;
         const matchesPriority = taskPriorityFilter === 'all' || (task.priority || 'normal') === taskPriorityFilter;
-        return matchesStatus && matchesProperty && matchesPriority && (taskView !== 'self' || task.selfService);
+        return matchesStatus && matchesProperty && matchesPriority;
       }).sort((a, b) => (Number(taskStatus(a) === 'Erledigt') - Number(taskStatus(b) === 'Erledigt')) || (a.date || '9999').localeCompare(b.date || '9999') || ((rank[a.priority] ?? 2) - (rank[b.priority] ?? 2)));
       const rows = visible.map((task) => {
         const status = taskStatus(task);
@@ -6041,7 +6085,7 @@ html.dark .auto-groups button span { color: #b1b7b3; background: #2e2d28; }
         const areaIcon = /kontroll|inspekt/i.test(task.area || '') ? 'inspection' : /saison|winter|frühjahr/i.test(task.area || '') ? 'calendar' : /reinig|gäste|wechsel/i.test(task.area || '') ? 'users' : /repar|instand|sanier/i.test(task.area || '') ? 'alert' : 'home';
         const chips = [
           priority !== 'normal' ? `<span class="tchip prio ${priority}">${priorityText[priority]}</span>` : '',
-          task.auto ? `<span class="tchip auto">${icon('bolt')} Automatisch</span>` : '',
+
           task.repeat && task.repeat !== 'Einmalig' ? `<span class="tchip">${icon('clock')} ${escapeHtml(task.repeat)}</span>` : '',
           task.area ? `<span class="tchip">${icon(areaIcon)} ${escapeHtml(task.area)}</span>` : '',
           singleHouse() ? '' : `<span class="tchip">${icon('property')} ${escapeHtml(task.property)}</span>`
@@ -6067,10 +6111,10 @@ html.dark .auto-groups button span { color: #b1b7b3; background: #2e2d28; }
       }).join('');
       const openCount = tasks.filter((task) => taskStatus(task) !== 'Erledigt').length;
       return `<div class="welcome"><div><p class="eyebrow">Buchungen & Instandhaltung</p><h1>Serviceaufgaben</h1><p class="subtitle">Koordiniere Reinigung, Schlüsselübergaben und saisonale Stugapflege.</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>
-        <section class="card auto-task-bar"><div><label class="switch"><input type="checkbox" id="auto-task-toggle" ${autoTasks.enabled ? 'checked' : ''}><span class="switch-track"></span><span>Aufgaben automatisch erstellen</span></label><p>${packageExtras().servicePackage ? `Servicepaket ${escapeHtml(packageExtras().servicePackage.name)} · ` : ''}${autoTasks.templates.filter((template) => template.selected).length} Vorlagen ausgewählt – werden ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} automatisch angelegt.</p></div><div class="auto-task-actions"><button class="primary-btn" data-action="new-task">${icon('plus')} Aufgabe erstellen</button><button class="secondary-btn" data-action="auto-task-config">Aufgaben auswählen / erstellen</button><button class="secondary-btn" data-page="automation">${icon('bolt')} Alle Automatiken</button></div></section>
+        <section class="card auto-task-bar"><div><label class="switch"><input type="checkbox" id="auto-task-toggle" ${autoTasks.enabled ? 'checked' : ''}><span class="switch-track"></span><span>Aufgaben automatisch erstellen</span></label><p>${packageExtras().servicePackage ? `Servicepaket ${escapeHtml(packageExtras().servicePackage.name)} · ` : ''}${autoTasks.templates.filter((template) => template.selected).length} Vorlagen ausgewählt – werden ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} automatisch angelegt.</p></div><div class="auto-task-actions"><button class="primary-btn" data-action="new-task">${icon('plus')} Aufgabe erstellen</button><button class="secondary-btn" data-action="auto-task-config">Aufgaben auswählen / erstellen</button></div></section>
         <section class="card"><div class="card-head"><div><h2 class="card-title">Alle Serviceaufgaben</h2><p class="card-caption">${openCount} offen · ${tasks.length - openCount} erledigt</p></div></div>
-        <div class="section-toolbar" style="padding:0 18px"><div class="toolbar-right"><select id="task-filter" class="filter-select" aria-label="Nach Status filtern"><option value="all">Alle Status</option>${taskStatuses.map((value) => `<option ${taskFilter === value ? 'selected' : ''}>${value}</option>`).join('')}</select>${singleHouse() ? '' : `<select id="task-property-filter" class="filter-select" aria-label="Nach Gebäude filtern"><option value="all">Alle Gebäude</option>${properties.map((property) => `<option value="${escapeHtml(property.name)}" ${taskPropertyFilter === property.name ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select>`}<select id="task-priority-filter" class="filter-select" aria-label="Nach Priorität filtern"><option value="all">Alle Prioritäten</option><option value="urgent" ${taskPriorityFilter === 'urgent' ? 'selected' : ''}>Dringend</option><option value="soon" ${taskPriorityFilter === 'soon' ? 'selected' : ''}>Wichtig</option><option value="normal" ${taskPriorityFilter === 'normal' ? 'selected' : ''}>Normal</option></select></div><div class="view-toggle" role="tablist" aria-label="Ansicht"><button type="button" class="${taskView === 'list' ? 'active' : ''}" data-task-view="list">Liste</button><button type="button" class="${taskView === 'partners' ? 'active' : ''}" data-task-view="partners">Nach Servicepartner</button><button type="button" class="${taskView === 'self' ? 'active' : ''}" data-task-view="self">Eigene${tasks.some((task) => task.selfService && taskStatus(task) !== 'Erledigt') ? ` <span class="view-count">${tasks.filter((task) => task.selfService && taskStatus(task) !== 'Erledigt').length}</span>` : ''}</button></div></div>
-        ${taskView === 'partners' ? partnerTasksView(visible) : `<div class="tcard-list">${rows || (taskView === 'self' ? '<div class="empty">Keine eigenen Aufgaben. Mit dem Schalter „Selbst“ an einer Aufgabe übernimmst du sie in Eigenleistung – sie erscheint dann hier.</div>' : '<div class="empty">Keine Aufgaben gefunden. Erstelle eine Aufgabe oder ändere die Filter.</div>')}</div>`}</section>`;
+        <div class="section-toolbar" style="padding:0 18px"><div class="toolbar-right"><select id="task-filter" class="filter-select" aria-label="Nach Status filtern"><option value="all">Alle Status</option>${taskStatuses.map((value) => `<option ${taskFilter === value ? 'selected' : ''}>${value}</option>`).join('')}</select>${singleHouse() ? '' : `<select id="task-property-filter" class="filter-select" aria-label="Nach Gebäude filtern"><option value="all">Alle Gebäude</option>${properties.map((property) => `<option value="${escapeHtml(property.name)}" ${taskPropertyFilter === property.name ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select>`}<select id="task-priority-filter" class="filter-select" aria-label="Nach Priorität filtern"><option value="all">Alle Prioritäten</option><option value="urgent" ${taskPriorityFilter === 'urgent' ? 'selected' : ''}>Dringend</option><option value="soon" ${taskPriorityFilter === 'soon' ? 'selected' : ''}>Wichtig</option><option value="normal" ${taskPriorityFilter === 'normal' ? 'selected' : ''}>Normal</option></select></div><div class="view-toggle" role="tablist" aria-label="Ansicht"><button type="button" class="${taskView === 'list' ? 'active' : ''}" data-task-view="list">Liste</button><button type="button" class="${taskView === 'partners' ? 'active' : ''}" data-task-view="partners">Nach Servicepartner</button></div></div>
+        ${taskView === 'partners' ? partnerTasksView(visible) : `<div class="tcard-list">${rows || '<div class="empty">Keine Aufgaben gefunden. Erstelle eine Aufgabe oder ändere die Filter.</div>'}</div>`}</section>`;
     }
     function automationPage() {
       const today = localDateKey(new Date());
@@ -13288,6 +13332,154 @@ html.dark .auto-groups button span { color: #b1b7b3; background: #2e2d28; }
     });
     document.addEventListener('change', (event) => {
       if (event.target.id === 'plan-template-select' && event.target.value) applyTemplateToPlan(event.target.value);
+    });
+    // ===== Servicepakete & Jahresaufgaben: Paket anklicken → Aufgaben im eigenen Fenster bearbeiten und erweitern =====
+    const PKG_INTERVALS = [[14, 'Alle 2 Wochen'], [30, 'Monatlich'], [90, 'Vierteljährlich'], [180, 'Halbjährlich'], [365, 'Jährlich']];
+    const PKG_PRIORITIES = [['normal', 'Normal'], ['soon', 'Wichtig'], ['urgent', 'Dringend']];
+    // Saison-Checklisten sind bearbeitbar: Standardpunkte merken, gespeicherte Anpassungen übernehmen.
+    const DEFAULT_SEASON_ITEMS = {
+      winter: winterChecklist.map((item) => ({ ...item, type: SEASON_ITEM_TYPES.winter[item.id] || 'control' })),
+      spring: springChecklist.map((item) => ({ ...item, type: SEASON_ITEM_TYPES.spring[item.id] || 'control' }))
+    };
+    function applySeasonItems(key, list) {
+      const target = SEASON_CHECKLISTS[key].items;
+      target.splice(0, target.length, ...list.map(({ id, title, detail }) => ({ id, title, detail })));
+      SEASON_ITEM_TYPES[key] = Object.fromEntries(list.map((item) => [item.id, item.type === 'service' ? 'service' : 'control']));
+    }
+    (() => {
+      const stored = loadStore('stugliv-season-items', {});
+      ['winter', 'spring'].forEach((key) => { if (Array.isArray(stored[key]) && stored[key].length) applySeasonItems(key, stored[key].filter((item) => item && item.id && item.title)); });
+    })();
+    let pkgDraft = null;
+    const templateFor = (id) => autoTasks.templates.find((template) => template.id === id) || defaultAutoTemplates.find((template) => template.id === id) || null;
+    function openPackage(ref) {
+      if (ref.startsWith('season:')) {
+        const key = ref.slice(7);
+        const season = SEASON_CHECKLISTS[key];
+        pkgDraft = { kind: 'season', key, rows: season.items.map((item) => ({ id: item.id, title: item.title, detail: item.detail, type: SEASON_ITEM_TYPES[key]?.[item.id] || 'control' })) };
+        document.getElementById('package-modal-title').textContent = season.title;
+        document.getElementById('package-modal-subtitle').textContent = key === 'winter' ? 'Vorbereitung auf Frost, Schnee und Abwesenheit' : 'Öffnung nach dem Winter';
+      } else {
+        const servicePackage = SERVICE_PACKAGES.find((item) => item.id === ref);
+        if (!servicePackage) return;
+        const active = autoTasks.packageId === servicePackage.id;
+        const rows = servicePackage.templates.map(templateFor).filter(Boolean).map((template) => ({ id: template.id, title: template.title, interval: Number(template.interval) || 365, season: template.season || 'all', priority: template.priority || 'normal', selected: active ? Boolean(autoTasks.templates.find((item) => item.id === template.id)?.selected) : true, builtin: true }));
+        const own = autoTasks.templates.filter((template) => !template.builtin && template.category === 'custom').map((template) => ({ id: template.id, title: template.title, interval: Number(template.interval) || 365, season: template.season || 'all', priority: template.priority || 'normal', selected: Boolean(template.selected), builtin: false }));
+        pkgDraft = { kind: 'service', id: servicePackage.id, active, rows: [...rows, ...own], removed: [] };
+        document.getElementById('package-modal-title').textContent = `Servicepaket ${servicePackage.name}`;
+        document.getElementById('package-modal-subtitle').textContent = servicePackage.tagline;
+      }
+      renderPackageModal();
+      document.getElementById('package-modal').classList.add('open');
+    }
+    function renderPackageModal() {
+      const body = document.getElementById('package-modal-body');
+      const actions = document.getElementById('package-modal-actions');
+      const options = (list, value) => list.map(([id, label]) => `<option value="${id}" ${String(id) === String(value) ? 'selected' : ''}>${label}</option>`).join('');
+      if (pkgDraft.kind === 'season') {
+        const count = (type) => pkgDraft.rows.filter((row) => row.type === type).length;
+        body.innerHTML = `<p class="pkg-intro">${pkgDraft.rows.length} Punkte · ${count('control')} prüfen · ${count('service')} erledigen. Passe Titel und Anweisung an, lege fest, ob ein Punkt geprüft oder erledigt wird, und ergänze eigene Aufgaben.</p>
+          <div class="pkg-list">${pkgDraft.rows.map((row, index) => `<div class="pkg-row" data-pkg-index="${index}"><div class="pkg-fields"><input class="form-control" data-pkg-field="title" maxlength="90" value="${escapeHtml(row.title)}" aria-label="Aufgabe"><input class="form-control pkg-detail" data-pkg-field="detail" maxlength="240" value="${escapeHtml(row.detail || '')}" placeholder="Anweisung (optional)" aria-label="Anweisung"><div class="pkg-meta"><select class="form-control" data-pkg-field="type" aria-label="Art">${options([['control', 'Prüfen'], ['service', 'Erledigen']], row.type)}</select></div></div><button type="button" class="pkg-remove" data-pkg-remove="${index}" aria-label="${escapeHtml(row.title)} entfernen">${icon('trash')}</button></div>`).join('')}</div>
+          <div class="pkg-add"><span class="form-label">Eigene Aufgabe ergänzen</span><div class="pkg-add-grid"><input class="form-control" id="pkg-new-title" maxlength="90" placeholder="z. B. Bootssteg abbauen" aria-label="Neue Aufgabe"><select class="form-control" id="pkg-new-type" aria-label="Art">${options([['service', 'Erledigen'], ['control', 'Prüfen']], 'service')}</select><button type="button" class="secondary-btn" data-pkg-add>${icon('plus')} Hinzufügen</button></div></div>`;
+        actions.innerHTML = '<button type="button" class="secondary-btn" data-pkg-reset>Standard wiederherstellen</button><span class="pkg-spacer"></span><button type="button" class="secondary-btn" data-package-close>Abbrechen</button><button type="button" class="primary-btn" data-pkg-save>Checkliste speichern</button>';
+        return;
+      }
+      const builtin = pkgDraft.rows.map((row, index) => ({ row, index })).filter(({ row }) => row.builtin);
+      const own = pkgDraft.rows.map((row, index) => ({ row, index })).filter(({ row }) => !row.builtin);
+      const yearly = pkgDraft.rows.filter((row) => row.selected).reduce((sum, row) => sum + templateYearlyCount(row), 0);
+      const rowHtml = ({ row, index }) => `<div class="pkg-row ${row.selected ? '' : 'off'}" data-pkg-index="${index}"><label class="pkg-check"><input type="checkbox" data-pkg-field="selected" ${row.selected ? 'checked' : ''} aria-label="${escapeHtml(row.title)} aktiv"><span class="season-check-box">${icon('check')}</span></label><div class="pkg-fields"><input class="form-control" data-pkg-field="title" maxlength="90" value="${escapeHtml(row.title)}" aria-label="Aufgabe"><div class="pkg-meta"><select class="form-control" data-pkg-field="interval" aria-label="Wiederholung">${options(PKG_INTERVALS, row.interval)}</select><select class="form-control" data-pkg-field="season" aria-label="Jahreszeit">${options(Object.entries(SEASONS).map(([id, season]) => [id, season.label]), row.season)}</select><select class="form-control" data-pkg-field="priority" aria-label="Priorität">${options(PKG_PRIORITIES, row.priority)}</select></div></div>${row.builtin ? '' : `<button type="button" class="pkg-remove" data-pkg-remove="${index}" aria-label="${escapeHtml(row.title)} entfernen">${icon('trash')}</button>`}</div>`;
+      body.innerHTML = `<p class="pkg-intro">${pkgDraft.rows.filter((row) => row.selected).length} von ${pkgDraft.rows.length} Aufgaben aktiv · ≈ ${yearly} Einsätze pro Jahr${singleHouse() ? '' : ' je Haus'}. Husora legt die aktiven Aufgaben zur passenden Jahreszeit automatisch an.</p>
+        <h3 class="pkg-h">Aufgaben im Paket</h3><div class="pkg-list">${builtin.map(rowHtml).join('')}</div>
+        <h3 class="pkg-h">Eigene Aufgaben <small>gelten zusätzlich zu jedem Paket</small></h3><div class="pkg-list">${own.length ? own.map(rowHtml).join('') : '<p class="pkg-empty">Noch keine eigenen Aufgaben.</p>'}</div>
+        <div class="pkg-add"><span class="form-label">Eigene Aufgabe ergänzen</span><div class="pkg-add-grid"><input class="form-control" id="pkg-new-title" maxlength="90" placeholder="z. B. Bootsmotor warten lassen" aria-label="Neue Aufgabe"><select class="form-control" id="pkg-new-interval" aria-label="Wiederholung">${options(PKG_INTERVALS, 365)}</select><button type="button" class="secondary-btn" data-pkg-add>${icon('plus')} Hinzufügen</button></div></div>`;
+      actions.innerHTML = `<span class="pkg-spacer"></span><button type="button" class="secondary-btn" data-package-close>Abbrechen</button><button type="button" class="primary-btn" data-pkg-save>${pkgDraft.active ? 'Änderungen speichern' : 'Paket übernehmen'}</button>`;
+    }
+    function readPackageInputs() {
+      document.querySelectorAll('#package-modal-body [data-pkg-index]').forEach((rowEl) => {
+        const row = pkgDraft.rows[Number(rowEl.dataset.pkgIndex)];
+        if (!row) return;
+        rowEl.querySelectorAll('[data-pkg-field]').forEach((input) => {
+          const field = input.dataset.pkgField;
+          row[field] = input.type === 'checkbox' ? input.checked : field === 'interval' ? Number(input.value) : input.value.trim();
+        });
+      });
+    }
+    function savePackage() {
+      readPackageInputs();
+      if (pkgDraft.rows.some((row) => !row.title)) { showToast('Bitte jeder Aufgabe einen Titel geben.'); return; }
+      if (pkgDraft.kind === 'season') {
+        if (!pkgDraft.rows.length) { showToast('Die Checkliste braucht mindestens einen Punkt.'); return; }
+        const stored = loadStore('stugliv-season-items', {});
+        if (!saveStore('stugliv-season-items', { ...stored, [pkgDraft.key]: pkgDraft.rows })) return;
+        applySeasonItems(pkgDraft.key, pkgDraft.rows);
+        closePackage(); render();
+        showToast(`${SEASON_CHECKLISTS[pkgDraft.key].title} gespeichert – ${pkgDraft.rows.length} Punkte.`);
+        return;
+      }
+      const wasActive = pkgDraft.active;
+      if (!wasActive) applyServicePackage(pkgDraft.id);
+      pkgDraft.removed.forEach((id) => removeAutoTemplate(id));
+      pkgDraft.rows.forEach((row) => {
+        let template = autoTasks.templates.find((item) => item.id === row.id);
+        if (!template) {
+          template = row.builtin ? { ...(defaultAutoTemplates.find((item) => item.id === row.id) || {}) } : { id: row.id, category: 'custom', builtin: false };
+          autoTasks.templates.push(template);
+        }
+        Object.assign(template, { title: row.title, interval: row.interval, season: row.season, priority: row.priority, selected: row.selected });
+      });
+      autoTasks.enabled = true;
+      persistAutoTasks();
+      const created = runAutoTasks(false);
+      closePackage(); render();
+      const name = SERVICE_PACKAGES.find((item) => item.id === pkgDraft.id)?.name;
+      showToast(`${wasActive ? `Servicepaket „${name}“ aktualisiert` : `Servicepaket „${name}“ übernommen`}${created ? ` – ${created} ${created === 1 ? 'Aufgabe' : 'Aufgaben'} angelegt` : ''}.`);
+    }
+    const closePackage = () => document.getElementById('package-modal').classList.remove('open');
+    function seasonPackageCardsHtml() {
+      const property = properties.find((item) => item.id === inspectionProperty) || properties[0];
+      return ['winter', 'spring'].map((key) => {
+        const season = SEASON_CHECKLISTS[key];
+        const types = SEASON_ITEM_TYPES[key] || {};
+        const control = season.items.filter((item) => types[item.id] !== 'service').length;
+        const due = property ? seasonState(key, property.id).due : '';
+        return `<button type="button" class="package-card season-package" data-package-open="season:${key}"><span class="package-name">${icon(key === 'winter' ? 'snow' : 'sun')} ${season.title}</span><small>${key === 'winter' ? 'Frost, Schnee und Abwesenheit' : 'Öffnung nach dem Winter'}</small><strong>${season.items.length} Punkte</strong><small>${control} prüfen · ${season.items.length - control} erledigen${due ? ` · bis ${escapeHtml(fmtDate(due))}` : ''}</small><em class="package-open">Punkte ansehen ${icon('arrow')}</em></button>`;
+      }).join('');
+    }
+    document.addEventListener('click', (event) => {
+      const target = event.target;
+      const open = target.closest('[data-package-open]');
+      if (open) { openPackage(open.dataset.packageOpen); return; }
+      if (!pkgDraft) return;
+      if (target.closest('[data-package-close]') || target.id === 'package-modal') { closePackage(); return; }
+      const remove = target.closest('[data-pkg-remove]');
+      if (remove) {
+        readPackageInputs();
+        const [row] = pkgDraft.rows.splice(Number(remove.dataset.pkgRemove), 1);
+        if (row && pkgDraft.kind === 'service' && !row.builtin && autoTasks.templates.some((item) => item.id === row.id)) pkgDraft.removed.push(row.id);
+        renderPackageModal(); return;
+      }
+      if (target.closest('[data-pkg-add]')) {
+        readPackageInputs();
+        const title = document.getElementById('pkg-new-title').value.trim();
+        if (!title) { showToast('Bitte einen Titel für die neue Aufgabe eingeben.'); document.getElementById('pkg-new-title').focus(); return; }
+        if (pkgDraft.kind === 'season') pkgDraft.rows.push({ id: newId('own'), title, detail: '', type: document.getElementById('pkg-new-type').value });
+        else pkgDraft.rows.push({ id: `tpl-${Date.now()}`, title, interval: Number(document.getElementById('pkg-new-interval').value) || 365, season: 'all', priority: 'normal', selected: true, builtin: false });
+        renderPackageModal();
+        document.getElementById('pkg-new-title')?.focus();
+        return;
+      }
+      if (target.closest('[data-pkg-reset]') && window.confirm(`${SEASON_CHECKLISTS[pkgDraft.key].title} auf die Standardpunkte zurücksetzen? Eigene Punkte werden entfernt.`)) {
+        pkgDraft.rows = DEFAULT_SEASON_ITEMS[pkgDraft.key].map((item) => ({ ...item }));
+        renderPackageModal(); return;
+      }
+      if (target.closest('[data-pkg-save]')) savePackage();
+    });
+    document.addEventListener('change', (event) => {
+      if (event.target.matches?.('#package-modal-body [data-pkg-field="selected"]')) { readPackageInputs(); event.target.closest('.pkg-row')?.classList.toggle('off', !event.target.checked); }
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && document.getElementById('package-modal')?.classList.contains('open')) closePackage();
+      if (event.key === 'Enter' && event.target.id === 'pkg-new-title') { event.preventDefault(); document.querySelector('[data-pkg-add]')?.click(); }
     });
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();
