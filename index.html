@@ -2262,6 +2262,7 @@
     .segmented { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; padding: 4px; border: 1px solid var(--line); border-radius: 12px; background: #f6f5f0; }
     .segmented button { flex: 1 1 90px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; padding: 0 10px; border: 0; border-radius: 9px; color: #4d5a51; background: transparent; font-size: 13px; font-weight: 650; cursor: pointer; }
     .segmented button.active { color: white; background: var(--green); box-shadow: 0 2px 6px rgba(35, 70, 52, .2); }
+    .segmented button svg { width: 16px; height: 16px; }
     .settings-switches { display: grid; border: 1px solid var(--line); border-radius: 11px; overflow: hidden; }
     .settings-switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 6px 14px; border-bottom: 1px solid var(--line); background: white; font-size: 13.5px; cursor: pointer; }
     .settings-switches .settings-switch:last-child { border-bottom: 0; }
@@ -2525,6 +2526,599 @@
     @media (max-width: 1180px) { .top-tabs .tab span { display: none; } .top-tabs .tab { padding: 0 11px; } }
     @media (max-width: 760px) { .top-tabs { display: none; } }
     .view-count { display: inline-block; min-width: 18px; margin-left: 4px; padding: 0 5px; border-radius: 9px; color: white; background: #8a6fb5; font-size: 11px; font-weight: 800; line-height: 18px; text-align: center; }
+  
+  
+  
+  
+    /* DARK-MODE-START */
+    @media screen {
+html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
+html.dark body { background: radial-gradient(ellipse at 88% 0%, rgba(80, 120, 95, .14), transparent 38%), var(--canvas); }
+html.dark img { opacity: .94; }
+html.dark .stat-art { filter: brightness(.82); }
+html.dark ::placeholder { color: #6f7a72; }
+html.dark input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(.85); }
+html.dark body { background: radial-gradient(ellipse at 88% 0%, rgba(255, 255, 255, 0.07), transparent 34%), var(--canvas); }
+html.dark .nav-menu { box-shadow: 0 16px 42px rgba(0, 0, 0, 0.53); }
+html.dark .icon-btn.avatar-btn[aria-expanded="true"] { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08); }
+html.dark .nav button { color: #afb4b0; }
+html.dark .nav-count { background: var(--green-solid); }
+html.dark .notification-panel { box-shadow: 0 16px 42px rgba(0, 0, 0, 0.4); }
+html.dark .icon-btn { color: #bcc1bd; background: #1c1c1c; }
+html.dark .icon-btn.avatar-btn { border: 1px solid rgba(255, 255, 255, 0.04); }
+html.dark .dot { border: 1px solid #383838; }
+html.dark .primary-btn { background: var(--green-solid); }
+html.dark .primary-btn:hover { background: var(--green-solid-dark); }
+html.dark .secondary-btn { color: #c4cac6; background: #1c1c1c; }
+html.dark .stat[data-page]:hover { box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25); }
+html.dark button.stat-icon:hover, html.dark button.stat-icon:focus-visible { outline: 2px solid #505b53; }
+html.dark .task-row.is-done, html.dark .task-table tbody tr.is-done { background: #272927; }
+html.dark .check { border: 1.5px solid #494e48; background: #1c1c1c; }
+html.dark .check.done { background: var(--green-solid); }
+html.dark .task-tag, html.dark .status { color: #b3bdb7; background: #272923; }
+html.dark .task-due { color: #afb4b0; }
+html.dark .appointment.past .appointment-info small { color: #b1b1b1; }
+html.dark .house-service-row:focus-visible { outline: 2px solid #505b53; }
+html.dark .winter-ready { color: #b9e0cd; background: #212c24; }
+html.dark .provider-avatar { color: #d7c7af; background: #342e22; }
+html.dark .rating { color: #dcc39c; }
+html.dark .favorite-btn { color: #a5a9a6; background: #1c1c1c; }
+html.dark .assign-provider-btn { border: 1px solid #494e48; color: #b2b9b4; background: #1c1c1c; }
+html.dark .assign-provider-btn.selected { background: var(--green-solid); }
+html.dark .assign-provider-btn:hover, html.dark .assign-provider-btn:focus-visible { outline: 2px solid #505b53; }
+html.dark .favorite-btn.active { border-color: #4f4035; color: #ca9887; background: #2f1d12; }
+html.dark .choice-card { background: #1e221b; }
+html.dark .choice-card:hover, html.dark .choice-card:focus-visible { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.31); }
+html.dark .import-mode { background: #1e221b; }
+html.dark .import-mode:has(input:checked) { background: #1f2821; }
+html.dark .import-mode input { accent-color: var(--green-solid); }
+html.dark .facts-plan { background: #1c1c1c; }
+html.dark .import-status { color: #bee4d3; background: #202b24; }
+html.dark .import-status.error { color: #e0aaa4; background: #2f1c18; }
+html.dark .house-chip { color: #bee4d3; background: #232d26; }
+html.dark .provider-details { color: #b7bcb8; }
+html.dark .provider-town { color: #b7bcb8; }
+html.dark .provider-type.renovation { color: #e0c6aa; }
+html.dark .provider-location-distance { color: #b7bcb8; }
+html.dark .provider-specialty { color: #b7bcb8; }
+html.dark .cost-total { background: var(--green-solid); }
+html.dark .currency-switch { background: #1c1c1c; }
+html.dark .currency-track { background: #373b35; }
+html.dark .currency-switch input:checked + .currency-track { background: var(--green-solid); }
+html.dark .cost-import-banner { border: 1px solid #5d5237; background: #322813; }
+html.dark .cost-import-banner strong { color: #e0c6aa; }
+html.dark .cost-import-banner p { color: #babfbb; }
+html.dark .cost-import-icon { color: #e0c6aa; background: #3c341f; }
+html.dark .cost-toggle-count { color: #e0c6aa; background: #322813; }
+html.dark .cost-source { color: #e0c6aa; }
+html.dark .portal-message { background: #202a23; }
+html.dark .portal-message.error { background: #2d1a18; }
+html.dark .portal-pill.ok { background: #232e26; }
+html.dark .portal-pill.warn { color: #e0c6aa; }
+html.dark .care-box { background: #1e221b; }
+html.dark .booking-source { background: #232e26; }
+html.dark .cost-bar-label { color: #c4cbc6; }
+html.dark .cost-bar-track { background: #252823; }
+html.dark .cost-item { border-bottom: 1px solid #3e403b; }
+html.dark .cost-disclaimer { color: #d7c7b1; background: #2f2512; }
+html.dark .document-actions a, html.dark .document-actions button { background: #1c1c1c; }
+html.dark .assigned-control-info { color: #bee4d3; background: #202b24; }
+html.dark .assigned-house-bar { background: linear-gradient(120deg, #2d2a1f, #262a21); }
+html.dark .checklist-item { border-bottom: 1px solid #3e403b; }
+html.dark .checklist-item input { accent-color: var(--green-solid); }
+html.dark .inspection-tab-divider { background: #444038; }
+html.dark .inspection-tab { color: #b7bcb8; background: #1c1c1c; }
+html.dark .winter-progress progress { accent-color: var(--green-solid); }
+html.dark .inspection-option input { accent-color: var(--green-solid); }
+html.dark .inspection-archive-row { border-bottom: 1px solid #3e403b; }
+html.dark .search input, html.dark .filter-select { background: #1c1c1c; }
+html.dark .search input:focus, html.dark .filter-select:focus, html.dark .form-control:focus { border-color: #56615a; box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.23); }
+html.dark .property-card[data-action="view-property"]:hover, html.dark .property-card[data-action="view-property"]:focus-visible { border-color: #4a524b; box-shadow: 0 5px 18px rgba(0, 0, 0, 0.23); }
+html.dark .remove-property-section { border: 1px solid #4d3d3a; background: #2b1510; }
+html.dark .danger-btn { border: 1px solid #694e4a; color: #d8a59e; background: #1c1c1c; }
+html.dark .photo-thumb { background: #252525; }
+html.dark .pro-hint { color: #d7c7b1; background: #312813; }
+html.dark .plan-card.highlight { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.82); }
+html.dark .plan-card.current { background: #1f251a; }
+html.dark .plan-current-tag { color: #b5e4ca; background: #212e26; }
+html.dark .pro-box { background: #1e221b; }
+html.dark .pro-legal input { accent-color: var(--green-solid); }
+html.dark .pro-test-note { color: #d7c7b1; background: #312813; }
+html.dark .pro-badge.on { color: #b5e4ca; background: #212e26; }
+html.dark .pro-badge.off { color: #c2c7c3; background: #272825; }
+html.dark .house-map { background: #272c24; }
+html.dark .map-pin { border: 2px solid #383838; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.82); }
+html.dark .map-popup span { color: #bababa; }
+html.dark .detail-grid .property-card { background: linear-gradient(180deg, #1e221b, var(--green-soft)); }
+html.dark .inspection-status-badge.current { color: #b9e0cd; background: #212c24; }
+html.dark .property-condition { background: #1f2821; }
+html.dark .card-reno-list { border-top: 1px solid #404a3d; }
+html.dark .card-reno-list li { color: #c9d0ca; }
+html.dark .data-table th { color: #a5a9a6; background: #1f221c; }
+html.dark .data-table td { border-top: 1px solid #3e403b; }
+html.dark .task-table td { border-bottom: 1px solid #3e413b; }
+@media (min-width: 721px) {
+html.dark .task-table td { background: #1e221b; }
+html.dark .task-table tbody tr td:first-child { border-left: 4px solid #454a45; }
+html.dark .task-table tbody tr.prio-soon td:first-child { border-left-color: #725f45; }
+html.dark .task-table tbody tr:hover td { background: #21251e; }
+html.dark .task-table tbody tr.is-done td { background: #272927; }
+}
+html.dark .task-table tbody tr.prio-soon { box-shadow: inset 4px 0 0 rgba(255, 255, 255, 0.1); }
+html.dark .task-table .small-action:hover { background: #21231d; }
+html.dark .task-table .badge-wrap { color: #b1b8b4; background: #252723; }
+html.dark .task-table .badge-wrap.soon { color: #dcc3a2; }
+@media (max-width: 720px) {
+html.dark .task-table tbody tr { background: #1e221b; }
+}
+html.dark .auto-task-bar p { color: var(--muted, #b1b7b3); }
+html.dark .switch-track { background: #343a36; }
+html.dark .switch input:focus-visible + .switch-track { box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.6); }
+html.dark .auto-template small { color: #b1b7b3; }
+html.dark .modal { background: #1c1c1c; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45); }
+html.dark .close-btn { color: #b0b5b0; background: #232420; }
+html.dark .inspection-report-summary { color: #bdc5c0; }
+html.dark .inspection-report-house { background: #25231a; }
+html.dark .inspection-report-list li { border-bottom: 1px solid #3e423b; }
+html.dark .plan-row.covered { background: #272825; border-color: #444742; }
+html.dark .plan-row.covered label > span { color: #abafac; }
+html.dark .plan-covered { color: #dbc8a5; }
+html.dark .plan-custom-tag { background: #222c25; }
+html.dark .plan-row select:disabled { background: #252623; }
+html.dark .house-service-row { border-bottom: 1px solid #3e403b; }
+html.dark .checklist-dot { background: var(--green-solid); }
+html.dark .item-frequency { background: #222c25; }
+html.dark .pdf-preview { background: #1c1c1c; color: #dde5e0; box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.1); }
+html.dark .pdf-preview .pdf-meta { color: #bac0bc; }
+html.dark .pdf-preview dt { color: #b2b7b3; }
+html.dark .pdf-preview li { border-bottom: 1px solid #3e413b; }
+html.dark .pdf-preview li small { color: #bac0bc; }
+html.dark .pdf-preview .pdf-field { border: 1px solid #505350; }
+html.dark .pdf-viewer-frame { background: #242421; }
+html.dark .house-controls button { background: #1c1c1c; }
+html.dark .house-pin { border: 2px solid #383838; box-shadow: 0 1px 4px #000000; }
+html.dark .house-pin.selected { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1); }
+html.dark .house-info { background: rgba(28, 28, 28, 0.97); box-shadow: 0 8px 26px rgba(0, 0, 0, 0.6); }
+html.dark .house-info-close { background: #252622; }
+html.dark .house-status.st-ok { color: #b5e4ca; background: #212e26; }
+html.dark .house-status.st-due { color: #edcca3; background: #392e1a; }
+html.dark .house-status.st-never { color: #c2c7c3; background: #272825; }
+html.dark .house-reno-tag { color: #b5e4ca; background: #203026; }
+html.dark .house-status.st-none { color: #c2c7c3; background: #272825; }
+html.dark .house-status.reno-planned { color: #f1d5ab; background: #40331c; }
+html.dark .house-status.reno-done { color: #b5e4ca; background: #212e26; }
+html.dark .house-status.reno-none { color: #c2c7c3; background: #272825; }
+html.dark .house-chip-btn { background: #1c1c1c; }
+html.dark .house-chip-btn.selected { background: #212a25; }
+html.dark .position-group-head { background: #20251f; }
+html.dark .control-card { background: #1e221b; }
+html.dark .control-due { color: #b5e4ca !important; }
+html.dark .control-card-actions button { background: #1c1c1c; }
+html.dark .control-card-actions button:hover, html.dark .control-card-actions .primary-btn:hover { background: #1c1c1c; }
+html.dark .partner-pick { background: #1e221b; }
+html.dark .partner-pick.is-selected { background: #202721; }
+html.dark .send-plan-note { color: #d7c7b1; background: #312813; }
+html.dark .send-plan-note.ok { color: #c7e1d7; background: #212a25; }
+html.dark .mail-status { color: #dcc3a2; }
+html.dark .mail-status.connected { background: #222c25; }
+html.dark .property-spec { color: #bac2bc; background: #232520; }
+html.dark .property-notes { color: #babfbb; }
+html.dark .reno-list li { border-bottom: 1px solid #3e413b; }
+html.dark .reno-year { background: #232e26; }
+html.dark .calendar-nav { background: #1c1c1c; }
+html.dark .calendar-nav:hover { border-color: #4a524b; }
+html.dark .calendar-day { border: 1px solid #3e413b; background: #1c1c1c; }
+html.dark .calendar-day:hover { border-color: #4a524b; background: #1f231c; }
+html.dark .calendar-day.outside { background: #20221e; }
+html.dark .calendar-day.past-day { color: #a7a9a7; background: #242523; }
+html.dark .calendar-day.today .calendar-day-number { background: var(--green-solid); }
+html.dark .calendar-event-chip.task { color: #e0c6aa; }
+html.dark .calendar-event-chip.booking { color: #e59595; background: #301616; }
+html.dark .calendar-view-toggle { background: #262722; }
+html.dark .calendar-view-toggle button.active { background: #1c1c1c; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.23); }
+html.dark .calendar-event-chip.task { color: #e0c6aa; }
+html.dark .calendar-view-toggle { background: #262722; }
+html.dark .calendar-view-toggle button.active { background: #1c1c1c; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.23); }
+html.dark .calendar-dot { background: var(--green-solid); }
+html.dark .calendar-event { border-top: 1px solid #3e403b; }
+html.dark .calendar-event.booking .calendar-event-time, html.dark .calendar-event.booking strong { color: #e59595; }
+html.dark .booking-calendar .calendar-day.past-day { color: #a7a9a7; background: #242523; }
+html.dark .booking-calendar .calendar-day.past-day.in-range { border-color: #444644; background: #242523; }
+html.dark .booking-calendar .calendar-day.past-day.range-start, html.dark .booking-calendar .calendar-day.past-day.range-end { border-color: #4a4c4b; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+html.dark .booking-calendar .calendar-day.in-range { border-color: #475047; background: #222821; }
+html.dark .booking-calendar .calendar-day.booked-range { border-color: #553737; background: #2f1212; }
+html.dark .booking-calendar .calendar-day.draft-range { border-color: #505a52; background: #262d24; }
+html.dark .booking-calendar .calendar-day.draft-range.range-start, html.dark .booking-calendar .calendar-day.draft-range.range-end, html.dark .booking-calendar .calendar-day.booked-range.range-start, html.dark .booking-calendar .calendar-day.booking-checkout-day { background: #2d362c; box-shadow: inset 0 0 0 2px #000000; }
+html.dark .booking-calendar .calendar-day.range-start .calendar-day-number::after { color: #c7e1d7; }
+html.dark .booking-calendar .calendar-day.range-end .calendar-day-number::after, html.dark .booking-calendar .calendar-day.booking-checkout-day .calendar-day-number::after { color: #c7e1d7; }
+html.dark .booking-row { border-top: 1px solid #3e403b; }
+html.dark .booking-row.past .booking-row-info small.checkout-status { color: #b1b1b1; }
+html.dark .booking-row-actions button { background: #1c1c1c; }
+html.dark .booking-row-actions button:hover { border-color: #4a524b; }
+html.dark .booking-row-actions .booking-edit-btn { background: var(--green-solid); }
+html.dark .booking-row-actions .booking-edit-btn:hover { background: var(--green-solid-dark); }
+html.dark .booking-row-actions .booking-delete-btn { border-color: #58413d; }
+html.dark .booking-row-actions .booking-delete-btn:hover { background: var(--red-solid); }
+html.dark .booking-overview-card { background: #1c1c1c; }
+html.dark .booking-status { background: var(--green-solid); }
+html.dark .booking-status.past { color: #b4b9b5; background: #252724; }
+html.dark .booking-overview-date { background: #23251f; }
+html.dark .booking-fact { border: 1px solid #40473c; background: linear-gradient(180deg, #1e2517, #22281e); }
+html.dark .booking-fact-icon { background: #293127; }
+html.dark .booking-note { border: 1px solid #544b35; background: #2f2512; }
+html.dark .booking-note .booking-fact-icon { color: #e4d1a4; background: #3c341f; }
+html.dark .booking-note p { color: #c9ccc7; }
+html.dark .profile-notice { color: #d7c7b1; background: #312813; }
+html.dark .profile-heading { background: linear-gradient(120deg, #2d2a1f, #262a21); }
+html.dark .profile-large-avatar { background: var(--green-solid); }
+html.dark .form-label { color: #bdc3be; }
+html.dark .form-control { background: #1c1c1c; }
+html.dark .occupancy-pill.busy { color: #d8aba4; }
+html.dark .occupancy-pill.turnover { color: #e1cead; }
+html.dark .calendar-today-btn { background: #1c1c1c; }
+html.dark .package-card { background: #1e221b; }
+html.dark .package-card:hover { border-color: #4b524d; }
+html.dark .package-card.active { background: #20251e; }
+html.dark .package-name i { background: var(--green-solid); }
+html.dark .auto-template.is-selected { border-color: #464e48; background: #1f241d; }
+html.dark .template-badge.extra { color: #b2c3d2; background: #20272c; }
+html.dark .template-badge.off { background: #2b2924; }
+html.dark .checklist-row { border-bottom: 1px solid #3e403b; }
+html.dark .small-action { color: #c4cac6; background: #1c1c1c; }
+html.dark .small-action:hover { border-color: #4b524d; background: #21231d; }
+html.dark .small-action.issue-btn { color: #edcca3; }
+html.dark .house-status.st-issue { color: #e0aaa4; }
+html.dark .house-issue { color: #e0aaa4; }
+html.dark .back-link { background: rgba(28, 28, 28, 0.7); }
+html.dark .back-link:hover { background: #1c1c1c; }
+html.dark .back-link:focus-visible { outline: 2px solid #505b53; }
+html.dark .issue-card { background: #2b2410; }
+html.dark .renovation-stages li { border-top: 4px solid #3f443e; }
+html.dark .renovation-notes { background: #28261e; color: #b9bfbb; }
+html.dark .doc-dropzone { border: 2px dashed #464c48; background: #1f231c; }
+html.dark .doc-drop-icon { background: var(--green-solid); }
+html.dark .doc-filter { color: #c4cac6; }
+html.dark .doc-filter i { background: #2b2924; }
+html.dark .doc-filter.active { background: var(--green-solid); }
+html.dark .doc-filter.active i { background: #1c1c1c; }
+html.dark .doc-thumb { background: #28261e; }
+html.dark .doc-badge, html.dark .doc-category { background: color-mix(in srgb, var(--accent) 14%, #1c1c1c); }
+html.dark .doc-cost { color: #e1c4ad; background: #32271d; }
+html.dark .doc-cost-btn { color: #e1bea3; background: #2d2011; }
+html.dark .invoice-status { background: #292721; color: #b9bfbb; }
+html.dark .invoice-status.warn { color: #e1cead; }
+html.dark .invoice-text pre { background: #28261e; }
+html.dark .actual-track { background: #2f2d26; }
+html.dark .actual-track span { background: var(--green-solid); }
+html.dark .actual-row.over .actual-track span { background: var(--red-solid); }
+html.dark .expense-row { border-bottom: 1px solid #4a4438; }
+html.dark .automation-step-when { color: #c4cac6; }
+html.dark .automation-step-when i { color: #b2c3d2; background: #20272c; }
+html.dark .automation-steps .automation-step.editing { background: #1c1c1c; }
+html.dark .add-step-btn { border: 1.5px dashed #4b524d; }
+html.dark .season-due { background: #1e221b; }
+html.dark .season-due.soon .season-due-state { color: #e1cead; }
+html.dark .season-due.overdue .season-due-state { background: var(--red-solid); }
+html.dark .season-overdue { color: #e0aaa4; }
+html.dark .inspection-status-badge.overdue { color: #e0aaa4; }
+html.dark .house-card-pill { background: rgba(28, 28, 28, 0.92); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.38); }
+html.dark .house-facts div { background: #2a2821; }
+html.dark .house-tile { --bg: #26251e; border: 1px solid #4a453a; }
+html.dark .house-tile:hover { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.23); }
+html.dark .house-tile.st-ok { --bg: #1d261f; }
+html.dark .house-tile.st-warn { --bg: #2e2516; }
+html.dark .house-tile.st-alert { --bg: #2c1a17; }
+html.dark .house-tile.st-busy { --bg: #291c19; }
+html.dark .house-tile-bar { background: #323029; }
+html.dark .house-tile-bar span { background: var(--green-solid); }
+html.dark .house-tile.st-alert .house-tile-bar span { background: var(--red-solid); }
+html.dark .house-card-meta .cond-ok { color: #addac0; }
+html.dark .house-card-meta .cond-warn { color: #e9c99b; }
+html.dark .detail-projects li { background: #28261e; }
+html.dark .detail-grid .property-card { border: 1px solid #4a453a; background: #26251d; }
+html.dark .calendar-event-chip.booking.owner { color: #accae4; background: #1c2630; }
+html.dark .calendar-event.booking.owner .calendar-event-time, html.dark .calendar-event.booking.owner strong { color: #accae4; }
+html.dark .booking-source.owner { color: #accae4; background: #1c2630; }
+html.dark .booking-status.owner.past { background: #2b2924; }
+html.dark .occupancy-pill.owner { color: #accae4; background: #1c2630; }
+html.dark .house-tile.st-owner { --bg: #192129; }
+html.dark .stay-legend i { background: var(--green-solid); }
+html.dark .stay-kind label { background: #1c1c1c; }
+html.dark .stay-kind label.active.owner { background: #19232d; }
+html.dark .stay-kind input { accent-color: var(--green-solid); }
+html.dark .swipe-back-hint { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.49); }
+html.dark .swipe-back-hint.ready { background: var(--green-solid); }
+html.dark .import-modal .modal-head { background: #1c1c1c; }
+html.dark .import-modal .form-actions { background: #1c1c1c; }
+html.dark .import-sources .text { color: #b2c3d2; background: #20272c; }
+html.dark .import-method { background: #2b2923; }
+html.dark .import-method button { color: #b9bfbb; }
+html.dark .import-method button.active { background: #1c1c1c; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.23); }
+html.dark .import-steps-howto { background: #28261e; color: #b9bfbb; }
+html.dark .import-includes i { color: #c4cac6; background: #1c1c1c; }
+html.dark .import-mode:has(input:checked) .import-includes i { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+html.dark .import-progress li { background: #2a2821; }
+html.dark .import-progress li.active::before { background: var(--green-solid); }
+html.dark .import-progress li.done::before { background: var(--green-solid); }
+html.dark .import-preview { border: 1px solid #434e46; background: #1e241e; }
+html.dark .import-preview-head i { background: #1c1c1c; }
+html.dark .ia-block { border: 1px solid #4a453a; background: #1c1c1c; }
+html.dark .import-recs li { border-left: 3px solid #50534f; background: #26251d; }
+html.dark .ia-condition.cond-ok { color: #addac0; }
+html.dark .ia-condition.cond-warn { color: #e9c99b; }
+html.dark .energy-scale i.on { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.49); }
+html.dark .e-D { color: #faf0c2 !important; }
+html.dark .house-aside { background: #252319; }
+html.dark .house-occupancy { color: #c9d0cc; background: #272923; }
+html.dark .house-occupancy.busy { color: #e5bfac; background: #332616; }
+html.dark .house-occupancy.owner { color: #accae4; background: #19242e; }
+html.dark .house-counts span { background: #2b2924; }
+html.dark .house-counts .st-ok { color: #b5e4ca; background: #212e26; }
+html.dark .house-counts .st-due { color: #edcca3; background: #392e1a; }
+html.dark .house-counts .st-issue { color: #e0aaa4; }
+html.dark .house-counts .reno { color: #edd9ab; background: #39321a; }
+html.dark .house-part-list button { background: #1c1c1c; }
+html.dark .house-part-list button:hover, html.dark .house-part-list button.selected { background: #1f2821; }
+html.dark .house-reno-tag { color: #edd9ab !important; background: #39321a !important; }
+html.dark .house-issue-tag { color: #e0aaa4; }
+html.dark .partner-select.has-partner { border-color: #47534b; background: #1d251f; }
+html.dark .view-toggle { background: #2b2923; }
+html.dark .view-toggle button { color: #b9bfbb; }
+html.dark .view-toggle button.active { background: #1c1c1c; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.23); }
+html.dark .partner-task-card { background: #1c1c1c; }
+html.dark .partner-task-card.unassigned { border-top-color: #50534f; background: #25231b; }
+html.dark .partner-task-list li { border-bottom: 1px solid #484338; }
+html.dark .ap-chip { background: #1c1c1c; }
+html.dark .ap-tasks { background: #28241a; }
+html.dark .ap-tasks em { color: #da9b90; }
+html.dark .ap-upload { background: #1c1c1c; }
+html.dark .ap-upload:hover { background: var(--green-solid); }
+html.dark .tcard { background: #1c1c1c; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14); }
+html.dark .tcard::before { background: #323632; }
+html.dark .tcard.prio-urgent::before { background: var(--red-solid); }
+html.dark .tcard:hover { box-shadow: 0 6px 18px rgba(0, 0, 0, 0.23); }
+html.dark .tcard-check { border: 2px solid #484d49; background: #1c1c1c; }
+html.dark .tcard.is-done .tcard-check { background: var(--green-solid); }
+html.dark .tchip { color: #b7bfba; background: #242622; }
+html.dark .tchip.prio.soon, html.dark .tchip.when.soon { color: #dcc3a2; }
+html.dark .tchip.auto { color: #a7c3da; background: #1d262e; }
+html.dark .tcard-ptype.cat-inspection { color: #b0d1da; background: #212b2e; }
+html.dark .tcard-ptype.cat-renovation { color: #dcc3a2; }
+html.dark .tcard .status-select.st-progress { color: #a7c3da; background-color: #1a222a; border-color: #394651; }
+html.dark .tcard-action:hover { background: #21241e; }
+html.dark .tcard-action.warn:hover { color: #e9c99b; }
+html.dark .tcard-action.warn.active { color: #f7d9a1; }
+html.dark .tcard-issue { border: 1px solid #706539; color: #f9e8b7; background: #393316; }
+html.dark .tcard-issue svg { color: #f5db8a; }
+html.dark .tcard-issue em { color: #ecdaa3; }
+html.dark .tcard-issue.fixed { border-color: #404c43; background: #1e2520; }
+html.dark .tcard.is-done { background: #22241f; }
+html.dark .tcard.is-done .tcard-date { background: #272925; }
+html.dark .tcard.is-done::before { background: #323632; }
+html.dark .issue-actions .order-btn { background: var(--green-solid); }
+html.dark .control-order { color: #dcc3a2; }
+html.dark .control-card-actions .control-order-btn { background: var(--green-solid) !important; }
+html.dark .issue-invoice { background: #1c1c1c; }
+html.dark .issue-invoice-read { color: #dcc3a2; }
+html.dark .task-status-pill { color: #b7bfba; background: #252823; }
+html.dark .task-status-pill.st-progress { color: #a7c3da; background: #1d262e; }
+html.dark .task-issue-flag { color: #f7d9a1; }
+html.dark .task-row-issue { color: #f8e5a9; }
+html.dark .insp-overview { border-bottom: 1px solid #3e403b; }
+html.dark .insp-tile { background: #1c1c1c; }
+html.dark .insp-tile::before { background: #323632; }
+html.dark .insp-tile:hover { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25); }
+html.dark .insp-tile-icon { color: #b7bfba; background: #252823; }
+html.dark .insp-tile-pill { color: #b7bfba; background: #252823; }
+html.dark .insp-tile-bar { background: #252823; }
+html.dark .insp-tile.st-done::before { background: var(--green-solid); }
+html.dark .insp-tile.st-ordered .insp-tile-icon, html.dark .insp-tile.st-ordered .insp-tile-pill { color: #a7c3da; background: #1d262e; }
+html.dark .insp-tile.st-ordered .insp-tile-bar { color: #95b5d0; }
+html.dark .insp-tile.st-due .insp-tile-icon, html.dark .insp-tile.st-due .insp-tile-pill { color: #dcc3a2; }
+html.dark .insp-tile.st-overdue::before { background: var(--red-solid); }
+html.dark .insp-tile.st-overdue { background: #2b1010; }
+html.dark .insp-tile.st-later { background: #22221c; }
+html.dark .dash-tile-list > .insp-overview + .insp-overview { border-top: 1px solid #3e403b; }
+html.dark .insp-tile.st-owner .insp-tile-icon, html.dark .insp-tile.st-owner .insp-tile-pill { color: #ae9fc7; background: #231d2c; }
+html.dark .auto-step-status.st-ordered { color: #a7c3da; background-color: #1a222a; border-color: #394651; }
+html.dark .auto-step-status.st-overdue { border-color: #583a35; }
+html.dark .insp-tile.auto-step.has-issue { background: #312b13; }
+html.dark .auto-step-issue { color: #f8e5a9 !important; }
+html.dark .dash-tasks .task-row.is-link:focus-visible { outline: 2px solid #505b53; }
+html.dark .task-due-badge.soon { color: #dcc3a2; }
+html.dark .task-due-badge.done { background: #252723; }
+html.dark .insp-tile.dash-task:focus-visible { outline: 2px solid #505b53; }
+html.dark .insp-tile.dash-task small .prio.soon { color: #dcc3a2; }
+html.dark .insp-tile.st-issue { background: #312b13; border-color: #675e37; }
+html.dark .insp-tile.st-issue .insp-tile-icon { color: #f7d9a1; }
+html.dark .insp-tile.st-issue .insp-tile-pill { color: #f8e5a9; background: #473e1b; }
+html.dark .dash-task-issue { color: #f8e5a9 !important; }
+html.dark .cost-kpi { background: #1c1c1c; }
+html.dark .cost-kpi.plan { border-color: #464c46; background: repeating-linear-gradient(135deg, #20231a 0 10px, #22251d 10px 20px); }
+html.dark .cost-kpi.plan .cost-kpi-tag, html.dark .cost-badge.plan { color: #b7bfba; background: #292c26; }
+html.dark .cost-kpi.actual { background: var(--green-solid); }
+html.dark .cost-kpi.actual .cost-kpi-tag { background: #1c1c1c; }
+html.dark .cost-badge.actual { background: var(--green-solid); }
+html.dark .cost-kpi-bar { background: rgba(255, 255, 255, 0.03); }
+html.dark .cost-kpi-bar i { background: #1c1c1c; }
+html.dark .cost-kpi.over { border-color: #583a35; background: #2d1611; }
+html.dark .bullet-legend .lg-actual { background: var(--green-solid); }
+html.dark .bullet-legend .lg-plan { border: 1px dashed #575c57; background: #252823; }
+html.dark .bullet-legend .lg-over { background: var(--red-solid); }
+html.dark .bullet-row:hover, html.dark .bullet-row:focus-visible { background: #21251e; }
+html.dark .bullet-plan { border: 1px dashed #575c57; background: #252823; }
+html.dark .bullet-actual { background: var(--green-solid); box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1); }
+html.dark .bullet-row.over .bullet-actual { background: var(--red-solid); }
+html.dark .expense-entry { background: #1e221b; }
+html.dark .expense-cat span { background: #1c1c1c; }
+html.dark .expense-cat input:checked + span { background: var(--green-solid); }
+html.dark .expense-cat input:focus-visible + span { outline: 2px solid #505b53; }
+html.dark .expense-cat-tag { color: #b7bfba; background: #252823; }
+html.dark .expense-cat-tag.service { color: #a7c3da; background: #1d262e; }
+html.dark .insp-tile.dash-task .task-pill.is-open { color: #dcc3a2; }
+html.dark .insp-tile.dash-task .task-pill.is-progress { color: #a7c3da; background: #1d262e; }
+html.dark .house-controls .house-design-btn.active { background: var(--green-solid); }
+html.dark .house-design-head { background: #252319; }
+html.dark .design-section { border-bottom: 1px solid #3f433b; }
+html.dark .design-chip { background: #1c1c1c; }
+html.dark .design-chip.active { background: var(--green-solid); }
+html.dark .design-swatch { border: 2px solid #383838; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45); }
+html.dark .design-toggle input:focus-visible + .switch-track { outline: 2px solid #505b53; }
+html.dark .design-stepper button { background: #1c1c1c; }
+html.dark .self-badge { border: 1px dashed #4a524c; }
+html.dark .no-partner-link { border: 1px dashed #706041; color: #edd6ab; background: #322813; }
+html.dark .no-partner-link:hover { background: #3a2f16; }
+html.dark .tcard-field > .no-partner-link { color: #edd6ab; }
+html.dark .partner-map-chip { background: #1c1c1c; }
+html.dark .partner-map-chip.on { border-color: #505b53; }
+html.dark .partner-map-chip:focus-within { outline: 2px solid #505b53; }
+html.dark .partner-map { background: #272c24; }
+html.dark .map-popup-tag { color: #cee3d7 !important; background: #232d26; }
+html.dark .map-popup-tag.fav { color: #dcc3a2 !important; background: #362d19; }
+html.dark .tile-count.full { color: #dcc3a2; }
+html.dark .tile-choice { background: #1c1c1c; }
+html.dark .tile-check { border: 2px solid #484d49; }
+html.dark .tile-choice.on { border-color: #505b53; }
+html.dark .tile-choice.on .tile-check { background: var(--green-solid); }
+html.dark .tile-choice:focus-within { outline: 2px solid #505b53; }
+html.dark .result-mode { background: #272a25; }
+html.dark .result-mode-thumb { background: #1c1c1c; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45); }
+html.dark .result-mode button:focus-visible { outline: 2px solid #505b53; }
+html.dark .control-return { border: 1px dashed #4a524c; background: #1f241d; }
+html.dark .issue-details { color: #ddd3b5; background: #312b13; }
+html.dark .plan-return-steps li > span { border: 2px solid #434843; }
+html.dark .plan-return-steps li.done svg { background: var(--green-solid); }
+html.dark .pr-kpi.issue { color: #f7d9a1; background: #3d3517; }
+html.dark .pr-kpi.open { color: #b7bfba; background: #252823; }
+html.dark .protocol-meta { border: 1px solid #3f4740; background: #1c241e; }
+html.dark .protocol-meta .missing dd { color: #e5c497; }
+html.dark .prc-ready { color: #b5e4ca; }
+html.dark .plan-return-h { color: #f7d9a1; }
+html.dark .plan-return-h.open { color: #b7bfba; }
+html.dark .plan-return-list li { background: #312b13; }
+html.dark .plan-return-list.open li { border-left-color: #4c514d; background: #22241f; }
+html.dark .plan-return-empty { color: #edd6ab; background: #322813; }
+html.dark .plan-return-card { background: #1c1c1c; }
+html.dark .prc-status { color: #f7d9a1; background: #3d3517; }
+html.dark .prc-open-row { background: #22241f; }
+html.dark .prc-open-row .warn { color: #f7d9a1; }
+html.dark .prc-repairs li { background: #312b13; }
+html.dark .prc-repairs li.fixed { background: #1e2520; }
+html.dark .prc-actions .archive-ready { background: var(--green-solid); }
+html.dark .insp-progress { background: #1c1c1c; }
+html.dark .insp-progress-bar { background: #252823; }
+html.dark .insp-progress.complete .insp-progress-bar i { background: var(--green-solid); }
+html.dark .dash-tasks .task-row { border-bottom: 1px solid #3e403b; }
+html.dark .dash-tasks .task-row::before { background: #2f332f; }
+html.dark .dash-tasks .task-row.prio-urgent::before { background: var(--red-solid); }
+html.dark .dash-tasks .task-row.has-issue { background: #312b13; }
+html.dark .dash-tasks .task-row:hover { background: #21241e; }
+html.dark .dash-tasks .task-row.has-issue:hover { background: #3b3316; }
+html.dark .insp-status-label { color: #e9c99b; }
+html.dark .insp-status-card.ok .insp-status-label { color: #addac0; }
+html.dark .insp-order { background: #2a2922; }
+html.dark .insp-order.order-ordered { background: #1c242d; }
+html.dark .insp-order.order-ordered svg, html.dark .insp-order.order-ordered strong { color: #a2c0dc; }
+html.dark .insp-step.done .insp-step-no { background: var(--green-solid); }
+html.dark .position-row { border-bottom: 1px solid #484338; }
+html.dark .position-row.res-ok { background: #1c241c; }
+html.dark .position-row.res-issue { background: #2a1a16; }
+html.dark .position-meta span { color: #b9bfbb; background: #2b2923; }
+html.dark .position-meta .pos-service { color: #b2c3d2; background: #20272c; }
+html.dark .position-hints li::marker { color: #e2b87d; }
+html.dark .position-history li.open { color: #e0aaa4; }
+html.dark .position-history li.fixed { color: #b6dac5; }
+html.dark .position-repair-btn { border: 1px solid #706540; color: #f9e5af; background: #403818; }
+html.dark .position-repair-btn:hover { background: #52471f; }
+html.dark .position-repair-btn.ordered { border-color: #435348; }
+html.dark .result-toggle button { color: #c4cac6; background: #1c1c1c; }
+html.dark .result-toggle button.active.issue { background: var(--red-solid); }
+html.dark .inspection-status-badge.order-ordered { color: #a2c0dc; background: #1c242d; }
+html.dark .section-chevron { background: #2b2923 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23244b3d' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / 14px no-repeat; }
+html.dark .detail-gallery button { background: #312e27; }
+html.dark .photo-lightbox img { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.93); background: #1c1c1c; }
+html.dark .lightbox-close { background: rgba(255, 255, 255, 0.02); }
+html.dark .lightbox-nav { background: rgba(255, 255, 255, 0.02); }
+html.dark .key-fact { border: 1px solid #4a453a; background: #25231a; }
+html.dark .key-fact.energy, html.dark .key-fact.condition { background: #1c1c1c; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16); }
+html.dark .key-fact.condition.cond-ok strong { color: #addac0; }
+html.dark .key-fact.condition.cond-warn strong { color: #e9c99b; }
+html.dark .cost-figure { border: 1px solid #4a453a; background: #25231a; }
+html.dark .cost-figure.main { background: linear-gradient(135deg, var(--green-solid), #2f6a52); }
+html.dark .cost-mini-bars em { color: #e1cead; }
+html.dark .cost-mini-track { background: #2e2c25; }
+html.dark .facts-more { background: #25231a; }
+html.dark .facts-plan-row button { background: #1c1c1c; }
+html.dark .care-steps li i { border: 1.5px solid #4c514d; }
+html.dark .care-steps li.done i { background: var(--green-solid); }
+html.dark .care-progress { background: #282c28; }
+html.dark .care-progress span { background: var(--green-solid); }
+html.dark .automation-step { background: #1e221b; }
+html.dark .automation-step-no { background: var(--green-solid); }
+html.dark .automation-step-main input { accent-color: var(--green-solid); }
+html.dark .automation-status li { background: #28261e; }
+html.dark .automation-state { color: #d2c7b5; }
+html.dark .automation-log li { border-bottom: 1px solid #4a4438; }
+html.dark .task-tag.auto { color: #b2c3d2; background: #20272c; }
+html.dark .storage-meter { background: #25231a; }
+html.dark .storage-bar { background: #2e2d28; }
+html.dark .storage-bar i { background: var(--green-solid); }
+html.dark .storage-meter.full .storage-bar i { background: var(--red-solid); }
+html.dark .backup-status.stale { color: #dcc3a2; }
+html.dark .settings-danger .danger { border-color: #553d3a; }
+html.dark .settings-links button { background: #1c1c1c; color: var(--ink, #dae2dc); }
+html.dark .settings-links button:hover { background: #26251e; }
+html.dark .legal-tabs button { background: #1c1c1c; }
+html.dark .legal-tabs button.active { background: var(--green-solid); }
+html.dark .legal-todo { color: #f8e5a9; background: #473e1b; }
+html.dark .legal-draft { border: 1px solid #675e37; color: #f9e5af; background: #312b13; }
+html.dark .segmented { background: #27251f; }
+html.dark .segmented button { color: #c0c8c3; }
+html.dark .segmented button.active { background: var(--green-solid); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.49); }
+html.dark .settings-switch { background: #1c1c1c; }
+html.dark .notify-panel { color: var(--ink, #dae2dc); background: #2b2410; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45); }
+html.dark .notify-item { border-left: 4px solid #505b53; background: #1c1c1c; }
+html.dark .notify-item.soon .notify-icon { color: #f7d9a1; background: #473e1b; }
+html.dark .notify-settings { background: #2a2821; }
+html.dark .weather-day { background: #27251f; }
+html.dark .weather-day.frost { background: #1c242d; }
+html.dark .weather-day.frost small { color: #a7c3da; }
+html.dark .weather-warning { color: #f9e5af; background: #312b13; }
+html.dark .weather-warning.urgent { color: #e0aaa4; }
+html.dark .emergency-number { background: #1c1c1c; }
+html.dark .emergency-number.main { border-color: #553d3a; }
+html.dark .emergency-contact { background: #25231a; }
+html.dark .section-kpis > div { background: #1c1c1c; }
+html.dark .contract-card { border-left: 4px solid #505b53; background: #1c1c1c; }
+html.dark .contract-card:hover { box-shadow: 0 8px 22px rgba(0, 0, 0, 0.23); }
+html.dark .contract-card.lvl-urgent { background: #2b1010; }
+html.dark .contract-card.lvl-soon { background: #2d2911; }
+html.dark .contract-card.lvl-expired, html.dark .contract-card.lvl-none { border-left-color: #484c48; }
+html.dark .contract-card.lvl-soon .contract-state b { color: #f7d9a1; }
+html.dark .empty-state { border: 1px dashed #464c48; background: #25231a; }
+html.dark .empty-state strong { color: var(--ink, #dae2dc); }
+html.dark .meter-figures > div { background: #27251f; }
+html.dark .help-action { background: #1c1c1c; }
+html.dark .help-action:hover { box-shadow: 0 8px 22px rgba(0, 0, 0, 0.23); }
+html.dark .faq-item p { color: #c0c8c3; }
+html.dark .ob-lead { color: #c0c8c3; }
+html.dark .ob-dots i { background: #31302b; }
+html.dark .ob-dots i.on { background: var(--green-solid); }
+html.dark .ob-hero { background: var(--green-solid); }
+html.dark .ob-next button { background: #1c1c1c; }
+html.dark .demo-banner { border: 1px solid #675e37; color: #f9e5af; background: #312b13; }
+@media (max-width: 760px) {
+html.dark .tabbar { background: rgba(40, 34, 19, 0.97); box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.23); }
+html.dark .tab { color: #b1b7b3; }
+}
+html.dark .dash-toggle { background: #1c1c1c; }
+html.dark .dash-summary.lvl-ok { color: #b5e4ca; background: #212e26; }
+html.dark .dash-summary.lvl-info { color: #a7c3da; background: #1d262e; }
+html.dark .dash-summary.lvl-due { color: #f8e5a9; background: #473e1b; }
+html.dark .dash-summary.lvl-urgent { color: #e0aaa4; }
+html.dark .dash-summary.lvl-muted { color: #b1b7b3; background: #2a2924; }
+    }
+    /* DARK-MODE-END */
   </style>
 </head>
 <body>
@@ -11345,12 +11939,18 @@
     const sectionPropertySelect = () => (properties.length < 2 ? '' : `<div class="section-toolbar"><label><span class="form-label">Ferienhaus</span><select class="filter-select" data-section-property aria-label="Ferienhaus wählen">${properties.map((property) => `<option value="${escapeHtml(property.id)}" ${property.id === sectionProperty().id ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select></label></div>`);
 
     // --- Darstellung und Sprache für Aufträge ---
-    let displaySettings = { textSize: 'normal', orderLanguage: 'de', ...loadStore('stugliv-display', {}) };
+    let displaySettings = { textSize: 'normal', orderLanguage: 'de', theme: 'system', ...loadStore('stugliv-display', {}) };
+    const darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+    const darkActive = () => displaySettings.theme === 'dark' || (displaySettings.theme !== 'light' && Boolean(darkQuery?.matches));
     function applyDisplaySettings() {
+      const dark = darkActive();
+      document.documentElement.classList.toggle('dark', dark);
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#111513' : '#f4efe4');
       document.documentElement.classList.toggle('ts-large', displaySettings.textSize === 'large');
       document.documentElement.classList.toggle('ts-xlarge', displaySettings.textSize === 'xlarge');
     }
     applyDisplaySettings();
+    darkQuery?.addEventListener?.('change', () => { if (displaySettings.theme === 'system') applyDisplaySettings(); });
     const ORDER_LANGUAGES = [['de', 'Deutsch'], ['sv', 'Svenska'], ['en', 'English']];
     const orderLang = () => (['sv', 'en'].includes(displaySettings.orderLanguage) ? displaySettings.orderLanguage : 'de');
     const ORDER_DICT = {
@@ -11577,8 +12177,12 @@
     }
     function displayCardHtml() {
       const sizes = [['normal', 'Normal'], ['large', 'Groß'], ['xlarge', 'Sehr groß']];
-      return `<section class="card settings-card"><div class="settings-card-head"><span class="settings-icon">${icon('text')}</span><div><h2 class="card-title">Darstellung & Sprache</h2><p class="card-caption">Schriftgröße der App und Sprache deiner Aufträge an Servicepartner.</p></div></div>
-        <span class="form-label">Schriftgröße</span>
+      const themes = [['light', 'Hell', 'sun'], ['dark', 'Dunkel', 'moon'], ['system', 'Automatisch', 'gear']];
+      return `<section class="card settings-card"><div class="settings-card-head"><span class="settings-icon">${icon('text')}</span><div><h2 class="card-title">Darstellung & Sprache</h2><p class="card-caption">Hell oder dunkel, Schriftgröße und Sprache deiner Aufträge an Servicepartner.</p></div></div>
+        <span class="form-label">Erscheinungsbild</span>
+        <div class="segmented" role="radiogroup" aria-label="Erscheinungsbild">${themes.map(([id, label, iconName]) => `<button type="button" role="radio" aria-checked="${displaySettings.theme === id}" class="${displaySettings.theme === id ? 'active' : ''}" data-display-theme="${id}">${icon(iconName)} ${label}</button>`).join('')}</div>
+        <p class="settings-hint" style="margin-top:6px">„Automatisch“ folgt der Einstellung deines Geräts.</p>
+        <span class="form-label" style="margin-top:14px;display:block">Schriftgröße</span>
         <div class="segmented" role="radiogroup" aria-label="Schriftgröße">${sizes.map(([id, label]) => `<button type="button" role="radio" aria-checked="${displaySettings.textSize === id}" class="${displaySettings.textSize === id ? 'active' : ''}" data-display-size="${id}"><span style="font-size:${id === 'normal' ? 13 : id === 'large' ? 15 : 17}px">Aa</span> ${label}</button>`).join('')}</div>
         <span class="form-label" style="margin-top:16px;display:block">Sprache für Aufträge und Anschreiben</span>
         <div class="segmented" role="radiogroup" aria-label="Sprache für Aufträge">${ORDER_LANGUAGES.map(([id, label]) => `<button type="button" role="radio" aria-checked="${orderLang() === id}" class="${orderLang() === id ? 'active' : ''}" data-order-lang="${id}">${label}</button>`).join('')}</div>
@@ -11890,6 +12494,8 @@
       if (target.closest('[data-notify-read-all]')) { markRemindersRead(collectReminders().map((item) => item.id)); renderNotifyPanel(); return; }
       if (target.closest('.notify-settings')) toggleNotifyPanel(false);
       else if (!target.closest('#notify-panel')) document.getElementById('notify-panel')?.classList.remove('open');
+      const themeButton = target.closest('[data-display-theme]');
+      if (themeButton) { displaySettings = { ...displaySettings, theme: themeButton.dataset.displayTheme }; saveStore('stugliv-display', displaySettings); applyDisplaySettings(); render(); return; }
       const sizeButton = target.closest('[data-display-size]');
       if (sizeButton) { displaySettings = { ...displaySettings, textSize: sizeButton.dataset.displaySize }; saveStore('stugliv-display', displaySettings); applyDisplaySettings(); render(); return; }
       const langButton = target.closest('[data-order-lang]');
