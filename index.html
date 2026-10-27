@@ -2530,6 +2530,21 @@
   
   
   
+    .settings-jump { display: flex; flex-wrap: wrap; gap: 8px; margin: -6px 0 18px; }
+    .settings-jump button { min-height: 38px; padding: 0 14px; border: 1px solid var(--line); border-radius: 20px; color: var(--green); background: white; font-size: 13px; font-weight: 700; }
+    .settings-group { margin-bottom: 26px; scroll-margin-top: 96px; }
+    .settings-group-head { margin: 0 2px 12px; }
+    .settings-group-head h2 { margin: 0; font-size: 19px; }
+    .settings-group-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .settings-group .settings-grid > .profile-form { padding: 20px; }
+    .settings-group .settings-grid > * { margin: 0; }
+    .settings-teaser { display: flex; align-items: center; gap: 12px; width: 100%; padding: 16px 18px; text-align: left; cursor: pointer; }
+    .settings-teaser > svg:first-child { flex: 0 0 auto; width: 22px; height: 22px; color: var(--green); }
+    .settings-teaser > svg:last-child { flex: 0 0 auto; width: 18px; height: 18px; margin-left: auto; color: var(--muted); }
+    .settings-teaser strong { display: block; font-size: 14px; }
+    .settings-teaser small { display: block; margin-top: 2px; color: var(--muted); font-size: 12.5px; }
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3117,6 +3132,7 @@ html.dark .dash-summary.lvl-info { color: #a7c3da; background: #1d262e; }
 html.dark .dash-summary.lvl-due { color: #f8e5a9; background: #473e1b; }
 html.dark .dash-summary.lvl-urgent { color: #e0aaa4; }
 html.dark .dash-summary.lvl-muted { color: #b1b7b3; background: #2a2924; }
+html.dark .settings-jump button { background: #1c1c1c; }
     }
     /* DARK-MODE-END */
   </style>
@@ -5739,9 +5755,7 @@ html.dark .dash-summary.lvl-muted { color: #b1b7b3; background: #2a2924; }
 </div><div class="profile-notice">Diese App speichert ihre Daten nur lokal auf diesem Gerät. Sichere sie regelmäßig unter <button type="button" class="text-btn" data-page="settings" style="padding:0">Einstellungen → Datensicherung</button>.</div><div class="form-actions"><button type="submit" class="primary-btn">Benutzerprofil speichern</button></div></form>
         </section>
         <div style="height:16px"></div>
-        ${dashboardTilesSettingsHtml()}
-        <div style="height:16px"></div>
-        ${dashSectionsSettingsHtml()}
+        <button type="button" class="card settings-teaser" data-page="settings" data-settings-anchor="settings-home">${icon('home')}<span><strong>Startseite gestalten</strong><small>Kacheln und Bereiche der Übersicht stellst du jetzt unter Einstellungen ein.</small></span>${icon('arrow')}</button>
         <div style="height:16px"></div>
         <section class="card profile-form"><div class="card-head" style="padding:0 0 4px"><div><h2 class="card-title">E-Mail-Konto verbinden</h2><p class="card-caption">Absender für Nachrichten an deine Servicepartner</p></div><span class="mail-status ${profileData.mailAccount ? 'connected' : ''}">${profileData.mailAccount ? '● Verbunden' + (profileData.mailConnectedAt ? ' seit ' + new Date(profileData.mailConnectedAt).toLocaleDateString('de-DE') : '') : 'Nicht verbunden'}</span></div>
           <form id="mail-form" style="padding-top:14px"><div class="profile-grid">
@@ -11827,8 +11841,14 @@ html.dark .dash-summary.lvl-muted { color: #b1b7b3; background: #2a2924; }
       </section>`;
     }
     function settingsPage() {
-      return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Einstellungen</h1><p class="subtitle">Datensicherung, Darstellung, Benachrichtigungen und Informationen zur App.</p></div></div>
-        <div class="settings-grid">${settingsCardsHtml().join('')}</div>`;
+      const groups = [
+        ['settings-home', 'Startseite gestalten', 'Lege fest, welche Kacheln und Bereiche deine Übersicht zeigt – so gestaltest du die Hauptansicht ganz nach deinem Bedarf.', [dashboardTilesSettingsHtml, dashSectionsSettingsHtml]],
+        ['settings-look', 'Darstellung & Erinnerungen', 'Hell oder dunkel, Schriftgröße, Sprache der Aufträge und was dir die Glocke meldet.', settingsCardBuilders.filter((build) => build !== backupCardHtml && build !== appInfoCardHtml)],
+        ['settings-data', 'Daten & App', 'Datensicherung, Speicher und Informationen zur App.', [backupCardHtml, appInfoCardHtml]]
+      ];
+      return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Einstellungen</h1><p class="subtitle">Startseite, Darstellung, Erinnerungen und Datensicherung.</p></div></div>
+        <nav class="settings-jump" aria-label="Bereiche der Einstellungen">${groups.map(([id, title]) => `<button type="button" data-settings-jump="${id}">${title}</button>`).join('')}</nav>
+        ${groups.map(([id, title, caption, builders]) => `<section class="settings-group" id="${id}"><div class="settings-group-head"><h2>${title}</h2><p>${caption}</p></div><div class="settings-grid">${builders.map((build) => build()).join('')}</div></section>`).join('')}`;
     }
     // Weitere Karten hängen sich hier ein (Darstellung, Benachrichtigungen …).
     const settingsCardBuilders = [backupCardHtml, appInfoCardHtml];
@@ -11880,6 +11900,10 @@ html.dark .dash-summary.lvl-muted { color: #b1b7b3; background: #2a2924; }
         </ul><p>Husora ${APP_VERSION} · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}</p>` }
     };
     let legalTab = 'imprint';
+    document.addEventListener('click', (event) => {
+      const jump = event.target.closest('[data-settings-jump]');
+      if (jump) document.getElementById(jump.dataset.settingsJump)?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
     const appFooterHtml = () => `<footer class="app-footer"><button type="button" data-legal-open="imprint">Impressum</button><button type="button" data-legal-open="privacy">Datenschutz</button><button type="button" data-legal-open="terms">AGB</button><button type="button" data-page="settings">Einstellungen</button><span>Husora ${APP_VERSION}</span></footer>`;
     function legalDraftNote() {
       const missing = ['company', 'street', 'zip', 'city', 'email'].some((key) => !LEGAL_INFO[key]);
@@ -12726,7 +12750,7 @@ html.dark .dash-summary.lvl-muted { color: #b1b7b3; background: #2a2924; }
         head?.insertAdjacentHTML('beforeend', `<button type="button" class="dash-toggle" data-dash-toggle="${id}" aria-expanded="${open}" aria-label="${escapeHtml(DASH_SECTIONS.find(([key]) => key === id)[1])} ${open ? 'zuklappen' : 'aufklappen'}">${icon('arrow')}</button>`);
         grid.appendChild(section);
       });
-      if (!grid.children.length) grid.innerHTML = `<div class="empty-state dash-empty">${icon('gear')}<strong>Keine Bereiche ausgewählt</strong><span>Unter Benutzerprofil → „Bereiche auf der Startseite“ legst du fest, was hier erscheint.</span><button type="button" class="secondary-btn" data-page="profile" data-settings-anchor="dash-sections-settings">Bereiche auswählen</button></div>`;
+      if (!grid.children.length) grid.innerHTML = `<div class="empty-state dash-empty">${icon('gear')}<strong>Keine Bereiche ausgewählt</strong><span>Unter Einstellungen → „Startseite gestalten“ legst du fest, was hier erscheint.</span><button type="button" class="secondary-btn" data-page="settings" data-settings-anchor="settings-home">Bereiche auswählen</button></div>`;
       columns.replaceWith(grid);
       if (grid.children.length > 1) grid.insertAdjacentHTML('beforebegin', `<div class="dash-sections-bar"><span>Bereiche</span><button type="button" class="text-btn" data-dash-all="${grid.querySelector('.dash-section.collapsed') ? 'open' : 'close'}">${grid.querySelector('.dash-section.collapsed') ? 'Alle aufklappen' : 'Alle zuklappen'}</button></div>`);
     }
