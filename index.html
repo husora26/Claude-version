@@ -2746,6 +2746,8 @@
   
   
   
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -6180,8 +6182,6 @@ html.dark .pkg-edit-btn { background: #1c1c1c; }
             <div class="automation-body">${sw('auto-repairs', automation.repairs, 'Reparaturaufträge automatisch planen')}<ul class="automation-status">${properties.map((property) => { const count = openIssues(property.id).length; return `<li><span>${escapeHtml(property.name)}</span><small class="${count ? 'due' : 'ok'}">${count ? `${count} offene ${count === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'}` : 'Keine offenen Auffälligkeiten'}</small></li>`; }).join('')}</ul><div class="automation-links"><button type="button" class="secondary-btn" data-action="report-issue">${icon('alert')} Auffälligkeit melden</button><button type="button" class="text-btn" data-page="repairs">Zur Übersicht →</button></div></div></section>
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('property')}</span><div><h2 class="card-title">Sanierung & Renovierung</h2><p class="card-caption">Für jedes Sanierungsprojekt mit Beginn plant Husora: Angebote einholen (60 Tage vorher), Handwerker beauftragen (30 Tage), Baubeginn vorbereiten und Abnahme. Abgeschlossene Projekte landen in der Sanierungshistorie.</p></div></div>
             <div class="automation-body">${sw('auto-renovation', automation.renovation, 'Sanierungsschritte automatisch planen')}<ul class="automation-status"><li><span>Laufende Projekte</span><small>${renovationProjects.filter((project) => project.status !== 'done').length}</small></li><li><span>Abgeschlossen</span><small>${renovationProjects.filter((project) => project.status === 'done').length}</small></li></ul><div class="automation-links"><button type="button" class="secondary-btn" data-action="new-renovation">${icon('plus')} Sanierungsprojekt</button><button type="button" class="text-btn" data-page="renovations">Zur Übersicht →</button></div></div></section>
-          <section class="card automation-card wide"><div class="automation-head"><span class="automation-icon">${icon('task')}</span><div><h2 class="card-title">Servicepakete & Jahresaufgaben</h2><p class="card-caption">Wähle ein Paket mit den typischen Jahresaufgaben eines Ferienhauses und erweitere es individuell. Husora legt die Aufgaben zur passenden Jahreszeit automatisch an.</p></div></div>
-            <div class="automation-body">${sw('auto-task-toggle', autoTasks.enabled, 'Jahresaufgaben automatisch erstellen')}${servicePackagesHtml()}</div></section>
           ${bookingsEnabled() ? `<section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('clock')}</span><div><h2 class="card-title">Kalender-Synchronisierung</h2><p class="card-caption">Buchungen von Airbnb, Booking.com und Vrbo laufen automatisch alle 15 Minuten ein.</p></div></div>
             <div class="automation-body"><p class="automation-state ${syncOn ? 'on' : ''}">${syncOn ? 'Aktiv' : 'Nicht eingerichtet'}</p><p class="card-caption">${icalCount} ${icalCount === 1 ? 'Kalenderlink' : 'Kalenderlinks'}${portalConnected() ? ' · Repull verbunden' : ''}${lastSync ? ` · zuletzt ${escapeHtml(timeFmt(lastSync))}` : ''}</p><button type="button" class="secondary-btn" data-page="profile">Buchungsportale verwalten</button></div></section>` : ''}
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('clock')}</span><div><h2 class="card-title">Nächste automatische Schritte</h2><p class="card-caption">Offene Aufgaben, die Husora geplant hat.</p></div></div>
@@ -13277,7 +13277,7 @@ html.dark .pkg-edit-btn { background: #1c1c1c; }
     const AUTO_GROUPS = [
       ['guests', 'Gäste & Buchungen', ['Gästewechsel je Buchung', 'Kalender-Synchronisierung']],
       ['care', 'Kontrolle & Saison', ['Hauskontrolle bei Leerstand', 'Saisonale Aufgaben']],
-      ['maintenance', 'Wartung & Reparatur', ['Reparatur & Instandhaltung', 'Sanierung & Renovierung', 'Servicepakete & Jahresaufgaben']],
+      ['maintenance', 'Wartung & Reparatur', ['Reparatur & Instandhaltung', 'Sanierung & Renovierung']],
       ['planned', 'Geplant', ['Nächste automatische Schritte']],
       ['log', 'Protokoll', ['Protokoll']]
     ];
@@ -13373,7 +13373,25 @@ html.dark .pkg-edit-btn { background: #1c1c1c; }
     const templateFor = (id) => autoTasks.templates.find((template) => template.id === id) || defaultAutoTemplates.find((template) => template.id === id) || null;
     const templateToRow = (template) => ({ id: template.id, title: template.title, interval: Number(template.interval) || 365, season: template.season || 'all', priority: template.priority || 'normal', selected: Boolean(template.selected), builtin: Boolean(template.builtin), category: template.category });
     function openTemplatePicker() {
-      pkgDraft = { kind: 'all', packageId: autoTasks.packageId || '', rows: autoTasks.templates.map(templateToRow), removed: [], open: -1 };
+      // Alle Vorlagen aus Serviceaufgaben und Servicepaketen zusammenführen; bei gleichem Titel bleibt die Standardvorlage.
+      const all = [...autoTasks.templates, ...defaultAutoTemplates.filter((template) => !autoTasks.templates.some((item) => item.id === template.id)).map((template) => ({ ...template, builtin: true, selected: false }))];
+      const titleKey = (template) => String(template.title || '').trim().toLocaleLowerCase('de').replace(/\s+/g, ' ');
+      const byKey = new Map();
+      const duplicates = [];
+      all.forEach((template) => {
+        const key = titleKey(template);
+        const kept = byKey.get(key);
+        if (!kept) { byKey.set(key, { ...template }); return; }
+        const keepNew = template.builtin && !kept.builtin;
+        const winner = keepNew ? { ...template } : kept;
+        const loser = keepNew ? kept : template;
+        winner.selected = Boolean(winner.selected || loser.selected);
+        if (!loser.builtin) duplicates.push(loser.id);
+        byKey.set(key, winner);
+      });
+      const order = new Map(defaultAutoTemplates.map((template, index) => [template.id, index]));
+      const merged = [...byKey.values()].sort((a, b) => (order.get(a.id) ?? 999) - (order.get(b.id) ?? 999));
+      pkgDraft = { kind: 'all', packageId: autoTasks.packageId || '', rows: merged.map(templateToRow), removed: duplicates, open: -1 };
       document.getElementById('package-modal-title').textContent = 'Aufgabenpaket aus Vorlage wählen';
       document.getElementById('package-modal-subtitle').textContent = 'Paket wählen, Aufgaben an- oder abwählen und per Klick bearbeiten';
       renderPackageModal();
