@@ -2256,6 +2256,187 @@
     .app-footer { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; margin: 34px 0 10px; color: var(--muted); font-size: 12px; }
     .app-footer button { min-height: 32px; padding: 0 2px; border: 0; color: var(--muted); background: none; font-size: 12px; cursor: pointer; }
     .app-footer button:hover { color: var(--green); text-decoration: underline; }
+    /* Schriftgröße */
+    html.ts-large .page, html.ts-large .modal, html.ts-large .nav-menu, html.ts-large .notify-panel { zoom: 1.12; }
+    html.ts-xlarge .page, html.ts-xlarge .modal, html.ts-xlarge .nav-menu, html.ts-xlarge .notify-panel { zoom: 1.25; }
+    .segmented { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; padding: 4px; border: 1px solid var(--line); border-radius: 12px; background: #f6f5f0; }
+    .segmented button { flex: 1 1 90px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; padding: 0 10px; border: 0; border-radius: 9px; color: #4d5a51; background: transparent; font-size: 13px; font-weight: 650; cursor: pointer; }
+    .segmented button.active { color: white; background: var(--green); box-shadow: 0 2px 6px rgba(35, 70, 52, .2); }
+    .settings-switches { display: grid; border: 1px solid var(--line); border-radius: 11px; overflow: hidden; }
+    .settings-switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 6px 14px; border-bottom: 1px solid var(--line); background: white; font-size: 13.5px; cursor: pointer; }
+    .settings-switches .settings-switch:last-child { border-bottom: 0; }
+    .contract-form .settings-switch { border: 1px solid var(--line); border-radius: 10px; }
+    .settings-system { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; }
+    .settings-system strong { display: block; font-size: 13px; }
+    .settings-system small { color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .settings-system .secondary-btn { min-height: 44px; }
+    .settings-icon.small { width: 32px; height: 32px; border-radius: 9px; }
+    .settings-icon.small svg { width: 16px; height: 16px; }
+    /* Erinnerungen */
+    .notify-wrap { position: relative; }
+    .notify-btn { position: relative; display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, .45); border-radius: 50%; color: white; background: rgba(20, 35, 27, .35); cursor: pointer; }
+    .notify-btn svg { width: 19px; height: 19px; }
+    .notify-btn .notify-count { position: absolute; top: -4px; right: -4px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px; color: #1f2a22; background: #ffd84d; font-size: 11px; font-weight: 800; line-height: 19px; text-align: center; }
+    .notify-btn .notify-count.urgent { color: white; background: var(--red); }
+    .notify-panel { position: absolute; top: calc(100% + 10px); right: -48px; z-index: 40; display: none; width: min(380px, calc(100vw - 24px)); max-height: min(70vh, 560px); overflow-y: auto; padding: 10px; border: 1px solid var(--line); border-radius: 14px; color: var(--ink, #1f2a22); background: #fffdf8; box-shadow: 0 20px 60px rgba(0, 0, 0, .18); }
+    .notify-panel.open { display: block; }
+    .notify-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 6px 8px; font-size: 15px; }
+    .notify-list { display: grid; gap: 6px; }
+    .notify-item { display: flex; gap: 10px; align-items: flex-start; width: 100%; padding: 10px; border: 1px solid var(--line); border-left: 4px solid #9db9a5; border-radius: 10px; background: white; text-align: left; cursor: pointer; }
+    .notify-item.urgent { border-left-color: var(--red); }
+    .notify-item.soon { border-left-color: #e8b800; }
+    .notify-item.read { opacity: .62; }
+    .notify-item strong { display: block; font-size: 13px; line-height: 1.35; }
+    .notify-item small { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .notify-icon { display: grid; place-items: center; flex: 0 0 auto; width: 30px; height: 30px; border-radius: 8px; color: var(--green); background: var(--green-soft); }
+    .notify-item.urgent .notify-icon { color: var(--red); background: var(--red-soft); }
+    .notify-item.soon .notify-icon { color: #8a5a00; background: #fff0b3; }
+    .notify-icon svg { width: 15px; height: 15px; }
+    .notify-empty { display: flex; gap: 8px; align-items: center; padding: 16px 8px; color: var(--green); font-size: 13px; }
+    .notify-empty svg { width: 18px; height: 18px; }
+    .notify-settings { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; min-height: 40px; margin-top: 8px; border: 0; border-radius: 9px; color: var(--green); background: #f3f1ea; font-size: 12.5px; font-weight: 700; cursor: pointer; }
+    .notify-settings svg { width: 15px; height: 15px; }
+    @media (max-width: 640px) { .notify-panel { position: fixed; top: 70px; right: 12px; left: 12px; width: auto; } .notify-btn { width: 36px; height: 36px; } }
+    /* Wetter */
+    .weather-card .card-head { margin-bottom: 8px; }
+    .weather-house + .weather-house { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .weather-name { display: block; margin-bottom: 6px; font-size: 13px; }
+    .weather-days { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+    .weather-day { display: grid; justify-items: center; gap: 1px; padding: 8px 2px; border-radius: 10px; background: #f6f5f0; font-size: 12px; }
+    .weather-day span { color: var(--muted); font-size: 11.5px; }
+    .weather-day b { font-size: 18px; line-height: 1.3; }
+    .weather-day small { color: var(--muted); font-size: 11.5px; }
+    .weather-day.frost { background: #e8f0f8; }
+    .weather-day.frost small { color: #2f5f86; font-weight: 700; }
+    .weather-warning { display: flex; gap: 9px; align-items: flex-start; margin-top: 8px; padding: 9px 11px; border-radius: 10px; color: #6f5200; background: #fffbea; }
+    .weather-warning.urgent { color: #8b2f25; background: var(--red-soft); }
+    .weather-warning svg { flex: 0 0 auto; width: 16px; height: 16px; margin-top: 1px; }
+    .weather-warning strong { display: block; font-size: 13px; }
+    .weather-warning small { display: block; font-size: 12px; line-height: 1.4; }
+    .weather-empty { margin: 4px 0; color: var(--muted); font-size: 12.5px; }
+    .weather-source { margin: 10px 0 0; color: var(--muted); font-size: 11px; }
+    /* Notfall, Verträge, Zähler */
+    .emergency-numbers { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-bottom: 16px; }
+    .emergency-number { display: grid; gap: 2px; min-height: 56px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 11px; color: inherit; background: white; text-decoration: none; }
+    .emergency-number strong { font-size: 17px; color: var(--green); }
+    .emergency-number span { color: var(--muted); font-size: 12px; line-height: 1.35; }
+    .emergency-number.main { border-color: #e8c4bf; background: var(--red-soft); }
+    .emergency-number.main strong { color: var(--red); font-size: 22px; }
+    .emergency-form .settings-card-head { flex-wrap: wrap; }
+    .emergency-form .settings-card-head > div { flex: 1 1 220px; }
+    .emergency-group { margin: 0 0 14px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; }
+    .emergency-group legend { padding: 0 6px; color: var(--green); font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+    .emergency-form .form-control, .contract-form .form-control, .meter-card .form-control, .meter-new .form-control { min-height: 44px; font-size: 14px; }
+    .emergency-contacts { display: grid; gap: 8px; margin-bottom: 10px; }
+    .emergency-contact { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: #fbfaf6; }
+    .emergency-contact > div { flex: 1 1 140px; }
+    .emergency-contact strong { display: block; font-size: 13.5px; }
+    .emergency-contact small { color: var(--muted); font-size: 12px; }
+    .emergency-contact .small-action { min-height: 36px; text-decoration: none; display: inline-flex; align-items: center; }
+    .emergency-contact-new { display: grid; grid-template-columns: 1.2fr 1fr 1fr auto; gap: 8px; }
+    .emergency-contact-new .secondary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
+    .emergency-contact-new svg { width: 15px; height: 15px; }
+    @media (max-width: 720px) { .emergency-contact-new { grid-template-columns: 1fr; } }
+    .section-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+    .section-kpis > div { padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+    .section-kpis strong { display: block; font-size: 20px; }
+    .section-kpis span { color: var(--muted); font-size: 12px; }
+    @media (max-width: 640px) { .section-kpis { grid-template-columns: 1fr; } .section-kpis > div { display: flex; align-items: baseline; gap: 8px; padding: 11px 14px; } .section-kpis strong { font-size: 17px; } }
+    .contract-form { margin-bottom: 16px; }
+    .contract-list { display: grid; gap: 10px; }
+    .contract-card { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; width: 100%; padding: 14px; border: 1px solid var(--line); border-left: 4px solid #9db9a5; border-radius: 12px; background: white; text-align: left; cursor: pointer; }
+    .contract-card:hover { box-shadow: 0 8px 22px rgba(35, 48, 39, .08); }
+    .contract-card.lvl-urgent { border-left-color: var(--red); background: #fffafa; }
+    .contract-card.lvl-soon { border-left-color: #e8b800; background: #fffdf3; }
+    .contract-card.lvl-expired, .contract-card.lvl-none { border-left-color: #c9cfc9; }
+    .contract-main { flex: 1 1 220px; min-width: 0; }
+    .contract-main strong { display: block; font-size: 14px; }
+    .contract-main small { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .contract-state { flex: 0 1 230px; text-align: right; }
+    .contract-state b { display: block; font-size: 13px; }
+    .contract-card.lvl-urgent .contract-state b { color: var(--red); }
+    .contract-card.lvl-soon .contract-state b { color: #8a5a00; }
+    .contract-state small { color: var(--muted); font-size: 12px; }
+    @media (max-width: 640px) { .contract-state { flex-basis: 100%; text-align: left; } }
+    .empty-state { display: grid; justify-items: center; gap: 6px; padding: 30px 20px; border: 1px dashed #c9d3cc; border-radius: 14px; color: var(--muted); background: #fbfaf6; text-align: center; font-size: 13px; line-height: 1.5; }
+    .empty-state svg { width: 28px; height: 28px; color: var(--green); }
+    .empty-state strong { color: var(--ink, #1f2a22); font-size: 15px; }
+    .meter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; margin-bottom: 16px; }
+    @media (max-width: 640px) { .meter-grid { grid-template-columns: 1fr; } }
+    .meter-card { padding: 16px; }
+    .meter-head { display: flex; align-items: center; gap: 10px; }
+    .meter-head > div { flex: 1; min-width: 0; }
+    .meter-head strong { display: block; font-size: 15px; }
+    .meter-head small { color: var(--muted); font-size: 12px; }
+    .meter-figures { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+    .meter-figures > div { padding: 10px 12px; border-radius: 10px; background: #f6f5f0; }
+    .meter-figures span { display: block; color: var(--muted); font-size: 11.5px; }
+    .meter-figures strong { display: block; margin-top: 2px; font-size: 16px; }
+    .meter-figures small { display: block; color: var(--muted); font-size: 11.5px; line-height: 1.4; }
+    .meter-chart { display: flex; align-items: flex-end; gap: 6px; height: 90px; margin-top: 12px; padding: 0 2px; }
+    .meter-bar { display: flex; flex: 1; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; }
+    .meter-bar i { display: block; width: 100%; max-width: 34px; border-radius: 6px 6px 2px 2px; background: #6f9c83; }
+    .meter-bar.negative i { background: #d9a45b; }
+    .meter-bar small { margin-top: 4px; color: var(--muted); font-size: 10.5px; }
+    .meter-chart-caption { margin: 4px 0 0; color: var(--muted); font-size: 11px; text-align: center; }
+    .meter-entry { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; margin-top: 12px; }
+    .meter-entry .primary-btn { min-height: 44px; }
+    @media (max-width: 420px) { .meter-entry { grid-template-columns: 1fr 1fr; } .meter-entry .primary-btn { grid-column: 1 / -1; } }
+    .meter-history { margin-top: 10px; font-size: 13px; }
+    .meter-history summary { min-height: 36px; display: flex; align-items: center; color: var(--green); font-weight: 700; cursor: pointer; }
+    .meter-history ul { margin: 4px 0 0; padding: 0; list-style: none; }
+    .meter-history li { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+    .meter-history li span { flex: 1; color: var(--muted); }
+    .meter-new-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr auto; gap: 8px; margin-top: 10px; }
+    .meter-new-row .secondary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
+    .meter-new-row svg { width: 15px; height: 15px; }
+    @media (max-width: 720px) { .meter-new-row { grid-template-columns: 1fr; } }
+    /* Hilfe */
+    .help-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 16px; }
+    .help-action { display: flex; gap: 12px; align-items: flex-start; min-height: 72px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: white; text-align: left; cursor: pointer; }
+    .help-action:hover { box-shadow: 0 8px 22px rgba(35, 48, 39, .08); }
+    .help-action > svg { flex: 0 0 auto; width: 22px; height: 22px; color: var(--green); }
+    .help-action strong { display: block; font-size: 14px; }
+    .help-action small { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .faq-card { padding: 20px; }
+    .faq-item { border-bottom: 1px solid var(--line); }
+    .faq-item:last-child { border-bottom: 0; }
+    .faq-item summary { display: flex; align-items: center; min-height: 52px; padding: 6px 0; font-size: 14.5px; font-weight: 700; cursor: pointer; }
+    .faq-item p { margin: 0 0 14px; color: #4d5a51; font-size: 14px; line-height: 1.65; }
+    /* Ersteinrichtung */
+    .onboarding-modal { width: min(500px, 100%); max-height: 92vh; overflow-y: auto; padding: 26px; }
+    #onboarding-body h2 { margin: 6px 0 6px; font-size: 22px; }
+    .ob-lead { margin: 0 0 16px; color: #4d5a51; font-size: 14px; line-height: 1.6; }
+    .ob-dots { display: flex; gap: 6px; margin-bottom: 14px; }
+    .ob-dots i { width: 26px; height: 5px; border-radius: 4px; background: #e3e1d9; }
+    .ob-dots i.on { background: var(--green); }
+    .ob-dots i.done { background: #9db9a5; }
+    .ob-hero { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; color: white; background: var(--green); }
+    .ob-hero svg { width: 28px; height: 28px; }
+    .ob-hero.done { background: #2f8a57; }
+    .ob-points { display: grid; gap: 10px; margin: 0 0 6px; padding: 0; list-style: none; }
+    .ob-points li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.45; }
+    .ob-points svg { flex: 0 0 auto; width: 18px; height: 18px; margin-top: 1px; color: var(--green); }
+    #onboarding-body .form-control { min-height: 46px; font-size: 15px; }
+    .ob-usage { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+    .ob-usage label { display: grid; gap: 2px; padding: 12px; border: 1.5px solid var(--line); border-radius: 12px; cursor: pointer; }
+    .ob-usage label.on { border-color: var(--green); background: var(--green-soft); }
+    .ob-usage input { position: absolute; opacity: 0; pointer-events: none; }
+    .ob-usage strong { font-size: 14px; }
+    .ob-usage small { color: var(--muted); font-size: 12px; }
+    .ob-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+    .ob-actions button { min-height: 46px; padding: 0 18px; font-size: 14px; }
+    .ob-next { display: grid; gap: 8px; }
+    .ob-next button { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: white; text-align: left; cursor: pointer; }
+    .ob-next button > svg:first-child { flex: 0 0 auto; width: 20px; height: 20px; color: var(--green); }
+    .ob-next button > svg:last-child { flex: 0 0 auto; width: 16px; height: 16px; margin-left: auto; color: var(--muted); }
+    .ob-next strong { display: block; font-size: 14px; }
+    .ob-next small { display: block; color: var(--muted); font-size: 12px; }
+    .demo-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0 0 16px; padding: 12px 16px; border: 1px solid #f0dd8c; border-radius: 12px; color: #6f5200; background: #fffbea; font-size: 13.5px; line-height: 1.5; }
+    .demo-banner > svg { flex: 0 0 auto; width: 20px; height: 20px; }
+    .demo-banner > span { flex: 1 1 240px; }
+    .demo-banner .primary-btn { min-height: 42px; }
+    .emergency-form textarea { font-family: inherit; min-height: 90px; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -2265,6 +2446,7 @@
         <div class="breadcrumb"><button class="breadcrumb-home" data-page="dashboard" aria-label="Zur Übersicht" title="Zur Übersicht"><svg viewBox="0 0 42 36" aria-hidden="true"><path d="M3 19 16 7l13 12M6 17v14h19V17M11 23h3v3h-3zm7 0h3v3h-3z" fill="none" stroke="#fff9eb" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3"/><path d="M34 2 29 10h3l-5 6h4l-4 7h6v8h3v-8h6l-4-7h4l-5-6h3z" fill="#b9955f"/></svg></button><span class="brand-lockup"><span class="brand-wordmark"><span class="breadcrumb-brand">HUSORA</span><span class="brand-region">Smart House Care</span></span></span><span class="breadcrumb-separator" aria-hidden="true">/</span><b id="breadcrumb">Übersicht</b></div>
         <div class="top-actions">
           <div class="plan-info" id="plan-info"></div>
+          <div class="notify-wrap"><button type="button" class="notify-btn" id="notify-toggle" aria-label="Erinnerungen anzeigen" title="Erinnerungen" aria-haspopup="true" aria-expanded="false" aria-controls="notify-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span class="notify-count" id="notify-count" hidden>0</span></button><div class="notify-panel" id="notify-panel" role="region" aria-label="Erinnerungen"></div></div>
           <div class="nav-menu-wrap"><button class="icon-btn avatar-btn" id="menu-toggle" aria-label="Menü und Benutzerprofil öffnen" title="Menü und Benutzerprofil" aria-haspopup="true" aria-expanded="false" aria-controls="main-menu"><span id="user-avatar">MM</span></button>
         <div class="nav-menu" id="main-menu">
           <div class="nav-menu-label">Menü</div>
@@ -2284,9 +2466,13 @@
             <button data-page="providers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14.5 6.5a5 5 0 0 0-6.7 6.7L3 18l3 3 4.8-4.8a5 5 0 0 0 6.7-6.7l-3.1 3.1-3-3z"/><path d="m15.5 4.5 4 4"/></svg><span>Servicepartner finden</span></button>
             <button data-page="assignedProviders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.2c2.1.6 3.5 2.6 3.5 5.8"/></svg><span>Zugeordnete Servicepartner</span></button>
             <button data-page="documents"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8m-8 4h8"/></svg><span>Dokumente</span></button>
+            <button data-page="emergency"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></svg><span>Notfall & Zugang</span></button>
+            <button data-page="contracts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h5M8 17h8"/></svg><span>Verträge & Fristen</span></button>
+            <button data-page="meters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 18a8 8 0 1 1 16 0"/><path d="m12 18 4-6M4 18h16"/></svg><span>Zählerstände</span></button>
             <button data-page="costs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6.5h14a2 2 0 0 1 2 2v11H5a2 2 0 0 1-2-2V6a3 3 0 0 1 3-3h12"/><path d="M3 7h17v5h-5a2 2 0 0 0 0 4h5"/><path d="M15.5 14.5h.01"/></svg><span>Jahreskosten</span></button>
             <div class="nav-divider" role="separator"></div>
             <button data-page="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg><span>Einstellungen</span></button>
+            <button data-page="help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .9-1 1.6v.6"/><path d="M12 17h.01"/></svg><span>Hilfe & Support</span></button>
             <button data-page="legal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 20 6v5c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V6z"/></svg><span>Rechtliches</span></button>
           </nav>
         </div>
@@ -2547,6 +2733,9 @@
     </form>
   </div>
   <div class="inspection-print-area" id="inspection-print-area" aria-hidden="true"></div>
+  <div class="modal-backdrop" id="onboarding-modal" role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
+    <section class="modal onboarding-modal"><div id="onboarding-body"></div></section>
+  </div>
   <div class="modal-backdrop" id="legal-modal" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title">
     <section class="modal legal-modal">
       <div class="modal-head"><div><h2 id="legal-modal-title">Rechtliches</h2></div><button class="close-btn" type="button" data-close-legal aria-label="Schließen">✕</button></div>
@@ -4531,10 +4720,12 @@
           documents: `<button class="stat" data-page="documents"><img class="stat-art" src="assets/dokumente.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Dokumente</span><span class="stat-icon">${icon('document')}</span></div><div class="stat-value">${documents.length}</div><div class="stat-note"><em>${documents.length === 1 ? 'Datei' : 'Dateien'}</em> gespeichert</div></button>`,
           plans: `<button class="stat" data-page="plans"><img class="stat-art" src="assets/meine-haeuser.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Versionen</span><span class="stat-icon">${icon('bolt')}</span></div><div class="stat-value">${isPro() ? 'Pro' : 'Free'}</div><div class="stat-note"><em>${isPro() ? 'Alle Funktionen' : 'Pro-Funktionen'}</em> ${isPro() ? 'freigeschaltet' : 'ansehen'}</div></button>`,
           profile: `<button class="stat" data-page="profile"><img class="stat-art" src="assets/meine-haeuser.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Benutzerprofil</span><span class="stat-icon">${icon('users')}</span></div><div class="stat-value stat-value-sm">${escapeHtml(profileData.name || 'Profil')}</div><div class="stat-note">${profileData.mailAccount ? '<em>Mailkonto</em> verbunden' : '<em>Mailkonto</em> noch nicht verbunden'}</div></button>`
+          , ...extraDashboardTiles()
         };
         return dashboardTileIds().map((id) => tileHtml[id] || '').join('');
       })()}
         </section>
+        ${dashboardExtrasHtml()}
         <div class="columns">
           <section class="card"><div class="card-head"><div><h2 class="card-title">Service vor Ort</h2><p class="card-caption">${open.length} offene ${open.length === 1 ? 'Aufgabe' : 'Aufgaben'} ${singleHouse() ? 'an deinem schwedischen Ferienhaus' : 'an deinen schwedischen Ferienhäusern'}</p></div><button class="text-btn" data-page="tasks">Alle Aufgaben →</button></div><div class="dash-tile-list">${open.length ? open.slice(0, 5).map(dashTaskTile).join('') : '<div class="empty">Alles erledigt — großartig!</div>'}</div>${open.length > 5 ? `<button type="button" class="dash-tasks-more" data-page="tasks">+ ${open.length - 5} weitere ${open.length - 5 === 1 ? 'Aufgabe' : 'Aufgaben'} ansehen</button>` : ''}</section>
           <div>
@@ -4546,6 +4737,7 @@
                 return dashTile({ tag: event.bookingId ? 'button' : 'div', attrs: event.bookingId ? `data-edit-booking="${escapeHtml(event.bookingId)}" aria-label="${event.isPast ? 'Vergangene Buchung, Gast hat ausgecheckt. Buchung bearbeiten' : 'Buchung bearbeiten'}: ${escapeHtml(event.title)}, ${escapeHtml(event.date)}"` : '', iconHtml: `<b>${escapeHtml(day || '')}</b><small>${escapeHtml(month || '')}</small>`, title: escapeHtml(event.title), state: event.isPast ? 'later' : kind, label: event.isPast ? 'Ausgecheckt' : event.time || '', detail: escapeHtml(event.isPast ? 'Gast hat ausgecheckt' : event.detail || '') });
               }).join('')}</div>` : `<div class="empty">Für ${singleHouse() ? 'dein Ferienhaus' : 'deine Ferienhäuser'} sind keine Buchungen eingetragen.</div>`}
             </section>` : ''}
+            ${weatherCardHtml()}
             <section class="card"><div class="card-head"><div><h2 class="card-title">Hauskontrolle</h2><p class="card-caption">${singleHouse() ? 'Prüfstatus deines Ferienhauses' : 'Prüfstatus je Ferienhaus'}</p></div><button class="text-btn" data-page="inspections">Hauskontrolle →</button></div>
               <div class="dash-tile-list">${properties.map((property) => {
                 const progress = inspectionProgress(property.id);
@@ -7046,6 +7238,8 @@
       return { assigned, nearby };
     }
     function planLetter(property, items, providerName) {
+      const translated = planLetterText(property, items, providerName);
+      if (translated) return translated;
       const sender = profileData.name.trim();
       return `Sehr geehrte Damen und Herren${providerName ? ` bei ${providerName}` : ''},\n\nfür mein Ferienhaus „${property.name}“ (${property.address || property.region || 'Schweden'}) bitte ich Sie um die Durchführung der Hauskontrolle gemäß dem beigefügten Kontrollplan.\n\nGeprüft werden sollen folgende Positionen:\n${items.map((item) => `• ${item.title}`).join('\n')}\n\nIn der angehängten PDF sind die Angaben zum Gebäude und alle Prüfpositionen aufgeführt. Bitte kreuzen Sie jede kontrollierte Position im Kästchen an, ergänzen Sie Datum und Bemerkungen und senden Sie mir die ausgefüllte PDF zurück.\n\nBei Auffälligkeiten, Wasserschäden oder Einbruch informieren Sie mich bitte sofort.\n\nVielen Dank und freundliche Grüße\n${sender}${profileData.email ? `\n${profileData.email}` : ''}`;
     }
@@ -7375,7 +7569,7 @@
       account.innerHTML = profileData.mailAccount
         ? `Absender: <strong>${escapeHtml(profileData.mailAccount)}</strong> (${escapeHtml({ default: 'Standard-Mailprogramm', gmail: 'Gmail', outlook: 'Outlook / Microsoft 365', icloud: 'iCloud Mail', other: 'Anderer Anbieter' }[profileData.mailProvider || 'default'])})`
         : 'Es ist noch kein Mailkonto verbunden. Du kannst im Benutzerprofil unter „E-Mail-Konto verbinden“ deine Absender-Adresse hinterlegen. Der Versand ist trotzdem möglich.';
-      document.getElementById('send-plan-subject').value = `Kontrollplan „${control.name}“ – ${property.name}`;
+      document.getElementById('send-plan-subject').value = orderLang() === 'en' ? `Inspection plan "${control.name}" – ${property.name}` : `Kontrollplan „${control.name}“ – ${property.name}`;
       updatePlanLetter();
       document.getElementById('send-plan-modal').classList.add('open');
     }
@@ -7486,6 +7680,8 @@
       const property = properties.find((item) => item.id === issue.propertyId);
       const prio = { urgent: 'dringend – es drohen Folgeschäden', soon: 'wichtig – bitte zeitnah', normal: 'normal – beim nächsten Einsatz' }[issue.priority] || 'zeitnah';
       const due = document.getElementById('repair-order-date').value;
+      const translated = repairLetterText({ name: partnerName, house: property?.name || '', address: property?.address || '', text: issue.text, part: orderT(partLabel(issue.part)), priority: issue.priority, due: due ? orderDate(due) : '', no: repairOrderNo(issue), details: issue.details || '', sender: profileData.name || '' });
+      if (translated) return translated;
       return `Hej${partnerName ? ` ${partnerName}` : ''},\n\nhiermit beauftrage ich Sie mit der folgenden Reparatur an meinem Ferienhaus „${property?.name || ''}“${property?.address ? ` (${property.address})` : ''}:\n\n• Mangel: ${issue.text}${partLabel(issue.part) ? `\n• Bauteil: ${partLabel(issue.part)}` : ''}\n• Dringlichkeit: ${prio}${due ? `\n• Erledigung bis: ${fullDate(due)}` : ''}\n• Auftragsnummer: ${repairOrderNo(issue)}${issue.details ? `\n\nHinweise aus der Kontrolle:\n${issue.details.split('\n').map((line) => `• ${line}`).join('\n')}` : ''}\n\nAlle Details stehen im angehängten Reparaturauftrag (PDF). Bitte bestätigen Sie kurz den Termin und senden Sie die Rechnung nach Abschluss an diese Adresse – gern mit ROT-Abzug und ein paar Fotos vorher/nachher.\n\nTack så mycket och viele Grüße\n${profileData.name || ''}`;
     }
     function openRepairOrder(issueId) {
@@ -7505,7 +7701,7 @@
         ? `Absender: <strong>${escapeHtml(profileData.mailAccount)}</strong>`
         : 'Es ist noch kein Mailkonto verbunden – die E-Mail öffnet sich in deinem Standard-Mailprogramm. Absender hinterlegen unter Benutzerprofil → „E-Mail-Konto verbinden“.';
       if (!assigned.length) document.getElementById('repair-order-account').innerHTML += noPartnerLinkHtml(issue.propertyId, 'Noch kein Servicepartner zugeordnet – oder unten eine E-Mail-Adresse eingeben');
-      document.getElementById('repair-order-subject').value = `Reparaturauftrag ${repairOrderNo(issue)} – ${property?.name || 'Ferienhaus'}: ${partLabel(issue.part) || issue.text.slice(0, 40)}`;
+      document.getElementById('repair-order-subject').value = `${orderT('Reparaturauftrag')} ${repairOrderNo(issue)} – ${property?.name || orderT('Ferienhaus')}: ${orderT(partLabel(issue.part)) || issue.text.slice(0, 40)}`;
       updateRepairOrderLetter();
       document.getElementById('repair-order-modal').classList.add('open');
     }
@@ -7544,28 +7740,29 @@
           y -= used + 8;
         }
       };
-      const today = fmtDateFull(new Date());
+      const today = orderDate(new Date());
       const due = document.getElementById('repair-order-date').value;
-      const prio = { urgent: 'Dringend – Folgeschäden drohen', soon: 'Wichtig – zeitnah beheben', normal: 'Normal – beim nächsten Einsatz' }[issue.priority] || 'Wichtig';
+      const prio = orderT({ urgent: 'Dringend – Folgeschäden drohen', soon: 'Wichtig – zeitnah beheben', normal: 'Normal – beim nächsten Einsatz' }[issue.priority] || 'Wichtig');
+      const L = orderT;
       box(0, H - 8, W, 8, issue.priority === 'urgent' ? '0.78 0.25 0.2' : '0.16 0.36 0.27');
       text('HUSORA · SMART HOUSE CARE', M, 9, true, '0.29 0.39 0.32'); y -= 26;
-      text('Reparaturauftrag', M, 24, true); y -= 18;
-      text(`Auftrag ${repairOrderNo(issue)} · erstellt am ${today}`, M, 10, false, '0.4 0.45 0.4'); y -= 14;
-      heading('Auftraggeber & Auftragnehmer');
+      text(L('Reparaturauftrag'), M, 24, true); y -= 18;
+      text({ sv: `Order ${repairOrderNo(issue)} · skapad ${today}`, en: `Order ${repairOrderNo(issue)} · created ${today}` }[orderLang()] || `Auftrag ${repairOrderNo(issue)} · erstellt am ${today}`, M, 10, false, '0.4 0.45 0.4'); y -= 14;
+      heading(L('Auftraggeber & Auftragnehmer'));
       pairs([
-        ['Auftraggeber', [profileData.name, profileData.mailAccount || profileData.email].filter(Boolean).join(' · ')],
-        ['Auftragnehmer', [partner?.name || recipient.name || recipient.email, partner?.phone].filter(Boolean).join(' · ')],
-        ['E-Mail Auftragnehmer', recipient.email || partner?.email || '–'],
-        ['Ort des Auftragnehmers', partner?.town || '–']
+        [L('Auftraggeber'), [profileData.name, profileData.mailAccount || profileData.email].filter(Boolean).join(' · ')],
+        [L('Auftragnehmer'), [partner?.name || recipient.name || recipient.email, partner?.phone].filter(Boolean).join(' · ')],
+        [L('E-Mail Auftragnehmer'), recipient.email || partner?.email || '–'],
+        [L('Ort des Auftragnehmers'), partner?.town || '–']
       ]);
-      heading('Objekt');
+      heading(L('Objekt'));
       pairs([
-        ['Ferienhaus', property.name],
-        ['Adresse', property.address || property.region || '–'],
-        ['Baujahr / Wohnfläche', [property.yearBuilt, property.livingArea ? `${property.livingArea} m²` : ''].filter(Boolean).join(' · ') || '–'],
-        ['Heizung', [property.heatingSystem, property.heatingYear].filter(Boolean).join(' · ') || '–']
+        [L('Ferienhaus'), property.name],
+        [L('Adresse'), property.address || property.region || '–'],
+        [L('Baujahr / Wohnfläche'), [property.yearBuilt, property.livingArea ? `${property.livingArea} m²` : ''].filter(Boolean).join(' · ') || '–'],
+        [L('Heizung'), [property.heatingSystem, property.heatingYear].filter(Boolean).join(' · ') || '–']
       ]);
-      heading('Mangel');
+      heading(L('Mangel'));
       const boxTop = y + 10;
       const descLines = pdfWrap(issue.text, 11, W - 2 * M - 24, true);
       const detailLines = String(issue.details || '').split('\n').filter(Boolean).flatMap((line) => pdfWrap(line, 9, W - 2 * M - 24, false));
@@ -7574,23 +7771,23 @@
       y = boxTop - 18;
       descLines.forEach((l) => { text(l, M + 12, 11, true); y -= 15; });
       detailLines.forEach((l) => { text(l, M + 12, 9, false, '0.3 0.3 0.25'); y -= 12; });
-      text(`Gemeldet am ${fullDate(issue.date)} · Quelle: ${issue.source || 'Meldung'}`, M + 12, 8.5, false, '0.4 0.36 0.2');
+      text({ sv: `Rapporterat ${orderDate(issue.date)} · Källa: ${issue.source || 'Rapport'}`, en: `Reported ${orderDate(issue.date)} · Source: ${issue.source || 'Report'}` }[orderLang()] || `Gemeldet am ${fullDate(issue.date)} · Quelle: ${issue.source || 'Meldung'}`, M + 12, 8.5, false, '0.4 0.36 0.2');
       y = boxTop - boxHeight - 14;
       pairs([
-        ['Bauteil', partLabel(issue.part) || 'Sonstiges / ganzes Haus'],
-        ['Dringlichkeit', prio],
-        ['Gewünschte Erledigung bis', due ? fullDate(due) : 'nach Absprache'],
-        ['Abrechnung', 'Rechnung an den Auftraggeber, ROT-Abzug wenn möglich']
+        [L('Bauteil'), L(partLabel(issue.part)) || L('Sonstiges / ganzes Haus')],
+        [L('Dringlichkeit'), prio],
+        [L('Gewünschte Erledigung bis'), due ? orderDate(due) : L('nach Absprache')],
+        [L('Abrechnung'), L('Rechnung an den Auftraggeber, ROT-Abzug wenn möglich')]
       ]);
       const history = issues.filter((other) => other.id !== issue.id && other.propertyId === issue.propertyId && other.part && other.part === issue.part).slice(0, 3);
-      if (history.length) { heading('Frühere Meldungen an diesem Bauteil'); history.forEach((other) => { pdfWrap(`${fmtDate(other.fixedAt || other.date)} · ${ISSUE_STATUS[other.status] || ''}: ${other.text}`, 9.5, W - 2 * M, false).forEach((l) => { text(l, M, 9.5); y -= 12; }); }); y -= 4; }
-      heading('Hinweise');
+      if (history.length) { heading(L('Frühere Meldungen an diesem Bauteil')); history.forEach((other) => { pdfWrap(`${fmtDate(other.fixedAt || other.date)} · ${ISSUE_STATUS[other.status] || ''}: ${other.text}`, 9.5, W - 2 * M, false).forEach((l) => { text(l, M, 9.5); y -= 12; }); }); y -= 4; }
+      heading(L('Hinweise'));
       ['Bitte Termin kurz per E-Mail bestätigen und den Zugang zum Haus abstimmen.', 'Bei Mehrkosten über 20 % des Angebots vorher Rücksprache halten.', 'Fotos vorher / nachher und eine kurze Beschreibung der Arbeiten mit der Rechnung senden.']
-        .forEach((hint) => { text(`•  ${hint}`, M, 9.5); y -= 13; });
-      heading('Rückmeldung des Handwerkers');
+        .forEach((hint) => { text(`•  ${L(hint)}`, M, 9.5); y -= 13; });
+      heading(L('Rückmeldung des Handwerkers'));
       const fieldRow = (label) => { text(label, M, 9, false, '0.4 0.45 0.4'); line(M + 130, y - 2, W - M, y - 2, '0.6 0.64 0.6'); y -= 22; };
-      ['Termin / erledigt am', 'Durchgeführte Arbeiten', '', 'Material / Kosten', 'Unterschrift'].forEach(fieldRow);
-      ops.push(`BT /F1 8 Tf 0.5 0.55 0.5 rg ${M} 28 Td (${pdfEncode(`${property.name} · Reparaturauftrag ${repairOrderNo(issue)} · erstellt mit Husora`)}) Tj ET`);
+      ['Termin / erledigt am', 'Durchgeführte Arbeiten', '', 'Material / Kosten', 'Unterschrift'].map((label) => (label ? L(label) : '')).forEach(fieldRow);
+      ops.push(`BT /F1 8 Tf 0.5 0.55 0.5 rg ${M} 28 Td (${pdfEncode(`${property.name} · ${L('Reparaturauftrag')} ${repairOrderNo(issue)} · ${{ sv: 'skapad med Husora', en: 'created with Husora' }[orderLang()] || 'erstellt mit Husora'}`)}) Tj ET`);
       const stream = (data) => `<< /Length ${data.length} >>\nstream\n${data}\nendstream`;
       const objs = [
         '<< /Type /Catalog /Pages 2 0 R >>',
@@ -8151,8 +8348,8 @@
         showToast('Das 3D-Hausmodell ist Teil von Husora Pro.');
         currentPage = 'plans';
       }
-      const pages = { dashboard, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPage, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage };
-      const labels = { dashboard: 'Übersicht', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches' };
+      const pages = { dashboard, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPage, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage };
+      const labels = { dashboard: 'Übersicht', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support' };
       if (currentPage !== lastRenderedPage) {
         if (returningToPreviousPage) {
           returningToPreviousPage = false;
@@ -8169,6 +8366,7 @@
       document.getElementById('nav-count').textContent = tasks.filter((task) => !task.done).length;
       document.querySelectorAll('.nav [data-page]').forEach((button) => button.classList.toggle('active', button.dataset.page === currentPage || (currentPage === 'propertyDetail' && button.dataset.page === 'properties')));
       updateProfileSummary();
+      updateNotifyBadge();
       pageContent.innerHTML = pages[currentPage]() + appFooterHtml();
       ensureBackButton();
       if (currentPage === 'house3d') fitHouseScene();
@@ -10961,6 +11159,7 @@
         <ul>
           <li><strong>Karten und Adresssuche:</strong> OpenStreetMap Foundation (Kartenkacheln, Nominatim-Adresssuche), Google Maps (Kartenvorschau in der Objektübersicht).</li>
           <li><strong>Programmbibliotheken:</strong> cdnjs (Cloudflare), unpkg und jsDelivr für pdf.js, Leaflet und Tesseract.js (PDF-Auslesen, Karte, Texterkennung).</li>
+          <li><strong>Wetter:</strong> Open-Meteo.com (Vorhersage für die Koordinaten deiner Ferienhäuser).</li>
           <li><strong>Wechselkurse:</strong> frankfurter.dev und open.er-api.com (nur bei Anzeige in Euro).</li>
           <li><strong>Import von Inseraten:</strong> Abruf der angegebenen Inseratsseite, ggf. über die Weiterleitungsdienste allorigins.win und cors.lol sowie die Schnittstellen der jeweiligen Maklerportale; Übersetzung schwedischer Texte über Google Übersetzer bzw. MyMemory.</li>
           <li><strong>Kalender-Abgleich:</strong> Abruf deiner iCal-Links, auf Wunsch über eine Weiterleitung; bei verbundenem Buchungsportal Datenaustausch mit Repull.</li>
@@ -10987,6 +11186,7 @@
           <li><strong>pdf.js</strong> – Apache License 2.0, © Mozilla Foundation</li>
           <li><strong>Tesseract.js</strong> – Apache License 2.0</li>
           <li><strong>Kartendaten</strong> – © OpenStreetMap-Mitwirkende, Open Database License (ODbL)</li>
+          <li><strong>Wetterdaten</strong> – Open-Meteo.com, CC BY 4.0</li>
           <li><strong>Fotos in der App</strong> – <mark class="legal-todo">[Bildnachweise ergänzen]</mark></li>
         </ul><p>Husora ${APP_VERSION} · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}</p>` }
     };
@@ -11037,10 +11237,687 @@
       if (sessionStorage.getItem('husora-restored')) { sessionStorage.removeItem('husora-restored'); setTimeout(() => showToast('Datensicherung wiederhergestellt.'), 300); }
       if (sessionStorage.getItem('husora-reset')) { sessionStorage.removeItem('husora-reset'); setTimeout(() => showToast('Alle Daten wurden gelöscht.'), 300); }
     } catch (error) { /* optional */ }
+    // ===== Neue Bereiche: Darstellung, Sprache für Aufträge, Erinnerungen, Wetter, Notfall, Verträge, Zähler, Hilfe, Ersteinrichtung =====
+    function loadStore(key, fallback) {
+      try { const value = JSON.parse(localStorage.getItem(key) || 'null'); return value ?? fallback; } catch (error) { return fallback; }
+    }
+    function saveStore(key, value) {
+      try { localStorage.setItem(key, JSON.stringify(value)); return true; } catch (error) { showToast('Speicher voll – bitte unter Einstellungen → Datensicherung Platz schaffen.'); return false; }
+    }
+    const newId = (prefix) => `${prefix}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+    let sectionPropertyId = null;
+    const sectionProperty = () => properties.find((property) => property.id === sectionPropertyId) || properties[0];
+    const sectionPropertySelect = () => (properties.length < 2 ? '' : `<div class="section-toolbar"><label><span class="form-label">Ferienhaus</span><select class="filter-select" data-section-property aria-label="Ferienhaus wählen">${properties.map((property) => `<option value="${escapeHtml(property.id)}" ${property.id === sectionProperty().id ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select></label></div>`);
+
+    // --- Darstellung und Sprache für Aufträge ---
+    let displaySettings = { textSize: 'normal', orderLanguage: 'de', ...loadStore('stugliv-display', {}) };
+    function applyDisplaySettings() {
+      document.documentElement.classList.toggle('ts-large', displaySettings.textSize === 'large');
+      document.documentElement.classList.toggle('ts-xlarge', displaySettings.textSize === 'xlarge');
+    }
+    applyDisplaySettings();
+    const ORDER_LANGUAGES = [['de', 'Deutsch'], ['sv', 'Svenska'], ['en', 'English']];
+    const orderLang = () => (['sv', 'en'].includes(displaySettings.orderLanguage) ? displaySettings.orderLanguage : 'de');
+    const ORDER_DICT = {
+      Reparaturauftrag: { sv: 'Arbetsorder', en: 'Repair order' },
+      'Auftraggeber & Auftragnehmer': { sv: 'Beställare & utförare', en: 'Client & contractor' },
+      Auftraggeber: { sv: 'Beställare', en: 'Client' },
+      Auftragnehmer: { sv: 'Utförare', en: 'Contractor' },
+      'E-Mail Auftragnehmer': { sv: 'E-post utförare', en: 'Contractor e-mail' },
+      'Ort des Auftragnehmers': { sv: 'Utförarens ort', en: 'Contractor location' },
+      Objekt: { sv: 'Objekt', en: 'Property' },
+      Ferienhaus: { sv: 'Fritidshus', en: 'Holiday home' },
+      Adresse: { sv: 'Adress', en: 'Address' },
+      'Baujahr / Wohnfläche': { sv: 'Byggår / boyta', en: 'Year built / living area' },
+      Heizung: { sv: 'Uppvärmning', en: 'Heating' },
+      Mangel: { sv: 'Fel', en: 'Defect' },
+      Bauteil: { sv: 'Byggdel', en: 'Building part' },
+      'Sonstiges / ganzes Haus': { sv: 'Övrigt / hela huset', en: 'Other / whole house' },
+      Dringlichkeit: { sv: 'Prioritet', en: 'Priority' },
+      'Gewünschte Erledigung bis': { sv: 'Önskas klart senast', en: 'Requested completion by' },
+      'nach Absprache': { sv: 'enligt överenskommelse', en: 'by arrangement' },
+      Abrechnung: { sv: 'Fakturering', en: 'Billing' },
+      'Rechnung an den Auftraggeber, ROT-Abzug wenn möglich': { sv: 'Faktura till beställaren, ROT-avdrag om möjligt', en: 'Invoice to the client, ROT deduction if possible' },
+      'Frühere Meldungen an diesem Bauteil': { sv: 'Tidigare rapporter för denna byggdel', en: 'Previous reports for this part' },
+      Hinweise: { sv: 'Information', en: 'Notes' },
+      'Bitte Termin kurz per E-Mail bestätigen und den Zugang zum Haus abstimmen.': { sv: 'Bekräfta gärna tiden kort via e-post och kom överens om tillträde till huset.', en: 'Please confirm the appointment by e-mail and arrange access to the house.' },
+      'Bei Mehrkosten über 20 % des Angebots vorher Rücksprache halten.': { sv: 'Kontakta mig innan om merkostnaden överstiger 20 % av offerten.', en: 'Please contact me first if additional costs exceed 20 % of the quote.' },
+      'Fotos vorher / nachher und eine kurze Beschreibung der Arbeiten mit der Rechnung senden.': { sv: 'Skicka gärna före/efter-bilder och en kort beskrivning av arbetet med fakturan.', en: 'Please send before/after photos and a short description of the work with the invoice.' },
+      'Rückmeldung des Handwerkers': { sv: 'Återkoppling från hantverkaren', en: 'Contractor feedback' },
+      'Termin / erledigt am': { sv: 'Tid / utfört den', en: 'Appointment / completed on' },
+      'Durchgeführte Arbeiten': { sv: 'Utfört arbete', en: 'Work carried out' },
+      'Material / Kosten': { sv: 'Material / kostnad', en: 'Material / costs' },
+      Unterschrift: { sv: 'Underskrift', en: 'Signature' },
+      'Dringend – Folgeschäden drohen': { sv: 'Brådskande – risk för följdskador', en: 'Urgent – risk of consequential damage' },
+      'Wichtig – zeitnah beheben': { sv: 'Viktigt – åtgärda snarast', en: 'Important – fix soon' },
+      'Normal – beim nächsten Einsatz': { sv: 'Normal – vid nästa besök', en: 'Normal – at the next visit' },
+      Wichtig: { sv: 'Viktigt', en: 'Important' },
+      Dach: { sv: 'Tak', en: 'Roof' }, 'Dachrinne & Entwässerung': { sv: 'Hängränna & dränering', en: 'Gutter & drainage' }, Fassade: { sv: 'Fasad', en: 'Facade' }, Fenster: { sv: 'Fönster', en: 'Windows' }, 'Haustür': { sv: 'Ytterdörr', en: 'Front door' }, Terrasse: { sv: 'Altan', en: 'Terrace' }, Kamin: { sv: 'Skorsten / kamin', en: 'Chimney / fireplace' }
+    };
+    const orderT = (text) => (orderLang() === 'de' ? text : ORDER_DICT[text]?.[orderLang()] || text);
+    const orderDate = (key) => {
+      if (!key) return '';
+      if (orderLang() === 'de') return fmtDateFull(key);
+      const date = toDate(key);
+      return Number.isNaN(date.getTime()) ? '' : new Intl.DateTimeFormat(orderLang() === 'sv' ? 'sv-SE' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(date);
+    };
+    const POSITION_TITLES = {
+      sv: { outside: 'Utomhus och klimatskal', water: 'Vattenledningar och fukt', heating: 'Värme och frostskydd', electricity: 'El och apparater (visuell kontroll)', fire: 'Brandskydd', pests: 'Skadedjur och lukt', security: 'Dörrar, fönster och nycklar', weather: 'Väder, snö och dränering', mail: 'Post och tomt', pumps: 'Brunn, pump och avlopp', climate: 'Inomhusklimat och luftfuktighet', crawlspace: 'Källare och krypgrund', outbuildings: 'Uthus, bastu och brygga', report: 'Dokumentation och återkoppling' },
+      en: { outside: 'Exterior and building envelope', water: 'Water pipes and moisture', heating: 'Heating and frost protection', electricity: 'Electricity and appliances (visual check)', fire: 'Fire safety', pests: 'Pests and odours', security: 'Doors, windows and keys', weather: 'Weather, snow and drainage', mail: 'Mail and grounds', pumps: 'Well, pump and drainage', climate: 'Indoor climate and humidity', crawlspace: 'Basement and crawl space', outbuildings: 'Outbuildings, sauna and jetty', report: 'Documentation and feedback' }
+    };
+    const positionTitle = (item) => POSITION_TITLES[orderLang()]?.[item.id] || item.title;
+    function repairLetterText({ name, house, address, text, part, priority, due, no, details, sender }) {
+      const lang = orderLang();
+      const prio = ({ sv: { urgent: 'brådskande – risk för följdskador', soon: 'viktigt – snarast', normal: 'normal – vid nästa besök' }, en: { urgent: 'urgent – risk of consequential damage', soon: 'important – as soon as possible', normal: 'normal – at the next visit' } }[lang] || {})[priority] || (lang === 'sv' ? 'snarast' : 'soon');
+      const notes = details ? details.split('\n').map((line) => `• ${line}`).join('\n') : '';
+      if (lang === 'sv') return `Hej${name ? ` ${name}` : ''},\n\nhärmed beställer jag följande reparation på mitt fritidshus „${house}“${address ? ` (${address})` : ''}:\n\n• Fel: ${text}${part ? `\n• Byggdel: ${part}` : ''}\n• Prioritet: ${prio}${due ? `\n• Klart senast: ${due}` : ''}\n• Ordernummer: ${no}${notes ? `\n\nAnteckningar från kontrollen:\n${notes}` : ''}\n\nAlla detaljer finns i bifogad arbetsorder (PDF). Bekräfta gärna tiden kort och skicka fakturan till denna adress när arbetet är klart – gärna med ROT-avdrag och några före/efter-bilder.\n\nTack så mycket och vänliga hälsningar\n${sender}`;
+      if (lang === 'en') return `Hello${name ? ` ${name}` : ''},\n\nI would like to commission the following repair at my holiday home "${house}"${address ? ` (${address})` : ''}:\n\n• Defect: ${text}${part ? `\n• Building part: ${part}` : ''}\n• Priority: ${prio}${due ? `\n• Complete by: ${due}` : ''}\n• Order number: ${no}${notes ? `\n\nNotes from the inspection:\n${notes}` : ''}\n\nAll details are in the attached work order (PDF). Please confirm the appointment and send the invoice to this address once the work is done – with ROT deduction if possible and a few before/after photos.\n\nMany thanks and kind regards\n${sender}`;
+      return null;
+    }
+    function planLetterText(property, items, providerName) {
+      const lang = orderLang();
+      const sender = `${profileData.name.trim()}${profileData.email ? `\n${profileData.email}` : ''}`;
+      const list = items.map((item) => `• ${positionTitle(item)}`).join('\n');
+      const where = property.address || property.region || (lang === 'sv' ? 'Sverige' : 'Sweden');
+      if (lang === 'sv') return `Hej${providerName ? ` ${providerName}` : ''},\n\nför mitt fritidshus „${property.name}“ (${where}) ber jag er att utföra en tillsyn enligt bifogad kontrollplan.\n\nFöljande punkter ska kontrolleras:\n${list}\n\nI bifogad PDF finns uppgifter om byggnaden och alla kontrollpunkter. Kryssa i varje kontrollerad punkt, fyll i datum och anmärkningar och skicka tillbaka den ifyllda PDF:en till mig.\n\nVid avvikelser, vattenskador eller inbrott – kontakta mig omedelbart.\n\nTack på förhand och vänliga hälsningar\n${sender}`;
+      if (lang === 'en') return `Hello${providerName ? ` ${providerName}` : ''},\n\nfor my holiday home "${property.name}" (${where}) I would like to ask you to carry out an inspection according to the attached inspection plan.\n\nThe following points should be checked:\n${list}\n\nThe attached PDF contains the building details and all inspection points. Please tick each point you have checked, add the date and remarks and send the completed PDF back to me.\n\nIn case of anomalies, water damage or burglary, please contact me immediately.\n\nThank you in advance and kind regards\n${sender}`;
+      return null;
+    }
+
+    // --- Wetter und Warnungen am Ferienhaus (Open-Meteo, Zwischenspeicher 3 Stunden) ---
+    let weatherCache = loadStore('stugliv-weather', {});
+    const weatherLoading = new Set();
+    const WEATHER_TTL = 3 * 60 * 60 * 1000;
+    function weatherFor(propertyId) {
+      const entry = weatherCache[propertyId];
+      return entry && Array.isArray(entry.days) ? entry : null;
+    }
+    async function refreshWeather(property, force = false) {
+      const origin = propertyOrigin(property);
+      if (!origin || weatherLoading.has(property.id)) return;
+      const cached = weatherFor(property.id);
+      const failedAt = weatherCache[property.id]?.failedAt;
+      if (!force && failedAt && Date.now() - new Date(failedAt).getTime() < 30 * 60 * 1000) return;
+      if (!force && cached && Date.now() - new Date(cached.fetchedAt).getTime() < WEATHER_TTL) return;
+      weatherLoading.add(property.id);
+      try {
+        const [lat, lon] = origin.coords;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat.toFixed(3)}&longitude=${lon.toFixed(3)}&daily=temperature_2m_min,temperature_2m_max,precipitation_sum,snowfall_sum,wind_gusts_10m_max,weather_code&timezone=Europe%2FStockholm&forecast_days=7&wind_speed_unit=ms`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const json = await response.json();
+        const daily = json.daily || {};
+        const days = (daily.time || []).map((date, index) => ({ date, min: daily.temperature_2m_min?.[index], max: daily.temperature_2m_max?.[index], rain: daily.precipitation_sum?.[index], snow: daily.snowfall_sum?.[index], gust: daily.wind_gusts_10m_max?.[index], code: daily.weather_code?.[index] }));
+        if (!days.length) throw new Error('keine Daten');
+        weatherCache = { ...weatherCache, [property.id]: { fetchedAt: new Date().toISOString(), days, error: false } };
+        saveStore('stugliv-weather', weatherCache);
+        if (['dashboard', 'inspections'].includes(currentPage)) render();
+      } catch (error) {
+        weatherCache = { ...weatherCache, [property.id]: { ...(weatherCache[property.id] || {}), error: true, failedAt: new Date().toISOString() } };
+        if (currentPage === 'dashboard') setTimeout(render, 0);
+      } finally { weatherLoading.delete(property.id); }
+    }
+    function weatherWarnings(propertyId) {
+      const weather = weatherFor(propertyId);
+      if (!weather) return [];
+      const today = localDateKey(new Date());
+      const days = weather.days.filter((day) => day.date >= today).slice(0, 5);
+      const vacant = !guestInHouse(propertyId, today);
+      const warnings = [];
+      const frost = days.filter((day) => Number(day.min) <= -10);
+      if (frost.length) warnings.push({ id: `frost-${frost[0].date}`, level: Number(frost[0].min) <= -20 ? 'urgent' : 'soon', title: `Starker Frost bis ${Math.round(Math.min(...frost.map((day) => day.min)))} °C`, detail: `${fmtDate(frost[0].date)}${vacant ? ' · Haus unbewohnt: Grundwärme und Frostschutz der Wasserleitungen prüfen' : ' · Wasserleitungen vor Frost schützen'}` });
+      const storm = days.filter((day) => Number(day.gust) >= 21);
+      if (storm.length) warnings.push({ id: `storm-${storm[0].date}`, level: Number(storm[0].gust) >= 25 ? 'urgent' : 'soon', title: `Sturmböen bis ${Math.round(Math.max(...storm.map((day) => day.gust)))} m/s`, detail: `${fmtDate(storm[0].date)} · Gartenmöbel sichern, danach Dach und Bäume kontrollieren lassen` });
+      const snow = days.filter((day) => Number(day.snow) >= 20);
+      if (snow.length) warnings.push({ id: `snow-${snow[0].date}`, level: 'soon', title: `Starker Schneefall (${Math.round(Math.max(...snow.map((day) => day.snow)))} cm)`, detail: `${fmtDate(snow[0].date)} · Schneeräumung und Dachlast im Blick behalten` });
+      const rain = days.filter((day) => Number(day.rain) >= 30);
+      if (rain.length) warnings.push({ id: `rain-${rain[0].date}`, level: 'soon', title: `Starkregen (${Math.round(Math.max(...rain.map((day) => day.rain)))} mm)`, detail: `${fmtDate(rain[0].date)} · Dachrinnen, Keller und Entwässerung prüfen` });
+      return warnings;
+    }
+    const weatherSymbol = (code) => (code >= 95 ? '⛈' : code >= 71 && code <= 86 ? '❄' : code >= 51 ? '🌧' : code >= 45 ? '🌫' : code >= 2 ? '⛅' : '☀');
+    function weatherCardHtml() {
+      const withCoords = properties.filter((property) => propertyOrigin(property));
+      if (!withCoords.length) return '';
+      withCoords.forEach((property) => refreshWeather(property));
+      if (withCoords.every((property) => !weatherFor(property.id) && weatherCache[property.id]?.error)) return '';
+      const rows = withCoords.map((property) => {
+        const weather = weatherFor(property.id);
+        const warnings = weatherWarnings(property.id);
+        const today = localDateKey(new Date());
+        const days = weather ? weather.days.filter((day) => day.date >= today).slice(0, 5) : [];
+        return `<div class="weather-house">${withCoords.length > 1 ? `<strong class="weather-name">${escapeHtml(property.name)}</strong>` : ''}
+          ${days.length ? `<div class="weather-days">${days.map((day) => `<div class="weather-day ${Number(day.min) <= -10 ? 'frost' : ''}"><span>${day.date === today ? 'Heute' : new Intl.DateTimeFormat('de-DE', { weekday: 'short' }).format(toDate(day.date))}</span><b aria-hidden="true">${weatherSymbol(Number(day.code))}</b><strong>${Math.round(day.max)}°</strong><small>${Math.round(day.min)}°</small></div>`).join('')}</div>` : `<p class="weather-empty">${weather?.error || weatherCache[property.id]?.error ? 'Wetterdaten sind gerade nicht erreichbar.' : 'Wetter wird geladen …'}</p>`}
+          ${warnings.map((warning) => `<div class="weather-warning ${warning.level}">${icon('alert')}<span><strong>${escapeHtml(warning.title)}</strong><small>${escapeHtml(warning.detail)}</small></span></div>`).join('')}
+        </div>`;
+      }).join('');
+      return `<section class="card weather-card"><div class="card-head"><div><h2 class="card-title">Wetter am Ferienhaus</h2><p class="card-caption">5-Tage-Vorhersage mit Frost-, Sturm- und Starkregenhinweisen</p></div></div>${rows}<p class="weather-source">Daten: Open-Meteo.com (CC BY 4.0)</p></section>`;
+    }
+
+    // --- Erinnerungen und Benachrichtigungen ---
+    let notifySettings = { tasks: true, inspections: true, repairs: true, bookings: true, contracts: true, meters: true, weather: true, backup: true, system: false, ...loadStore('stugliv-notify', {}) };
+    const NOTIFY_CATEGORIES = [['tasks', 'Fällige und überfällige Aufgaben'], ['inspections', 'Hauskontrolle und Saison-Checklisten'], ['repairs', 'Offene Mängel ohne Auftrag'], ['bookings', 'Anreisen der nächsten Tage'], ['contracts', 'Kündigungsfristen und Termine'], ['meters', 'Zählerstände ablesen'], ['weather', 'Frost-, Sturm- und Unwetterhinweise'], ['backup', 'Erinnerung an die Datensicherung']];
+    function collectReminders() {
+      const today = localDateKey(new Date());
+      const tomorrow = shiftDateKey(today, 1);
+      const list = [];
+      const add = (category, reminder) => { if (notifySettings[category] !== false) list.push({ category, ...reminder }); };
+      const openTasks = tasks.filter((task) => !task.done && task.date);
+      const overdue = openTasks.filter((task) => task.date < today);
+      if (overdue.length) add('tasks', { id: `tasks-overdue-${overdue.length}`, level: 'urgent', icon: 'task', title: `${overdue.length} ${overdue.length === 1 ? 'Aufgabe ist' : 'Aufgaben sind'} überfällig`, detail: overdue.slice(0, 2).map((task) => task.title).join(' · '), page: 'tasks' });
+      const dueSoon = openTasks.filter((task) => task.date === today || task.date === tomorrow);
+      if (dueSoon.length) add('tasks', { id: `tasks-due-${today}-${dueSoon.length}`, level: 'soon', icon: 'task', title: `${dueSoon.length} ${dueSoon.length === 1 ? 'Aufgabe' : 'Aufgaben'} heute oder morgen fällig`, detail: dueSoon.slice(0, 2).map((task) => task.title).join(' · '), page: 'tasks' });
+      properties.forEach((property) => {
+        const name = properties.length > 1 ? `${property.name}: ` : '';
+        const active = activePlanReturn(property.id);
+        if (active?.state.complete) add('inspections', { id: `archive-${active.record.id}`, level: 'info', icon: 'inspection', title: `${name}Prüfprotokoll bereit fürs Archiv`, detail: 'Alle Mängel sind behoben – jetzt im Archiv ablegen.', page: 'inspections', propertyId: property.id });
+        else if (!active && !inspectionIsCurrent(property.id) && inspectionOrderState(property.id).state !== 'ordered') add('inspections', { id: `inspection-${property.id}-${today.slice(0, 7)}`, level: 'soon', icon: 'inspection', title: `${name}Abwesenheitskontrolle fällig`, detail: 'Kontrollplan an den Servicepartner senden oder selbst prüfen.', page: 'inspections', propertyId: property.id });
+        ['winter', 'spring'].forEach((key) => {
+          const { ready, days, overdue: late } = seasonDueState(key, property.id);
+          if (ready || days > 21 || days < -60) return;
+          add('inspections', { id: `season-${key}-${property.id}-${today.slice(0, 4)}`, level: late ? 'urgent' : 'soon', icon: key === 'winter' ? 'snow' : 'sun', title: `${name}${key === 'winter' ? 'Wintervorbereitung' : 'Frühjahrsöffnung'} ${late ? 'überfällig' : `in ${days} ${days === 1 ? 'Tag' : 'Tagen'} fällig`}`, detail: 'Checkliste in der Hauskontrolle abarbeiten.', page: 'inspections', propertyId: property.id });
+        });
+        const unordered = openIssues(property.id).filter((issue) => !issue.orderedAt && issue.date && issue.date <= shiftDateKey(today, -3));
+        if (unordered.length) add('repairs', { id: `issues-${property.id}-${unordered.length}`, level: unordered.some((issue) => issue.priority === 'urgent') ? 'urgent' : 'soon', icon: 'alert', title: `${name}${unordered.length} ${unordered.length === 1 ? 'Mangel' : 'Mängel'} noch nicht beauftragt`, detail: unordered.slice(0, 2).map((issue) => issue.text).join(' · '), page: 'repairs' });
+        if (bookingsEnabled()) bookings.filter((booking) => booking.propertyId === property.id && booking.startDate >= today && booking.startDate <= shiftDateKey(today, 2)).forEach((booking) => add('bookings', { id: `arrival-${booking.id}`, level: 'info', icon: 'calendar', title: `${name}Anreise ${booking.startDate === today ? 'heute' : booking.startDate === tomorrow ? 'morgen' : `am ${fmtDate(booking.startDate)}`}`, detail: `${booking.guestName || (isOwnerStay(booking) ? 'Eigennutzung' : 'Gast')} · Haus vorbereiten und Schlüssel bereitlegen`, page: 'bookings' }));
+        contractsFor(property.id).forEach((contract) => {
+          const state = contractState(contract);
+          if (state.level === 'soon' || state.level === 'urgent') add('contracts', { id: `contract-${contract.id}-${state.deadline}`, level: state.level, icon: 'contract', title: `${name}${contractTypeLabel(contract.type)}: ${state.label}`, detail: `${contract.provider || 'Anbieter'} · ${state.detail}`, page: 'contracts', propertyId: property.id });
+        });
+        metersFor(property.id).forEach((meter) => {
+          const last = meter.readings.slice().sort((a, b) => a.date.localeCompare(b.date)).pop();
+          if (!last || last.date <= shiftDateKey(today, -35)) add('meters', { id: `meter-${meter.id}-${today.slice(0, 7)}`, level: 'info', icon: 'meter', title: `${name}Zählerstand ${meterLabel(meter)} ablesen`, detail: last ? `Letzte Ablesung am ${fmtDate(last.date)}` : 'Noch keine Ablesung eingetragen', page: 'meters', propertyId: property.id });
+        });
+        weatherWarnings(property.id).forEach((warning) => add('weather', { ...warning, id: `weather-${property.id}-${warning.id}`, icon: 'cloud', title: `${name}${warning.title}`, page: 'dashboard' }));
+      });
+      let lastBackup = '';
+      try { lastBackup = localStorage.getItem('stugliv-last-backup') || ''; } catch (error) { lastBackup = ''; }
+      if (!lastBackup || Date.now() - new Date(lastBackup).getTime() > 30 * 24 * 60 * 60 * 1000) add('backup', { id: `backup-${today.slice(0, 7)}`, level: 'info', icon: 'document', title: lastBackup ? 'Datensicherung ist älter als 30 Tage' : 'Noch keine Datensicherung', detail: 'Sichere deine Daten als Datei.', page: 'settings' });
+      const order = { urgent: 0, soon: 1, info: 2 };
+      return list.sort((a, b) => order[a.level] - order[b.level]);
+    }
+    let readReminders = loadStore('stugliv-notify-read', []);
+    function updateNotifyBadge() {
+      const badge = document.getElementById('notify-count');
+      if (!badge) return;
+      const unread = collectReminders().filter((reminder) => !readReminders.includes(reminder.id));
+      badge.textContent = unread.length > 9 ? '9+' : String(unread.length);
+      badge.hidden = !unread.length;
+      badge.classList.toggle('urgent', unread.some((reminder) => reminder.level === 'urgent'));
+    }
+    function renderNotifyPanel() {
+      const panel = document.getElementById('notify-panel');
+      const reminders = collectReminders();
+      panel.innerHTML = `<div class="notify-head"><strong>Erinnerungen</strong>${reminders.length ? '<button type="button" class="text-btn" data-notify-read-all>Alle gelesen</button>' : ''}</div>
+        ${reminders.length ? `<div class="notify-list">${reminders.map((reminder) => `<button type="button" class="notify-item ${reminder.level} ${readReminders.includes(reminder.id) ? 'read' : ''}" data-notify-open="${escapeHtml(reminder.id)}"><span class="notify-icon">${icon(reminder.icon || 'bell')}</span><span><strong>${escapeHtml(reminder.title)}</strong>${reminder.detail ? `<small>${escapeHtml(reminder.detail)}</small>` : ''}</span></button>`).join('')}</div>` : `<div class="notify-empty">${icon('check')}<span>Alles erledigt – keine offenen Erinnerungen.</span></div>`}
+        <button type="button" class="notify-settings" data-page="settings" data-settings-anchor="settings-notify">${icon('gear')} Erinnerungen einstellen</button>`;
+    }
+    function toggleNotifyPanel(force) {
+      const panel = document.getElementById('notify-panel');
+      const open = force ?? !panel.classList.contains('open');
+      if (open) { renderNotifyPanel(); document.getElementById('main-menu')?.classList.remove('open'); }
+      panel.classList.toggle('open', open);
+      document.getElementById('notify-toggle').setAttribute('aria-expanded', String(open));
+    }
+    function markRemindersRead(ids) {
+      readReminders = [...new Set([...readReminders, ...ids])].slice(-300);
+      saveStore('stugliv-notify-read', readReminders);
+      updateNotifyBadge();
+    }
+    // Systembenachrichtigung für neue dringende Erinnerungen (solange die App geöffnet ist).
+    function pushSystemNotifications() {
+      if (!notifySettings.system || !('Notification' in window) || Notification.permission !== 'granted') return;
+      const shown = loadStore('stugliv-notify-shown', []);
+      const fresh = collectReminders().filter((reminder) => reminder.level !== 'info' && !shown.includes(reminder.id)).slice(0, 3);
+      fresh.forEach((reminder) => { try { new Notification(`Husora · ${reminder.title}`, { body: reminder.detail || '', tag: reminder.id }); } catch (error) { /* nicht unterstützt */ } });
+      if (fresh.length) saveStore('stugliv-notify-shown', [...shown, ...fresh.map((reminder) => reminder.id)].slice(-300));
+    }
+    function notifyCardHtml() {
+      const supported = 'Notification' in window;
+      const permission = supported ? Notification.permission : 'unsupported';
+      return `<section class="card settings-card" id="settings-notify"><div class="settings-card-head"><span class="settings-icon">${icon('bell')}</span><div><h2 class="card-title">Erinnerungen</h2><p class="card-caption">Was Husora dir oben über die Glocke meldet.</p></div></div>
+        <div class="settings-switches">${NOTIFY_CATEGORIES.map(([key, label]) => `<label class="settings-switch"><span>${label}</span><span class="switch"><input type="checkbox" data-notify-pref="${key}" ${notifySettings[key] !== false ? 'checked' : ''}><span class="switch-track"></span></span></label>`).join('')}</div>
+        <div class="settings-system"><div><strong>Mitteilungen auf diesem Gerät</strong><small>${!supported ? 'Dieser Browser unterstützt keine Mitteilungen.' : permission === 'denied' ? 'Mitteilungen sind in den Browser-Einstellungen blockiert.' : notifySettings.system && permission === 'granted' ? 'Aktiv – dringende Erinnerungen erscheinen als Mitteilung, solange Husora geöffnet ist.' : 'Dringende Erinnerungen zusätzlich als Mitteilung anzeigen.'}</small></div>${supported && permission !== 'denied' ? `<button type="button" class="secondary-btn" data-notify-system>${notifySettings.system && permission === 'granted' ? 'Ausschalten' : 'Einschalten'}</button>` : ''}</div>
+        <p class="settings-hint">Hinweis: Ohne geöffnete App kann der Browser keine Erinnerungen senden. Echte Push-Mitteilungen folgen mit der App-Version für iPhone und Android.</p>
+      </section>`;
+    }
+    function displayCardHtml() {
+      const sizes = [['normal', 'Normal'], ['large', 'Groß'], ['xlarge', 'Sehr groß']];
+      return `<section class="card settings-card"><div class="settings-card-head"><span class="settings-icon">${icon('text')}</span><div><h2 class="card-title">Darstellung & Sprache</h2><p class="card-caption">Schriftgröße der App und Sprache deiner Aufträge an Servicepartner.</p></div></div>
+        <span class="form-label">Schriftgröße</span>
+        <div class="segmented" role="radiogroup" aria-label="Schriftgröße">${sizes.map(([id, label]) => `<button type="button" role="radio" aria-checked="${displaySettings.textSize === id}" class="${displaySettings.textSize === id ? 'active' : ''}" data-display-size="${id}"><span style="font-size:${id === 'normal' ? 13 : id === 'large' ? 15 : 17}px">Aa</span> ${label}</button>`).join('')}</div>
+        <span class="form-label" style="margin-top:16px;display:block">Sprache für Aufträge und Anschreiben</span>
+        <div class="segmented" role="radiogroup" aria-label="Sprache für Aufträge">${ORDER_LANGUAGES.map(([id, label]) => `<button type="button" role="radio" aria-checked="${orderLang() === id}" class="${orderLang() === id ? 'active' : ''}" data-order-lang="${id}">${label}</button>`).join('')}</div>
+        <p class="settings-hint">Gilt für E-Mails und den Reparaturauftrag (PDF) an Servicepartner. Schwedische Betriebe antworten meist schneller auf Schwedisch oder Englisch. Deine eigenen Beschreibungen werden nicht übersetzt. Die App selbst bleibt auf Deutsch.</p>
+      </section>`;
+    }
+    settingsCardBuilders.splice(0, settingsCardBuilders.length, displayCardHtml, notifyCardHtml, backupCardHtml, appInfoCardHtml);
+
+    // --- Notfall & Zugang ---
+    let emergencyData = loadStore('stugliv-emergency', {});
+    const EMERGENCY_FIELDS = [
+      ['Zugang', [['keyLocation', 'Schlüssel – Ort / Übergabe', 'z. B. Schlüsselbox links neben der Tür, Ersatzschlüssel bei Nachbar Lindqvist'], ['keyCode', 'Code Schlüsselbox', '', 'secret'], ['alarm', 'Alarmanlage', 'Anbieter, Bedienung, Code-Hinweis', 'secret']]],
+      ['Haustechnik', [['water', 'Haupthahn Wasser', 'z. B. Kriechkeller, Klappe unter der Treppe'], ['power', 'Sicherungskasten / Hauptschalter', 'z. B. Flur hinter der Garderobe'], ['heating', 'Heizung / Notabschaltung', 'Wärmepumpe, Notschalter, Mindesttemperatur'], ['gridOperator', 'Stromnetzbetreiber (Störung)', 'z. B. Ellevio, Vattenfall Eldistribution, E.ON – mit Störungsnummer'], ['wifi', 'WLAN (Name / Passwort)', '', 'secret']]],
+      ['Versicherung', [['insurer', 'Versicherung', 'z. B. Länsförsäkringar, Folksam, If'], ['policyNo', 'Policennummer', ''], ['claimsPhone', 'Schadenhotline', '']]]
+    ];
+    const SWEDISH_EMERGENCY_NUMBERS = [['112', 'Notruf – Feuer, Rettung, Polizei (akut)'], ['114 14', 'Polizei – nicht dringend'], ['1177', 'Vårdguiden – medizinische Beratung'], ['113 13', 'Informationsnummer bei Krisen und Großereignissen'], ['010-456 67 00', 'Giftinformation (nicht akut)']];
+    const emergencyFor = (propertyId) => ({ contacts: [], ...(emergencyData[propertyId] || {}) });
+    let emergencyReveal = false;
+    function emergencyPage() {
+      const property = sectionProperty();
+      const data = emergencyFor(property.id);
+      const filled = EMERGENCY_FIELDS.flatMap(([, fields]) => fields).filter(([key]) => data[key]).length;
+      return `<div class="welcome"><div><p class="eyebrow">Mein Ferienhaus · ${escapeHtml(property.name)}</p><h1>Notfall & Zugang</h1><p class="subtitle">Alles, was du, Gäste oder Servicepartner im Ernstfall schnell finden müssen.</p></div></div>
+        ${sectionPropertySelect()}
+        <div class="emergency-numbers">${SWEDISH_EMERGENCY_NUMBERS.map(([number, label]) => `<a href="tel:${number.replace(/[^0-9+]/g, '')}" class="emergency-number ${number === '112' ? 'main' : ''}"><strong>${number}</strong><span>${label}</span></a>`).join('')}</div>
+        <form class="card settings-card emergency-form" id="emergency-form" autocomplete="off">
+          <div class="settings-card-head"><span class="settings-icon">${icon('key')}</span><div><h2 class="card-title">Angaben zum Haus</h2><p class="card-caption">${filled} von ${EMERGENCY_FIELDS.flatMap(([, fields]) => fields).length} Angaben eingetragen · Codes und Passwörter werden unverschlüsselt auf diesem Gerät gespeichert.</p></div><button type="button" class="small-action" data-emergency-reveal>${emergencyReveal ? 'Codes verbergen' : 'Codes zeigen'}</button></div>
+          ${EMERGENCY_FIELDS.map(([group, fields]) => `<fieldset class="emergency-group"><legend>${group}</legend><div class="profile-grid">${fields.map(([key, label, placeholder, kind]) => `<label class="${kind === 'secret' ? '' : key === 'keyLocation' || key === 'heating' || key === 'gridOperator' ? 'full' : ''}"><span class="form-label">${label}</span><input class="form-control" name="${key}" maxlength="200" ${kind === 'secret' && !emergencyReveal ? 'type="password"' : 'type="text"'} value="${escapeHtml(data[key] || '')}" placeholder="${escapeHtml(placeholder || '')}"></label>`).join('')}</div></fieldset>`).join('')}
+          <fieldset class="emergency-group"><legend>Notfallkontakte vor Ort</legend>
+            <div class="emergency-contacts">${data.contacts.length ? data.contacts.map((contact) => `<div class="emergency-contact"><span class="settings-icon small">${icon('phone')}</span><div><strong>${escapeHtml(contact.name)}</strong><small>${escapeHtml(contact.role || 'Kontakt')}</small></div>${contact.phone ? `<a class="small-action" href="tel:${escapeHtml(contact.phone.replace(/[^0-9+]/g, ''))}">${escapeHtml(contact.phone)}</a>` : ''}<button type="button" class="small-action danger" data-emergency-contact-delete="${escapeHtml(contact.id)}" aria-label="${escapeHtml(contact.name)} entfernen">Entfernen</button></div>`).join('') : '<p class="settings-hint" style="margin:0 0 8px">Noch keine Kontakte – z. B. Nachbar, Hausmeister oder dein Servicepartner für Notfälle.</p>'}</div>
+            <div class="emergency-contact-new"><input class="form-control" id="emergency-contact-name" maxlength="80" placeholder="Name" aria-label="Name des Kontakts"><input class="form-control" id="emergency-contact-role" maxlength="60" placeholder="Rolle, z. B. Nachbar" aria-label="Rolle"><input class="form-control" id="emergency-contact-phone" type="tel" maxlength="30" placeholder="Telefon" aria-label="Telefon"><button type="button" class="secondary-btn" data-emergency-contact-add>${icon('plus')} Hinzufügen</button></div>
+          </fieldset>
+          <label class="full"><span class="form-label">Weitere Hinweise</span><textarea class="form-control textarea" name="notes" maxlength="1000" placeholder="z. B. Wasser im Winter abgestellt, Brennholz im Schuppen, Mülltonnen an der Straße">${escapeHtml(data.notes || '')}</textarea></label>
+          <div class="settings-actions"><button type="submit" class="primary-btn">Speichern</button><button type="button" class="secondary-btn" data-emergency-share>${icon('document')} Notfallblatt teilen</button></div>
+        </form>`;
+    }
+    function emergencySheetText(property, withSecrets) {
+      const data = emergencyFor(property.id);
+      const lines = [`Notfall & Zugang – ${property.name}`, property.address || '', '', 'Notruf Schweden: 112 · Polizei nicht dringend: 114 14 · Vårdguiden: 1177', ''];
+      EMERGENCY_FIELDS.forEach(([group, fields]) => {
+        const rows = fields.filter(([key, , , kind]) => data[key] && (withSecrets || kind !== 'secret')).map(([key, label]) => `${label}: ${data[key]}`);
+        if (rows.length) lines.push(group.toUpperCase(), ...rows, '');
+      });
+      if (data.contacts.length) lines.push('KONTAKTE', ...data.contacts.map((contact) => `${contact.name}${contact.role ? ` (${contact.role})` : ''}: ${contact.phone || '–'}`), '');
+      if (data.notes) lines.push('HINWEISE', data.notes);
+      return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+    }
+    async function shareEmergencySheet() {
+      const property = sectionProperty();
+      const withSecrets = window.confirm('Sollen Codes und Passwörter (Schlüsselbox, Alarm, WLAN) mit geteilt werden?\n\nOK = mit Codes · Abbrechen = ohne Codes');
+      const text = emergencySheetText(property, withSecrets);
+      try {
+        if (navigator.share) await navigator.share({ title: `Notfall & Zugang – ${property.name}`, text });
+        else { await navigator.clipboard.writeText(text); showToast('Notfallblatt in die Zwischenablage kopiert.'); }
+      } catch (error) { if (error?.name !== 'AbortError') showToast('Teilen nicht möglich.'); }
+    }
+
+    // --- Verträge & Fristen ---
+    let contractsData = loadStore('stugliv-contracts', {});
+    const CONTRACT_TYPES = [['insurance', 'Versicherung'], ['electricity', 'Strom'], ['grid', 'Stromnetz'], ['internet', 'Internet & Telefon'], ['water', 'Wasser & Abwasser'], ['waste', 'Müllabfuhr'], ['chimney', 'Schornsteinfeger / Brandschutz'], ['snow', 'Schneeräumung'], ['alarm', 'Alarmanlage'], ['other', 'Sonstiges']];
+    const contractTypeLabel = (type) => CONTRACT_TYPES.find(([id]) => id === type)?.[1] || 'Vertrag';
+    const contractsFor = (propertyId) => (Array.isArray(contractsData[propertyId]) ? contractsData[propertyId] : []);
+    const addMonths = (key, months) => { const date = toDate(key); const day = date.getDate(); date.setDate(1); date.setMonth(date.getMonth() + months); date.setDate(Math.min(day, new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate())); return localDateKey(date); };
+    function contractState(contract) {
+      const today = localDateKey(new Date());
+      if (!contract.endDate) return { level: 'none', label: 'Ohne Enddatum', detail: 'Laufzeit unbefristet oder nicht eingetragen', deadline: '' };
+      let end = contract.endDate;
+      const renew = Number(contract.renewMonths) || 12;
+      if (contract.autoRenew) { let guard = 0; while (end < today && guard < 200) { end = addMonths(end, renew); guard += 1; } }
+      const notice = Math.max(0, Number(contract.noticeMonths) || 0);
+      const deadline = notice ? addMonths(end, -notice) : end;
+      const days = Math.round((toDate(deadline) - toDate(today)) / 86400000);
+      if (end < today) return { level: 'expired', label: 'Abgelaufen', detail: `Ende am ${fmtDate(end)}`, deadline, end };
+      if (notice && deadline < today) return { level: 'locked', label: `Läuft bis ${fmtDate(end)}`, detail: `Kündigungsfrist verstrichen${contract.autoRenew ? ` – verlängert sich danach um ${renew} Monate` : ''}`, deadline, end };
+      if (days <= 30) return { level: 'urgent', label: notice ? `Kündigen bis ${fmtDate(deadline)}` : `Endet am ${fmtDate(end)}`, detail: `noch ${days} ${days === 1 ? 'Tag' : 'Tage'}${contract.autoRenew ? ' · sonst automatische Verlängerung' : ''}`, deadline, end };
+      if (days <= 60) return { level: 'soon', label: notice ? `Kündigen bis ${fmtDate(deadline)}` : `Endet am ${fmtDate(end)}`, detail: `noch ${days} Tage${contract.autoRenew ? ' · sonst automatische Verlängerung' : ''}`, deadline, end };
+      return { level: 'ok', label: `Läuft bis ${fmtDate(end)}`, detail: notice ? `Kündigung bis ${fmtDate(deadline)} möglich` : 'Keine Kündigungsfrist eingetragen', deadline, end };
+    }
+    let contractEditId = null;
+    function contractFormHtml(contract) {
+      const c = contract || { type: 'insurance', autoRenew: true, renewMonths: 12, noticeMonths: 1 };
+      return `<form class="card settings-card contract-form" id="contract-form"><h2 class="card-title">${contract ? 'Vertrag bearbeiten' : 'Vertrag hinzufügen'}</h2>
+        <div class="profile-grid" style="margin-top:12px">
+          <label><span class="form-label">Art</span><select class="form-control" name="type">${CONTRACT_TYPES.map(([id, label]) => `<option value="${id}" ${c.type === id ? 'selected' : ''}>${label}</option>`).join('')}</select></label>
+          <label><span class="form-label">Anbieter</span><input class="form-control" name="provider" required maxlength="80" value="${escapeHtml(c.provider || '')}" placeholder="z. B. Länsförsäkringar"></label>
+          <label><span class="form-label">Vertrags- / Kundennummer</span><input class="form-control" name="number" maxlength="60" value="${escapeHtml(c.number || '')}"></label>
+          <label><span class="form-label">Kosten pro Jahr (kr)</span><input class="form-control" name="costYear" type="number" min="0" step="1" inputmode="numeric" value="${escapeHtml(c.costYear ?? '')}"></label>
+          <label><span class="form-label">Laufzeit bis / nächster Termin</span><input class="form-control" name="endDate" type="date" value="${escapeHtml(c.endDate || '')}"></label>
+          <label><span class="form-label">Kündigungsfrist (Monate)</span><input class="form-control" name="noticeMonths" type="number" min="0" max="36" step="1" inputmode="numeric" value="${escapeHtml(c.noticeMonths ?? '')}"></label>
+          <label class="settings-switch full"><span>Verlängert sich automatisch</span><span class="switch"><input type="checkbox" name="autoRenew" ${c.autoRenew ? 'checked' : ''}><span class="switch-track"></span></span></label>
+          <label><span class="form-label">Verlängerung um (Monate)</span><input class="form-control" name="renewMonths" type="number" min="1" max="60" step="1" inputmode="numeric" value="${escapeHtml(c.renewMonths ?? 12)}"></label>
+          <label class="full"><span class="form-label">Notiz</span><input class="form-control" name="notes" maxlength="200" value="${escapeHtml(c.notes || '')}" placeholder="z. B. Selbstbeteiligung 1 500 kr, Ansprechpartner"></label>
+        </div>
+        <div class="settings-actions"><button type="submit" class="primary-btn">Speichern</button><button type="button" class="secondary-btn" data-contract-cancel>Abbrechen</button>${contract ? `<button type="button" class="secondary-btn danger" data-contract-delete="${escapeHtml(contract.id)}">Löschen</button>` : ''}</div>
+      </form>`;
+    }
+    function contractsPage() {
+      const property = sectionProperty();
+      const list = contractsFor(property.id).map((contract) => ({ contract, state: contractState(contract) })).sort((a, b) => (a.state.deadline || '9999').localeCompare(b.state.deadline || '9999'));
+      const yearly = list.reduce((sum, { contract }) => sum + (Number(contract.costYear) || 0), 0);
+      const next = list.find(({ state }) => ['urgent', 'soon', 'ok'].includes(state.level));
+      const editing = contractEditId === 'new' ? null : list.find(({ contract }) => contract.id === contractEditId)?.contract;
+      return `<div class="welcome"><div><p class="eyebrow">Mein Ferienhaus · ${escapeHtml(property.name)}</p><h1>Verträge & Fristen</h1><p class="subtitle">Versicherung, Strom, Müll, Schornsteinfeger und Co. – mit Erinnerung vor jeder Kündigungsfrist.</p></div><button type="button" class="primary-btn" data-contract-new>${icon('plus')} Vertrag hinzufügen</button></div>
+        ${sectionPropertySelect()}
+        <div class="section-kpis"><div><strong>${list.length}</strong><span>Verträge</span></div><div><strong>${escapeHtml(formatCost(yearly))}</strong><span>Kosten pro Jahr</span></div><div><strong>${next ? escapeHtml(fmtDate(next.state.deadline)) : '–'}</strong><span>${next ? `nächste Frist · ${escapeHtml(contractTypeLabel(next.contract.type))}` : 'keine Frist'}</span></div></div>
+        ${contractEditId ? contractFormHtml(editing) : ''}
+        <div class="contract-list">${list.length ? list.map(({ contract, state }) => `<button type="button" class="contract-card lvl-${state.level}" data-contract-edit="${escapeHtml(contract.id)}"><span class="settings-icon">${icon('contract')}</span><span class="contract-main"><strong>${escapeHtml(contractTypeLabel(contract.type))} · ${escapeHtml(contract.provider || '')}</strong><small>${[contract.number ? `Nr. ${contract.number}` : '', contract.costYear ? `${formatCost(Number(contract.costYear))} / Jahr` : '', contract.notes || ''].filter(Boolean).map(escapeHtml).join(' · ') || 'Keine weiteren Angaben'}</small></span><span class="contract-state"><b>${escapeHtml(state.label)}</b><small>${escapeHtml(state.detail)}</small></span></button>`).join('') : `<div class="empty-state">${icon('contract')}<strong>Noch keine Verträge</strong><span>Trage deine Versicherung, den Stromvertrag oder den Termin des Schornsteinfegers ein – Husora erinnert dich rechtzeitig vor jeder Frist.</span></div>`}</div>`;
+    }
+
+    // --- Zählerstände ---
+    let metersData = loadStore('stugliv-meters', {});
+    const METER_TYPES = [['electricity', 'Strom', 'kWh'], ['water', 'Wasser', 'm³'], ['heatpump', 'Wärmepumpe', 'kWh'], ['oil', 'Heizöl', 'l'], ['pellets', 'Pellets', 'kg'], ['other', 'Sonstiger Zähler', '']];
+    const meterTypeInfo = (type) => METER_TYPES.find(([id]) => id === type) || METER_TYPES[METER_TYPES.length - 1];
+    const metersFor = (propertyId) => (Array.isArray(metersData[propertyId]) ? metersData[propertyId] : []);
+    const meterLabel = (meter) => meter.label || meterTypeInfo(meter.type)[1];
+    const meterUnit = (meter) => meter.unit || meterTypeInfo(meter.type)[2];
+    const fmtNumber = (value, digits = 1) => new Intl.NumberFormat('de-DE', { maximumFractionDigits: digits }).format(value);
+    function meterPeriods(meter) {
+      const readings = meter.readings.slice().sort((a, b) => a.date.localeCompare(b.date));
+      const periods = [];
+      for (let index = 1; index < readings.length; index += 1) {
+        const days = Math.max(1, Math.round((toDate(readings[index].date) - toDate(readings[index - 1].date)) / 86400000));
+        const used = Number(readings[index].value) - Number(readings[index - 1].value);
+        periods.push({ from: readings[index - 1].date, to: readings[index].date, used, days, perDay: used / days });
+      }
+      return { readings, periods };
+    }
+    function meterCardHtml(meter) {
+      const { readings, periods } = meterPeriods(meter);
+      const last = readings[readings.length - 1];
+      const lastPeriod = periods[periods.length - 1];
+      const unit = meterUnit(meter);
+      const shown = periods.slice(-6);
+      const peak = Math.max(...shown.map((period) => Math.max(0, period.perDay)), 0.0001);
+      return `<article class="card meter-card"><div class="meter-head"><span class="settings-icon">${icon('meter')}</span><div><strong>${escapeHtml(meterLabel(meter))}</strong><small>${meter.number ? `Zähler-Nr. ${escapeHtml(meter.number)} · ` : ''}${unit ? escapeHtml(unit) : 'ohne Einheit'}</small></div><button type="button" class="small-action danger" data-meter-delete="${escapeHtml(meter.id)}">Entfernen</button></div>
+        <div class="meter-figures"><div><span>Letzter Stand</span><strong>${last ? `${escapeHtml(fmtNumber(Number(last.value), 2))} ${escapeHtml(unit)}` : '–'}</strong><small>${last ? escapeHtml(fmtDate(last.date)) : 'noch nicht abgelesen'}</small></div><div><span>Verbrauch zuletzt</span><strong>${lastPeriod ? `${escapeHtml(fmtNumber(lastPeriod.used))} ${escapeHtml(unit)}` : '–'}</strong><small>${lastPeriod ? `in ${lastPeriod.days} Tagen · Ø ${escapeHtml(fmtNumber(lastPeriod.perDay, 2))} ${escapeHtml(unit)}/Tag` : 'ab der zweiten Ablesung'}</small></div></div>
+        ${shown.length ? `<div class="meter-chart" role="img" aria-label="Verbrauch pro Tag der letzten Ablesezeiträume">${shown.map((period) => `<div class="meter-bar ${period.used < 0 ? 'negative' : ''}" title="${escapeHtml(`${fmtDate(period.from)} – ${fmtDate(period.to)}: ${fmtNumber(period.used)} ${unit}`)}"><i style="height:${Math.max(4, Math.round(Math.max(0, period.perDay) / peak * 100))}%"></i><small>${escapeHtml(fmtDate(period.to).split(' ')[0])}.${escapeHtml(String(toDate(period.to).getMonth() + 1))}.</small></div>`).join('')}</div><p class="meter-chart-caption">Ø Verbrauch pro Tag je Ablesezeitraum</p>` : ''}
+        <div class="meter-entry"><input class="form-control" type="date" data-meter-date="${escapeHtml(meter.id)}" value="${localDateKey(new Date())}" max="${localDateKey(new Date())}" aria-label="Ablesedatum"><input class="form-control" type="number" step="any" min="0" inputmode="decimal" data-meter-value="${escapeHtml(meter.id)}" placeholder="Neuer Stand${unit ? ` (${escapeHtml(unit)})` : ''}" aria-label="Neuer Zählerstand"><button type="button" class="primary-btn" data-meter-add="${escapeHtml(meter.id)}">Eintragen</button></div>
+        ${readings.length ? `<details class="meter-history"><summary>Alle Ablesungen (${readings.length})</summary><ul>${readings.slice().reverse().map((reading) => `<li><span>${escapeHtml(fmtDateFull(reading.date))}</span><strong>${escapeHtml(fmtNumber(Number(reading.value), 2))} ${escapeHtml(unit)}</strong><button type="button" class="small-action" data-meter-reading-delete="${escapeHtml(meter.id)}" data-reading="${escapeHtml(reading.id)}" aria-label="Ablesung löschen">Löschen</button></li>`).join('')}</ul></details>` : ''}
+      </article>`;
+    }
+    function metersPage() {
+      const property = sectionProperty();
+      const meters = metersFor(property.id);
+      return `<div class="welcome"><div><p class="eyebrow">Mein Ferienhaus · ${escapeHtml(property.name)}</p><h1>Zählerstände</h1><p class="subtitle">Strom, Wasser und Heizung ablesen – ein ungewöhnlich hoher Verbrauch bei leerem Haus fällt so sofort auf.</p></div></div>
+        ${sectionPropertySelect()}
+        <div class="meter-grid">${meters.map(meterCardHtml).join('')}</div>
+        <section class="card settings-card meter-new"><h2 class="card-title">Zähler hinzufügen</h2><div class="meter-new-row"><select class="form-control" id="meter-new-type" aria-label="Zählerart">${METER_TYPES.map(([id, label, unit]) => `<option value="${id}">${label}${unit ? ` (${unit})` : ''}</option>`).join('')}</select><input class="form-control" id="meter-new-number" maxlength="40" placeholder="Zähler-Nr. (optional)" aria-label="Zählernummer"><input class="form-control" id="meter-new-label" maxlength="40" placeholder="Bezeichnung (optional)" aria-label="Bezeichnung"><button type="button" class="secondary-btn" data-meter-new>${icon('plus')} Hinzufügen</button></div>${meters.length ? '' : '<p class="settings-hint">Tipp: Lies die Zähler bei jedem Besuch oder einmal im Monat ab – Husora erinnert dich daran.</p>'}</section>`;
+    }
+    function addMeterReading(meterId) {
+      const property = sectionProperty();
+      const meters = metersFor(property.id);
+      const meter = meters.find((item) => item.id === meterId);
+      const valueInput = document.querySelector(`[data-meter-value="${CSS.escape(meterId)}"]`);
+      const date = document.querySelector(`[data-meter-date="${CSS.escape(meterId)}"]`)?.value || localDateKey(new Date());
+      const value = Number(String(valueInput?.value || '').replace(',', '.'));
+      if (!meter || !valueInput?.value || !Number.isFinite(value) || value < 0) { showToast('Bitte einen gültigen Zählerstand eingeben.'); valueInput?.focus(); return; }
+      if (date > localDateKey(new Date())) { showToast('Das Ablesedatum darf nicht in der Zukunft liegen.'); return; }
+      const previous = meter.readings.filter((reading) => reading.date <= date).sort((a, b) => a.date.localeCompare(b.date)).pop();
+      if (previous && value < Number(previous.value) && !window.confirm(`Der neue Stand (${fmtNumber(value, 2)}) ist niedriger als am ${fmtDate(previous.date)} (${fmtNumber(Number(previous.value), 2)}). Wurde der Zähler gewechselt? Trotzdem speichern?`)) return;
+      meter.readings = [...meter.readings.filter((reading) => reading.date !== date), { id: newId('r'), date, value }];
+      metersData = { ...metersData, [property.id]: meters };
+      if (saveStore('stugliv-meters', metersData)) { render(); showToast(`Zählerstand ${meterLabel(meter)} gespeichert.`); }
+    }
+
+    // --- Hilfe & Support ---
+    const FAQ = [
+      ['Wo werden meine Daten gespeichert?', 'Nur auf diesem Gerät im Speicher des Browsers bzw. der App. Es gibt (noch) kein Benutzerkonto und keine Cloud. Sichere deine Daten deshalb regelmäßig unter Einstellungen → Datensicherung als Datei.'],
+      ['Wie übertrage ich meine Daten auf ein anderes Gerät?', 'Unter Einstellungen → „Daten sichern (Datei)“ eine Sicherung erstellen, die Datei z. B. per AirDrop, E-Mail oder Cloud-Speicher auf das neue Gerät bringen und dort unter Einstellungen → „Sicherung wiederherstellen“ einlesen.'],
+      ['Wie beauftrage ich eine Hauskontrolle?', 'Unter Hauskontrolle in Schritt 1 die Prüfpositionen festlegen, in Schritt 2 „Service beauftragen“ wählen. Husora erstellt den Kontrollplan als PDF und öffnet eine vorbereitete E-Mail an deinen Servicepartner. Den ausgefüllten Plan liest du danach in Schritt 3 wieder ein.'],
+      ['Was passiert mit Mängeln aus der Kontrolle?', 'Auffällige Positionen werden automatisch als Mangel unter „Reparatur & Instandhaltung“ angelegt. Dort beauftragst du einen Handwerker per E-Mail mit PDF-Auftrag. Sind alle Mängel behoben, kannst du das Prüfprotokoll im Archiv ablegen.'],
+      ['Wie finde ich passende Servicepartner?', 'Unter „Servicepartner finden“ siehst du Betriebe in der Nähe deines Hauses, gefiltert nach Hausservice, Hauskontrolle und Sanierung. Mit „Zuordnen“ übernimmst du sie für dein Haus. Die Angaben stammen aus öffentlichen Quellen – bitte vor der Beauftragung prüfen.'],
+      ['Warum bekomme ich keine Erinnerungen, wenn die App geschlossen ist?', 'In der Web-Version kann Husora nur Erinnerungen zeigen, solange die App geöffnet ist. Echte Push-Mitteilungen kommen mit der App für iPhone und Android.'],
+      ['In welcher Sprache gehen Aufträge an Servicepartner?', 'Das stellst du unter Einstellungen → Darstellung & Sprache ein: Deutsch, Schwedisch oder Englisch. Deine eigenen Beschreibungen werden nicht automatisch übersetzt.'],
+      ['Was kostet Husora Pro?', 'Die kostenlose Version umfasst ein Ferienhaus. Husora Pro schaltet bis zu 50 Ferienhäuser und das 3D-Hausmodell frei – einmalig, ohne Abo. Details unter „Versionen“.']
+    ];
+    function helpPage() {
+      return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Hilfe & Support</h1><p class="subtitle">Antworten auf häufige Fragen, Erste Schritte und Kontakt.</p></div></div>
+        <div class="help-actions">
+          <button type="button" class="help-action" data-onboarding-start>${icon('home')}<span><strong>Ersteinrichtung starten</strong><small>Haus, Nutzung und erste Schritte einrichten</small></span></button>
+          <button type="button" class="help-action" data-support-mail="question">${icon('help')}<span><strong>Frage stellen</strong><small>E-Mail an den Husora-Support</small></span></button>
+          <button type="button" class="help-action" data-support-mail="bug">${icon('alert')}<span><strong>Fehler melden</strong><small>mit Geräteinfos für eine schnelle Lösung</small></span></button>
+          <button type="button" class="help-action" data-support-mail="feedback">${icon('note')}<span><strong>Idee oder Feedback</strong><small>Was sollen wir verbessern?</small></span></button>
+        </div>
+        <section class="card faq-card"><h2 class="card-title">Häufige Fragen</h2>${FAQ.map(([question, answer]) => `<details class="faq-item"><summary>${escapeHtml(question)}</summary><p>${escapeHtml(answer)}</p></details>`).join('')}</section>`;
+    }
+    function openSupportMail(kind) {
+      const to = LEGAL_INFO.supportEmail || LEGAL_INFO.email;
+      if (!to) { showToast('Die Support-Adresse ist noch nicht hinterlegt (LEGAL_INFO.supportEmail).'); return; }
+      const subject = { question: 'Frage zu Husora', bug: 'Fehlermeldung Husora', feedback: 'Feedback zu Husora' }[kind] || 'Husora';
+      const info = `\n\n---\nHusora ${APP_VERSION} (${APP_BUILD}) · ${isPro() ? 'Pro' : 'Kostenlos'} · ${properties.length} Ferienhaus/-häuser\n${navigator.userAgent}\nBildschirm ${window.innerWidth}×${window.innerHeight}`;
+      const body = kind === 'bug' ? `Was ist passiert?\n\n\nWas hast du davor gemacht?\n\n\nWas hättest du erwartet?\n${info}` : `Hallo Husora-Team,\n\n${info}`;
+      window.location.href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    }
+
+    // --- Ersteinrichtung ---
+    let onboardingState = loadStore('stugliv-onboarding', null);
+    let onboardingStep = 0;
+    const onboardingDraft = {};
+    const REGION_LABELS = Object.keys(REGION_CENTERS).map((key) => key.replace(/(^|\s)\S/g, (letter) => letter.toLocaleUpperCase('sv')));
+    function onboardingNeeded() {
+      if (onboardingState) return false;
+      let stored = false;
+      try { stored = Boolean(localStorage.getItem('stugliv-properties')); } catch (error) { stored = false; }
+      if (stored) { onboardingState = { status: 'done', at: new Date().toISOString(), existing: true }; saveStore('stugliv-onboarding', onboardingState); return false; }
+      return true;
+    }
+    function openOnboarding(step = 0) {
+      const property = properties[0] || {};
+      const demoHouse = property.name === 'Stuga Björkbacken' && property.address === 'Sunne, Värmland, Schweden';
+      Object.assign(onboardingDraft, { name: profileData.name === 'Max Mustermann' ? '' : profileData.name, email: profileData.email || '', house: demoHouse ? '' : property.name || '', address: demoHouse ? '' : property.address || '', region: demoHouse ? '' : property.region || '', usage: profileData.usage === 'self' ? 'self' : 'rental' });
+      onboardingStep = step;
+      renderOnboarding();
+      document.getElementById('onboarding-modal').classList.add('open');
+    }
+    function readOnboardingInputs() {
+      document.querySelectorAll('#onboarding-body [data-ob]').forEach((input) => { onboardingDraft[input.dataset.ob] = input.type === 'radio' ? (input.checked ? input.value : onboardingDraft[input.dataset.ob]) : input.value.trim(); });
+    }
+    function renderOnboarding() {
+      const body = document.getElementById('onboarding-body');
+      const dots = `<div class="ob-dots" aria-hidden="true">${[0, 1, 2, 3].map((index) => `<i class="${index === onboardingStep ? 'on' : index < onboardingStep ? 'done' : ''}"></i>`).join('')}</div>`;
+      const steps = [
+        () => `<div class="ob-hero">${icon('home')}</div><h2 id="onboarding-title">Willkommen bei Husora</h2><p class="ob-lead">Dein Ferienhaus in Schweden – organisiert, kontrolliert und gut betreut, auch wenn du nicht vor Ort bist.</p>
+          <ul class="ob-points"><li>${icon('inspection')}<span><strong>Hauskontrolle</strong> mit Kontrollplan für deinen Servicepartner</span></li><li>${icon('users')}<span><strong>Servicepartner</strong> in der Nähe finden und beauftragen</span></li><li>${icon('alert')}<span><strong>Mängel & Reparaturen</strong> mit fertigem Auftrag per E-Mail</span></li><li>${icon('cost')}<span><strong>Kosten, Verträge und Fristen</strong> im Blick</span></li></ul>
+          <div class="ob-actions"><button type="button" class="secondary-btn" data-ob-demo>Erst die Demo ansehen</button><button type="button" class="primary-btn" data-ob-next>Jetzt einrichten</button></div>`,
+        () => `<h2 id="onboarding-title">Wie heißt du?</h2><p class="ob-lead">Dein Name steht als Absender in Aufträgen an Servicepartner.</p>
+          <label><span class="form-label">Dein Name</span><input class="form-control" data-ob="name" maxlength="80" autocomplete="name" value="${escapeHtml(onboardingDraft.name)}" placeholder="Vor- und Nachname"></label>
+          <label style="margin-top:12px;display:block"><span class="form-label">E-Mail (optional)</span><input class="form-control" data-ob="email" type="email" maxlength="120" autocomplete="email" value="${escapeHtml(onboardingDraft.email)}" placeholder="du@beispiel.de"></label>
+          <div class="ob-actions"><button type="button" class="secondary-btn" data-ob-back>Zurück</button><button type="button" class="primary-btn" data-ob-next>Weiter</button></div>`,
+        () => `<h2 id="onboarding-title">Dein Ferienhaus</h2><p class="ob-lead">Mit Ort und Region schlägt Husora passende Servicepartner in der Nähe vor.</p>
+          <label><span class="form-label">Name des Hauses</span><input class="form-control" data-ob="house" maxlength="80" value="${escapeHtml(onboardingDraft.house)}" placeholder="z. B. Stuga am See"></label>
+          <label style="margin-top:12px;display:block"><span class="form-label">Adresse oder Ort</span><input class="form-control" data-ob="address" maxlength="160" value="${escapeHtml(onboardingDraft.address)}" placeholder="z. B. Sjövägen 4, Sunne"></label>
+          <label style="margin-top:12px;display:block"><span class="form-label">Region / Provinz</span><select class="form-control" data-ob="region"><option value="">Bitte wählen …</option>${REGION_LABELS.map((label) => `<option ${onboardingDraft.region.toLocaleLowerCase('sv') === label.toLocaleLowerCase('sv') ? 'selected' : ''}>${escapeHtml(label)}</option>`).join('')}<option value="Andere" ${onboardingDraft.region === 'Andere' ? 'selected' : ''}>Andere Region</option></select></label>
+          <span class="form-label" style="margin-top:14px;display:block">Wie nutzt du das Haus?</span>
+          <div class="ob-usage"><label class="${onboardingDraft.usage === 'self' ? 'on' : ''}"><input type="radio" name="ob-usage" data-ob="usage" value="self" ${onboardingDraft.usage === 'self' ? 'checked' : ''}><strong>Nur selbst</strong><small>Eigennutzung, keine Gäste</small></label><label class="${onboardingDraft.usage !== 'self' ? 'on' : ''}"><input type="radio" name="ob-usage" data-ob="usage" value="rental" ${onboardingDraft.usage !== 'self' ? 'checked' : ''}><strong>Auch Vermietung</strong><small>mit Buchungen und Gästewechsel</small></label></div>
+          <div class="ob-actions"><button type="button" class="secondary-btn" data-ob-back>Zurück</button><button type="button" class="primary-btn" data-ob-finish>Einrichtung abschließen</button></div>`,
+        () => `<div class="ob-hero done">${icon('check')}</div><h2 id="onboarding-title">Geschafft${onboardingDraft.name ? `, ${escapeHtml(onboardingDraft.name.split(/\s+/)[0])}` : ''}!</h2><p class="ob-lead">„${escapeHtml(onboardingDraft.house)}“ ist eingerichtet. Diese drei Schritte lohnen sich als Nächstes:</p>
+          <div class="ob-next"><button type="button" data-ob-goto="assignedProviders">${icon('users')}<span><strong>Servicepartner zuordnen</strong><small>Hausservice, Hauskontrolle und Handwerker in der Nähe</small></span>${icon('arrow')}</button><button type="button" data-ob-goto="inspections">${icon('inspection')}<span><strong>Kontrollplan anlegen</strong><small>Was bei deiner Abwesenheit geprüft wird</small></span>${icon('arrow')}</button><button type="button" data-ob-goto="emergency">${icon('key')}<span><strong>Notfall & Zugang eintragen</strong><small>Schlüssel, Haupthahn, Kontakte</small></span>${icon('arrow')}</button></div>
+          <div class="ob-actions"><button type="button" class="primary-btn" data-ob-close>Zur Übersicht</button></div>`
+      ];
+      body.innerHTML = dots + steps[onboardingStep]();
+      setTimeout(() => body.querySelector('input:not([type=radio]), select')?.focus(), 50);
+    }
+    function finishOnboarding() {
+      readOnboardingInputs();
+      if (!onboardingDraft.house) { showToast('Bitte gib deinem Ferienhaus einen Namen.'); document.querySelector('[data-ob="house"]')?.focus(); return; }
+      const wasDemo = !onboardingState || onboardingState.status === 'demo';
+      const name = onboardingDraft.name || profileData.name;
+      profileData = { ...profileData, name, username: (name.split(/\s+/)[0] || profileData.username), email: onboardingDraft.email, usage: onboardingDraft.usage === 'self' ? 'self' : 'rental' };
+      try { localStorage.setItem('stugliv-profile', JSON.stringify(profileData)); } catch (error) { /* siehe Toast beim Speichern */ }
+      const region = onboardingDraft.region === 'Andere' ? '' : onboardingDraft.region;
+      const first = properties[0];
+      if (first) {
+        const oldName = first.name;
+        Object.assign(first, { name: onboardingDraft.house, address: onboardingDraft.address, region });
+        if (wasDemo) { first.beds = ''; first.tasks = ''; }
+        tasks.forEach((task) => { if (task.propertyId === first.id || task.property === oldName) task.property = first.name; });
+      }
+      if (wasDemo) tasks = tasks.filter((task) => !initialTasks.some((demo) => demo.id === task.id && demo.title === task.title));
+      // Ohne Vermietung fallen Reinigung und Gästewechsel als Planwert weg.
+      if (wasDemo && first && profileData.usage === 'self') {
+        annualCosts = { ...annualCosts, [first.id]: { ...(initialCosts[first.id] || {}), ...(annualCosts[first.id] || {}), cleaning: 0 } };
+        try { localStorage.setItem('stugliv-costs', JSON.stringify(annualCosts)); } catch (error) { /* optional */ }
+      }
+      saveProperties();
+      persistTasks();
+      onboardingState = { status: 'done', at: new Date().toISOString() };
+      saveStore('stugliv-onboarding', onboardingState);
+      onboardingStep = 3;
+      renderOnboarding();
+      render();
+    }
+    const closeOnboarding = () => document.getElementById('onboarding-modal').classList.remove('open');
+    function demoBannerHtml() {
+      return onboardingState?.status === 'demo' ? `<div class="demo-banner">${icon('home')}<span><strong>Du siehst Beispieldaten.</strong> „${escapeHtml(properties[0]?.name || '')}“ ist ein Demo-Haus zum Ausprobieren.</span><button type="button" class="primary-btn" data-onboarding-start="1">Eigenes Haus einrichten</button></div>` : '';
+    }
+
+    // --- Startseite: zusätzliche Kacheln und Bereiche ---
+    function extraDashboardTiles() {
+      const property = properties[0];
+      const contractsAll = properties.flatMap((item) => contractsFor(item.id).map((contract) => contractState(contract)));
+      const dueContracts = contractsAll.filter((state) => state.level === 'urgent' || state.level === 'soon').length;
+      const meterCount = properties.reduce((sum, item) => sum + metersFor(item.id).length, 0);
+      const emergencyFilled = property ? EMERGENCY_FIELDS.flatMap(([, fields]) => fields).filter(([key]) => emergencyFor(property.id)[key]).length : 0;
+      const tile = (page, title, iconName, value, word, detail, art) => `<button class="stat" data-page="${page}"><img class="stat-art" src="assets/${art}" alt="" aria-hidden="true"><div class="stat-head"><span>${title}</span><span class="stat-icon">${icon(iconName)}</span></div><div class="stat-value">${value} <span class="stat-open-word">${word}</span></div>${detail ? `<div class="stat-note">${detail}</div>` : ''}</button>`;
+      return {
+        emergency: tile('emergency', 'Notfall & Zugang', 'key', emergencyFilled, 'Angaben', emergencyFilled ? 'Schlüssel, Technik, Kontakte' : 'Jetzt eintragen', 'ferienhaus.jpg'),
+        contracts: tile('contracts', 'Verträge & Fristen', 'contract', contractsAll.length, 'Verträge', dueContracts ? `<span class="stat-alert">${dueContracts} Frist${dueContracts === 1 ? '' : 'en'} bald</span>` : 'keine Frist in den nächsten 60 Tagen', 'dokumente.jpg'),
+        meters: tile('meters', 'Zählerstände', 'meter', meterCount, 'Zähler', meterCount ? 'Ablesung eintragen' : 'Zähler anlegen', 'kosten.jpg'),
+        settings: tile('settings', 'Einstellungen', 'gear', `${storageUsage().percent} %`, 'Speicher', 'Datensicherung & Darstellung', 'meine-haeuser.jpg'),
+        help: tile('help', 'Hilfe & Support', 'help', FAQ.length, 'Antworten', 'FAQ, Kontakt, Fehler melden', 'schweden-landschaft.jpg')
+      };
+    }
+    DASHBOARD_TILES.push(['emergency', 'Notfall & Zugang'], ['contracts', 'Verträge & Fristen'], ['meters', 'Zählerstände'], ['settings', 'Einstellungen'], ['help', 'Hilfe & Support']);
+    const dashboardExtrasHtml = () => demoBannerHtml();
+
+    // --- Ereignisse ---
+    document.addEventListener('click', (event) => {
+      const target = event.target;
+      if (target.closest('#notify-toggle')) { toggleNotifyPanel(); return; }
+      const notifyOpen = target.closest('[data-notify-open]');
+      if (notifyOpen) {
+        const reminder = collectReminders().find((item) => item.id === notifyOpen.dataset.notifyOpen);
+        markRemindersRead([notifyOpen.dataset.notifyOpen]);
+        toggleNotifyPanel(false);
+        if (reminder) { if (reminder.propertyId) { sectionPropertyId = reminder.propertyId; inspectionProperty = reminder.propertyId; } currentPage = reminder.page || 'dashboard'; render(); window.scrollTo(0, 0); }
+        return;
+      }
+      if (target.closest('[data-notify-read-all]')) { markRemindersRead(collectReminders().map((item) => item.id)); renderNotifyPanel(); return; }
+      if (target.closest('.notify-settings')) toggleNotifyPanel(false);
+      else if (!target.closest('#notify-panel')) document.getElementById('notify-panel')?.classList.remove('open');
+      const sizeButton = target.closest('[data-display-size]');
+      if (sizeButton) { displaySettings = { ...displaySettings, textSize: sizeButton.dataset.displaySize }; saveStore('stugliv-display', displaySettings); applyDisplaySettings(); render(); return; }
+      const langButton = target.closest('[data-order-lang]');
+      if (langButton) { displaySettings = { ...displaySettings, orderLanguage: langButton.dataset.orderLang }; saveStore('stugliv-display', displaySettings); render(); showToast(`Aufträge an Servicepartner werden jetzt auf ${ORDER_LANGUAGES.find(([id]) => id === orderLang())[1]} erstellt.`); return; }
+      if (target.closest('[data-notify-system]')) {
+        if (notifySettings.system && Notification.permission === 'granted') { notifySettings = { ...notifySettings, system: false }; saveStore('stugliv-notify', notifySettings); render(); return; }
+        Notification.requestPermission().then((permission) => { notifySettings = { ...notifySettings, system: permission === 'granted' }; saveStore('stugliv-notify', notifySettings); render(); if (permission === 'granted') { showToast('Mitteilungen sind eingeschaltet.'); pushSystemNotifications(); } });
+        return;
+      }
+      if (target.closest('[data-emergency-reveal]')) { emergencyReveal = !emergencyReveal; saveEmergencyForm(false); render(); return; }
+      if (target.closest('[data-emergency-share]')) { saveEmergencyForm(false); shareEmergencySheet(); return; }
+      if (target.closest('[data-emergency-contact-add]')) {
+        const name = document.getElementById('emergency-contact-name').value.trim();
+        const phone = document.getElementById('emergency-contact-phone').value.trim();
+        if (!name) { showToast('Bitte einen Namen eintragen.'); document.getElementById('emergency-contact-name').focus(); return; }
+        saveEmergencyForm(false);
+        const property = sectionProperty();
+        const data = emergencyFor(property.id);
+        data.contacts = [...data.contacts, { id: newId('c'), name, role: document.getElementById('emergency-contact-role').value.trim(), phone }];
+        emergencyData = { ...emergencyData, [property.id]: data };
+        if (saveStore('stugliv-emergency', emergencyData)) render();
+        return;
+      }
+      const contactDelete = target.closest('[data-emergency-contact-delete]');
+      if (contactDelete) {
+        saveEmergencyForm(false);
+        const property = sectionProperty();
+        const data = emergencyFor(property.id);
+        data.contacts = data.contacts.filter((contact) => contact.id !== contactDelete.dataset.emergencyContactDelete);
+        emergencyData = { ...emergencyData, [property.id]: data };
+        if (saveStore('stugliv-emergency', emergencyData)) render();
+        return;
+      }
+      if (target.closest('[data-contract-new]')) { contractEditId = 'new'; render(); document.getElementById('contract-form')?.scrollIntoView({ block: 'start', behavior: 'smooth' }); return; }
+      const contractEdit = target.closest('[data-contract-edit]');
+      if (contractEdit) { contractEditId = contractEdit.dataset.contractEdit; render(); document.getElementById('contract-form')?.scrollIntoView({ block: 'start', behavior: 'smooth' }); return; }
+      if (target.closest('[data-contract-cancel]')) { contractEditId = null; render(); return; }
+      const contractDelete = target.closest('[data-contract-delete]');
+      if (contractDelete && window.confirm('Diesen Vertrag löschen?')) {
+        const property = sectionProperty();
+        contractsData = { ...contractsData, [property.id]: contractsFor(property.id).filter((contract) => contract.id !== contractDelete.dataset.contractDelete) };
+        saveStore('stugliv-contracts', contractsData); contractEditId = null; render(); return;
+      }
+      if (target.closest('[data-meter-new]')) {
+        const property = sectionProperty();
+        const type = document.getElementById('meter-new-type').value;
+        const meter = { id: newId('m'), type, number: document.getElementById('meter-new-number').value.trim(), label: document.getElementById('meter-new-label').value.trim(), unit: meterTypeInfo(type)[2], readings: [] };
+        metersData = { ...metersData, [property.id]: [...metersFor(property.id), meter] };
+        if (saveStore('stugliv-meters', metersData)) { render(); showToast(`Zähler „${meterLabel(meter)}“ angelegt – trage jetzt den aktuellen Stand ein.`); document.querySelector(`[data-meter-value="${CSS.escape(meter.id)}"]`)?.focus(); }
+        return;
+      }
+      const meterAdd = target.closest('[data-meter-add]');
+      if (meterAdd) { addMeterReading(meterAdd.dataset.meterAdd); return; }
+      const meterDelete = target.closest('[data-meter-delete]');
+      if (meterDelete && window.confirm('Diesen Zähler mit allen Ablesungen löschen?')) {
+        const property = sectionProperty();
+        metersData = { ...metersData, [property.id]: metersFor(property.id).filter((meter) => meter.id !== meterDelete.dataset.meterDelete) };
+        saveStore('stugliv-meters', metersData); render(); return;
+      }
+      const readingDelete = target.closest('[data-meter-reading-delete]');
+      if (readingDelete) {
+        const property = sectionProperty();
+        const meter = metersFor(property.id).find((item) => item.id === readingDelete.dataset.meterReadingDelete);
+        if (meter) { meter.readings = meter.readings.filter((reading) => reading.id !== readingDelete.dataset.reading); saveStore('stugliv-meters', metersData); render(); }
+        return;
+      }
+      const supportButton = target.closest('[data-support-mail]');
+      if (supportButton) { openSupportMail(supportButton.dataset.supportMail); return; }
+      const onboardingStart = target.closest('[data-onboarding-start]');
+      if (onboardingStart) { document.getElementById('main-menu')?.classList.remove('open'); openOnboarding(onboardingStart.dataset.onboardingStart === '1' ? 1 : 0); return; }
+      if (target.closest('[data-ob-next]')) { readOnboardingInputs(); onboardingStep = Math.min(2, onboardingStep + 1); renderOnboarding(); return; }
+      if (target.closest('[data-ob-back]')) { readOnboardingInputs(); onboardingStep = Math.max(0, onboardingStep - 1); renderOnboarding(); return; }
+      if (target.closest('[data-ob-finish]')) { finishOnboarding(); return; }
+      if (target.closest('[data-ob-demo]')) { onboardingState = { status: 'demo', at: new Date().toISOString() }; saveStore('stugliv-onboarding', onboardingState); closeOnboarding(); render(); return; }
+      const obGoto = target.closest('[data-ob-goto]');
+      if (obGoto) { closeOnboarding(); currentPage = obGoto.dataset.obGoto; render(); window.scrollTo(0, 0); return; }
+      if (target.closest('[data-ob-close]')) { closeOnboarding(); currentPage = 'dashboard'; render(); window.scrollTo(0, 0); return; }
+      const usageLabel = target.closest('.ob-usage label');
+      if (usageLabel) setTimeout(() => { document.querySelectorAll('.ob-usage label').forEach((label) => label.classList.toggle('on', label.querySelector('input').checked)); }, 0);
+      const anchor = target.closest('[data-settings-anchor]');
+      if (anchor) setTimeout(() => document.getElementById(anchor.dataset.settingsAnchor)?.scrollIntoView({ block: 'start', behavior: 'smooth' }), 60);
+    });
+    function saveEmergencyForm(notify = true) {
+      const form = document.getElementById('emergency-form');
+      if (!form) return;
+      const property = sectionProperty();
+      const data = emergencyFor(property.id);
+      EMERGENCY_FIELDS.flatMap(([, fields]) => fields).forEach(([key]) => { data[key] = String(form.elements[key]?.value || '').trim(); });
+      data.notes = String(form.elements.notes?.value || '').trim();
+      emergencyData = { ...emergencyData, [property.id]: data };
+      if (saveStore('stugliv-emergency', emergencyData) && notify) { render(); showToast('Notfall & Zugang gespeichert.'); }
+    }
+    document.addEventListener('submit', (event) => {
+      if (event.target.id === 'emergency-form') { event.preventDefault(); saveEmergencyForm(true); }
+      if (event.target.id === 'contract-form') {
+        event.preventDefault();
+        const form = event.target;
+        const property = sectionProperty();
+        const values = { type: form.elements.type.value, provider: form.elements.provider.value.trim(), number: form.elements.number.value.trim(), costYear: form.elements.costYear.value === '' ? '' : Math.max(0, Number(form.elements.costYear.value)), endDate: form.elements.endDate.value, noticeMonths: form.elements.noticeMonths.value === '' ? '' : Math.max(0, Number(form.elements.noticeMonths.value)), autoRenew: form.elements.autoRenew.checked, renewMonths: Math.max(1, Number(form.elements.renewMonths.value) || 12), notes: form.elements.notes.value.trim() };
+        if (!values.provider) { showToast('Bitte den Anbieter eintragen.'); return; }
+        const list = contractsFor(property.id);
+        const next = contractEditId && contractEditId !== 'new' ? list.map((contract) => (contract.id === contractEditId ? { ...contract, ...values } : contract)) : [...list, { id: newId('k'), ...values }];
+        contractsData = { ...contractsData, [property.id]: next };
+        if (saveStore('stugliv-contracts', contractsData)) { contractEditId = null; render(); showToast('Vertrag gespeichert.'); }
+      }
+    });
+    document.addEventListener('change', (event) => {
+      const target = event.target;
+      if (target.matches('[data-section-property]')) { sectionPropertyId = target.value; contractEditId = null; render(); }
+      if (target.matches('[data-notify-pref]')) { notifySettings = { ...notifySettings, [target.dataset.notifyPref]: target.checked }; saveStore('stugliv-notify', notifySettings); updateNotifyBadge(); }
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') { document.getElementById('notify-panel')?.classList.remove('open'); if (document.getElementById('onboarding-modal')?.classList.contains('open') && onboardingStep === 3) closeOnboarding(); }
+      if (event.key === 'Enter' && event.target.matches('[data-meter-value]')) { event.preventDefault(); addMeterReading(event.target.dataset.meterValue); }
+      if (event.key === 'Enter' && event.target.closest('#onboarding-body') && event.target.matches('input:not([type=radio])')) { event.preventDefault(); document.querySelector('#onboarding-body [data-ob-next], #onboarding-body [data-ob-finish]')?.click(); }
+    });
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();
     if (isEuro()) refreshFxRate();
     render();
+    if (onboardingNeeded()) openOnboarding(0);
+    pushSystemNotifications();
+    setInterval(() => { updateNotifyBadge(); pushSystemNotifications(); }, 30 * 60 * 1000);
     const portalDue = () => portalConnected() && portalSync.auto && (!portalSync.lastSync || Date.now() - new Date(portalSync.lastSync).getTime() > PORTAL_SYNC_INTERVAL);
     const icalDue = () => icalSync.auto && icalLinkCount() > 0 && (!icalSync.lastSync || Date.now() - new Date(icalSync.lastSync).getTime() > PORTAL_SYNC_INTERVAL);
     if (portalDue()) syncPortalBookings();
