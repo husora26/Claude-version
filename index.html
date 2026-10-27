@@ -2546,6 +2546,32 @@
   
   
   
+    /* Kopfzeile der Unterseiten */
+    .page-bar { display: none; }
+    body.is-sub .topbar { height: 66px; background: var(--green-dark); }
+    body.is-sub .topbar::before { opacity: .16; }
+    body.is-sub .breadcrumb, body.is-sub .plan-info, body.is-sub .top-tabs .tab[data-page] { display: none; }
+    body.is-sub .page-bar { display: flex; flex: 1; align-items: center; gap: 16px; min-width: 0; }
+    .page-bar-back { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 6px; height: 38px; padding: 0 14px 0 10px; border: 1px solid rgba(255, 253, 248, .32); border-radius: 20px; color: #fffdf8; background: rgba(255, 253, 248, .08); font-size: 13.5px; font-weight: 650; cursor: pointer; }
+    .page-bar-back:hover { background: rgba(255, 253, 248, .16); }
+    .page-bar-back svg { width: 17px; height: 17px; transform: rotate(180deg); }
+    .page-bar-title { display: flex; align-items: center; gap: 11px; min-width: 0; }
+    .page-bar-icon { display: grid; flex: 0 0 auto; place-items: center; width: 36px; height: 36px; border-radius: 10px; color: #fffdf8; background: rgba(255, 253, 248, .12); }
+    .page-bar-icon svg { width: 19px; height: 19px; }
+    .page-bar-title > div { min-width: 0; }
+    .page-bar-title small { display: block; color: #c9d6cc; font-size: 10.5px; font-weight: 750; letter-spacing: .09em; text-transform: uppercase; }
+    .page-bar-title strong { display: block; overflow: hidden; color: #fffdf8; font-size: 18px; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; text-overflow: ellipsis; }
+    body.is-sub .welcome .back-link { display: none; }
+    @media (max-width: 760px) {
+      body.is-sub .topbar { height: 60px; }
+      body.is-sub .page-bar { gap: 10px; }
+      .page-bar-back { width: 38px; padding: 0; justify-content: center; }
+      .page-bar-back span { display: none; }
+      .page-bar-icon { display: none; }
+      .page-bar-title strong { font-size: 17px; }
+    }
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3138,6 +3164,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
     <main>
       <header class="topbar">
         <div class="breadcrumb"><button class="breadcrumb-home" data-page="dashboard" aria-label="Zur Übersicht" title="Zur Übersicht"><svg viewBox="0 0 42 36" aria-hidden="true"><path d="M3 19 16 7l13 12M6 17v14h19V17M11 23h3v3h-3zm7 0h3v3h-3z" fill="none" stroke="#fff9eb" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3"/><path d="M34 2 29 10h3l-5 6h4l-4 7h6v8h3v-8h6l-4-7h4l-5-6h3z" fill="#b9955f"/></svg></button><span class="brand-lockup"><span class="brand-wordmark"><span class="breadcrumb-brand">HUSORA</span><span class="brand-region">Smart House Care</span></span></span><span class="breadcrumb-separator" aria-hidden="true">/</span><b id="breadcrumb">Übersicht</b></div>
+        <div class="page-bar" id="page-bar"></div>
         <div class="top-actions">
           <div class="plan-info" id="plan-info"></div>
           <nav class="top-tabs" id="top-tabs" aria-label="Hauptbereiche"></nav>
@@ -4868,7 +4895,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
     const PAYPAL_CONFIG = { clientId: 'sb', currency: 'EUR', supportEmail: '' };
     // Weitere Versionen: einfach einen Eintrag ergänzen. Unterstützt werden Einmalzahlungen (billing: 'once').
     const PLANS = [
-      { id: 'free', name: 'Kostenlose Version', tagline: 'Für dein erstes Ferienhaus', price: '0', billing: 'free', houseLimit: 1, paid: false, features: ['1 Ferienhaus verwalten', 'Objektverwaltung, Kalender und Aufgaben', 'Hauskontrolle und Dokumente', 'Servicepartner finden und zuordnen'] },
+      { id: 'free', name: 'Husora Free', tagline: 'Für dein erstes Ferienhaus', price: '0', billing: 'free', houseLimit: 1, paid: false, features: ['1 Ferienhaus verwalten', 'Objektverwaltung, Kalender und Aufgaben', 'Hauskontrolle und Dokumente', 'Servicepartner finden und zuordnen'] },
       { id: 'pro', name: 'Husora Pro', tagline: 'Für mehrere Ferienhäuser', price: '29.00', billing: 'once', houseLimit: 50, paid: true, highlight: true, features: ['Mehrere Ferienhäuser verwalten (bis zu 50)', 'Alle Funktionen der kostenlosen Version je Haus', 'Objektverwaltung, Hauskontrolle und Servicepartner je Haus', 'Interaktives 3D-Hausmodell (nur in Pro)', 'Einmalige Zahlung, kein Abo'] }
     ];
     const planById = (id) => PLANS.find((plan) => plan.id === id) || PLANS[0];
@@ -5038,7 +5065,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
         ? `<button type="button" class="plan-pro" data-page="plans" title="Versionen ansehen">${escapeHtml(currentPlan().name)}</button>`
         : '<button type="button" class="plan-buy" data-page="plans">Pro Version erwerben</button>';
       const testSwitch = SHOW_PLAN_TEST_SWITCH
-        ? `<label class="plan-test" title="Nur zum Testen: zwischen kostenloser Version und Pro wechseln"><span>Free</span><input type="checkbox" role="switch" id="plan-test-toggle" aria-label="Testschalter: zwischen kostenloser Version und Pro wechseln" ${isPro() ? 'checked' : ''}><span class="plan-test-track" aria-hidden="true"></span><span>Pro</span></label>`
+        ? `<label class="plan-test" title="Nur zum Testen: zwischen Husora Free und Pro wechseln"><span>Free</span><input type="checkbox" role="switch" id="plan-test-toggle" aria-label="Testschalter: zwischen kostenloser Version und Pro wechseln" ${isPro() ? 'checked' : ''}><span class="plan-test-track" aria-hidden="true"></span><span>Pro</span></label>`
         : '';
       info.innerHTML = planButton + testSwitch;
     }
@@ -5691,7 +5718,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
     }
     function proProfileCard() {
       const plan = currentPlan();
-      return `<section class="card profile-form pro-profile-card"><div class="card-head"><div><h2 class="card-title">Deine Version</h2><p class="card-caption">${isPro() ? `${escapeHtml(plan.name)} ist freigeschaltet.` : `Du nutzt die kostenlose Version mit ${FREE_HOUSE_LIMIT} Ferienhaus.`}</p></div>${isPro() ? `<span class="plan-pro" style="color:#5a4310;background:#fbeec4;box-shadow:inset 0 0 0 1px #d9b24c">${escapeHtml(plan.name)}</span>` : '<span class="pro-badge off">Kostenlose Version</span>'}</div>
+      return `<section class="card profile-form pro-profile-card"><div class="card-head"><div><h2 class="card-title">Deine Version</h2><p class="card-caption">${isPro() ? `${escapeHtml(plan.name)} ist freigeschaltet.` : `Du nutzt Husora Free – kostenlos, mit ${FREE_HOUSE_LIMIT} Ferienhaus.`}</p></div>${isPro() ? `<span class="plan-pro" style="color:#5a4310;background:#fbeec4;box-shadow:inset 0 0 0 1px #d9b24c">${escapeHtml(plan.name)}</span>` : '<span class="pro-badge off">Kostenlose Version</span>'}</div>
         <div style="padding:4px 18px 18px"><button type="button" class="secondary-btn" data-page="plans">Versionen ansehen</button></div></section>`;
     }
     function plansPage() {
@@ -9058,6 +9085,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
         lastRenderedPage = currentPage;
       }
       document.getElementById('breadcrumb').textContent = labels[currentPage];
+      updatePageBar(labels[currentPage]);
       // Menüeinträge tragen denselben Namen wie die Seiten.
       document.querySelectorAll('.nav [data-page] > span').forEach((span) => { const page = span.parentElement.dataset.page; if (labels[page] && page !== 'dashboard') span.textContent = labels[page]; });
       document.getElementById('nav-count').textContent = tasks.filter((task) => !task.done).length;
@@ -10424,7 +10452,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
       try { localStorage.setItem('stugliv-test-plan', planOverride); } catch (error) { console.error(error); }
       render();
       document.getElementById('plan-test-toggle')?.focus();
-      showToast(event.target.checked ? 'Testmodus: Husora Pro aktiv.' : 'Testmodus: Kostenlose Version aktiv.');
+      showToast(event.target.checked ? 'Testmodus: Husora Pro aktiv.' : 'Testmodus: Husora Free aktiv.');
     });
     document.getElementById('close-pro-modal').addEventListener('click', closeProModal);
     document.getElementById('pro-modal').addEventListener('click', (event) => {
@@ -11876,7 +11904,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
         <h3>6. Deine Rechte</h3><p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch sowie das Recht auf Beschwerde bei einer Datenschutz-Aufsichtsbehörde. Da wir keine Daten von dir speichern, betreffen diese Rechte vor allem die Kaufabwicklung.</p>` },
       terms: { title: 'Allgemeine Geschäftsbedingungen', html: () => `<p class="legal-lead">Stand: ${escapeHtml(fmtDateFull(APP_BUILD))}</p>
         <h3>1. Geltungsbereich</h3><p>Diese Bedingungen gelten für die Nutzung der App Husora, angeboten von ${legalValue('company', 'Firma oder Name')}.</p>
-        <h3>2. Leistungen</h3><p>Husora unterstützt bei der Verwaltung von Ferienhäusern: Aufgaben, Buchungen, Hauskontrollen, Kosten, Dokumente und die Kontaktaufnahme mit Servicepartnern. Die kostenlose Version umfasst ein Ferienhaus. Husora Pro erweitert die Nutzung auf bis zu 50 Ferienhäuser und das 3D-Hausmodell.</p>
+        <h3>2. Leistungen</h3><p>Husora unterstützt bei der Verwaltung von Ferienhäusern: Aufgaben, Buchungen, Hauskontrollen, Kosten, Dokumente und die Kontaktaufnahme mit Servicepartnern. Husora Free ist kostenlos und umfasst ein Ferienhaus. Husora Pro erweitert die Nutzung auf bis zu 50 Ferienhäuser und das 3D-Hausmodell.</p>
         <h3>3. Vertragsschluss und Preis</h3><p>Husora Pro wird gegen eine einmalige Zahlung freigeschaltet (Preis laut Anzeige in der App, inkl. gesetzlicher MwSt.). Es entsteht kein Abonnement.</p>
         <h3>4. Widerrufsrecht</h3><p>Verbrauchern steht ein gesetzliches Widerrufsrecht zu. Bei digitalen Inhalten erlischt es, wenn du ausdrücklich zustimmst, dass wir vor Ablauf der Widerrufsfrist mit der Bereitstellung beginnen, und deine Kenntnis vom Verlust des Widerrufsrechts bestätigst.</p>
         <h3>5. Servicepartner</h3><p>Aufträge an Servicepartner schließt du direkt mit dem jeweiligen Betrieb. Husora ist nicht Vertragspartei und übernimmt keine Gewähr für Verfügbarkeit, Preise oder Qualität der Leistungen.</p>
@@ -12377,7 +12405,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
       ['Wie finde ich passende Servicepartner?', 'Unter „Servicepartner finden“ siehst du Betriebe in der Nähe deines Hauses, gefiltert nach Hausservice, Hauskontrolle und Sanierung. Mit „Zuordnen“ übernimmst du sie für dein Haus. Die Angaben stammen aus öffentlichen Quellen – bitte vor der Beauftragung prüfen.'],
       ['Warum bekomme ich keine Erinnerungen, wenn die App geschlossen ist?', 'In der Web-Version kann Husora nur Erinnerungen zeigen, solange die App geöffnet ist. Echte Push-Mitteilungen kommen mit der App für iPhone und Android.'],
       ['In welcher Sprache gehen Aufträge an Servicepartner?', 'Das stellst du unter Einstellungen → Darstellung & Sprache ein: Deutsch, Schwedisch oder Englisch. Deine eigenen Beschreibungen werden nicht automatisch übersetzt.'],
-      ['Was kostet Husora Pro?', 'Die kostenlose Version umfasst ein Ferienhaus. Husora Pro schaltet bis zu 50 Ferienhäuser und das 3D-Hausmodell frei – einmalig, ohne Abo. Details unter „Versionen“.']
+      ['Was kostet Husora Pro?', 'Husora Free ist kostenlos und umfasst ein Ferienhaus. Husora Pro schaltet bis zu 50 Ferienhäuser und das 3D-Hausmodell frei – einmalig, ohne Abo. Details unter „Versionen“.']
     ];
     function helpPage() {
       return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Hilfe & Support</h1><p class="subtitle">Antworten auf häufige Fragen, Erste Schritte und Kontakt.</p></div></div>
@@ -12393,7 +12421,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
       const to = LEGAL_INFO.supportEmail || LEGAL_INFO.email;
       if (!to) { showToast('Die Support-Adresse ist noch nicht hinterlegt (LEGAL_INFO.supportEmail).'); return; }
       const subject = { question: 'Frage zu Husora', bug: 'Fehlermeldung Husora', feedback: 'Feedback zu Husora' }[kind] || 'Husora';
-      const info = `\n\n---\nHusora ${APP_VERSION} (${APP_BUILD}) · ${isPro() ? 'Pro' : 'Kostenlos'} · ${properties.length} Ferienhaus/-häuser\n${navigator.userAgent}\nBildschirm ${window.innerWidth}×${window.innerHeight}`;
+      const info = `\n\n---\nHusora ${APP_VERSION} (${APP_BUILD}) · ${isPro() ? 'Pro' : 'Free'} · ${properties.length} Ferienhaus/-häuser\n${navigator.userAgent}\nBildschirm ${window.innerWidth}×${window.innerHeight}`;
       const body = kind === 'bug' ? `Was ist passiert?\n\n\nWas hast du davor gemacht?\n\n\nWas hättest du erwartet?\n${info}` : `Hallo Husora-Team,\n\n${info}`;
       window.location.href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
@@ -12660,6 +12688,20 @@ html.dark .settings-jump button { background: #1c1c1c; }
     }
     buildGroupedNav();
     const TABBAR_ITEMS = [['dashboard', 'Übersicht', 'home'], ['tasks', 'Aufgaben', 'task'], ['inspections', 'Kontrolle', 'inspection'], ['calendar', 'Kalender', 'calendar']];
+    // Kopfzeile: Startseite mit Marke und Bereichen, Unterseiten mit Zurück und dem aktuellen Menüpunkt.
+    function updatePageBar(title) {
+      const sub = currentPage !== 'dashboard';
+      document.body.classList.toggle('is-sub', sub);
+      const bar = document.getElementById('page-bar');
+      if (!bar) return;
+      if (!sub) { bar.innerHTML = ''; return; }
+      const navPage = currentPage === 'propertyDetail' ? 'properties' : currentPage;
+      const svg = document.querySelector(`#main-menu .nav [data-page="${navPage}"] svg`)?.outerHTML || '';
+      const group = NAV_GROUPS.find((entry) => entry.pages.includes(navPage))?.label || '';
+      const name = currentPage === 'propertyDetail' ? (properties.find((property) => property.id === selectedPropertyId)?.name || title) : title;
+      bar.innerHTML = `<button type="button" class="page-bar-back" data-action="go-back" aria-label="Zurück zur vorherigen Seite">${icon('arrow')}<span>Zurück</span></button><div class="page-bar-title">${svg ? `<span class="page-bar-icon" aria-hidden="true">${svg}</span>` : ''}<div>${group ? `<small>${escapeHtml(group)}</small>` : ''}<strong>${escapeHtml(name || '')}</strong></div></div>`;
+      document.title = `${name ? `${name} – ` : ''}Husora`;
+    }
     function renderTabbar() {
       const bars = [document.getElementById('tabbar'), document.getElementById('top-tabs')].filter(Boolean);
       if (!bars.length) return;
