@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f4efe4">
-  <title>Husora — Fritidshusförvaltare</title>
+  <title>Husora – Ferienhausverwaltung</title>
   <style>
     :root {
       color-scheme: light;
@@ -2203,6 +2203,59 @@
       .automation-step select { grid-column: 2; width: 100%; }
       .automation-log li { grid-template-columns: 1fr; gap: 2px; }
     }
+    /* Einstellungen, Datensicherung, Rechtliches */
+    .settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+    @media (max-width: 860px) { .settings-grid { grid-template-columns: 1fr; } }
+    .settings-card { padding: 20px; }
+    .settings-card-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+    .settings-icon { display: grid; place-items: center; flex: 0 0 auto; width: 38px; height: 38px; border-radius: 11px; color: var(--green); background: var(--green-soft); }
+    .settings-icon svg { width: 19px; height: 19px; }
+    .settings-card .card-caption { font-size: 12px; line-height: 1.5; }
+    .storage-meter { padding: 12px 14px; border: 1px solid var(--line); border-radius: 11px; background: #fbfaf6; }
+    .storage-meter-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; font-size: 13px; }
+    .storage-meter-top span { color: var(--muted); }
+    .storage-bar { display: block; height: 8px; margin-top: 9px; overflow: hidden; border-radius: 6px; background: #e8e6df; }
+    .storage-bar i { display: block; height: 100%; border-radius: inherit; background: var(--green); }
+    .storage-meter.warn .storage-bar i { background: #d9a45b; }
+    .storage-meter.full .storage-bar i { background: var(--red); }
+    .storage-meter small { display: block; margin-top: 8px; color: var(--red); font-size: 12px; line-height: 1.5; }
+    .backup-status { display: flex; gap: 8px; align-items: flex-start; margin-top: 12px; color: var(--green); font-size: 13px; line-height: 1.5; }
+    .backup-status.stale { color: #8e622b; }
+    .backup-status svg { flex: 0 0 auto; width: 17px; height: 17px; margin-top: 1px; }
+    .settings-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .settings-actions .primary-btn, .settings-actions .secondary-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; font-size: 13px; }
+    .settings-actions svg { width: 16px; height: 16px; }
+    .settings-file { cursor: pointer; }
+    .settings-hint { margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .settings-danger { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .settings-danger strong { display: block; font-size: 13px; }
+    .settings-danger small { color: var(--muted); font-size: 12px; }
+    .settings-danger .danger { min-height: 44px; color: var(--red); border-color: #e8c4bf; }
+    .settings-links { display: grid; border: 1px solid var(--line); border-radius: 11px; overflow: hidden; }
+    .settings-links button { display: flex; align-items: center; justify-content: space-between; min-height: 48px; padding: 0 14px; border: 0; border-bottom: 1px solid var(--line); background: white; color: var(--ink, #1f2a22); font-size: 14px; font-weight: 600; text-align: left; cursor: pointer; }
+    .settings-links button:last-child { border-bottom: 0; }
+    .settings-links button:hover { background: #f7f6f1; }
+    .settings-links svg { width: 16px; height: 16px; color: var(--muted); }
+    .legal-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .legal-tabs button { min-height: 40px; padding: 0 14px; border: 1px solid var(--line); border-radius: 20px; background: white; font-size: 13px; font-weight: 650; cursor: pointer; }
+    .legal-tabs button.active { color: white; border-color: var(--green); background: var(--green); }
+    .legal-text { padding: 24px; max-width: 820px; font-size: 14px; line-height: 1.65; }
+    .legal-text h2 { margin: 0 0 6px; font-size: 22px; }
+    .legal-text h3, #legal-modal-body h3 { margin: 20px 0 4px; font-size: 15px; }
+    .legal-text p, #legal-modal-body p { margin: 6px 0; }
+    .legal-text ul, #legal-modal-body ul { margin: 6px 0; padding-left: 20px; }
+    .legal-text li, #legal-modal-body li { margin: 6px 0; }
+    .legal-lead { color: var(--muted); }
+    .legal-todo { padding: 1px 5px; border-radius: 4px; color: #7a5c00; background: #fff0b3; font-weight: 650; }
+    .legal-draft { display: flex; gap: 9px; align-items: flex-start; max-width: 820px; margin-bottom: 14px; padding: 12px 14px; border: 1px solid #f0dd8c; border-radius: 11px; color: #6f5200; background: #fffbea; font-size: 13px; line-height: 1.5; }
+    .legal-draft svg { flex: 0 0 auto; width: 17px; height: 17px; margin-top: 1px; }
+    .legal-modal { width: min(640px, 100%); max-height: 88vh; overflow-y: auto; }
+    #legal-modal-body { font-size: 14px; line-height: 1.6; }
+    .nav-divider { height: 1px; margin: 6px 10px; background: var(--line); }
+    .inline-link { padding: 0; font-size: inherit; text-decoration: underline; }
+    .app-footer { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; margin: 34px 0 10px; color: var(--muted); font-size: 12px; }
+    .app-footer button { min-height: 32px; padding: 0 2px; border: 0; color: var(--muted); background: none; font-size: 12px; cursor: pointer; }
+    .app-footer button:hover { color: var(--green); text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -2229,8 +2282,12 @@
             <button data-page="renovations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 21h18M5 21V10l7-6 7 6v11"/><path d="M10 21v-5h4v5"/></svg><span>Sanierung & Renovierung</span></button>
             <button data-page="house3d" data-pro-only><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg><span>Hausmodell</span></button>
             <button data-page="providers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14.5 6.5a5 5 0 0 0-6.7 6.7L3 18l3 3 4.8-4.8a5 5 0 0 0 6.7-6.7l-3.1 3.1-3-3z"/><path d="m15.5 4.5 4 4"/></svg><span>Servicepartner finden</span></button>
+            <button data-page="assignedProviders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.2c2.1.6 3.5 2.6 3.5 5.8"/></svg><span>Zugeordnete Servicepartner</span></button>
             <button data-page="documents"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8m-8 4h8"/></svg><span>Dokumente</span></button>
             <button data-page="costs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6.5h14a2 2 0 0 1 2 2v11H5a2 2 0 0 1-2-2V6a3 3 0 0 1 3-3h12"/><path d="M3 7h17v5h-5a2 2 0 0 0 0 4h5"/><path d="M15.5 14.5h.01"/></svg><span>Jahreskosten</span></button>
+            <div class="nav-divider" role="separator"></div>
+            <button data-page="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg><span>Einstellungen</span></button>
+            <button data-page="legal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 20 6v5c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V6z"/></svg><span>Rechtliches</span></button>
           </nav>
         </div>
         </div>
@@ -2490,11 +2547,29 @@
     </form>
   </div>
   <div class="inspection-print-area" id="inspection-print-area" aria-hidden="true"></div>
+  <div class="modal-backdrop" id="legal-modal" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title">
+    <section class="modal legal-modal">
+      <div class="modal-head"><div><h2 id="legal-modal-title">Rechtliches</h2></div><button class="close-btn" type="button" data-close-legal aria-label="Schließen">✕</button></div>
+      <div id="legal-modal-body"></div>
+      <div class="form-actions"><button type="button" class="primary-btn" data-close-legal>Schließen</button></div>
+    </section>
+  </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
     const icon = (name) => {
       const paths = {
         check: '<path d="m5 12 4 4L19 6"/>',
+        arrow: '<path d="m9 6 6 6-6 6"/>',
+        bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/>',
+        gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',
+        help: '<circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .9-1 1.6v.6"/><path d="M12 17h.01"/>',
+        shield: '<path d="M12 3 20 6v5c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V6z"/>',
+        key: '<circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/>',
+        phone: '<path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2"/>',
+        meter: '<path d="M4 18a8 8 0 1 1 16 0"/><path d="m12 18 4-6M4 18h16"/>',
+        contract: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h5M8 17h8"/><path d="m15 12 1.5 1.5L19 11"/>',
+        cloud: '<path d="M7 18h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.6 1.6A3.3 3.3 0 0 0 7 18z"/>',
+        text: '<path d="M4 7V5h16v2M9 19h6M12 5v14"/>',
         bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
         cube: '<path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/>',
         alert: '<path d="M12 3 2 20h20z"/><path d="M12 10v4m0 3h.01"/>',
@@ -3061,7 +3136,7 @@
     }
     function portalHintHtml() {
       const text = portalConnected() || icalLinkCount()
-        ? `Buchungsportale verbunden · letzter Abgleich: ${(portalSync.lastSync || icalSync.lastSync) ? new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(portalSync.lastSync || icalSync.lastSync)) : 'noch nie'}`
+        ? `Buchungsportale verbunden · letzter Abgleich: ${(portalSync.lastSync || icalSync.lastSync) ? fmtDateTime(new Date(portalSync.lastSync || icalSync.lastSync)) : 'noch nie'}`
         : 'Airbnb, Booking.com und Vrbo lassen sich automatisch in den Kalender übernehmen.';
       return `<p class="portal-link-note">${escapeHtml(text)} <button type="button" class="text-btn" data-page="profile">Buchungsportale im Benutzerprofil verwalten →</button></p>`;
     }
@@ -3183,7 +3258,7 @@
     }
     function portalCardHtml() {
       const connected = portalConnected();
-      const lastSync = portalSync.lastSync ? new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(portalSync.lastSync)) : 'noch nie';
+      const lastSync = portalSync.lastSync ? fmtDateTime(new Date(portalSync.lastSync)) : 'noch nie';
       const message = portalMessage ? `<p class="portal-message ${portalMessage.error ? 'error' : ''}" role="status">${escapeHtml(portalMessage.text)}${portalMessage.link ? ` <a href="${escapeHtml(portalMessage.link)}" target="_blank" rel="noopener noreferrer">Verknüpfung öffnen ↗</a>` : ''}</p>` : '';
       if (!connected) {
         return `<section class="card portal-card" id="portal-card"><div class="card-head"><div><h2 class="card-title">Buchungsportale verbinden</h2><p class="card-caption">Airbnb, Booking.com und Vrbo über Repull: Buchungen erscheinen automatisch im Kalender.</p></div><span class="status pending">Nicht verbunden</span></div>
@@ -3309,7 +3384,7 @@
       else if (currentPage === 'bookings' || currentPage === 'dashboard' || currentPage === 'calendar') render();
     }
     function icalCardHtml() {
-      const stamp = (iso) => new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(iso));
+      const stamp = (iso) => fmtDateTime(new Date(iso));
       const rows = properties.map((property) => {
         const status = icalSync.status[property.id];
         const info = status ? (status.ok ? `<small class="ical-status ok">✓ ${status.count} ${status.count === 1 ? 'Buchung' : 'Buchungen'} gefunden · ${escapeHtml(stamp(status.at))}</small>` : `<small class="ical-status error">${escapeHtml(status.message)}</small>`) : '';
@@ -3914,9 +3989,17 @@
     const FREE_HOUSE_LIMIT = PLANS.find((plan) => !plan.paid).houseLimit;
     let proState = null;
     try { proState = JSON.parse(localStorage.getItem('stugliv-pro') || 'null'); } catch (error) { proState = null; }
-    const SHOW_PLAN_TEST_SWITCH = true;
+    // Free/Pro-Testschalter nur im Testmodus: lokal oder einmalig per ?test=1 aktivieren (?test=0 schaltet ihn wieder ab).
+    const SHOW_PLAN_TEST_SWITCH = (() => {
+      try {
+        const flag = new URLSearchParams(location.search).get('test');
+        if (flag === '1') localStorage.setItem('stugliv-dev', '1');
+        if (flag === '0') { localStorage.removeItem('stugliv-dev'); localStorage.removeItem('stugliv-test-plan'); }
+        return /^(localhost|127\.0\.0\.1)$/.test(location.hostname) || localStorage.getItem('stugliv-dev') === '1';
+      } catch (error) { return false; }
+    })();
     let planOverride = null;
-    try { planOverride = localStorage.getItem('stugliv-test-plan') || null; } catch (error) { planOverride = null; }
+    try { planOverride = SHOW_PLAN_TEST_SWITCH ? localStorage.getItem('stugliv-test-plan') || null : null; } catch (error) { planOverride = null; }
     const currentPlan = () => {
       if (planOverride === 'pro') return planById('pro');
       if (planOverride === 'free') return PLANS.find((plan) => !plan.paid);
@@ -3984,7 +4067,12 @@
       favorites = [];
     }
     const pageContent = document.getElementById('page-content');
-    const fmtDate = (date) => new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 'short' }).format(new Date(`${date}T12:00:00`)).replace('.', '');
+    // Einheitliche Datumsanzeige: „24 Okt.“ im laufenden Jahr, sonst „24 Okt. 2025“; mit Jahr immer über fmtDateFull.
+    const toDate = (value) => (value instanceof Date ? value : new Date(/^\d{4}-\d{2}-\d{2}$/.test(String(value)) ? `${value}T12:00:00` : value));
+    const fmtDay = (date) => new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 'short' }).format(date).replace('.', '');
+    const fmtDate = (value) => { const date = toDate(value); if (!value || Number.isNaN(date.getTime())) return ''; return date.getFullYear() === new Date().getFullYear() ? fmtDay(date) : `${fmtDay(date)} ${date.getFullYear()}`; };
+    const fmtDateFull = (value) => { const date = toDate(value); if (!value || Number.isNaN(date.getTime())) return ''; return `${fmtDay(date)} ${date.getFullYear()}`; };
+    const fmtDateTime = (value) => { const date = toDate(value); if (!value || Number.isNaN(date.getTime())) return ''; return `${fmtDateFull(date)}, ${new Intl.DateTimeFormat('de-DE', { hour: '2-digit', minute: '2-digit' }).format(date)} Uhr`; };
     const fmtLongDate = () => new Intl.DateTimeFormat('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
     const activeGuestChanges = () => guestChanges.filter((event) => properties.some((property) => property.id === event.property || property.name === event.property));
     const taskStatuses = ['Offen', 'In Bearbeitung', 'Erledigt'];
@@ -4719,7 +4807,7 @@
     }
     function plansPage() {
       const current = currentPlan();
-      const dateText = (iso) => new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(iso));
+      const dateText = (iso) => fmtDateFull(new Date(iso));
       const billingText = (plan) => (plan.billing === 'once' ? 'einmalig · inkl. gesetzlicher MwSt.' : '');
       const cards = PLANS.map((plan) => {
         const isCurrent = plan.id === current.id;
@@ -4771,7 +4859,7 @@
             <label><span class="form-label">Username</span><input class="form-control" name="username" required maxlength="40" value="${escapeHtml(profileData.username)}"></label>
             <label class="full"><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" maxlength="120" value="${escapeHtml(profileData.email)}"></label>
             <div class="full profile-notice" style="margin-top:0">Nutzung der Immobilie und Anzahl der Ferienhäuser stellst du jetzt unter <button type="button" class="text-btn" data-page="properties" style="padding:0">Mein Ferienhaus</button> ein.</div>
-</div><div class="profile-notice">Diese App speichert ihre Daten nur lokal in diesem Browser.</div><div class="form-actions"><button type="submit" class="primary-btn">Benutzerprofil speichern</button></div></form>
+</div><div class="profile-notice">Diese App speichert ihre Daten nur lokal auf diesem Gerät. Sichere sie regelmäßig unter <button type="button" class="text-btn" data-page="settings" style="padding:0">Einstellungen → Datensicherung</button>.</div><div class="form-actions"><button type="submit" class="primary-btn">Benutzerprofil speichern</button></div></form>
         </section>
         <div style="height:16px"></div>
         ${dashboardTilesSettingsHtml()}
@@ -6212,7 +6300,7 @@
     function documentsPage() {
       const property = properties.find((item) => item.id === documentsProperty) || properties[0];
       const fileSize = (bytes) => bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-      const dateLabel = (iso) => (iso ? new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(`${iso}T12:00:00`)) : '');
+      const dateLabel = (iso) => (iso ? fmtDateFull(new Date(`${iso}T12:00:00`)) : '');
       const own = documents.filter((document) => document.propertyId === property.id && !document.providerId).map((document) => ({ kind: 'file', category: document.category || guessDocCategory(document.name), date: docDate(document), doc: document }));
       const protocols = [
         ...inspectionLogEntries(property.id).map((entry, index) => ({ kind: 'inspection', category: 'protocol', date: entry.date, index, entry })),
@@ -6389,7 +6477,7 @@
           ${inspectionManual ? `<div class="position-result"><div class="result-toggle" role="group" aria-label="Ergebnis ${escapeHtml(item.title)}"><button type="button" class="${result === 'ok' ? 'active ok' : ''}" data-position-result="ok" data-item="${item.id}">${icon('check')} In Ordnung</button><button type="button" class="${result === 'issue' ? 'active issue' : ''}" data-position-result="issue" data-item="${item.id}">${icon('alert')} Auffällig</button></div>${result === 'issue' ? `<input class="form-control" data-position-note="${item.id}" maxlength="200" value="${escapeHtml(note)}" placeholder="Was ist aufgefallen?">${(() => { const linked = manualRepairIssue(property.id, item.id); return linked ? `<button type="button" class="position-repair-btn ordered" data-position-repair="${item.id}">${icon('check')} ${linked.orderedAt ? `Beauftragt am ${escapeHtml(fmtDate(linked.orderedAt))}` : 'Reparaturauftrag angelegt'} · öffnen</button>` : `<button type="button" class="position-repair-btn" data-position-repair="${item.id}">${icon('alert')} Reparaturauftrag schreiben</button>`; })()}` : ''}</div>` : ''}
         </article>`;
       }).join('');
-      return `<section class="card insp-status-card ${last.current ? 'ok' : 'due'}"><div class="insp-status-head"><div><span class="insp-status-label">${last.current ? 'Abwesenheitskontrolle aktuell' : 'Abwesenheitskontrolle fällig'}</span><h2>${last.current ? `Gültig bis ${escapeHtml(formatInspectionDate(last.validUntil))}` : last.entry ? `Seit ${escapeHtml(formatInspectionDate(last.validUntil))} fällig` : 'Noch nie durchgeführt'}</h2><p>${last.entry ? `Letzte Kontrolle am ${escapeHtml(formatInspectionDate(last.entry.date))}` : 'Lege fest, was geprüft wird, und beauftrage deinen Servicepartner.'}</p></div><div class="insp-order order-${order.state}">${order.state === 'done' ? icon('check') : icon('clock')}<div><strong>${escapeHtml(order.short)}</strong><small>${escapeHtml(order.text)}</small></div></div></div>
+      return `<section class="card insp-status-card ${last.current ? 'ok' : 'due'}"><div class="insp-status-head"><div><span class="insp-status-label">${last.current ? 'Abwesenheitskontrolle aktuell' : 'Abwesenheitskontrolle fällig'}</span><h2>${last.current ? `Gültig bis ${escapeHtml(formatInspectionDate(last.validUntil))}` : last.entry ? `Seit ${escapeHtml(formatInspectionDate(last.validUntil))} fällig` : 'Noch nie durchgeführt'}</h2><p>${last.entry ? `Letzte Kontrolle am ${escapeHtml(formatInspectionDate(last.entry.date))}` : 'Lege fest, was geprüft wird, und beauftrage deinen Servicepartner.'}</p></div><div class="insp-order order-${order.state}">${order.state === 'done' ? icon('check') : icon('clock')}<div><strong>${escapeHtml(order.short)}</strong><small>${order.state === 'ordered' || order.state === 'done' ? escapeHtml(order.text) : 'Kontrollplan in Schritt 2 senden'}</small></div></div></div>
           <div class="insp-steps">
             ${step(1, 'Prüfpositionen festlegen', `${items.length} Positionen${controls.length ? ` · ${controls.length === 1 ? `Plan „${escapeHtml(controls[0].name)}“` : `${controls.length} Pläne`}` : ' · Standardliste'}`, `<button type="button" class="secondary-btn" data-action="${controls.length ? 'edit-first-control' : 'create-inspection'}" data-property="${escapeHtml(property.id)}">${controls.length ? 'Anpassen' : 'Plan anlegen'}</button>`, controls.length ? 'done' : '')}
             ${step(2, 'Servicepartner beauftragen', order.state === 'ordered' ? escapeHtml(order.text) : partner ? `Vorschlag: ${escapeHtml(partner.name)}` : 'Noch kein Partner für Hauskontrolle zugeordnet', `<button type="button" class="${order.state === 'ordered' ? 'secondary-btn' : 'primary-btn'}" data-action="quick-send-plan" data-property="${escapeHtml(property.id)}">${icon('document')} ${order.state === 'ordered' ? 'Erneut beauftragen' : 'Service beauftragen'}</button>`, order.state === 'ordered' || order.state === 'done' ? 'done' : '')}
@@ -6446,10 +6534,10 @@
       return `${pageHeader}${propertyAndTabs}
         ${absenceInspectionView(property)}
         <section class="card"><div class="card-head"><div><h2 class="card-title">Archiv der Prüfprotokolle</h2><p class="card-caption">${entries.length + (planUploads[property.id] || []).length} ${entries.length + (planUploads[property.id] || []).length === 1 ? 'Protokoll' : 'Protokolle'} für ${escapeHtml(property.name)}</p></div></div>
-          ${(planUploads[property.id] || []).length ? `<div class="inspection-archive-list">${(planUploads[property.id] || []).slice().reverse().map((upload) => `<article class="inspection-archive-row"><div class="inspection-archive-main"><strong>Hochgeladene PDF · ${escapeHtml(upload.name)}</strong><small>Archiviert ${escapeHtml(new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(upload.uploadedAt)))} · ${Math.max(1, Math.round(upload.size / 1024))} KB</small></div><div class="inspection-archive-actions"><button class="secondary-btn" type="button" data-open-upload="${escapeHtml(upload.id)}">PDF anzeigen</button><button class="secondary-btn" type="button" data-delete-upload="${escapeHtml(upload.id)}">Löschen</button></div></article>`).join('')}</div>` : ''}
+          ${(planUploads[property.id] || []).length ? `<div class="inspection-archive-list">${(planUploads[property.id] || []).slice().reverse().map((upload) => `<article class="inspection-archive-row"><div class="inspection-archive-main"><strong>Hochgeladene PDF · ${escapeHtml(upload.name)}</strong><small>Archiviert ${escapeHtml(fmtDateFull(new Date(upload.uploadedAt)))} · ${Math.max(1, Math.round(upload.size / 1024))} KB</small></div><div class="inspection-archive-actions"><button class="secondary-btn" type="button" data-open-upload="${escapeHtml(upload.id)}">PDF anzeigen</button><button class="secondary-btn" type="button" data-delete-upload="${escapeHtml(upload.id)}">Löschen</button></div></article>`).join('')}</div>` : ''}
           ${archiveEntries.length ? `<div class="inspection-archive-list">${archiveEntries.map(({ entry, index }) => {
             const checkedItems = Array.isArray(entry.checkedItemsSnapshot) ? entry.checkedItemsSnapshot.length : entry.checkedItems?.length || 0;
-            return `<article class="inspection-archive-row"><div class="inspection-archive-main"><strong>Abwesenheitskontrolle · ${escapeHtml(formatInspectionDate(entry.date))}</strong>${entry.inspectedBy || entry.source ? `<span class="archive-responsible">${icon('inspection')}${entry.inspectedBy ? `Verantwortlich: ${escapeHtml(entry.inspectedBy)}` : 'Verantwortlich: nicht eingetragen'}${entry.source ? ` · ${escapeHtml(entry.source)}` : ''}</span>` : ''}<small>${checkedItems} geprüfte ${checkedItems === 1 ? 'Position' : 'Positionen'}${entry.findings?.length ? ` · ${entry.findings.length} ${entry.findings.length === 1 ? 'Mangel' : 'Mängel'} behoben` : ''}${entry.completedAt ? ` · gespeichert ${escapeHtml(new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(entry.completedAt)))}` : ''}</small></div><div class="inspection-archive-actions"><button class="secondary-btn" type="button" data-inspection-archive="${index}">Protokoll ansehen / PDF</button><button class="secondary-btn" type="button" data-delete-protocol="${index}">Löschen</button></div></article>`;
+            return `<article class="inspection-archive-row"><div class="inspection-archive-main"><strong>Abwesenheitskontrolle · ${escapeHtml(formatInspectionDate(entry.date))}</strong>${entry.inspectedBy || entry.source ? `<span class="archive-responsible">${icon('inspection')}${entry.inspectedBy ? `Verantwortlich: ${escapeHtml(entry.inspectedBy)}` : 'Verantwortlich: nicht eingetragen'}${entry.source ? ` · ${escapeHtml(entry.source)}` : ''}</span>` : ''}<small>${checkedItems} geprüfte ${checkedItems === 1 ? 'Position' : 'Positionen'}${entry.findings?.length ? ` · ${entry.findings.length} ${entry.findings.length === 1 ? 'Mangel' : 'Mängel'} behoben` : ''}${entry.completedAt ? ` · gespeichert ${escapeHtml(fmtDateFull(new Date(entry.completedAt)))}` : ''}</small></div><div class="inspection-archive-actions"><button class="secondary-btn" type="button" data-inspection-archive="${index}">Protokoll ansehen / PDF</button><button class="secondary-btn" type="button" data-delete-protocol="${index}">Löschen</button></div></article>`;
           }).join('')}</div><p class="inspection-archive-note">Das Archiv wird lokal in diesem Browser gespeichert. Für eine externe Ablage kannst du ein Protokoll öffnen und als PDF sichern.</p>` : (planUploads[property.id] || []).length ? '' : '<div class="empty">Für dieses Ferienhaus sind noch keine Prüfprotokolle archiviert.</div>'}
         </section>`;
     }
@@ -6783,7 +6871,7 @@
       newPage();
       text('HUSORA · HAUSKONTROLLE', M, 9, true, '0.29 0.39 0.32'); y -= 26;
       text('Kontrollplan / Prüfprotokoll', M, 22, true); y -= 20;
-      text(control ? `Kontrolle „${control.name}“ · Servicepartner: ${providers.find((entry) => entry.id === control.providerId)?.name || '–'} · erstellt am` : `Abwesenheitskontrolle · ${cadence === 'weekly' ? 'wöchentlich' : 'monatlich'} · erstellt am ${new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date())}`, M, 10, false, '0.35 0.39 0.35'); y -= 28;
+      text(control ? `Kontrolle „${control.name}“ · Servicepartner: ${providers.find((entry) => entry.id === control.providerId)?.name || '–'} · erstellt am` : `Abwesenheitskontrolle · ${cadence === 'weekly' ? 'wöchentlich' : 'monatlich'} · erstellt am ${fmtDateFull(new Date())}`, M, 10, false, '0.35 0.39 0.35'); y -= 28;
       text('Angaben zum Gebäude', M, 13, true); y -= 8;
       line(M, y, W - M, y); y -= 16;
       const details = inspectionHouseDetails(property);
@@ -6889,7 +6977,7 @@
     let pdfViewerUrl = '';
     function planPreviewHtml(property, items, control) {
       const provider = control ? providers.find((entry) => entry.id === control.providerId) : null;
-      const date = new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date());
+      const date = fmtDateFull(new Date());
       return `<h3>Kontrollplan / Prüfprotokoll</h3><p class="pdf-meta">${control ? `Kontrolle „${escapeHtml(control.name)}“${provider ? ` · Servicepartner: ${escapeHtml(provider.name)}` : ''}` : 'Abwesenheitskontrolle'} · erstellt am ${escapeHtml(date)}</p>
         <h4>Angaben zum Gebäude</h4><dl>${inspectionHouseDetails(property).map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl>
         <h4>Prüfpositionen</h4><p class="pdf-meta">Bitte jede Position nach der Kontrolle im Kästchen ankreuzen.</p>
@@ -7124,7 +7212,7 @@
         ${cell('Verantwortlich', inspectedBy, 'nicht eingetragen')}
         ${cell('Kontrolliert am', day, 'nicht eingetragen')}
         ${controlName && !compact ? cell('Kontrollplan', controlName, '') : ''}
-        ${readAt ? cell('Eingelesen am', new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(readAt)), '') : ''}
+        ${readAt ? cell('Eingelesen am', fmtDateFull(new Date(readAt)), '') : ''}
       </dl></div>`;
     }
     function latestPlanReturn(propertyId) {
@@ -7385,7 +7473,7 @@
     }
     // Reparaturauftrag für einen Mangel: Anschreiben + PDF-Auftrag, Versand über das Mailprogramm.
     const repairOrderState = { issue: null };
-    const fullDate = (key) => (key ? new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(`${key}T12:00:00`)) : '');
+    const fullDate = (key) => (key ? fmtDateFull(new Date(`${key}T12:00:00`)) : '');
     const repairOrderFile = (issue, property) => `Reparaturauftrag-${String(property?.name || 'Ferienhaus').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '')}-${String(issue.date || '').replace(/-/g, '')}.pdf`;
     const repairOrderNo = (issue) => `R-${String(issue.date || '').replace(/-/g, '').slice(2)}-${String(issue.id).replace(/\D/g, '').slice(-4)}`;
     function repairOrderRecipient() {
@@ -7456,7 +7544,7 @@
           y -= used + 8;
         }
       };
-      const today = new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date());
+      const today = fmtDateFull(new Date());
       const due = document.getElementById('repair-order-date').value;
       const prio = { urgent: 'Dringend – Folgeschäden drohen', soon: 'Wichtig – zeitnah beheben', normal: 'Normal – beim nächsten Einsatz' }[issue.priority] || 'Wichtig';
       box(0, H - 8, W, 8, issue.priority === 'urgent' ? '0.78 0.25 0.2' : '0.16 0.36 0.27');
@@ -7575,7 +7663,7 @@
     function exportInspectionPdf() {
       if (!pendingInspection) return;
       const { property, houseDetails, checkedItems, date, protocol } = pendingInspection;
-      const createdDate = new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date());
+      const createdDate = fmtDateFull(new Date());
       document.getElementById('inspection-print-area').innerHTML = `<main class="inspection-print-page">
         <p class="inspection-print-eyebrow">Husora · Hauskontrolle</p>
         <h1>Prüfprotokoll</h1>
@@ -7689,7 +7777,7 @@
       return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     }
     function formatInspectionDate(date) {
-      return new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(`${date}T12:00:00`));
+      return fmtDateFull(new Date(`${date}T12:00:00`));
     }
     function inspectionLogEntries(propertyId) {
       const log = inspectionLog[propertyId];
@@ -7815,7 +7903,7 @@
         const base = { view: key, iconName: key === 'winter' ? 'snow' : 'sun', title: key === 'winter' ? 'Wintervorbereitung' : 'Frühjahrsöffnung' };
         if (ready) return { ...base, state: 'done', label: 'Erledigt', detail: `Alle ${total} Punkte abgehakt` };
         // Außerhalb der Saison (mehr als zwei Monate nach der Frist) gilt die nächste Saison.
-        if (days < -60) return { ...base, state: 'later', label: 'Nächste Saison', detail: `Fällig bis ${escapeHtml(fmtDate(`${Number(due.slice(0, 4)) + 1}${due.slice(4)}`))} ${Number(due.slice(0, 4)) + 1}` };
+        if (days < -60) return { ...base, state: 'later', label: 'Nächste Saison', detail: `Fällig bis ${escapeHtml(fmtDate(`${Number(due.slice(0, 4)) + 1}${due.slice(4)}`))}` };
         if (days > 75) return { ...base, state: 'later', label: 'Später', detail: `Fällig bis ${escapeHtml(fmtDate(due))} · Start etwa 6 Wochen vorher` };
         const progressText = done ? `${done} von ${total} Punkten erledigt` : `${total} Punkte offen`;
         const when = overdue ? `seit ${escapeHtml(fmtDate(due))} überfällig` : days === 0 ? 'Frist heute' : `bis ${escapeHtml(fmtDate(due))} · noch ${days} ${days === 1 ? 'Tag' : 'Tage'}`;
@@ -8051,8 +8139,6 @@
     }
     function render() {
       document.body.classList.remove('no-bookings');
-      const bookingsNav = document.querySelector('.nav [data-page="bookings"] span');
-      if (bookingsNav) bookingsNav.textContent = bookingsEnabled() ? 'Buchung & Eigennutzung' : 'Eigennutzung';
       document.querySelectorAll('[data-pro-only]').forEach((node) => { node.hidden = !isPro(); });
       const plannedCount = syncAutomation();
       if (plannedCount) setTimeout(() => {
@@ -8065,8 +8151,8 @@
         showToast('Das 3D-Hausmodell ist Teil von Husora Pro.');
         currentPage = 'plans';
       }
-      const pages = { dashboard, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPage, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage };
-      const labels = { dashboard: 'Übersicht', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner', documents: 'Dokumente', costs: 'Jahreskosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil' };
+      const pages = { dashboard, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPage, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage };
+      const labels = { dashboard: 'Übersicht', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches' };
       if (currentPage !== lastRenderedPage) {
         if (returningToPreviousPage) {
           returningToPreviousPage = false;
@@ -8078,10 +8164,12 @@
         lastRenderedPage = currentPage;
       }
       document.getElementById('breadcrumb').textContent = labels[currentPage];
+      // Menüeinträge tragen denselben Namen wie die Seiten.
+      document.querySelectorAll('.nav [data-page] > span').forEach((span) => { const page = span.parentElement.dataset.page; if (labels[page] && page !== 'dashboard') span.textContent = labels[page]; });
       document.getElementById('nav-count').textContent = tasks.filter((task) => !task.done).length;
       document.querySelectorAll('.nav [data-page]').forEach((button) => button.classList.toggle('active', button.dataset.page === currentPage || (currentPage === 'propertyDetail' && button.dataset.page === 'properties')));
       updateProfileSummary();
-      pageContent.innerHTML = pages[currentPage]();
+      pageContent.innerHTML = pages[currentPage]() + appFooterHtml();
       ensureBackButton();
       if (currentPage === 'house3d') fitHouseScene();
       if (currentPage === 'propertyDetail') initPropertyMap();
@@ -9351,7 +9439,7 @@
           <label><span class="form-label">E-Mail für den Beleg *</span><input class="form-control" id="pro-email" type="email" maxlength="120" autocomplete="email" value="${escapeHtml(profileData.email || '')}"></label>
           <label class="full"><span class="form-label">Gewünschte Anzahl Ferienhäuser</span><input class="form-control" id="pro-count" type="number" min="2" max="${plan.houseLimit}" value="${proDesiredCount}"></label></div></div>
         <div class="pro-box"><h3>Bestellübersicht</h3><dl class="pro-summary"><div><dt>Produkt</dt><dd>${escapeHtml(plan.name)}</dd></div><div><dt>Zahlungsart</dt><dd>PayPal (auch Karte oder Lastschrift über PayPal)</dd></div><div><dt>Lieferung</dt><dd>Sofortige Freischaltung nach Zahlung</dd></div><div class="pro-total"><dt>Gesamtpreis</dt><dd>${formatMoney(plan.price)}</dd></div></dl></div>
-        <div class="pro-legal"><label><input type="checkbox" id="pro-terms"><span>Ich habe die Allgemeinen Geschäftsbedingungen und die Datenschutzhinweise gelesen und akzeptiere sie.</span></label>
+        <div class="pro-legal"><label><input type="checkbox" id="pro-terms"><span>Ich habe die <button type="button" class="text-btn inline-link" data-legal-open="terms" data-legal-modal>Allgemeinen Geschäftsbedingungen</button> und die <button type="button" class="text-btn inline-link" data-legal-open="privacy" data-legal-modal>Datenschutzerklärung</button> gelesen und akzeptiere sie.</span></label>
           <label><input type="checkbox" id="pro-withdrawal"><span>Ich stimme ausdrücklich zu, dass die Freischaltung sofort beginnt, und weiß, dass ich dadurch mein Widerrufsrecht bei digitalen Inhalten verliere.</span></label></div>
         <div class="pro-paypal" id="paypal-button-container"><p class="pro-fineprint">PayPal wird geladen …</p></div>
         <p class="pro-fineprint">Die Zahlung wird von PayPal abgewickelt. Zahlungsdaten gibst du nur bei PayPal ein und sie werden nicht in Husora gespeichert. Die Freischaltung gilt für diesen Browser${PAYPAL_CONFIG.supportEmail ? `. Fragen: ${escapeHtml(PAYPAL_CONFIG.supportEmail)}` : ''}.</p>`;
@@ -9422,7 +9510,7 @@
       document.getElementById('pro-modal-title').textContent = 'Vielen Dank!';
       document.getElementById('pro-modal-subtitle').textContent = `${plan.name} ist freigeschaltet`;
       document.getElementById('pro-modal-body').innerHTML = `<div class="pro-success"><div class="pro-check">✓</div><p style="font-size:13px;line-height:1.6;margin:0 0 14px">Deine Zahlung ist eingegangen. Du kannst jetzt bis zu <strong>${profileData.houseCount}</strong> Ferienhäuser verwalten.</p></div>
-        <div class="pro-box"><h3>Beleg</h3><dl class="pro-summary"><div><dt>Bestellnummer</dt><dd>${escapeHtml(proState.orderId)}</dd></div><div><dt>Betrag</dt><dd>${escapeHtml(formatMoney(proState.amount))}</dd></div><div><dt>Datum</dt><dd>${escapeHtml(new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(new Date(proState.purchasedAt)))}</dd></div><div><dt>PayPal-Konto</dt><dd>${escapeHtml(proState.payerEmail)}</dd></div>${proState.testMode ? '<div><dt>Modus</dt><dd>Test (kein echtes Geld)</dd></div>' : ''}</dl></div>
+        <div class="pro-box"><h3>Beleg</h3><dl class="pro-summary"><div><dt>Bestellnummer</dt><dd>${escapeHtml(proState.orderId)}</dd></div><div><dt>Betrag</dt><dd>${escapeHtml(formatMoney(proState.amount))}</dd></div><div><dt>Datum</dt><dd>${escapeHtml(fmtDateFull(new Date(proState.purchasedAt)))}</dd></div><div><dt>PayPal-Konto</dt><dd>${escapeHtml(proState.payerEmail)}</dd></div>${proState.testMode ? '<div><dt>Modus</dt><dd>Test (kein echtes Geld)</dd></div>' : ''}</dl></div>
         <div class="form-actions"><button type="button" class="secondary-btn" id="pro-done">Schließen</button><button type="button" class="primary-btn" id="pro-add-house">Weiteres Ferienhaus hinzufügen</button></div>`;
       render();
     }
@@ -10769,6 +10857,186 @@
       if (event.key === 'ArrowLeft') stepLightbox(-1);
       if (event.key === 'ArrowRight') stepLightbox(1);
     }, true);
+    // ===== Einstellungen, Datensicherung und Rechtliches =====
+    const APP_VERSION = '1.0.0';
+    const APP_BUILD = '2026-10-27';
+    // Angaben des Anbieters für Impressum und Datenschutz – vor der Veröffentlichung ausfüllen.
+    const LEGAL_INFO = { company: '', owner: '', street: '', zip: '', city: '', country: 'Deutschland', email: '', phone: '', vatId: '', supportEmail: '' };
+    const legalValue = (key, label) => (LEGAL_INFO[key] ? escapeHtml(LEGAL_INFO[key]) : `<mark class="legal-todo">[${label}]</mark>`);
+    const STORAGE_PREFIX = 'stugliv-';
+    const STORAGE_LIMIT = 5 * 1024 * 1024;
+    function storageUsage() {
+      let bytes = 0;
+      const keys = [];
+      try {
+        for (let index = 0; index < localStorage.length; index += 1) {
+          const key = localStorage.key(index);
+          if (!key || !key.startsWith(STORAGE_PREFIX)) continue;
+          keys.push(key);
+          bytes += (key.length + (localStorage.getItem(key) || '').length) * 2;
+        }
+      } catch (error) { /* Speicher nicht verfügbar */ }
+      return { bytes, keys, percent: Math.min(100, Math.round(bytes / STORAGE_LIMIT * 100)) };
+    }
+    const formatBytes = (bytes) => (bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / (1024 * 1024)).toFixed(1).replace('.', ',')} MB`);
+    function exportAppData() {
+      const { keys } = storageUsage();
+      const data = Object.fromEntries(keys.map((key) => [key, localStorage.getItem(key)]));
+      const backup = { app: 'husora', version: APP_VERSION, exportedAt: new Date().toISOString(), houses: properties.map((property) => property.name), data };
+      const blob = new Blob([JSON.stringify(backup)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `husora-sicherung-${localDateKey(new Date())}.json`;
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => { URL.revokeObjectURL(link.href); link.remove(); }, 1000);
+      try { localStorage.setItem('stugliv-last-backup', new Date().toISOString()); } catch (error) { /* optional */ }
+      showToast('Datensicherung erstellt – bewahre die Datei an einem sicheren Ort auf (z. B. iCloud Drive oder Google Drive).');
+      render();
+    }
+    async function importAppData(file) {
+      if (!file) return;
+      let backup;
+      try { backup = JSON.parse(await file.text()); } catch (error) { showToast('Die Datei ist keine gültige Husora-Datensicherung.'); return; }
+      if (!backup || backup.app !== 'husora' || typeof backup.data !== 'object') { showToast('Die Datei ist keine gültige Husora-Datensicherung.'); return; }
+      const entries = Object.entries(backup.data).filter(([key, value]) => key.startsWith(STORAGE_PREFIX) && typeof value === 'string');
+      const houses = Array.isArray(backup.houses) && backup.houses.length ? ` (${backup.houses.slice(0, 3).join(', ')}${backup.houses.length > 3 ? ' …' : ''})` : '';
+      if (!window.confirm(`Datensicherung vom ${fmtDateTime(backup.exportedAt)}${houses} wiederherstellen? Alle aktuellen Daten in dieser App werden dabei ersetzt.`)) return;
+      const previous = storageUsage().keys.map((key) => [key, localStorage.getItem(key)]);
+      try {
+        previous.forEach(([key]) => localStorage.removeItem(key));
+        entries.forEach(([key, value]) => localStorage.setItem(key, value));
+      } catch (error) {
+        previous.forEach(([key, value]) => { try { localStorage.setItem(key, value); } catch (inner) { /* bestmöglich zurücksetzen */ } });
+        showToast('Die Sicherung ist zu groß für den Speicher dieses Geräts – es wurde nichts geändert.');
+        return;
+      }
+      sessionStorage.setItem('husora-restored', '1');
+      location.reload();
+    }
+    function resetAppData() {
+      if (!window.confirm('Wirklich alle Daten dieser App löschen? Ferienhäuser, Aufgaben, Buchungen, Dokumente und Einstellungen werden unwiderruflich entfernt. Erstelle vorher eine Datensicherung.')) return;
+      if (!window.confirm('Letzte Bestätigung: Alle Husora-Daten auf diesem Gerät löschen?')) return;
+      storageUsage().keys.forEach((key) => { try { localStorage.removeItem(key); } catch (error) { /* weiter */ } });
+      sessionStorage.setItem('husora-reset', '1');
+      location.reload();
+    }
+    function backupCardHtml() {
+      const usage = storageUsage();
+      let lastBackup = '';
+      try { lastBackup = localStorage.getItem('stugliv-last-backup') || ''; } catch (error) { lastBackup = ''; }
+      const stale = !lastBackup || Date.now() - new Date(lastBackup).getTime() > 30 * 24 * 60 * 60 * 1000;
+      return `<section class="card settings-card" id="settings-backup"><div class="settings-card-head"><span class="settings-icon">${icon('document')}</span><div><h2 class="card-title">Datensicherung</h2><p class="card-caption">Deine Daten liegen nur auf diesem Gerät. Sichere sie regelmäßig als Datei.</p></div></div>
+        <div class="storage-meter ${usage.percent > 80 ? 'full' : usage.percent > 60 ? 'warn' : ''}"><div class="storage-meter-top"><strong>Speicher belegt</strong><span>${formatBytes(usage.bytes)} von ca. ${formatBytes(STORAGE_LIMIT)} · ${usage.percent} %</span></div><span class="storage-bar"><i style="width:${Math.max(2, usage.percent)}%"></i></span>${usage.percent > 80 ? '<small>Der Speicher ist fast voll. Lösche nicht mehr benötigte PDFs und Fotos unter „Dokumente“, sonst können neue Daten nicht gespeichert werden.</small>' : ''}</div>
+        <div class="backup-status ${stale ? 'stale' : ''}">${stale ? icon('alert') : icon('check')}<span>${lastBackup ? `Letzte Sicherung: ${escapeHtml(fmtDateTime(lastBackup))}` : 'Noch keine Datensicherung erstellt'}${stale ? ' – wir empfehlen eine Sicherung pro Monat.' : ''}</span></div>
+        <div class="settings-actions"><button type="button" class="primary-btn" data-settings-action="export">${icon('document')} Daten sichern (Datei)</button><label class="secondary-btn settings-file">Sicherung wiederherstellen<input type="file" accept="application/json,.json" data-settings-import hidden></label></div>
+        <p class="settings-hint">Die Sicherungsdatei enthält alle Ferienhäuser, Aufgaben, Buchungen, Kontrollen, Kosten und hochgeladenen Dokumente. Mit „Wiederherstellen“ überträgst du alles auf ein anderes Gerät oder in einen anderen Browser.</p>
+        <div class="settings-danger"><div><strong>Alle Daten löschen</strong><small>Entfernt sämtliche Husora-Daten von diesem Gerät.</small></div><button type="button" class="secondary-btn danger" data-settings-action="reset">Alle Daten löschen</button></div>
+      </section>`;
+    }
+    function appInfoCardHtml() {
+      return `<section class="card settings-card"><div class="settings-card-head"><span class="settings-icon">${icon('home')}</span><div><h2 class="card-title">Über Husora</h2><p class="card-caption">Version ${APP_VERSION} · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}</p></div></div>
+        <div class="settings-links">${[['imprint', 'Impressum'], ['privacy', 'Datenschutzerklärung'], ['terms', 'AGB'], ['partners', 'Hinweis zu Partnerdaten'], ['licenses', 'Lizenzen & Datenquellen']].map(([id, label]) => `<button type="button" data-legal-open="${id}"><span>${label}</span>${icon('arrow')}</button>`).join('')}</div>
+      </section>`;
+    }
+    function settingsPage() {
+      return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Einstellungen</h1><p class="subtitle">Datensicherung, Darstellung, Benachrichtigungen und Informationen zur App.</p></div></div>
+        <div class="settings-grid">${settingsCardsHtml().join('')}</div>`;
+    }
+    // Weitere Karten hängen sich hier ein (Darstellung, Benachrichtigungen …).
+    const settingsCardBuilders = [backupCardHtml, appInfoCardHtml];
+    const settingsCardsHtml = () => settingsCardBuilders.map((build) => build());
+
+    const LEGAL_SECTIONS = {
+      imprint: { title: 'Impressum', html: () => `<p class="legal-lead">Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG)</p>
+        <p>${legalValue('company', 'Firma oder Name')}<br>${legalValue('owner', 'Inhaber / vertretungsberechtigte Person')}<br>${legalValue('street', 'Straße und Hausnummer')}<br>${legalValue('zip', 'PLZ')} ${legalValue('city', 'Ort')}<br>${escapeHtml(LEGAL_INFO.country)}</p>
+        <h3>Kontakt</h3><p>E-Mail: ${legalValue('email', 'E-Mail-Adresse')}<br>Telefon: ${legalValue('phone', 'Telefonnummer')}</p>
+        <h3>Umsatzsteuer</h3><p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: ${legalValue('vatId', 'USt-IdNr., falls vorhanden – sonst Abschnitt entfernen')}</p>
+        <h3>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h3><p>${legalValue('owner', 'Name')}, Anschrift wie oben</p>
+        <h3>Verbraucherstreitbeilegung</h3><p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>` },
+      privacy: { title: 'Datenschutzerklärung', html: () => `<p class="legal-lead">Stand: ${escapeHtml(fmtDateFull(APP_BUILD))}</p>
+        <h3>1. Verantwortlicher</h3><p>${legalValue('company', 'Firma oder Name')}, ${legalValue('street', 'Anschrift')}, ${legalValue('zip', 'PLZ')} ${legalValue('city', 'Ort')} · ${legalValue('email', 'E-Mail-Adresse')}</p>
+        <h3>2. Grundsatz: Speicherung auf deinem Gerät</h3><p>Husora benötigt kein Benutzerkonto. Alle Angaben – Profil, Ferienhäuser, Buchungen, Aufgaben, Kontrollen, Kosten, Fotos und Dokumente – werden ausschließlich im lokalen Speicher deines Geräts bzw. Browsers abgelegt und nicht an uns übertragen. Wir setzen keine Analyse-, Werbe- oder Tracking-Dienste ein.</p>
+        <h3>3. Externe Dienste</h3><p>Für einzelne Funktionen ruft die App Inhalte von Drittanbietern ab. Dabei wird technisch bedingt deine IP-Adresse an den jeweiligen Anbieter übertragen; bei Suchanfragen zusätzlich der eingegebene Suchbegriff bzw. Link.</p>
+        <ul>
+          <li><strong>Karten und Adresssuche:</strong> OpenStreetMap Foundation (Kartenkacheln, Nominatim-Adresssuche), Google Maps (Kartenvorschau in der Objektübersicht).</li>
+          <li><strong>Programmbibliotheken:</strong> cdnjs (Cloudflare), unpkg und jsDelivr für pdf.js, Leaflet und Tesseract.js (PDF-Auslesen, Karte, Texterkennung).</li>
+          <li><strong>Wechselkurse:</strong> frankfurter.dev und open.er-api.com (nur bei Anzeige in Euro).</li>
+          <li><strong>Import von Inseraten:</strong> Abruf der angegebenen Inseratsseite, ggf. über die Weiterleitungsdienste allorigins.win und cors.lol sowie die Schnittstellen der jeweiligen Maklerportale; Übersetzung schwedischer Texte über Google Übersetzer bzw. MyMemory.</li>
+          <li><strong>Kalender-Abgleich:</strong> Abruf deiner iCal-Links, auf Wunsch über eine Weiterleitung; bei verbundenem Buchungsportal Datenaustausch mit Repull.</li>
+          <li><strong>Zahlung Husora Pro:</strong> PayPal (Europe) S.à r.l. et Cie, S.C.A. – Name, E-Mail und Zahlungsdaten werden direkt von PayPal verarbeitet.</li>
+          <li><strong>E-Mails an Servicepartner:</strong> werden über dein eigenes Mailprogramm versendet; Husora selbst versendet keine E-Mails.</li>
+        </ul>
+        <h3>4. Rechtsgrundlagen</h3><p>Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der von dir genutzten Funktionen und Abwicklung des Kaufs) sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer funktionsfähigen App).</p>
+        <h3>5. Speicherdauer und Löschung</h3><p>Die Daten bleiben auf deinem Gerät, bis du sie löschst. Unter „Einstellungen → Datensicherung → Alle Daten löschen“ entfernst du sämtliche Daten. Das Löschen des Browserspeichers oder der App löscht die Daten ebenfalls.</p>
+        <h3>6. Deine Rechte</h3><p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch sowie das Recht auf Beschwerde bei einer Datenschutz-Aufsichtsbehörde. Da wir keine Daten von dir speichern, betreffen diese Rechte vor allem die Kaufabwicklung.</p>` },
+      terms: { title: 'Allgemeine Geschäftsbedingungen', html: () => `<p class="legal-lead">Stand: ${escapeHtml(fmtDateFull(APP_BUILD))}</p>
+        <h3>1. Geltungsbereich</h3><p>Diese Bedingungen gelten für die Nutzung der App Husora, angeboten von ${legalValue('company', 'Firma oder Name')}.</p>
+        <h3>2. Leistungen</h3><p>Husora unterstützt bei der Verwaltung von Ferienhäusern: Aufgaben, Buchungen, Hauskontrollen, Kosten, Dokumente und die Kontaktaufnahme mit Servicepartnern. Die kostenlose Version umfasst ein Ferienhaus. Husora Pro erweitert die Nutzung auf bis zu 50 Ferienhäuser und das 3D-Hausmodell.</p>
+        <h3>3. Vertragsschluss und Preis</h3><p>Husora Pro wird gegen eine einmalige Zahlung freigeschaltet (Preis laut Anzeige in der App, inkl. gesetzlicher MwSt.). Es entsteht kein Abonnement.</p>
+        <h3>4. Widerrufsrecht</h3><p>Verbrauchern steht ein gesetzliches Widerrufsrecht zu. Bei digitalen Inhalten erlischt es, wenn du ausdrücklich zustimmst, dass wir vor Ablauf der Widerrufsfrist mit der Bereitstellung beginnen, und deine Kenntnis vom Verlust des Widerrufsrechts bestätigst.</p>
+        <h3>5. Servicepartner</h3><p>Aufträge an Servicepartner schließt du direkt mit dem jeweiligen Betrieb. Husora ist nicht Vertragspartei und übernimmt keine Gewähr für Verfügbarkeit, Preise oder Qualität der Leistungen.</p>
+        <h3>6. Daten und Datensicherung</h3><p>Deine Daten werden lokal auf deinem Gerät gespeichert. Für regelmäßige Sicherungen bist du selbst verantwortlich; die App bietet dafür unter „Einstellungen“ eine Export-Funktion.</p>
+        <h3>7. Haftung</h3><p>Wir haften unbeschränkt bei Vorsatz und grober Fahrlässigkeit sowie bei Verletzung von Leben, Körper und Gesundheit. Bei leichter Fahrlässigkeit haften wir nur bei Verletzung wesentlicher Vertragspflichten und begrenzt auf den vorhersehbaren, vertragstypischen Schaden.</p>
+        <h3>8. Schlussbestimmungen</h3><p>Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts; zwingende Verbraucherschutzvorschriften deines Wohnsitzstaates bleiben unberührt.</p>` },
+      partners: { title: 'Hinweis zu Partnerdaten', html: () => `<p>Die Servicepartner-Datenbank wurde aus öffentlich zugänglichen Quellen (Websites der Betriebe, Branchenverzeichnisse) zusammengestellt. Angaben wie Leistungen, Kontaktdaten und Entfernungen können veraltet oder ungenau sein; Entfernungen sind Luftlinien-Schätzungen.</p>
+        <p>Die Aufnahme in die Liste ist keine Empfehlung und keine Bewertung. Husora steht in keiner Geschäftsbeziehung zu den aufgeführten Betrieben und erhält keine Provision.</p>
+        <p>Betriebe, die eine Korrektur oder Entfernung wünschen, wenden sich bitte an ${legalValue('email', 'E-Mail-Adresse')}.</p>` },
+      licenses: { title: 'Lizenzen & Datenquellen', html: () => `<ul>
+          <li><strong>Leaflet</strong> – BSD-2-Clause-Lizenz, © Volodymyr Agafonkin</li>
+          <li><strong>pdf.js</strong> – Apache License 2.0, © Mozilla Foundation</li>
+          <li><strong>Tesseract.js</strong> – Apache License 2.0</li>
+          <li><strong>Kartendaten</strong> – © OpenStreetMap-Mitwirkende, Open Database License (ODbL)</li>
+          <li><strong>Fotos in der App</strong> – <mark class="legal-todo">[Bildnachweise ergänzen]</mark></li>
+        </ul><p>Husora ${APP_VERSION} · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}</p>` }
+    };
+    let legalTab = 'imprint';
+    const appFooterHtml = () => `<footer class="app-footer"><button type="button" data-legal-open="imprint">Impressum</button><button type="button" data-legal-open="privacy">Datenschutz</button><button type="button" data-legal-open="terms">AGB</button><button type="button" data-page="settings">Einstellungen</button><span>Husora ${APP_VERSION}</span></footer>`;
+    function legalDraftNote() {
+      const missing = ['company', 'street', 'zip', 'city', 'email'].some((key) => !LEGAL_INFO[key]);
+      return missing ? `<div class="legal-draft">${icon('alert')}<span><strong>Entwurf:</strong> Markierte Angaben fehlen noch. Lass die Texte vor der Veröffentlichung im App Store rechtlich prüfen.</span></div>` : '';
+    }
+    function legalPage() {
+      const section = LEGAL_SECTIONS[legalTab] || LEGAL_SECTIONS.imprint;
+      return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Rechtliches</h1><p class="subtitle">Impressum, Datenschutz, AGB und Lizenzen.</p></div></div>
+        ${legalDraftNote()}
+        <div class="legal-tabs" role="tablist">${Object.entries(LEGAL_SECTIONS).map(([id, entry]) => `<button type="button" role="tab" aria-selected="${id === legalTab}" class="${id === legalTab ? 'active' : ''}" data-legal-tab="${id}">${entry.title}</button>`).join('')}</div>
+        <article class="card legal-text"><h2>${section.title}</h2>${section.html()}</article>`;
+    }
+    function openLegalModal(id) {
+      const section = LEGAL_SECTIONS[id];
+      if (!section) return;
+      document.getElementById('legal-modal-title').textContent = section.title;
+      document.getElementById('legal-modal-body').innerHTML = legalDraftNote() + section.html();
+      document.getElementById('legal-modal').classList.add('open');
+    }
+    const closeLegalModal = () => document.getElementById('legal-modal').classList.remove('open');
+    document.addEventListener('click', (event) => {
+      const settingsAction = event.target.closest('[data-settings-action]');
+      if (settingsAction) {
+        if (settingsAction.dataset.settingsAction === 'export') exportAppData();
+        if (settingsAction.dataset.settingsAction === 'reset') resetAppData();
+        return;
+      }
+      const legalTabButton = event.target.closest('[data-legal-tab]');
+      if (legalTabButton) { legalTab = legalTabButton.dataset.legalTab; render(); return; }
+      const legalOpen = event.target.closest('[data-legal-open]');
+      if (legalOpen) {
+        event.preventDefault();
+        if (legalOpen.closest('.modal-backdrop') || legalOpen.dataset.legalModal !== undefined) openLegalModal(legalOpen.dataset.legalOpen);
+        else { legalTab = legalOpen.dataset.legalOpen; document.getElementById('main-menu')?.classList.remove('open'); currentPage = 'legal'; render(); window.scrollTo(0, 0); }
+        return;
+      }
+      if (event.target.closest('[data-close-legal]') || event.target.id === 'legal-modal') closeLegalModal();
+    });
+    document.addEventListener('change', (event) => {
+      if (event.target.matches('[data-settings-import]')) { importAppData(event.target.files[0]); event.target.value = ''; }
+    });
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && document.getElementById('legal-modal')?.classList.contains('open')) closeLegalModal(); });
+    try {
+      if (sessionStorage.getItem('husora-restored')) { sessionStorage.removeItem('husora-restored'); setTimeout(() => showToast('Datensicherung wiederhergestellt.'), 300); }
+      if (sessionStorage.getItem('husora-reset')) { sessionStorage.removeItem('husora-reset'); setTimeout(() => showToast('Alle Daten wurden gelöscht.'), 300); }
+    } catch (error) { /* optional */ }
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();
     if (isEuro()) refreshFxRate();
