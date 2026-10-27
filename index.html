@@ -2726,7 +2726,10 @@
     .pkg-add-grid .secondary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
     .pkg-add-grid svg { width: 15px; height: 15px; }
     .pkg-spacer { flex: 1; }
+    .season-edit { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
+    .season-edit svg { width: 15px; height: 15px; }
     @media (max-width: 600px) { .pkg-meta { grid-template-columns: 1fr; } .pkg-add-grid { grid-template-columns: 1fr; } }
+  
   
   
     /* DARK-MODE-START */
@@ -5089,7 +5092,6 @@ html.dark .pkg-remove { background: #1c1c1c; }
         : `<strong>Eigene Zusammenstellung</strong>`;
       return `<span class="form-label package-label">Servicepakete</span><div class="package-grid">${cards}</div>
         <p class="package-summary">${summary} · ${selected.length} Aufgaben aktiv · ≈ ${yearlyTotal} Einsätze pro Jahr${singleHouse() ? '' : ' je Haus'}</p>
-        <span class="form-label package-label">Saison-Checklisten</span><div class="package-grid season-packages">${seasonPackageCardsHtml()}</div>
         <p class="package-summary">Ein Klick auf ein Paket öffnet seine Aufgaben – dort kannst du sie anpassen und um eigene erweitern.</p>`;
     }
     let currentPage = 'dashboard';
@@ -13167,7 +13169,7 @@ html.dark .pkg-remove { background: #1c1c1c; }
         ${singleHouse() ? '' : `<div class="section-toolbar"><label><span class="form-label">Ferienhaus</span><select id="inspection-property" class="filter-select" aria-label="Ferienhaus wählen">${properties.map((item) => `<option value="${escapeHtml(item.id)}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)}</option>`).join('')}</select></label></div>`}
         <div class="season-switches">${seasonCard('winter')}${seasonCard('spring')}</div>
         <section class="card season-summary"><div class="season-summary-main"><span class="form-label">${season.card} ${escapeHtml(String(dueState.due || '').slice(0, 4) || new Date().getFullYear())}</span><strong>${done} von ${items.length} Punkten erledigt</strong><span class="season-progress"><i style="width:${Math.round(done / items.length * 100)}%"></i></span><small>${items.filter((item) => item.type === 'control').length} Kontrollpunkte · ${items.filter((item) => item.type === 'service').length} Serviceaufgaben · ${items.filter((item) => item.task).length} davon als Aufgabe vergeben</small></div>
-          <div class="season-due ${dueState.ready ? 'ready' : dueState.overdue ? 'overdue' : dueState.days <= 14 ? 'soon' : ''}"><label><span class="form-label">Fertig bis</span><input class="form-control" type="date" id="season-due-input" data-season="${key}" value="${escapeHtml(dueState.due)}"></label><span class="season-due-state">${escapeHtml(dueText)}</span></div></section>
+          <div class="season-due ${dueState.ready ? 'ready' : dueState.overdue ? 'overdue' : dueState.days <= 14 ? 'soon' : ''}"><label><span class="form-label">Fertig bis</span><input class="form-control" type="date" id="season-due-input" data-season="${key}" value="${escapeHtml(dueState.due)}"></label><span class="season-due-state">${escapeHtml(dueText)}</span></div><button type="button" class="secondary-btn season-edit" data-package-open="season:${key}">${icon('edit')} Checkliste bearbeiten</button></section>
         ${done === items.length ? `<div class="winter-ready">${icon('check')}<span><strong>${key === 'winter' ? 'Winterfest' : 'Saison eröffnet'}</strong><small>${escapeHtml(season.ready(property.name))}</small></span></div>` : ''}
         <div class="season-groups">
           ${group('control', 'Prüfen', 'Zustand kontrollieren – Auffälligkeiten werden als Mangel gemeldet und die Reparatur geplant.')}
