@@ -2725,10 +2725,24 @@
     .pkg-add-grid .form-control { min-height: 44px; }
     .pkg-add-grid .secondary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
     .pkg-add-grid svg { width: 15px; height: 15px; }
+    .pkg-chips { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 6px 0 14px; }
+    .pkg-chip { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 11px; color: var(--ink); background: white; text-align: left; cursor: pointer; }
+    .pkg-chip strong { font-size: 14px; }
+    .pkg-chip small { color: var(--muted); font-size: 12px; line-height: 1.35; }
+    .pkg-chip.active { border-color: var(--green); box-shadow: 0 0 0 1px var(--green) inset; background: var(--green-soft); }
+    .pkg-pick { align-items: center; }
+    .pkg-pick.open { align-items: flex-start; border-color: var(--green); background: white; }
+    .pkg-pick-title { display: grid; gap: 2px; width: 100%; padding: 2px 0; border: 0; color: var(--ink); background: none; text-align: left; cursor: pointer; }
+    .pkg-pick-title strong { font-size: 14px; font-weight: 600; }
+    .pkg-pick-title small { color: var(--muted); font-size: 12px; }
+    .pkg-edit-btn { display: grid; flex: 0 0 auto; place-items: center; width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 9px; color: var(--green); background: white; cursor: pointer; }
+    .pkg-edit-btn svg { width: 15px; height: 15px; }
+    .pkg-edit-actions { display: flex; gap: 8px; }
     .pkg-spacer { flex: 1; }
     .season-edit { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
     .season-edit svg { width: 15px; height: 15px; }
     @media (max-width: 600px) { .pkg-meta { grid-template-columns: 1fr; } .pkg-add-grid { grid-template-columns: 1fr; } }
+  
   
   
   
@@ -3349,6 +3363,9 @@ html.dark .pkg-row { background: #25231a; }
 html.dark .pkg-check input:checked + .season-check-box { background: var(--green-solid); }
 html.dark .pkg-fields .pkg-detail { color: #c0c8c3; }
 html.dark .pkg-remove { background: #1c1c1c; }
+html.dark .pkg-chip { background: #1c1c1c; }
+html.dark .pkg-pick.open { background: #1c1c1c; }
+html.dark .pkg-edit-btn { background: #1c1c1c; }
     }
     /* DARK-MODE-END */
   </style>
@@ -6113,7 +6130,7 @@ html.dark .pkg-remove { background: #1c1c1c; }
       }).join('');
       const openCount = tasks.filter((task) => taskStatus(task) !== 'Erledigt').length;
       return `<div class="welcome"><div><p class="eyebrow">Buchungen & Instandhaltung</p><h1>Serviceaufgaben</h1><p class="subtitle">Koordiniere Reinigung, Schlüsselübergaben und saisonale Stugapflege.</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>
-        <section class="card auto-task-bar"><div><label class="switch"><input type="checkbox" id="auto-task-toggle" ${autoTasks.enabled ? 'checked' : ''}><span class="switch-track"></span><span>Aufgaben automatisch erstellen</span></label><p>${packageExtras().servicePackage ? `Servicepaket ${escapeHtml(packageExtras().servicePackage.name)} · ` : ''}${autoTasks.templates.filter((template) => template.selected).length} Vorlagen ausgewählt – werden ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} automatisch angelegt.</p></div><div class="auto-task-actions"><button class="primary-btn" data-action="new-task">${icon('plus')} Aufgabe erstellen</button><button class="secondary-btn" data-action="auto-task-config">Aufgaben auswählen / erstellen</button></div></section>
+        <section class="card auto-task-bar"><div><label class="switch"><input type="checkbox" id="auto-task-toggle" ${autoTasks.enabled ? 'checked' : ''}><span class="switch-track"></span><span>Aufgaben automatisch erstellen</span></label><p>${packageExtras().servicePackage ? `Servicepaket ${escapeHtml(packageExtras().servicePackage.name)} · ` : ''}${autoTasks.templates.filter((template) => template.selected).length} Vorlagen ausgewählt – werden ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} automatisch angelegt.</p></div><div class="auto-task-actions"><button class="primary-btn" data-action="new-task">${icon('plus')} Aufgabe erstellen</button><button class="secondary-btn" data-template-picker>${icon('task')} Aufgabenpaket aus Vorlage wählen</button></div></section>
         <section class="card"><div class="card-head"><div><h2 class="card-title">Alle Serviceaufgaben</h2><p class="card-caption">${openCount} offen · ${tasks.length - openCount} erledigt</p></div></div>
         <div class="section-toolbar" style="padding:0 18px"><div class="toolbar-right"><select id="task-filter" class="filter-select" aria-label="Nach Status filtern"><option value="all">Alle Status</option>${taskStatuses.map((value) => `<option ${taskFilter === value ? 'selected' : ''}>${value}</option>`).join('')}</select>${singleHouse() ? '' : `<select id="task-property-filter" class="filter-select" aria-label="Nach Gebäude filtern"><option value="all">Alle Gebäude</option>${properties.map((property) => `<option value="${escapeHtml(property.name)}" ${taskPropertyFilter === property.name ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select>`}<select id="task-priority-filter" class="filter-select" aria-label="Nach Priorität filtern"><option value="all">Alle Prioritäten</option><option value="urgent" ${taskPriorityFilter === 'urgent' ? 'selected' : ''}>Dringend</option><option value="soon" ${taskPriorityFilter === 'soon' ? 'selected' : ''}>Wichtig</option><option value="normal" ${taskPriorityFilter === 'normal' ? 'selected' : ''}>Normal</option></select></div><div class="view-toggle" role="tablist" aria-label="Ansicht"><button type="button" class="${taskView === 'list' ? 'active' : ''}" data-task-view="list">Liste</button><button type="button" class="${taskView === 'partners' ? 'active' : ''}" data-task-view="partners">Nach Servicepartner</button></div></div>
         ${taskView === 'partners' ? partnerTasksView(visible) : `<div class="tcard-list">${rows || '<div class="empty">Keine Aufgaben gefunden. Erstelle eine Aufgabe oder ändere die Filter.</div>'}</div>`}</section>`;
@@ -13354,6 +13371,25 @@ html.dark .pkg-remove { background: #1c1c1c; }
     })();
     let pkgDraft = null;
     const templateFor = (id) => autoTasks.templates.find((template) => template.id === id) || defaultAutoTemplates.find((template) => template.id === id) || null;
+    const templateToRow = (template) => ({ id: template.id, title: template.title, interval: Number(template.interval) || 365, season: template.season || 'all', priority: template.priority || 'normal', selected: Boolean(template.selected), builtin: Boolean(template.builtin), category: template.category });
+    function openTemplatePicker() {
+      pkgDraft = { kind: 'all', packageId: autoTasks.packageId || '', rows: autoTasks.templates.map(templateToRow), removed: [], open: -1 };
+      document.getElementById('package-modal-title').textContent = 'Aufgabenpaket aus Vorlage wählen';
+      document.getElementById('package-modal-subtitle').textContent = 'Paket wählen, Aufgaben an- oder abwählen und per Klick bearbeiten';
+      renderPackageModal();
+      document.getElementById('package-modal').classList.add('open');
+    }
+    function renderTemplatePicker(body, actions, options) {
+      const metaText = (row) => [PKG_INTERVALS.find(([days]) => days === row.interval)?.[1] || intervalLabel(row.interval), SEASONS[row.season]?.label || 'Ganzjährig', PKG_PRIORITIES.find(([id]) => id === row.priority)?.[1] || 'Normal'].join(' · ');
+      const groups = TASK_CATEGORIES.map((category) => ({ category, items: pkgDraft.rows.map((row, index) => ({ row, index })).filter(({ row }) => templateCategory(row).id === category.id) })).filter((group) => group.items.length);
+      const active = pkgDraft.rows.filter((row) => row.selected).length;
+      body.innerHTML = `<span class="form-label">Aufgabenpaket</span>
+        <div class="pkg-chips">${SERVICE_PACKAGES.map((item) => `<button type="button" class="pkg-chip ${pkgDraft.packageId === item.id ? 'active' : ''}" data-pkg-choose="${item.id}"><strong>${escapeHtml(item.name)}</strong><small>${item.templates.length} Aufgaben · ${escapeHtml(item.tagline)}</small></button>`).join('')}</div>
+        <p class="pkg-intro">${active} von ${pkgDraft.rows.length} Aufgaben ausgewählt. Tippe auf eine Aufgabe, um sie zu bearbeiten.</p>
+        ${groups.map(({ category, items }) => `<h3 class="pkg-h">${escapeHtml(category.label)} <small>${items.filter(({ row }) => row.selected).length} von ${items.length}</small></h3><div class="pkg-list">${items.map(({ row, index }) => `<div class="pkg-row pkg-pick ${row.selected ? '' : 'off'} ${pkgDraft.open === index ? 'open' : ''}" data-pkg-index="${index}"><label class="pkg-check"><input type="checkbox" data-pkg-field="selected" ${row.selected ? 'checked' : ''} aria-label="${escapeHtml(row.title)} auswählen"><span class="season-check-box">${icon('check')}</span></label><div class="pkg-fields">${pkgDraft.open === index ? `<input class="form-control" data-pkg-field="title" maxlength="90" value="${escapeHtml(row.title)}" aria-label="Aufgabe"><div class="pkg-meta"><select class="form-control" data-pkg-field="interval" aria-label="Wiederholung">${options(PKG_INTERVALS, row.interval)}</select><select class="form-control" data-pkg-field="season" aria-label="Jahreszeit">${options(Object.entries(SEASONS).map(([id, season]) => [id, season.label]), row.season)}</select><select class="form-control" data-pkg-field="priority" aria-label="Priorität">${options(PKG_PRIORITIES, row.priority)}</select></div><div class="pkg-edit-actions"><button type="button" class="small-action" data-pkg-toggle="${index}">Fertig</button>${row.builtin ? '' : `<button type="button" class="small-action danger" data-pkg-remove="${index}">Löschen</button>`}</div>` : `<button type="button" class="pkg-pick-title" data-pkg-toggle="${index}"><strong>${escapeHtml(row.title)}</strong><small>${escapeHtml(metaText(row))}${row.builtin ? '' : ' · Eigene'}</small></button>`}</div>${pkgDraft.open === index ? '' : `<button type="button" class="pkg-edit-btn" data-pkg-toggle="${index}" aria-label="${escapeHtml(row.title)} bearbeiten">${icon('edit')}</button>`}</div>`).join('')}</div>`).join('')}
+        <div class="pkg-add"><span class="form-label">Eigene Aufgabe ergänzen</span><div class="pkg-add-grid"><input class="form-control" id="pkg-new-title" maxlength="90" placeholder="z. B. Boot winterfest machen" aria-label="Neue Aufgabe"><select class="form-control" id="pkg-new-interval" aria-label="Wiederholung">${options(PKG_INTERVALS, 365)}</select><button type="button" class="secondary-btn" data-pkg-add>${icon('plus')} Hinzufügen</button></div></div>`;
+      actions.innerHTML = '<span class="pkg-spacer"></span><button type="button" class="secondary-btn" data-package-close>Abbrechen</button><button type="button" class="primary-btn" data-pkg-save>Übernehmen</button>';
+    }
     function openPackage(ref) {
       if (ref.startsWith('season:')) {
         const key = ref.slice(7);
@@ -13378,6 +13414,7 @@ html.dark .pkg-remove { background: #1c1c1c; }
       const body = document.getElementById('package-modal-body');
       const actions = document.getElementById('package-modal-actions');
       const options = (list, value) => list.map(([id, label]) => `<option value="${id}" ${String(id) === String(value) ? 'selected' : ''}>${label}</option>`).join('');
+      if (pkgDraft.kind === 'all') { renderTemplatePicker(body, actions, options); return; }
       if (pkgDraft.kind === 'season') {
         const count = (type) => pkgDraft.rows.filter((row) => row.type === type).length;
         body.innerHTML = `<p class="pkg-intro">${pkgDraft.rows.length} Punkte · ${count('control')} prüfen · ${count('service')} erledigen. Passe Titel und Anweisung an, lege fest, ob ein Punkt geprüft oder erledigt wird, und ergänze eigene Aufgaben.</p>
@@ -13418,6 +13455,22 @@ html.dark .pkg-remove { background: #1c1c1c; }
         showToast(`${SEASON_CHECKLISTS[pkgDraft.key].title} gespeichert – ${pkgDraft.rows.length} Punkte.`);
         return;
       }
+      if (pkgDraft.kind === 'all') {
+        const chosen = pkgDraft.packageId && pkgDraft.packageId !== autoTasks.packageId ? pkgDraft.packageId : '';
+        if (chosen) applyServicePackage(chosen);
+        pkgDraft.removed.forEach((id) => removeAutoTemplate(id));
+        pkgDraft.rows.forEach((row) => {
+          let template = autoTasks.templates.find((item) => item.id === row.id);
+          if (!template) { template = row.builtin ? { ...(defaultAutoTemplates.find((item) => item.id === row.id) || {}) } : { id: row.id, category: 'custom', builtin: false }; autoTasks.templates.push(template); }
+          Object.assign(template, { title: row.title, interval: row.interval, season: row.season, priority: row.priority, selected: row.selected });
+        });
+        autoTasks.enabled = true;
+        persistAutoTasks();
+        const created = runAutoTasks(false);
+        closePackage(); render();
+        showToast(`${pkgDraft.rows.filter((row) => row.selected).length} Aufgaben ausgewählt${chosen ? ` (Paket ${SERVICE_PACKAGES.find((item) => item.id === chosen)?.name})` : ''}${created ? ` – ${created} ${created === 1 ? 'Aufgabe' : 'Aufgaben'} angelegt` : ''}.`);
+        return;
+      }
       const wasActive = pkgDraft.active;
       if (!wasActive) applyServicePackage(pkgDraft.id);
       pkgDraft.removed.forEach((id) => removeAutoTemplate(id));
@@ -13451,6 +13504,20 @@ html.dark .pkg-remove { background: #1c1c1c; }
       const target = event.target;
       const open = target.closest('[data-package-open]');
       if (open) { openPackage(open.dataset.packageOpen); return; }
+      if (target.closest('[data-template-picker]')) { openTemplatePicker(); return; }
+      if (pkgDraft?.kind === 'all') {
+        const toggle = target.closest('[data-pkg-toggle]');
+        if (toggle) { readPackageInputs(); const index = Number(toggle.dataset.pkgToggle); pkgDraft.open = pkgDraft.open === index ? -1 : index; renderPackageModal(); document.querySelector(`#package-modal-body [data-pkg-index="${index}"]`)?.scrollIntoView({ block: 'nearest' }); return; }
+        const choose = target.closest('[data-pkg-choose]');
+        if (choose) {
+          readPackageInputs();
+          const servicePackage = SERVICE_PACKAGES.find((item) => item.id === choose.dataset.pkgChoose);
+          pkgDraft.packageId = servicePackage.id;
+          servicePackage.templates.forEach((id) => { if (!pkgDraft.rows.some((row) => row.id === id)) { const template = defaultAutoTemplates.find((item) => item.id === id); if (template) pkgDraft.rows.push(templateToRow({ ...template, builtin: true })); } });
+          pkgDraft.rows.forEach((row) => { if (row.builtin) row.selected = servicePackage.templates.includes(row.id); });
+          renderPackageModal(); return;
+        }
+      }
       if (!pkgDraft) return;
       if (target.closest('[data-package-close]') || target.id === 'package-modal') { closePackage(); return; }
       const remove = target.closest('[data-pkg-remove]');
@@ -13465,7 +13532,7 @@ html.dark .pkg-remove { background: #1c1c1c; }
         const title = document.getElementById('pkg-new-title').value.trim();
         if (!title) { showToast('Bitte einen Titel für die neue Aufgabe eingeben.'); document.getElementById('pkg-new-title').focus(); return; }
         if (pkgDraft.kind === 'season') pkgDraft.rows.push({ id: newId('own'), title, detail: '', type: document.getElementById('pkg-new-type').value });
-        else pkgDraft.rows.push({ id: `tpl-${Date.now()}`, title, interval: Number(document.getElementById('pkg-new-interval').value) || 365, season: 'all', priority: 'normal', selected: true, builtin: false });
+        else pkgDraft.rows.push({ id: `tpl-${Date.now()}`, title, interval: Number(document.getElementById('pkg-new-interval').value) || 365, season: 'all', priority: 'normal', selected: true, builtin: false, category: 'custom' });
         renderPackageModal();
         document.getElementById('pkg-new-title')?.focus();
         return;
