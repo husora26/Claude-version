@@ -2478,12 +2478,12 @@
     .dash-section.collapsed .card-head { border-bottom: 0; }
     .dash-section.collapsed .card-caption { display: none; }
     .dash-section.collapsed .card-head .text-btn { display: none; }
-    .dash-summary { display: inline-block; margin-top: 6px; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
-    .dash-summary.lvl-ok { color: #1f6b41; background: #e2f2e8; }
-    .dash-summary.lvl-info { color: #2f5f86; background: #e6eff7; }
-    .dash-summary.lvl-due { color: #7a5c00; background: #fff0b3; }
-    .dash-summary.lvl-urgent { color: #8b2f25; background: var(--red-soft); }
-    .dash-summary.lvl-muted { color: #6b766e; background: #efeee8; }
+    .dash-summary { display: flex; align-items: center; gap: 7px; margin-top: 5px; color: var(--muted); font-size: 12.5px; font-weight: 500; }
+    .dash-summary::before { flex: 0 0 auto; width: 7px; height: 7px; border-radius: 50%; background: #b9c1bb; content: ''; }
+    .dash-summary.lvl-ok::before { background: #4f9a6f; }
+    .dash-summary.lvl-info::before { background: #6f93b3; }
+    .dash-summary.lvl-due::before { background: #d4a243; }
+    .dash-summary.lvl-urgent::before { background: #c0564a; }
     .dash-empty { column-span: all; }
     @media (prefers-reduced-motion: reduce) { .dash-toggle svg { transition: none; } }
     .settings-switch > span:first-child strong { display: block; font-size: 14px; }
@@ -2543,6 +2543,7 @@
     .settings-teaser > svg:last-child { flex: 0 0 auto; width: 18px; height: 18px; margin-left: auto; color: var(--muted); }
     .settings-teaser strong { display: block; font-size: 14px; }
     .settings-teaser small { display: block; margin-top: 2px; color: var(--muted); font-size: 12.5px; }
+  
   
   
     /* DARK-MODE-START */
@@ -3127,11 +3128,6 @@ html.dark .tabbar { background: rgba(40, 34, 19, 0.97); box-shadow: 0 -6px 24px 
 html.dark .tab { color: #b1b7b3; }
 }
 html.dark .dash-toggle { background: #1c1c1c; }
-html.dark .dash-summary.lvl-ok { color: #b5e4ca; background: #212e26; }
-html.dark .dash-summary.lvl-info { color: #a7c3da; background: #1d262e; }
-html.dark .dash-summary.lvl-due { color: #f8e5a9; background: #473e1b; }
-html.dark .dash-summary.lvl-urgent { color: #e0aaa4; }
-html.dark .dash-summary.lvl-muted { color: #b1b7b3; background: #2a2924; }
 html.dark .settings-jump button { background: #1c1c1c; }
     }
     /* DARK-MODE-END */
