@@ -2572,6 +2572,129 @@
     }
   
   
+    /* Arbeitsbereiche: Serviceaufgaben · Hauskontrolle · Saison · Automatisierung */
+    .work-areas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: -6px 0 20px; padding: 6px; border: 1px solid var(--line); border-radius: 14px; background: #f7f5ef; }
+    .work-area { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2px 10px; min-height: 64px; padding: 10px 12px; border: 1px solid transparent; border-radius: 10px; color: var(--ink); background: transparent; text-align: left; cursor: pointer; }
+    .work-area:hover { background: white; }
+    .work-area.active { border-color: var(--line); background: white; box-shadow: 0 4px 14px rgba(35, 48, 39, .07); }
+    .work-area-icon { display: grid; grid-row: span 2; place-items: center; width: 36px; height: 36px; border-radius: 10px; color: #6b766e; background: #ecebe4; }
+    .work-area.active .work-area-icon { color: white; background: var(--green); }
+    .work-area-icon svg { width: 18px; height: 18px; }
+    .work-area-text strong { display: block; font-size: 14px; }
+    .work-area-text small { display: block; color: var(--muted); font-size: 12px; line-height: 1.35; }
+    .work-area-status { grid-column: 2; color: var(--green); font-size: 11.5px; font-weight: 700; }
+    @media (max-width: 900px) {
+      .work-areas { display: flex; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+      .work-areas::-webkit-scrollbar { display: none; }
+      .work-area { flex: 0 0 auto; min-height: 56px; padding: 8px 12px; white-space: nowrap; }
+      .work-area-text small { display: none; }
+      .work-area-icon { width: 32px; height: 32px; }
+    }
+    /* Einheitlicher Editor-Aufbau */
+    .editor-modal { width: min(700px, 100%); max-height: 92vh; overflow-y: auto; }
+    .editor-modal [hidden] { display: none !important; }
+    .editor-modal textarea { font-family: inherit; font-size: 14px; }
+    .editor-section { padding: 16px 0; border-top: 1px solid var(--line); }
+    .editor-section:first-of-type { border-top: 0; padding-top: 4px; }
+    .editor-step { display: flex; align-items: flex-start; gap: 11px; margin-bottom: 12px; }
+    .editor-step > span { display: grid; flex: 0 0 auto; place-items: center; width: 26px; height: 26px; border-radius: 50%; color: white; background: var(--green); font-size: 13px; font-weight: 800; }
+    .editor-step strong { display: block; font-size: 15px; }
+    .editor-step small { display: block; margin-top: 1px; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+    .editor-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; }
+    .editor-grid .full { grid-column: 1 / -1; }
+    .editor-grid .form-control { min-height: 44px; font-size: 14px; }
+    @media (max-width: 560px) { .editor-grid { grid-template-columns: 1fr; } }
+    .editor-actions { position: sticky; bottom: -23px; margin: 4px -23px -23px; padding: 14px 23px; border-top: 1px solid var(--line); background: white; flex-wrap: wrap; }
+    .plan-detail { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; font-weight: 400; line-height: 1.45; }
+    /* Saison-Checklisten */
+    .season-switches { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+    .season-switch { position: relative; display: flex; align-items: center; gap: 12px; padding: 14px 16px 18px; border: 1px solid var(--line); border-radius: 14px; color: var(--ink); background: white; text-align: left; cursor: pointer; overflow: hidden; }
+    .season-switch.active { border-color: var(--green); box-shadow: 0 0 0 1px var(--green) inset; }
+    .season-switch-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; color: #2f5f86; background: #e6eff7; }
+    .season-switch[data-season-switch="spring"] .season-switch-icon { color: #7a5c00; background: #fbf2d3; }
+    .season-switch-icon svg { width: 20px; height: 20px; }
+    .season-switch strong { display: block; font-size: 15px; }
+    .season-switch small { display: block; color: var(--muted); font-size: 12.5px; }
+    .season-switch-bar { position: absolute; right: 16px; bottom: 9px; left: 16px; height: 4px; border-radius: 3px; background: #ecebe4; }
+    .season-switch-bar b { display: block; height: 100%; border-radius: inherit; background: var(--green); }
+    .season-summary { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 24px; padding: 18px 20px; margin-bottom: 14px; }
+    .season-summary-main { flex: 1 1 320px; display: grid; gap: 4px; }
+    .season-summary-main strong { font-size: 18px; }
+    .season-summary-main small { color: var(--muted); font-size: 12.5px; }
+    .season-progress { display: block; height: 8px; border-radius: 5px; background: #ecebe4; overflow: hidden; }
+    .season-progress i { display: block; height: 100%; border-radius: inherit; background: var(--green); }
+    .season-due-state { display: block; margin-top: 4px; color: var(--muted); font-size: 12.5px; font-weight: 650; }
+    .season-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; }
+    @media (max-width: 900px) { .season-groups, .season-switches { grid-template-columns: 1fr; } }
+    .season-group { padding: 0; overflow: hidden; }
+    .season-groups > * { margin: 0; }
+    .season-group-head { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+    .season-group-head > div { flex: 1; min-width: 0; }
+    .season-group-head .card-caption { font-size: 12.5px; line-height: 1.45; }
+    .season-type { display: grid; flex: 0 0 auto; place-items: center; width: 36px; height: 36px; border-radius: 10px; }
+    .season-type svg { width: 18px; height: 18px; }
+    .season-type.control { color: #2f5f86; background: #e6eff7; }
+    .season-type.service { color: #6a4f96; background: #efe9f7; }
+    .season-group-count { color: var(--muted); font-size: 13px; font-weight: 700; }
+    .season-row { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; padding: 13px 18px; border-bottom: 1px solid var(--line); }
+    .season-row:last-of-type { border-bottom: 0; }
+    .season-row.done .season-row-main strong { color: var(--muted); text-decoration: line-through; text-decoration-color: #b9c1bb; }
+    .season-check { position: relative; display: grid; place-items: center; width: 26px; height: 26px; margin-top: 1px; cursor: pointer; }
+    .season-check input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .season-check-box { display: grid; place-items: center; width: 24px; height: 24px; border: 1.5px solid #b9c1bb; border-radius: 7px; color: transparent; background: white; }
+    .season-check-box svg { width: 15px; height: 15px; }
+    .season-check input:checked + .season-check-box { color: white; border-color: var(--green); background: var(--green); }
+    .season-check input:focus-visible + .season-check-box { box-shadow: 0 0 0 3px rgba(40, 92, 69, .25); }
+    .season-row-main strong { display: block; font-size: 14px; }
+    .season-row-main small { display: block; margin-top: 2px; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+    .season-row-action { grid-column: 2; }
+    .season-row-action .small-action { display: inline-flex; align-items: center; gap: 5px; }
+    .season-row-action svg { width: 14px; height: 14px; }
+    .season-task-link { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 11px; border: 1px solid var(--line); border-radius: 16px; color: #4d5a51; background: #f7f6f1; font-size: 12.5px; font-weight: 650; cursor: pointer; }
+    .season-task-link.st-progress { color: #2f5f86; border-color: #c9dbea; background: #eef4fa; }
+    .season-task-link.st-done { color: #1f6b41; border-color: #bcd8c5; background: #e2f2e8; }
+    .season-group-foot { padding: 12px 18px 16px; border-top: 1px solid var(--line); }
+    .season-group-foot .secondary-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; max-width: 100%; white-space: normal; text-align: center; }
+    .season-group-foot svg { width: 15px; height: 15px; }
+    .season-note { display: flex; gap: 8px; align-items: flex-start; margin: 14px 2px 0; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+    .season-note svg { flex: 0 0 auto; width: 16px; height: 16px; margin-top: 1px; }
+    /* Prüfprotokoll-Vorlagen */
+    .template-card .card-head .secondary-btn { display: inline-flex; align-items: center; gap: 6px; }
+    .template-card .card-head svg { width: 15px; height: 15px; }
+    .template-list { display: grid; gap: 10px; padding: 16px 18px 18px; }
+    .template-item { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: #fbfaf6; }
+    .template-main { flex: 1 1 340px; min-width: 0; display: grid; gap: 4px; }
+    .template-title { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .template-title strong { font-size: 14.5px; }
+    .template-badge { padding: 1px 8px; border-radius: 10px; color: #6b766e; background: #ecebe4; font-size: 11px; font-weight: 750; }
+    .template-badge.own { color: #6a4f96; background: #efe9f7; }
+    .template-main > small { color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+    .template-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+    .template-chips span { padding: 2px 8px; border: 1px solid var(--line); border-radius: 10px; background: white; font-size: 11.5px; }
+    .template-chips .more { color: var(--muted); }
+    .template-meta { color: var(--muted); font-size: 12px; }
+    .template-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .template-actions .primary-btn { min-height: 38px; padding: 0 14px; font-size: 13px; }
+    /* Automatisierung in Gruppen */
+    .auto-groups { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; padding: 5px; border: 1px solid var(--line); border-radius: 12px; background: #f7f5ef; }
+    .auto-groups button { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 14px; border: 0; border-radius: 9px; color: #4d5a51; background: transparent; font-size: 13.5px; font-weight: 650; cursor: pointer; }
+    .auto-groups button.active { color: var(--ink); background: white; box-shadow: 0 2px 8px rgba(35, 48, 39, .08); }
+    .auto-groups button span { min-width: 20px; padding: 0 6px; border-radius: 10px; color: #6b766e; background: #e8e6df; font-size: 11.5px; line-height: 20px; text-align: center; }
+    .automation-grid.grouped { grid-template-columns: 1fr; }
+    @media (max-width: 640px) {
+      .auto-groups { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+      .auto-groups::-webkit-scrollbar { display: none; }
+      .auto-groups button { flex: 0 0 auto; white-space: nowrap; }
+      .automation-summary { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 6px !important; }
+      .automation-summary > div { display: grid !important; gap: 2px; padding: 10px !important; }
+      .automation-summary strong { font-size: 20px !important; }
+      .automation-summary span { font-size: 11.5px !important; line-height: 1.3; }
+    }
+  
+  
+  
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3155,6 +3278,36 @@ html.dark .tab { color: #b1b7b3; }
 }
 html.dark .dash-toggle { background: #1c1c1c; }
 html.dark .settings-jump button { background: #1c1c1c; }
+html.dark .work-areas { background: #28251d; }
+html.dark .work-area:hover { background: #1c1c1c; }
+html.dark .work-area.active { background: #1c1c1c; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2); }
+html.dark .work-area-icon { color: #b1b7b3; background: #2c2b26; }
+html.dark .work-area.active .work-area-icon { background: var(--green-solid); }
+html.dark .editor-step > span { background: var(--green-solid); }
+html.dark .editor-actions { background: #1c1c1c; }
+html.dark .season-switch { background: #1c1c1c; }
+html.dark .season-switch-icon { color: #a7c3da; background: #1d262e; }
+html.dark .season-switch[data-season-switch="spring"] .season-switch-icon { color: #f8e5a9; background: #39321a; }
+html.dark .season-switch-bar { background: #2c2b26; }
+html.dark .season-switch-bar b { background: var(--green-solid); }
+html.dark .season-progress { background: #2c2b26; }
+html.dark .season-progress i { background: var(--green-solid); }
+html.dark .season-type.control { color: #a7c3da; background: #1d262e; }
+html.dark .season-type.service { color: #ae9fc7; background: #231d2c; }
+html.dark .season-check-box { border: 1.5px solid #4d514e; background: #1c1c1c; }
+html.dark .season-check input:checked + .season-check-box { background: var(--green-solid); }
+html.dark .season-check input:focus-visible + .season-check-box { box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.6); }
+html.dark .season-task-link { color: #c0c8c3; background: #26251e; }
+html.dark .season-task-link.st-progress { color: #a7c3da; border-color: #394651; background: #1a222a; }
+html.dark .season-task-link.st-done { color: #b5e4ca; border-color: #435348; background: #212e26; }
+html.dark .template-item { background: #25231a; }
+html.dark .template-badge { color: #b1b7b3; background: #2c2b26; }
+html.dark .template-badge.own { color: #ae9fc7; background: #231d2c; }
+html.dark .template-chips span { background: #1c1c1c; }
+html.dark .auto-groups { background: #28251d; }
+html.dark .auto-groups button { color: #c0c8c3; }
+html.dark .auto-groups button.active { background: #1c1c1c; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.23); }
+html.dark .auto-groups button span { color: #b1b7b3; background: #2e2d28; }
     }
     /* DARK-MODE-END */
   </style>
@@ -3182,6 +3335,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
             <button data-page="tasks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5M8.5 10h7m-7 4h7m-7 4h4"/></svg><span>Serviceaufgaben</span><i class="nav-count" id="nav-count">0</i></button>
             <button data-page="automation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span>Automatisierung</span></button>
             <button data-page="inspections"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 20 6v5c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V6z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg><span>Hauskontrolle</span></button>
+            <button data-page="seasons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2v20M4.9 6.5l14.2 11M19.1 6.5 4.9 17.5"/><path d="m9.5 3.5 2.5 2 2.5-2M9.5 20.5l2.5-2 2.5 2"/></svg><span>Saison-Checklisten</span></button>
             <button data-page="repairs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14.5 6.5a5 5 0 0 0-6.7 6.7L3 18l3 3 4.8-4.8a5 5 0 0 0 6.7-6.7l-3.1 3.1-3-3z"/></svg><span>Reparatur & Instandhaltung</span></button>
             <button data-page="renovations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 21h18M5 21V10l7-6 7 6v11"/><path d="M10 21v-5h4v5"/></svg><span>Sanierung & Renovierung</span></button>
             <button data-page="house3d" data-pro-only><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg><span>Hausmodell</span></button>
@@ -3248,21 +3402,30 @@ html.dark .settings-jump button { background: #1c1c1c; }
     </section>
   </div>
   <div class="modal-backdrop" id="inspection-plan-modal" role="dialog" aria-modal="true" aria-labelledby="inspection-plan-title">
-    <section class="modal send-plan-modal">
+    <section class="modal send-plan-modal editor-modal">
       <div class="modal-head"><div><h2 id="inspection-plan-title">Kontrolle erstellen</h2><p id="inspection-plan-subtitle"></p></div><button class="close-btn" type="button" id="close-inspection-plan" aria-label="Schließen">✕</button></div>
-      <div class="send-plan-grid">
-        <label><span class="form-label">Name der Kontrolle</span><input class="form-control" id="inspection-plan-name" maxlength="80" placeholder="z. B. Monatliche Sichtkontrolle"></label>
-        <label><span class="form-label">Servicepartner für diese Kontrolle</span><select class="form-control" id="inspection-plan-provider"></select></label>
-        <div id="inspection-plan-provider-note" hidden></div>
+      <div class="editor-section"><div class="editor-step"><span>1</span><div><strong id="plan-step1-title">Was wird geprüft?</strong><small id="plan-step1-caption">Name des Kontrollplans – optional aus einer Vorlage</small></div></div>
+        <div class="editor-grid">
+          <label><span class="form-label" id="inspection-plan-name-label">Name des Kontrollplans</span><input class="form-control" id="inspection-plan-name" maxlength="80" placeholder="z. B. Monatliche Sichtkontrolle"></label>
+          <label id="plan-template-wrap"><span class="form-label">Vorlage laden</span><select class="form-control" id="plan-template-select"></select></label>
+          <label id="plan-description-wrap" class="full" hidden><span class="form-label">Einsatzzweck</span><input class="form-control" id="plan-description" maxlength="160" placeholder="z. B. Monatlicher Rundgang bei Leerstand"></label>
+        </div>
       </div>
-      <span class="form-label">Zu prüfende Positionen und Kontrolltaktung</span>
-      <p class="send-plan-note ok" id="plan-due-note"></p>
-      <div class="plan-rows" id="inspection-plan-rows"></div>
-      <div class="plan-custom">
-        <span class="form-label">Eigene Position ergänzen</span>
-        <div class="plan-custom-grid"><input class="form-control" id="plan-custom-title" maxlength="80" placeholder="z. B. Regenwassertonne leeren"><input class="form-control" id="plan-custom-detail" maxlength="200" placeholder="Beschreibung (optional)"><button type="button" class="secondary-btn" id="plan-custom-add">Hinzufügen</button></div>
+      <div class="editor-section"><div class="editor-step"><span>2</span><div><strong>Prüfpositionen & Taktung</strong><small>Positionen mit Prüfanweisung auswählen und je Position festlegen, wie oft geprüft wird</small></div></div>
+        <p class="send-plan-note ok" id="plan-due-note"></p>
+        <div class="plan-rows" id="inspection-plan-rows"></div>
+        <div class="plan-custom">
+          <span class="form-label">Eigene Position ergänzen</span>
+          <div class="plan-custom-grid"><input class="form-control" id="plan-custom-title" maxlength="80" placeholder="z. B. Regenwassertonne leeren"><input class="form-control" id="plan-custom-detail" maxlength="200" placeholder="Prüfanweisung (optional)"><button type="button" class="secondary-btn" id="plan-custom-add">Hinzufügen</button></div>
+        </div>
       </div>
-      <div class="form-actions"><button type="button" class="secondary-btn" id="inspection-plan-cancel">Abbrechen</button><button type="button" class="secondary-btn" id="inspection-plan-save">Nur speichern</button><button type="button" class="primary-btn send-order-btn" id="inspection-plan-save-send">Speichern & Service beauftragen</button></div>
+      <div class="editor-section" id="plan-partner-section"><div class="editor-step"><span>3</span><div><strong>Wer prüft?</strong><small>Zugeordneter Servicepartner für die Hauskontrolle</small></div></div>
+        <div class="editor-grid">
+          <label class="full"><span class="form-label">Servicepartner für diese Kontrolle</span><select class="form-control" id="inspection-plan-provider"></select></label>
+          <div id="inspection-plan-provider-note" class="full" hidden></div>
+        </div>
+      </div>
+      <div class="form-actions editor-actions"><button type="button" class="secondary-btn" id="inspection-plan-cancel">Abbrechen</button><button type="button" class="secondary-btn" id="plan-save-as-template">Als Vorlage speichern</button><button type="button" class="secondary-btn" id="inspection-plan-save">Nur speichern</button><button type="button" class="primary-btn send-order-btn" id="inspection-plan-save-send">Speichern & Service beauftragen</button><button type="button" class="primary-btn" id="plan-template-save" hidden>Vorlage speichern</button></div>
     </section>
   </div>
   <div class="modal-backdrop" id="pdf-viewer-modal" role="dialog" aria-modal="true" aria-labelledby="pdf-viewer-title">
@@ -3347,20 +3510,30 @@ html.dark .settings-jump button { background: #1c1c1c; }
     </div>
   </div>
   <div class="modal-backdrop" id="task-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <form class="modal" id="task-form">
-      <div class="modal-head"><div><h2 id="modal-title">Aufgabe erstellen</h2><p>Behalte alle wichtigen Arbeiten im Blick.</p></div><button class="close-btn" type="button" id="close-modal" aria-label="Schließen">✕</button></div>
-      <div class="form-grid">
-        <label><span class="form-label">Aufgabe</span><input class="form-control" name="title" placeholder="z. B. Saunaofen vor Anreise prüfen" required maxlength="90"></label>
-        <label><span class="form-label">Ferienhaus</span><select class="form-control" name="property"></select></label>
-        <label><span class="form-label">Fällig am</span><input class="form-control" name="date" type="date" required></label>
-        <label><span class="form-label">Priorität</span><select class="form-control" name="priority"><option value="normal">Normal</option><option value="soon">Wichtig</option><option value="urgent">Dringend</option></select></label>
-        <label><span class="form-label">Bereich</span><input class="form-control" name="area" maxlength="60" placeholder="z. B. Heizungsraum, Außenbereich"></label>
-        <label><span class="form-label">Status</span><select class="form-control" name="status"><option>Offen</option><option>In Bearbeitung</option><option>Erledigt</option></select></label>
-        <label><span class="form-label">Servicepartner</span><select class="form-control" name="partnerId"></select><small class="form-hint" id="task-partner-hint" hidden></small></label>
-        <label><span class="form-label">Wiederholung</span><select class="form-control" name="repeat"><option>Einmalig</option><option>Wöchentlich</option><option>Monatlich</option><option>Jährlich</option></select></label>
-        <label style="grid-column:1/-1"><span class="form-label">Beschreibung</span><textarea class="form-control" name="description" rows="2" maxlength="300" placeholder="Optionale Hinweise zur Aufgabe"></textarea></label>
+    <form class="modal editor-modal" id="task-form">
+      <div class="modal-head"><div><h2 id="modal-title">Aufgabe erstellen</h2><p>Eine Arbeit am Ferienhaus planen und vergeben.</p></div><button class="close-btn" type="button" id="close-modal" aria-label="Schließen">✕</button></div>
+      <div class="editor-section"><div class="editor-step"><span>1</span><div><strong>Was ist zu tun?</strong><small>Aufgabe, Ort im Haus und Hinweise</small></div></div>
+        <div class="editor-grid">
+          <label class="full"><span class="form-label">Aufgabe</span><input class="form-control" name="title" placeholder="z. B. Saunaofen vor Anreise prüfen" required maxlength="90"></label>
+          <label class="full"><span class="form-label">Bereich</span><input class="form-control" name="area" maxlength="60" placeholder="z. B. Heizungsraum, Außenbereich"></label>
+          <label class="full"><span class="form-label">Beschreibung</span><textarea class="form-control" name="description" rows="2" maxlength="300" placeholder="Optionale Hinweise zur Aufgabe"></textarea></label>
+        </div>
       </div>
-      <div class="form-actions"><button type="button" class="secondary-btn" id="cancel-modal">Abbrechen</button><button type="submit" class="primary-btn">Aufgabe speichern</button></div>
+      <div class="editor-section"><div class="editor-step"><span>2</span><div><strong>Wo und wann?</strong><small>Ferienhaus, Termin und Wiederholung</small></div></div>
+        <div class="editor-grid">
+          <label><span class="form-label">Ferienhaus</span><select class="form-control" name="property"></select></label>
+          <label><span class="form-label">Fällig am</span><input class="form-control" name="date" type="date" required></label>
+          <label><span class="form-label">Wiederholung</span><select class="form-control" name="repeat"><option>Einmalig</option><option>Wöchentlich</option><option>Monatlich</option><option>Jährlich</option></select></label>
+          <label><span class="form-label">Priorität</span><select class="form-control" name="priority"><option value="normal">Normal</option><option value="soon">Wichtig</option><option value="urgent">Dringend</option></select></label>
+        </div>
+      </div>
+      <div class="editor-section"><div class="editor-step"><span>3</span><div><strong>Wer erledigt es?</strong><small>Servicepartner oder Eigenleistung und aktueller Stand</small></div></div>
+        <div class="editor-grid">
+          <label><span class="form-label">Servicepartner</span><select class="form-control" name="partnerId"></select><small class="form-hint" id="task-partner-hint" hidden></small></label>
+          <label><span class="form-label">Status</span><select class="form-control" name="status"><option>Offen</option><option>In Bearbeitung</option><option>Erledigt</option></select></label>
+        </div>
+      </div>
+      <div class="form-actions editor-actions"><button type="button" class="secondary-btn" id="cancel-modal">Abbrechen</button><button type="submit" class="primary-btn">Aufgabe speichern</button></div>
     </form>
   </div>
       <div class="modal-backdrop" id="property-modal" role="dialog" aria-modal="true" aria-labelledby="property-modal-title">
@@ -7449,6 +7622,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
       }
       return `${pageHeader}${propertyAndTabs}
         ${absenceInspectionView(property)}
+        ${controlTemplatesCardHtml(property)}
         <section class="card"><div class="card-head"><div><h2 class="card-title">Archiv der Prüfprotokolle</h2><p class="card-caption">${entries.length + (planUploads[property.id] || []).length} ${entries.length + (planUploads[property.id] || []).length === 1 ? 'Protokoll' : 'Protokolle'} für ${escapeHtml(property.name)}</p></div></div>
           ${(planUploads[property.id] || []).length ? `<div class="inspection-archive-list">${(planUploads[property.id] || []).slice().reverse().map((upload) => `<article class="inspection-archive-row"><div class="inspection-archive-main"><strong>Hochgeladene PDF · ${escapeHtml(upload.name)}</strong><small>Archiviert ${escapeHtml(fmtDateFull(new Date(upload.uploadedAt)))} · ${Math.max(1, Math.round(upload.size / 1024))} KB</small></div><div class="inspection-archive-actions"><button class="secondary-btn" type="button" data-open-upload="${escapeHtml(upload.id)}">PDF anzeigen</button><button class="secondary-btn" type="button" data-delete-upload="${escapeHtml(upload.id)}">Löschen</button></div></article>`).join('')}</div>` : ''}
           ${archiveEntries.length ? `<div class="inspection-archive-list">${archiveEntries.map(({ entry, index }) => {
@@ -7589,7 +7763,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
         const frequency = saved?.frequency || (control && control.items[item.id]) || defaultFrequency;
         const covering = others.filter((entry) => entry.items?.[item.id]);
         const coveredBy = covering.map((entry) => `${providers.find((provider) => provider.id === entry.providerId)?.name || 'Servicepartner'} (${entry.name})`).join(', ');
-        return `<div class="plan-row ${enabled ? '' : 'off'} ${covering.length ? 'covered' : ''}"><label><input type="checkbox" data-plan-item="${item.id}" ${enabled ? 'checked' : ''}><span>${escapeHtml(item.title)}${item.custom ? '<span class="plan-custom-tag">Eigene</span>' : ''}${covering.length ? `<small class="plan-covered">Wird bereits kontrolliert von ${escapeHtml(coveredBy)}</small>` : ''}</span></label><select class="form-control" data-plan-frequency="${item.id}" aria-label="Kontrolltaktung für ${escapeHtml(item.title)}" ${enabled ? '' : 'disabled'}>${planFrequencies.map(([value, label]) => `<option value="${value}" ${value === frequency ? 'selected' : ''}>${label}</option>`).join('')}</select>${item.custom ? `<button class="plan-remove" type="button" data-plan-remove="${item.id}" aria-label="Eigene Position „${escapeHtml(item.title)}“ löschen">Position löschen</button>` : ''}</div>`;
+        return `<div class="plan-row ${enabled ? '' : 'off'} ${covering.length ? 'covered' : ''}"><label><input type="checkbox" data-plan-item="${item.id}" ${enabled ? 'checked' : ''}><span>${escapeHtml(item.title)}${item.custom ? '<span class="plan-custom-tag">Eigene</span>' : ''}${item.detail ? `<small class="plan-detail">${escapeHtml(item.detail)}</small>` : ''}${covering.length ? `<small class="plan-covered">Wird bereits kontrolliert von ${escapeHtml(coveredBy)}</small>` : ''}</span></label><select class="form-control" data-plan-frequency="${item.id}" aria-label="Kontrolltaktung für ${escapeHtml(item.title)}" ${enabled ? '' : 'disabled'}>${planFrequencies.map(([value, label]) => `<option value="${value}" ${value === frequency ? 'selected' : ''}>${label}</option>`).join('')}</select>${item.custom ? `<button class="plan-remove" type="button" data-plan-remove="${item.id}" aria-label="Eigene Position „${escapeHtml(item.title)}“ löschen">Position löschen</button>` : ''}</div>`;
       }).join('');
       updatePlanDue();
     }
@@ -7671,6 +7845,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
       document.getElementById('inspection-plan-title').textContent = control ? 'Kontrolle bearbeiten' : 'Kontrolle erstellen';
       document.getElementById('inspection-plan-subtitle').textContent = property.name;
       renderPlanRows(property.id, control, null);
+      setPlanEditorMode('control');
       document.getElementById('inspection-plan-modal').classList.add('open');
     }
     function openControlPositions() {
@@ -9060,6 +9235,9 @@ html.dark .settings-jump button { background: #1c1c1c; }
     }
     function render() {
       document.body.classList.remove('no-bookings');
+      // Saison-Checklisten sind ein eigener Bereich; alte Verweise auf die Hauskontrolle führen dorthin.
+      if (lastRenderedPage === 'seasons' && currentPage !== 'seasons' && SEASON_CHECKLISTS[inspectionView]) { lastSeasonView = inspectionView; inspectionView = 'absence'; }
+      if (currentPage === 'inspections' && SEASON_CHECKLISTS[inspectionView]) currentPage = 'seasons';
       document.querySelectorAll('[data-pro-only]').forEach((node) => { node.hidden = !isPro(); });
       const plannedCount = syncAutomation();
       if (plannedCount) setTimeout(() => {
@@ -9072,8 +9250,8 @@ html.dark .settings-jump button { background: #1c1c1c; }
         showToast('Das 3D-Hausmodell ist Teil von Husora Pro.');
         currentPage = 'plans';
       }
-      const pages = { dashboard, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPage, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage };
-      const labels = { dashboard: 'Übersicht', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support' };
+      const pages = { dashboard, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPage, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage };
+      const labels = { dashboard: 'Übersicht', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' };
       if (currentPage !== lastRenderedPage) {
         if (returningToPreviousPage) {
           returningToPreviousPage = false;
@@ -9096,6 +9274,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
       pageContent.innerHTML = pages[currentPage]() + appFooterHtml();
       ensureBackButton();
       if (currentPage === 'dashboard') enhanceDashboardSections();
+      enhanceWorkPages();
       if (currentPage === 'house3d') fitHouseScene();
       if (currentPage === 'propertyDetail') initPropertyMap();
     }
@@ -12157,7 +12336,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
         ['winter', 'spring'].forEach((key) => {
           const { ready, days, overdue: late } = seasonDueState(key, property.id);
           if (ready || days > 21 || days < -60) return;
-          add('inspections', { id: `season-${key}-${property.id}-${today.slice(0, 4)}`, level: late ? 'urgent' : 'soon', icon: key === 'winter' ? 'snow' : 'sun', title: `${name}${key === 'winter' ? 'Wintervorbereitung' : 'Frühjahrsöffnung'} ${late ? 'überfällig' : `in ${days} ${days === 1 ? 'Tag' : 'Tagen'} fällig`}`, detail: 'Checkliste in der Hauskontrolle abarbeiten.', page: 'inspections', propertyId: property.id });
+          add('inspections', { id: `season-${key}-${property.id}-${today.slice(0, 4)}`, level: late ? 'urgent' : 'soon', icon: key === 'winter' ? 'snow' : 'sun', title: `${name}${key === 'winter' ? 'Wintervorbereitung' : 'Frühjahrsöffnung'} ${late ? 'überfällig' : `in ${days} ${days === 1 ? 'Tag' : 'Tagen'} fällig`}`, detail: 'Saison-Checkliste abarbeiten.', page: 'seasons', propertyId: property.id });
         });
         const unordered = openIssues(property.id).filter((issue) => !issue.orderedAt && issue.date && issue.date <= shiftDateKey(today, -3));
         if (unordered.length) add('repairs', { id: `issues-${property.id}-${unordered.length}`, level: unordered.some((issue) => issue.priority === 'urgent') ? 'urgent' : 'soon', icon: 'alert', title: `${name}${unordered.length} ${unordered.length === 1 ? 'Mangel' : 'Mängel'} noch nicht beauftragt`, detail: unordered.slice(0, 2).map((issue) => issue.text).join(' · '), page: 'repairs' });
@@ -12517,6 +12696,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
       const emergencyFilled = property ? EMERGENCY_FIELDS.flatMap(([, fields]) => fields).filter(([key]) => emergencyFor(property.id)[key]).length : 0;
       const tile = (page, title, iconName, value, word, detail, art) => `<button class="stat" data-page="${page}"><img class="stat-art" src="assets/${art}" alt="" aria-hidden="true"><div class="stat-head"><span>${title}</span><span class="stat-icon">${icon(iconName)}</span></div><div class="stat-value">${value} <span class="stat-open-word">${word}</span></div>${detail ? `<div class="stat-note">${detail}</div>` : ''}</button>`;
       return {
+        seasons: (() => { const key = currentSeasonKey(property?.id); const season = SEASON_CHECKLISTS[key]; const ticks = property ? winterChecks[season.key(property.id)] || {} : {}; const count = season.items.filter((item) => ticks[item.id]).length; return tile('seasons', 'Saison-Checklisten', key === 'winter' ? 'snow' : 'sun', `${count}/${season.items.length}`, 'erledigt', season.card, 'ferienhaus.jpg'); })(),
         emergency: tile('emergency', 'Notfall & Zugang', 'key', emergencyFilled, 'Angaben', emergencyFilled ? 'Schlüssel, Technik, Kontakte' : 'Jetzt eintragen', 'ferienhaus.jpg'),
         contracts: tile('contracts', 'Verträge & Fristen', 'contract', contractsAll.length, 'Verträge', dueContracts ? `<span class="stat-alert">${dueContracts} Frist${dueContracts === 1 ? '' : 'en'} bald</span>` : 'keine Frist in den nächsten 60 Tagen', 'dokumente.jpg'),
         meters: tile('meters', 'Zählerstände', 'meter', meterCount, 'Zähler', meterCount ? 'Ablesung eintragen' : 'Zähler anlegen', 'kosten.jpg'),
@@ -12524,7 +12704,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
         help: tile('help', 'Hilfe & Support', 'help', FAQ.length, 'Antworten', 'FAQ, Kontakt, Fehler melden', 'schweden-landschaft.jpg')
       };
     }
-    DASHBOARD_TILES.push(['emergency', 'Notfall & Zugang'], ['contracts', 'Verträge & Fristen'], ['meters', 'Zählerstände'], ['settings', 'Einstellungen'], ['help', 'Hilfe & Support']);
+    DASHBOARD_TILES.push(['seasons', 'Saison-Checklisten'], ['emergency', 'Notfall & Zugang'], ['contracts', 'Verträge & Fristen'], ['meters', 'Zählerstände'], ['settings', 'Einstellungen'], ['help', 'Hilfe & Support']);
     const dashboardExtrasHtml = () => demoBannerHtml();
 
     // --- Ereignisse ---
@@ -12664,7 +12844,7 @@ html.dark .settings-jump button { background: #1c1c1c; }
     const NAV_GROUPS = [
       { label: '', pages: ['dashboard'] },
       { label: 'Mein Ferienhaus', pages: ['properties', 'house3d', 'documents', 'costs', 'contracts', 'meters', 'emergency'] },
-      { label: 'Pflege & Service', pages: ['tasks', 'inspections', 'repairs', 'renovations', 'automation'] },
+      { label: 'Pflege & Service', pages: ['tasks', 'inspections', 'seasons', 'repairs', 'renovations', 'automation'] },
       { label: 'Belegung', pages: ['calendar', 'bookings'] },
       { label: 'Servicepartner', pages: ['assignedProviders', 'providers'] },
       { label: 'Konto & App', pages: ['profile', 'plans', 'settings', 'help', 'legal'] }
@@ -12843,6 +13023,271 @@ html.dark .settings-jump button { background: #1c1c1c; }
         saveStore('stugliv-dash-sections', dashPrefs);
         showToast(target.checked ? 'Die Startseite zeigt nur noch die Überschriften der Bereiche.' : 'Die Bereiche der Startseite starten aufgeklappt.');
       }
+    });
+    // ===== Serviceaufgaben, Hauskontrolle, Saison-Checklisten und Automatisierung klar getrennt =====
+    const WORK_AREAS = [
+      ['tasks', 'Serviceaufgaben', 'Arbeiten planen und vergeben', 'task'],
+      ['inspections', 'Hauskontrolle', 'Haus regelmäßig prüfen lassen', 'inspection'],
+      ['seasons', 'Saison-Checklisten', 'Winter- und Frühjahrsvorbereitung', 'snow'],
+      ['automation', 'Automatisierung', 'Regeln, nach denen Husora plant', 'bolt']
+    ];
+    function workAreaStatus(page) {
+      const property = properties.find((item) => item.id === inspectionProperty) || properties[0];
+      if (page === 'tasks') { const open = tasks.filter((task) => taskStatus(task) !== 'Erledigt').length; return open ? `${open} offen` : 'Alles erledigt'; }
+      if (page === 'inspections') return property && inspectionIsCurrent(property.id) ? 'Aktuell' : 'Fällig';
+      if (page === 'seasons') { const key = currentSeasonKey(property?.id); const season = SEASON_CHECKLISTS[key]; const checked = winterChecks[season.key(property?.id)] || {}; return `${season.card}: ${season.items.filter((item) => checked[item.id]).length}/${season.items.length}`; }
+      if (page === 'automation') return `${automationActiveCount()} aktiv`;
+      return '';
+    }
+    function workAreaNavHtml() {
+      return `<nav class="work-areas" aria-label="Arbeitsbereiche">${WORK_AREAS.map(([page, label, sub, iconName]) => `<button type="button" class="work-area ${currentPage === page ? 'active' : ''}" data-page="${page}" ${currentPage === page ? 'aria-current="page"' : ''}><span class="work-area-icon">${icon(iconName)}</span><span class="work-area-text"><strong>${label}</strong><small>${sub}</small></span><span class="work-area-status">${escapeHtml(workAreaStatus(page))}</span></button>`).join('')}</nav>`;
+    }
+
+    // --- Saison-Checklisten ---
+    const SEASON_ITEM_TYPES = {
+      winter: { heating: 'service', water: 'service', meter: 'control', gutters: 'control', building: 'control', chimney: 'service', fire: 'control', outdoor: 'service', snow: 'service', security: 'service', documentation: 'control' },
+      spring: { water: 'service', heating: 'service', roof: 'control', building: 'control', crawlspace: 'control', pests: 'control', drainage: 'control', airing: 'service', outdoor: 'service', garden: 'service', documentation: 'control' }
+    };
+    let lastSeasonView = '';
+    function currentSeasonKey(propertyId) {
+      if (SEASON_CHECKLISTS[inspectionView]) return inspectionView;
+      if (lastSeasonView) return lastSeasonView;
+      const winter = seasonDueState('winter', propertyId);
+      const spring = seasonDueState('spring', propertyId);
+      const score = (state) => (state.ready || state.days < -60 ? Infinity : state.days);
+      return score(spring) < score(winter) ? 'spring' : 'winter';
+    }
+    // Liegt die Frist mehr als zwei Monate zurück, gilt die nächste Saison.
+    function seasonState(key, propertyId) {
+      const state = seasonDueState(key, propertyId);
+      if (state.ready || state.days >= -60) return state;
+      const due = `${Number(state.due.slice(0, 4)) + 1}${state.due.slice(4)}`;
+      return { ...state, due, days: Math.round((toDate(due) - toDate(localDateKey(new Date()))) / 86400000), overdue: false };
+    }
+    const seasonRef = (key, propertyId, itemId) => `${SEASON_CHECKLISTS[key].key(propertyId)}|${key}|${itemId}`;
+    const seasonTaskFor = (key, propertyId, itemId) => tasks.find((task) => task.seasonRef === seasonRef(key, propertyId, itemId)) || null;
+    function syncSeasonTasks(key, propertyId) {
+      const season = SEASON_CHECKLISTS[key];
+      const storeKey = season.key(propertyId);
+      const checked = { ...(winterChecks[storeKey] || {}) };
+      let changed = false;
+      season.items.forEach((item) => { const task = seasonTaskFor(key, propertyId, item.id); if (task && taskStatus(task) === 'Erledigt' && !checked[item.id]) { checked[item.id] = true; changed = true; } });
+      if (changed) { winterChecks = { ...winterChecks, [storeKey]: checked }; persistWinterChecks(); }
+    }
+    function createSeasonTask(key, propertyId, itemId, quiet = false) {
+      const season = SEASON_CHECKLISTS[key];
+      const item = season.items.find((entry) => entry.id === itemId);
+      const property = properties.find((entry) => entry.id === propertyId);
+      if (!item || !property || seasonTaskFor(key, propertyId, itemId)) return null;
+      const due = seasonState(key, propertyId).due || localDateKey(new Date());
+      const partnerId = suggestPartner(propertyId, ['outdoor', 'snow', 'garden'].includes(itemId) ? 'outdoor' : itemId === 'chimney' ? 'repair' : 'maintenance');
+      const task = { id: Date.now() + Math.floor(Math.random() * 1000), partnerId, title: item.title, property: property.name, propertyId, date: due < localDateKey(new Date()) ? localDateKey(new Date()) : due, priority: 'soon', area: season.card, status: 'Offen', done: false, repeat: 'Einmalig', description: `${item.detail} (aus der ${season.title} ${new Date().getFullYear()})`, seasonRef: seasonRef(key, propertyId, itemId) };
+      tasks = [...tasks, task];
+      if (!quiet) { persistTasks(); render(); showToast(`„${item.title}“ ist jetzt eine Serviceaufgabe${partnerId ? ` für ${providerById(partnerId)?.name}` : ''} – erledigt sie sich, wird der Punkt automatisch abgehakt.`); }
+      return task;
+    }
+    function seasonsPage() {
+      const property = properties.find((item) => item.id === inspectionProperty) || properties[0];
+      const key = currentSeasonKey(property.id);
+      inspectionView = key;
+      lastSeasonView = key;
+      const season = SEASON_CHECKLISTS[key];
+      syncSeasonTasks(key, property.id);
+      const checked = winterChecks[season.key(property.id)] || {};
+      const items = season.items.map((item) => ({ ...item, type: SEASON_ITEM_TYPES[key]?.[item.id] || 'control', task: seasonTaskFor(key, property.id, item.id) }));
+      const done = items.filter((item) => checked[item.id]).length;
+      const dueState = seasonState(key, property.id);
+      const dueText = dueState.ready ? 'Erledigt' : dueState.overdue ? `${Math.abs(dueState.days)} ${Math.abs(dueState.days) === 1 ? 'Tag' : 'Tage'} überfällig` : dueState.days === 0 ? 'heute fällig' : `noch ${dueState.days} ${dueState.days === 1 ? 'Tag' : 'Tage'}`;
+      const seasonCard = (id) => {
+        const entry = SEASON_CHECKLISTS[id];
+        const state = seasonState(id, property.id);
+        const ticks = winterChecks[entry.key(property.id)] || {};
+        const count = entry.items.filter((item) => ticks[item.id]).length;
+        return `<button type="button" class="season-switch ${id === key ? 'active' : ''}" data-season-switch="${id}" aria-pressed="${id === key}"><span class="season-switch-icon">${icon(id === 'winter' ? 'snow' : 'sun')}</span><span><strong>${entry.card}</strong><small>${state.ready ? 'Erledigt' : `bis ${escapeHtml(fmtDate(state.due))}`} · ${count} von ${entry.items.length}</small></span><i class="season-switch-bar"><b style="width:${Math.round(count / entry.items.length * 100)}%"></b></i></button>`;
+      };
+      const row = (item) => {
+        const task = item.task;
+        const status = task ? taskStatus(task) : '';
+        const partner = task ? providerById(task.partnerId) : null;
+        const action = item.type === 'service'
+          ? (task ? `<button type="button" class="season-task-link st-${status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open'}" data-season-open-task="${task.id}">${icon('task')}<span>${escapeHtml(status)}${task.selfService ? ' · Eigenleistung' : partner ? ` · ${escapeHtml(partner.name)}` : ''}</span></button>` : `<button type="button" class="small-action" data-season-task="${item.id}">${icon('plus')} Als Serviceaufgabe planen</button>`)
+          : `<button type="button" class="small-action issue-btn" data-report-issue-source="${escapeHtml(season.title)}" data-issue-text="${escapeHtml(item.title)}: " data-property="${escapeHtml(property.id)}">${icon('alert')} Auffälligkeit</button>`;
+        return `<div class="season-row ${checked[item.id] ? 'done' : ''}"><label class="season-check"><input type="checkbox" data-season-check="${item.id}" ${checked[item.id] ? 'checked' : ''} aria-label="${escapeHtml(item.title)} erledigt"><span class="season-check-box">${icon('check')}</span></label><div class="season-row-main"><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.detail)}</small></div><div class="season-row-action">${action}</div></div>`;
+      };
+      const group = (type, title, caption) => {
+        const list = items.filter((item) => item.type === type);
+        const count = list.filter((item) => checked[item.id]).length;
+        return `<section class="card season-group"><div class="season-group-head"><span class="season-type ${type}">${icon(type === 'service' ? 'task' : 'inspection')}</span><div><h2 class="card-title">${title}</h2><p class="card-caption">${caption}</p></div><span class="season-group-count">${count} / ${list.length}</span></div>${list.map(row).join('')}${type === 'service' && list.some((item) => !item.task && !checked[item.id]) ? `<div class="season-group-foot"><button type="button" class="secondary-btn" data-season-task-all>${icon('plus')} Alle offenen Service-Punkte als Aufgaben planen</button></div>` : ''}</section>`;
+      };
+      return `<div class="welcome"><div><p class="eyebrow">Saisonvorbereitung · ${escapeHtml(property.name)}</p><h1>Saison-Checklisten</h1><p class="subtitle">Winter- und Frühjahrsvorbereitung mit beiden Seiten: Punkte, die geprüft werden, und Arbeiten, die erledigt werden müssen.</p></div></div>
+        ${singleHouse() ? '' : `<div class="section-toolbar"><label><span class="form-label">Ferienhaus</span><select id="inspection-property" class="filter-select" aria-label="Ferienhaus wählen">${properties.map((item) => `<option value="${escapeHtml(item.id)}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)}</option>`).join('')}</select></label></div>`}
+        <div class="season-switches">${seasonCard('winter')}${seasonCard('spring')}</div>
+        <section class="card season-summary"><div class="season-summary-main"><span class="form-label">${season.card} ${escapeHtml(String(dueState.due || '').slice(0, 4) || new Date().getFullYear())}</span><strong>${done} von ${items.length} Punkten erledigt</strong><span class="season-progress"><i style="width:${Math.round(done / items.length * 100)}%"></i></span><small>${items.filter((item) => item.type === 'control').length} Kontrollpunkte · ${items.filter((item) => item.type === 'service').length} Serviceaufgaben · ${items.filter((item) => item.task).length} davon als Aufgabe vergeben</small></div>
+          <div class="season-due ${dueState.ready ? 'ready' : dueState.overdue ? 'overdue' : dueState.days <= 14 ? 'soon' : ''}"><label><span class="form-label">Fertig bis</span><input class="form-control" type="date" id="season-due-input" data-season="${key}" value="${escapeHtml(dueState.due)}"></label><span class="season-due-state">${escapeHtml(dueText)}</span></div></section>
+        ${done === items.length ? `<div class="winter-ready">${icon('check')}<span><strong>${key === 'winter' ? 'Winterfest' : 'Saison eröffnet'}</strong><small>${escapeHtml(season.ready(property.name))}</small></span></div>` : ''}
+        <div class="season-groups">
+          ${group('control', 'Prüfen', 'Zustand kontrollieren – Auffälligkeiten werden als Mangel gemeldet und die Reparatur geplant.')}
+          ${group('service', 'Erledigen', 'Arbeiten, die du selbst übernimmst oder als Serviceaufgabe an einen Partner vergibst.')}
+        </div>
+        <p class="season-note">${icon('help')} Ist die Liste vollständig, erledigt sich die automatisch angelegte Saisonaufgabe. Erledigte Serviceaufgaben haken ihren Punkt hier selbst ab.</p>`;
+    }
+
+    // --- Prüfprotokoll-Vorlagen ---
+    const BUILTIN_TEMPLATES = [
+      { id: 'tpl-standard', builtIn: true, name: 'Abwesenheitskontrolle – Standard', description: 'Vollständiger Rundgang durch Haus und Grundstück bei Leerstand.', items: { outside: 'm1', water: 'm1', heating: 'm1', electricity: 'm1', fire: 'm1', pests: 'm1', security: 'm1', weather: 'm1', mail: 'm1', pumps: 'm1', climate: 'm1', crawlspace: 'q1', outbuildings: 'q1', report: 'm1' } },
+      { id: 'tpl-short', builtIn: true, name: 'Kurzkontrolle', description: 'Schneller Kontrollgang: Wasser, Heizung, Zugänge und Wetterschäden.', items: { water: 'w2', heating: 'w2', security: 'w2', weather: 'w2', mail: 'w2', report: 'w2' } },
+      { id: 'tpl-frost', builtIn: true, name: 'Frost & Wasser (Winterhalbjahr)', description: 'Für die kalten Monate: Leitungen, Heizung, Pumpen und Feuchtigkeit.', items: { water: 'w2', heating: 'w2', pumps: 'w2', crawlspace: 'm1', climate: 'm1', report: 'w2' } },
+      { id: 'tpl-storm', builtIn: true, name: 'Kontrolle nach Sturm & Unwetter', description: 'Nach starkem Wind, Schnee oder Starkregen: Gebäudehülle, Grundstück und Nebengebäude.', items: { outside: 'm1', weather: 'm1', outbuildings: 'm1', mail: 'm1', security: 'm1', report: 'm1' } }
+    ];
+    let controlTemplates = loadStore('stugliv-control-templates', []).filter((entry) => entry && entry.id && entry.items);
+    const allTemplates = () => [...BUILTIN_TEMPLATES, ...controlTemplates];
+    const templateById = (id) => allTemplates().find((entry) => entry.id === id) || null;
+    const templateItems = (template) => Object.fromEntries(Object.entries(template?.items || {}).filter(([id]) => absenceChecklist.some((item) => item.id === id)));
+    let planEditorMode = 'control';
+    let planTemplateEditId = null;
+    function readPlanItems() {
+      const items = {};
+      document.querySelectorAll('#inspection-plan-rows [data-plan-item]').forEach((box) => { if (box.checked) items[box.dataset.planItem] = document.querySelector(`[data-plan-frequency="${box.dataset.planItem}"]`).value; });
+      return items;
+    }
+    function setPlanEditorMode(mode) {
+      planEditorMode = mode;
+      const template = mode === 'template';
+      document.getElementById('plan-template-wrap').hidden = template;
+      document.getElementById('plan-description-wrap').hidden = !template;
+      document.getElementById('plan-partner-section').hidden = template;
+      document.getElementById('plan-due-note').hidden = template;
+      document.getElementById('plan-save-as-template').hidden = template;
+      document.getElementById('inspection-plan-save').hidden = template;
+      document.getElementById('inspection-plan-save-send').hidden = template;
+      document.getElementById('plan-template-save').hidden = !template;
+      document.getElementById('plan-step1-title').textContent = template ? 'Welche Vorlage?' : 'Was wird geprüft?';
+      document.getElementById('plan-step1-caption').textContent = template ? 'Name und Einsatzzweck der Prüfprotokoll-Vorlage' : 'Name des Kontrollplans – optional aus einer Vorlage';
+      document.getElementById('inspection-plan-name-label').textContent = template ? 'Name der Vorlage' : 'Name des Kontrollplans';
+      const select = document.getElementById('plan-template-select');
+      select.innerHTML = `<option value="">Ohne Vorlage – Positionen selbst wählen</option>${allTemplates().map((entry) => `<option value="${escapeHtml(entry.id)}">${escapeHtml(entry.name)} · ${Object.keys(templateItems(entry)).length} Positionen</option>`).join('')}`;
+    }
+    function applyTemplateToPlan(templateId) {
+      const template = templateById(templateId);
+      if (!template) return;
+      renderPlanRows(planEditProperty, { items: templateItems(template) }, null);
+      const nameInput = document.getElementById('inspection-plan-name');
+      if (!nameInput.value.trim() || /^Kontrolle \d+$/.test(nameInput.value.trim())) nameInput.value = template.name;
+      document.getElementById('plan-template-select').value = template.id;
+    }
+    function openTemplateEditor(templateId = null) {
+      const source = templateId ? templateById(templateId) : null;
+      planTemplateEditId = source && !source.builtIn ? source.id : null;
+      planEditProperty = '__template';
+      planEditControlId = null;
+      document.getElementById('inspection-plan-title').textContent = source ? (source.builtIn ? 'Vorlage anpassen' : 'Vorlage bearbeiten') : 'Prüfprotokoll-Vorlage erstellen';
+      document.getElementById('inspection-plan-subtitle').textContent = source?.builtIn ? 'Standardvorlage – deine Änderungen werden als eigene Vorlage gespeichert.' : 'Wiederverwendbar für alle Ferienhäuser';
+      document.getElementById('inspection-plan-name').value = source ? (source.builtIn ? `${source.name} (eigene)` : source.name) : '';
+      document.getElementById('plan-description').value = source?.description || '';
+      renderPlanRows('__template', { items: source ? templateItems(source) : {} }, null);
+      setPlanEditorMode('template');
+      document.getElementById('inspection-plan-modal').classList.add('open');
+      setTimeout(() => document.getElementById('inspection-plan-name').focus(), 50);
+    }
+    function saveTemplate(items, name, description, editId = null) {
+      if (!name) { showToast('Bitte gib der Vorlage einen Namen.'); document.getElementById('inspection-plan-name').focus(); return false; }
+      if (!Object.keys(items).length) { showToast('Bitte mindestens eine Prüfposition auswählen.'); return false; }
+      const entry = { id: editId || newId('tpl'), name, description, items, updatedAt: new Date().toISOString() };
+      const next = editId ? controlTemplates.map((template) => (template.id === editId ? entry : template)) : [...controlTemplates, entry];
+      if (!saveStore('stugliv-control-templates', next)) return false;
+      controlTemplates = next;
+      return true;
+    }
+    function controlTemplatesCardHtml(property) {
+      const summary = (template) => {
+        const items = templateItems(template);
+        const titles = absenceChecklist.filter((item) => items[item.id]).map((item) => item.title);
+        const freqs = [...new Set(Object.values(items))].sort((a, b) => (houseIntervalDays[a] || 30) - (houseIntervalDays[b] || 30)).map(planFrequencyLabel);
+        return { count: titles.length, titles, freqs };
+      };
+      return `<section class="card template-card" id="control-templates"><div class="card-head"><div><h2 class="card-title">Prüfprotokoll-Vorlagen</h2><p class="card-caption">Kontrolllisten aus einzelnen Prüfpositionen zusammenstellen und als Vorlage für neue Kontrollpläne speichern</p></div><button type="button" class="secondary-btn" data-template-new>${icon('plus')} Neue Vorlage</button></div>
+        <div class="template-list">${allTemplates().map((template) => { const info = summary(template); return `<article class="template-item"><div class="template-main"><div class="template-title"><strong>${escapeHtml(template.name)}</strong><span class="template-badge ${template.builtIn ? '' : 'own'}">${template.builtIn ? 'Standard' : 'Eigene'}</span></div>${template.description ? `<small>${escapeHtml(template.description)}</small>` : ''}<div class="template-chips">${info.titles.slice(0, 5).map((title) => `<span>${escapeHtml(title)}</span>`).join('')}${info.count > 5 ? `<span class="more">+${info.count - 5} weitere</span>` : ''}</div><small class="template-meta">${info.count} ${info.count === 1 ? 'Position' : 'Positionen'} · Taktung ${escapeHtml(info.freqs.join(', ') || '–')}</small></div><div class="template-actions"><button type="button" class="primary-btn" data-template-use="${escapeHtml(template.id)}">Als Kontrollplan nutzen</button><button type="button" class="small-action" data-template-edit="${escapeHtml(template.id)}">${template.builtIn ? 'Anpassen' : 'Bearbeiten'}</button>${template.builtIn ? '' : `<button type="button" class="small-action danger" data-template-delete="${escapeHtml(template.id)}">Löschen</button>`}</div></article>`; }).join('')}</div>
+      </section>`;
+    }
+
+    // --- Automatisierung in Gruppen ---
+    const AUTO_GROUPS = [
+      ['guests', 'Gäste & Buchungen', ['Gästewechsel je Buchung', 'Kalender-Synchronisierung']],
+      ['care', 'Kontrolle & Saison', ['Hauskontrolle bei Leerstand', 'Saisonale Aufgaben']],
+      ['maintenance', 'Wartung & Reparatur', ['Reparatur & Instandhaltung', 'Sanierung & Renovierung', 'Servicepakete & Jahresaufgaben']],
+      ['planned', 'Geplant', ['Nächste automatische Schritte']],
+      ['log', 'Protokoll', ['Protokoll']]
+    ];
+    let automationView = '';
+    function enhanceAutomationPage() {
+      const grid = pageContent.querySelector('.automation-grid');
+      if (!grid) return;
+      const cards = [...grid.querySelectorAll(':scope > .automation-card')];
+      const groupOf = (card) => AUTO_GROUPS.find(([, , titles]) => titles.includes(card.querySelector('.card-title')?.textContent.trim()))?.[0] || 'maintenance';
+      const present = AUTO_GROUPS.filter(([id]) => cards.some((card) => groupOf(card) === id));
+      if (!present.some(([id]) => id === automationView)) automationView = present[0]?.[0] || 'care';
+      cards.forEach((card) => { card.hidden = groupOf(card) !== automationView; card.classList.add('wide'); });
+      const counts = Object.fromEntries(present.map(([id]) => [id, cards.filter((card) => groupOf(card) === id).length]));
+      grid.insertAdjacentHTML('beforebegin', `<div class="auto-groups" role="tablist" aria-label="Automatiken">${present.map(([id, label]) => `<button type="button" role="tab" aria-selected="${id === automationView}" class="${id === automationView ? 'active' : ''}" data-auto-view="${id}">${label}${['planned', 'log'].includes(id) ? '' : `<span>${counts[id]}</span>`}</button>`).join('')}</div>`);
+      grid.classList.add('grouped');
+    }
+
+    // --- Seiten-Erweiterungen nach dem Rendern ---
+    function enhanceWorkPages() {
+      if (!['tasks', 'inspections', 'seasons', 'automation'].includes(currentPage)) return;
+      const welcome = pageContent.querySelector('.welcome');
+      welcome?.insertAdjacentHTML('afterend', workAreaNavHtml());
+      const areaNav = pageContent.querySelector('.work-areas');
+      const activeArea = areaNav?.querySelector('.work-area.active');
+      if (areaNav && activeArea && areaNav.scrollWidth > areaNav.clientWidth) areaNav.scrollLeft = Math.max(0, activeArea.offsetLeft - 16);
+      if (currentPage === 'inspections') pageContent.querySelector('.inspection-tabs')?.remove();
+      if (currentPage === 'automation') enhanceAutomationPage();
+    }
+    document.addEventListener('click', (event) => {
+      const target = event.target;
+      const seasonSwitch = target.closest('[data-season-switch]');
+      if (seasonSwitch) { inspectionView = seasonSwitch.dataset.seasonSwitch; lastSeasonView = inspectionView; render(); return; }
+      const seasonTask = target.closest('[data-season-task]');
+      if (seasonTask) { const property = properties.find((item) => item.id === inspectionProperty) || properties[0]; createSeasonTask(currentSeasonKey(property.id), property.id, seasonTask.dataset.seasonTask); return; }
+      if (target.closest('[data-season-task-all]')) {
+        const property = properties.find((item) => item.id === inspectionProperty) || properties[0];
+        const key = currentSeasonKey(property.id);
+        const checked = winterChecks[SEASON_CHECKLISTS[key].key(property.id)] || {};
+        const created = SEASON_CHECKLISTS[key].items.filter((item) => SEASON_ITEM_TYPES[key]?.[item.id] === 'service' && !checked[item.id]).map((item) => createSeasonTask(key, property.id, item.id, true)).filter(Boolean);
+        persistTasks(); render();
+        showToast(created.length ? `${created.length} Serviceaufgaben angelegt – du findest sie unter Serviceaufgaben.` : 'Alle Service-Punkte sind bereits vergeben.');
+        return;
+      }
+      const openTask = target.closest('[data-season-open-task]');
+      if (openTask) { showTaskInList(Number(openTask.dataset.seasonOpenTask)); return; }
+      if (target.closest('[data-template-new]')) { openTemplateEditor(null); return; }
+      const templateEdit = target.closest('[data-template-edit]');
+      if (templateEdit) { openTemplateEditor(templateEdit.dataset.templateEdit); return; }
+      const templateUse = target.closest('[data-template-use]');
+      if (templateUse) { openInspectionPlan(inspectionProperty, null); applyTemplateToPlan(templateUse.dataset.templateUse); return; }
+      const templateDelete = target.closest('[data-template-delete]');
+      if (templateDelete) {
+        const template = templateById(templateDelete.dataset.templateDelete);
+        if (!template || !window.confirm(`Vorlage „${template.name}“ löschen? Bestehende Kontrollpläne bleiben erhalten.`)) return;
+        controlTemplates = controlTemplates.filter((entry) => entry.id !== template.id);
+        saveStore('stugliv-control-templates', controlTemplates); render(); showToast('Vorlage gelöscht.'); return;
+      }
+      if (target.closest('#plan-template-save')) {
+        if (saveTemplate(readPlanItems(), document.getElementById('inspection-plan-name').value.trim(), document.getElementById('plan-description').value.trim(), planTemplateEditId)) { closeInspectionPlan(); render(); showToast('Vorlage gespeichert – du findest sie unter Prüfprotokoll-Vorlagen.'); }
+        return;
+      }
+      if (target.closest('#plan-save-as-template')) {
+        const items = readPlanItems();
+        if (!Object.keys(items).length) { showToast('Bitte zuerst Prüfpositionen auswählen.'); return; }
+        const name = (window.prompt('Name der neuen Vorlage', document.getElementById('inspection-plan-name').value.trim()) || '').trim();
+        if (name && saveTemplate(items, name, '')) { setPlanEditorMode('control'); showToast(`Vorlage „${name}“ gespeichert.`); }
+        return;
+      }
+      const autoView = target.closest('[data-auto-view]');
+      if (autoView) { automationView = autoView.dataset.autoView; render(); }
+    });
+    document.addEventListener('change', (event) => {
+      if (event.target.id === 'plan-template-select' && event.target.value) applyTemplateToPlan(event.target.value);
     });
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();
