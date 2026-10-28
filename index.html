@@ -2533,6 +2533,7 @@
     .settings-jump { display: flex; flex-wrap: wrap; gap: 8px; margin: -6px 0 18px; }
     .settings-jump button { min-height: 38px; padding: 0 14px; border: 1px solid var(--line); border-radius: 20px; color: var(--green); background: white; font-size: 13px; font-weight: 700; }
     .settings-group { margin-bottom: 26px; scroll-margin-top: 96px; }
+    @media (max-width: 760px) { .settings-jump { display: none; } .settings-group:not(.active) { display: none; } }
     .settings-group-head { margin: 0 2px 12px; }
     .settings-group-head h2 { margin: 0; font-size: 19px; }
     .settings-group-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
@@ -2788,6 +2789,7 @@
     .season-edit { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
     .season-edit svg { width: 15px; height: 15px; }
     @media (max-width: 600px) { .pkg-meta { grid-template-columns: 1fr; } .pkg-add-grid { grid-template-columns: 1fr; } }
+  
   
   
   
@@ -12174,7 +12176,7 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
       ];
       return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Einstellungen</h1><p class="subtitle">Startseite, Darstellung, Erinnerungen und Datensicherung.</p></div></div>
         <nav class="settings-jump" aria-label="Bereiche der Einstellungen">${groups.map(([id, title]) => `<button type="button" data-settings-jump="${id}">${title}</button>`).join('')}</nav>
-        ${groups.map(([id, title, caption, builders]) => `<section class="settings-group" id="${id}"><div class="settings-group-head"><h2>${title}</h2><p>${caption}</p></div><div class="settings-grid">${builders.map((build) => build()).join('')}</div></section>`).join('')}`;
+        ${groups.map(([id, title, caption, builders]) => `<section class="settings-group ${id === settingsView ? 'active' : ''}" id="${id}"><div class="settings-group-head"><h2>${title}</h2><p>${caption}</p></div><div class="settings-grid">${builders.map((build) => build()).join('')}</div></section>`).join('')}`;
     }
     // Weitere Karten hängen sich hier ein (Darstellung, Benachrichtigungen …).
     const settingsCardBuilders = [backupCardHtml, appInfoCardHtml];
@@ -12226,7 +12228,10 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
         </ul><p>Husora ${APP_VERSION} · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}</p>` }
     };
     let legalTab = 'imprint';
+    let settingsView = 'settings-home';
     document.addEventListener('click', (event) => {
+      const settingsTab = event.target.closest('[data-settings-view]');
+      if (settingsTab) { settingsView = settingsTab.dataset.settingsView; render(); window.scrollTo(0, 0); return; }
       const jump = event.target.closest('[data-settings-jump]');
       if (jump) document.getElementById(jump.dataset.settingsJump)?.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
@@ -12927,7 +12932,7 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
       const usageLabel = target.closest('.ob-usage label');
       if (usageLabel) setTimeout(() => { document.querySelectorAll('.ob-usage label').forEach((label) => label.classList.toggle('on', label.querySelector('input').checked)); }, 0);
       const anchor = target.closest('[data-settings-anchor]');
-      if (anchor) setTimeout(() => document.getElementById(anchor.dataset.settingsAnchor)?.scrollIntoView({ block: 'start', behavior: 'smooth' }), 60);
+      if (anchor) { if (/^settings-(home|look|data)$/.test(anchor.dataset.settingsAnchor)) settingsView = anchor.dataset.settingsAnchor; else if (anchor.dataset.settingsAnchor === 'settings-notify') settingsView = 'settings-look'; setTimeout(() => { if (currentPage === 'settings') render(); document.getElementById(anchor.dataset.settingsAnchor)?.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60); }
     });
     function saveEmergencyForm(notify = true) {
       const form = document.getElementById('emergency-form');
@@ -13011,6 +13016,15 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
       const active = TABBAR_ITEMS.some(([page]) => page === currentPage) ? currentPage : (currentPage === 'bookings' ? 'calendar' : '');
       const openCount = tasks.filter((task) => !task.done).length;
       const menuOpen = document.getElementById('main-menu')?.classList.contains('open');
+      // In den Einstellungen trägt die Leiste unten die drei Bereiche der Seite.
+      if (currentPage === 'settings') {
+        const items = [['settings-home', 'Startseite', 'home'], ['settings-look', 'Darstellung', 'text'], ['settings-data', 'Daten & App', 'document']];
+        const tab = document.getElementById('tabbar');
+        if (tab) { tab.innerHTML = items.map(([id, label, iconName]) => `<button type="button" class="tab ${settingsView === id ? 'active' : ''}" data-settings-view="${id}" ${settingsView === id ? 'aria-current="true"' : ''}>${icon(iconName)}<span>${label}</span></button>`).join(''); tab.style.setProperty('grid-template-columns', `repeat(${items.length}, 1fr)`); }
+        const top = document.getElementById('top-tabs');
+        if (top) top.innerHTML = TABBAR_ITEMS.map(([page, label, iconName]) => `<button type="button" class="tab" data-page="${page}">${icon(iconName)}<span>${label}</span></button>`).join('') + `<button type="button" class="tab active-more" data-tab-more aria-haspopup="true" aria-expanded="false" aria-controls="main-menu">${icon('menu')}<span>Mehr</span></button>`;
+        return;
+      }
       // In der Automatisierung trägt die Leiste unten die Reiter der Automatiken.
       if (currentPage === 'automation') {
         const groups = [['guests', 'Gäste', 'calendar'], ['care', 'Kontrolle', 'inspection'], ['maintenance', 'Wartung', 'alert'], ['planned', 'Geplant', 'clock'], ['log', 'Protokoll', 'note']].filter(([id]) => id !== 'guests' || bookingsEnabled());
