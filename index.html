@@ -2757,6 +2757,13 @@
     .package-modal.picker .pkg-pick.open .pkg-meta .form-control { min-height: 44px; font-size: 14px; }
     @media (max-width: 760px) { .package-modal.picker { width: 100%; max-height: none; height: 100%; border-radius: 0; } #package-modal.open:has(.picker) { padding: 0; } }
     .pkg-chip-wrap { position: relative; display: grid; }
+    .pkg-label { display: grid; gap: 4px; }
+    .season-editor .pkg-row { padding: 14px 16px; }
+    .season-editor .pkg-fields { gap: 10px; }
+    .pkg-fields .pkg-title-area, .pkg-fields .pkg-detail-area { height: auto; width: 100%; resize: vertical; padding-top: 10px; padding-bottom: 10px; font-family: inherit; line-height: 1.5; }
+    .pkg-fields .pkg-title-area { min-height: 66px; font-size: 15px; font-weight: 600; }
+    .pkg-fields .pkg-detail-area { min-height: 116px; font-size: 14px; color: var(--ink); }
+    .season-editor .pkg-meta { grid-template-columns: minmax(0, 220px); }
     .pkg-chip em { margin-left: 4px; padding: 1px 7px; border-radius: 9px; color: #6a4f96; background: #efe9f7; font-size: 11px; font-style: normal; font-weight: 750; }
     .pkg-chip.own { padding-right: 40px; }
     .pkg-chip-delete { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 8px; color: var(--red); background: white; cursor: pointer; }
@@ -2765,6 +2772,8 @@
     .season-edit { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
     .season-edit svg { width: 15px; height: 15px; }
     @media (max-width: 600px) { .pkg-meta { grid-template-columns: 1fr; } .pkg-add-grid { grid-template-columns: 1fr; } }
+  
+  
   
   
   
@@ -13481,11 +13490,12 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
       actions.innerHTML = '<button type="button" class="secondary-btn" data-pkg-save-package>Als eigenes Paket speichern</button><span class="pkg-spacer"></span><button type="button" class="secondary-btn" data-package-close>Abbrechen</button><button type="button" class="primary-btn" data-pkg-save>Übernehmen</button>';
     }
     function openPackage(ref) {
-      document.querySelector('#package-modal .package-modal').classList.remove('picker');
+      document.querySelector('#package-modal .package-modal').classList.remove('picker', 'season-editor');
       if (ref.startsWith('season:')) {
         const key = ref.slice(7);
         const season = SEASON_CHECKLISTS[key];
         pkgDraft = { kind: 'season', key, rows: season.items.map((item) => ({ id: item.id, title: item.title, detail: item.detail, type: SEASON_ITEM_TYPES[key]?.[item.id] || 'control' })) };
+        document.querySelector('#package-modal .package-modal').classList.add('picker', 'season-editor');
         document.getElementById('package-modal-title').textContent = season.title;
         document.getElementById('package-modal-subtitle').textContent = key === 'winter' ? 'Vorbereitung auf Frost, Schnee und Abwesenheit' : 'Öffnung nach dem Winter';
       } else {
@@ -13509,7 +13519,7 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
       if (pkgDraft.kind === 'season') {
         const count = (type) => pkgDraft.rows.filter((row) => row.type === type).length;
         body.innerHTML = `<p class="pkg-intro">${pkgDraft.rows.length} Punkte · ${count('control')} prüfen · ${count('service')} erledigen. Passe Titel und Anweisung an, lege fest, ob ein Punkt geprüft oder erledigt wird, und ergänze eigene Aufgaben.</p>
-          <div class="pkg-list">${pkgDraft.rows.map((row, index) => `<div class="pkg-row" data-pkg-index="${index}"><div class="pkg-fields"><input class="form-control" data-pkg-field="title" maxlength="90" value="${escapeHtml(row.title)}" aria-label="Aufgabe"><input class="form-control pkg-detail" data-pkg-field="detail" maxlength="240" value="${escapeHtml(row.detail || '')}" placeholder="Anweisung (optional)" aria-label="Anweisung"><div class="pkg-meta"><select class="form-control" data-pkg-field="type" aria-label="Art">${options([['control', 'Prüfen'], ['service', 'Erledigen']], row.type)}</select></div></div><button type="button" class="pkg-remove" data-pkg-remove="${index}" aria-label="${escapeHtml(row.title)} entfernen">${icon('trash')}</button></div>`).join('')}</div>
+          <div class="pkg-list">${pkgDraft.rows.map((row, index) => `<div class="pkg-row" data-pkg-index="${index}"><div class="pkg-fields"><label class="pkg-label"><span class="form-label">Titel</span><textarea class="form-control pkg-title-area" data-pkg-field="title" maxlength="120" rows="2" aria-label="Titel">${escapeHtml(row.title)}</textarea></label><label class="pkg-label"><span class="form-label">Anweisung</span><textarea class="form-control pkg-detail-area" data-pkg-field="detail" maxlength="600" rows="4" placeholder="Was genau ist zu tun oder zu prüfen? (optional)" aria-label="Anweisung">${escapeHtml(row.detail || '')}</textarea></label><div class="pkg-meta"><select class="form-control" data-pkg-field="type" aria-label="Art">${options([['control', 'Prüfen'], ['service', 'Erledigen']], row.type)}</select></div></div><button type="button" class="pkg-remove" data-pkg-remove="${index}" aria-label="${escapeHtml(row.title)} entfernen">${icon('trash')}</button></div>`).join('')}</div>
           <div class="pkg-add"><span class="form-label">Eigene Aufgabe ergänzen</span><div class="pkg-add-grid"><input class="form-control" id="pkg-new-title" maxlength="90" placeholder="z. B. Bootssteg abbauen" aria-label="Neue Aufgabe"><select class="form-control" id="pkg-new-type" aria-label="Art">${options([['service', 'Erledigen'], ['control', 'Prüfen']], 'service')}</select><button type="button" class="secondary-btn" data-pkg-add>${icon('plus')} Hinzufügen</button></div></div>`;
         actions.innerHTML = '<button type="button" class="secondary-btn" data-pkg-reset>Standard wiederherstellen</button><span class="pkg-spacer"></span><button type="button" class="secondary-btn" data-package-close>Abbrechen</button><button type="button" class="primary-btn" data-pkg-save>Checkliste speichern</button>';
         return;
