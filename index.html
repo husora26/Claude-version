@@ -2757,6 +2757,22 @@
     .package-modal.picker .pkg-pick.open .pkg-meta .form-control { min-height: 44px; font-size: 14px; }
     @media (max-width: 760px) { .package-modal.picker { width: 100%; max-height: none; height: 100%; border-radius: 0; } #package-modal.open:has(.picker) { padding: 0; } }
     .pkg-chip-wrap { position: relative; display: grid; }
+    .automation-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .automation-actions .primary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
+    .automation-actions svg { width: 15px; height: 15px; }
+    .season-order { display: grid; gap: 10px; }
+    .season-order-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; }
+    .season-order-row label { flex: 1 1 220px; display: grid; gap: 4px; }
+    .season-order-row .form-control { min-height: 42px; }
+    .season-order-row .primary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
+    .season-order-row svg { width: 15px; height: 15px; }
+    .season-order-hint { color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .season-order-state { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #2f5f86; background: #eef4fa; }
+    .season-order-state.st-done { color: #1f6b41; background: #e2f2e8; }
+    .season-order-state > svg { flex: 0 0 auto; width: 18px; height: 18px; }
+    .season-order-state span { flex: 1; }
+    .season-order-state strong { display: block; font-size: 13.5px; }
+    .season-order-state small { display: block; font-size: 12px; opacity: .85; }
     .pkg-label { display: grid; gap: 4px; }
     .season-editor .pkg-row { padding: 14px 16px; }
     .season-editor .pkg-fields { gap: 10px; }
@@ -2772,6 +2788,7 @@
     .season-edit { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
     .season-edit svg { width: 15px; height: 15px; }
     @media (max-width: 600px) { .pkg-meta { grid-template-columns: 1fr; } .pkg-add-grid { grid-template-columns: 1fr; } }
+  
   
   
   
@@ -3405,6 +3422,8 @@ html.dark .pkg-remove { background: #1c1c1c; }
 html.dark .pkg-chip { background: #1c1c1c; }
 html.dark .pkg-pick.open { background: #1c1c1c; }
 html.dark .pkg-edit-btn { background: #1c1c1c; }
+html.dark .season-order-state { color: #a7c3da; background: #1a222a; }
+html.dark .season-order-state.st-done { color: #b5e4ca; background: #212e26; }
 html.dark .pkg-chip em { color: #ae9fc7; background: #231d2c; }
 html.dark .pkg-chip-delete { background: #1c1c1c; }
     }
@@ -6221,6 +6240,8 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
             <div class="automation-body">${sw('auto-repairs', automation.repairs, 'Reparaturaufträge automatisch planen')}<ul class="automation-status">${properties.map((property) => { const count = openIssues(property.id).length; return `<li><span>${escapeHtml(property.name)}</span><small class="${count ? 'due' : 'ok'}">${count ? `${count} offene ${count === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'}` : 'Keine offenen Auffälligkeiten'}</small></li>`; }).join('')}</ul><div class="automation-links"><button type="button" class="secondary-btn" data-action="report-issue">${icon('alert')} Auffälligkeit melden</button><button type="button" class="text-btn" data-page="repairs">Zur Übersicht →</button></div></div></section>
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('property')}</span><div><h2 class="card-title">Sanierung & Renovierung</h2><p class="card-caption">Für jedes Sanierungsprojekt mit Beginn plant Husora: Angebote einholen (60 Tage vorher), Handwerker beauftragen (30 Tage), Baubeginn vorbereiten und Abnahme. Abgeschlossene Projekte landen in der Sanierungshistorie.</p></div></div>
             <div class="automation-body">${sw('auto-renovation', automation.renovation, 'Sanierungsschritte automatisch planen')}<ul class="automation-status"><li><span>Laufende Projekte</span><small>${renovationProjects.filter((project) => project.status !== 'done').length}</small></li><li><span>Abgeschlossen</span><small>${renovationProjects.filter((project) => project.status === 'done').length}</small></li></ul><div class="automation-links"><button type="button" class="secondary-btn" data-action="new-renovation">${icon('plus')} Sanierungsprojekt</button><button type="button" class="text-btn" data-page="renovations">Zur Übersicht →</button></div></div></section>
+          <section class="card automation-card wide"><div class="automation-head"><span class="automation-icon">${icon('task')}</span><div><h2 class="card-title">Jahresaufgaben</h2><p class="card-caption">Wiederkehrende Aufgaben aus Vorlagen und Servicepaketen – Husora legt sie zur passenden Jahreszeit automatisch an.</p></div></div>
+            <div class="automation-body">${sw('auto-task-toggle', autoTasks.enabled, 'Jahresaufgaben automatisch erstellen')}<p class="package-summary">${(() => { const { servicePackage } = packageExtras(); const selected = autoTasks.templates.filter((template) => template.selected); return `${servicePackage ? `Paket <strong>${escapeHtml(servicePackage.name)}</strong> · ` : ''}${selected.length} Aufgaben ausgewählt · ≈ ${selected.reduce((sum, template) => sum + templateYearlyCount(template), 0)} Einsätze pro Jahr${singleHouse() ? '' : ' je Haus'}`; })()}</p><div class="automation-actions"><button type="button" class="primary-btn" data-template-picker>${icon('task')} Aufgabenpaket aus Vorlage wählen</button></div></div></section>
           ${bookingsEnabled() ? `<section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('clock')}</span><div><h2 class="card-title">Kalender-Synchronisierung</h2><p class="card-caption">Buchungen von Airbnb, Booking.com und Vrbo laufen automatisch alle 15 Minuten ein.</p></div></div>
             <div class="automation-body"><p class="automation-state ${syncOn ? 'on' : ''}">${syncOn ? 'Aktiv' : 'Nicht eingerichtet'}</p><p class="card-caption">${icalCount} ${icalCount === 1 ? 'Kalenderlink' : 'Kalenderlinks'}${portalConnected() ? ' · Repull verbunden' : ''}${lastSync ? ` · zuletzt ${escapeHtml(timeFmt(lastSync))}` : ''}</p><button type="button" class="secondary-btn" data-page="profile">Buchungsportale verwalten</button></div></section>` : ''}
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('clock')}</span><div><h2 class="card-title">Nächste automatische Schritte</h2><p class="card-caption">Offene Aufgaben, die Husora geplant hat.</p></div></div>
@@ -13184,6 +13205,8 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
       const checked = { ...(winterChecks[storeKey] || {}) };
       let changed = false;
       season.items.forEach((item) => { const task = seasonTaskFor(key, propertyId, item.id); if (task && taskStatus(task) === 'Erledigt' && !checked[item.id]) { checked[item.id] = true; changed = true; } });
+      const order = seasonOrderTask(key, propertyId);
+      if (order && taskStatus(order) === 'Erledigt' && !order.seasonSynced) { season.items.filter((item) => (SEASON_ITEM_TYPES[key]?.[item.id] || 'control') === 'control').forEach((item) => { if (!checked[item.id]) { checked[item.id] = true; changed = true; } }); order.seasonSynced = true; persistTasks(); }
       if (changed) { winterChecks = { ...winterChecks, [storeKey]: checked }; persistWinterChecks(); }
     }
     function createSeasonTask(key, propertyId, itemId, quiet = false) {
@@ -13197,6 +13220,39 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
       tasks = [...tasks, task];
       if (!quiet) { persistTasks(); render(); showToast(`„${item.title}“ ist jetzt eine Serviceaufgabe${partnerId ? ` für ${providerById(partnerId)?.name}` : ''} – erledigt sie sich, wird der Punkt automatisch abgehakt.`); }
       return task;
+    }
+    // Prüfpunkte der Saison-Checkliste an einen Servicepartner vergeben.
+    const seasonOrderRef = (key, propertyId) => `${SEASON_CHECKLISTS[key].key(propertyId)}|${key}|control-order`;
+    const seasonOrderTask = (key, propertyId) => tasks.find((task) => task.seasonRef === seasonOrderRef(key, propertyId)) || null;
+    function seasonControlOrderHtml(key, property, list, checked) {
+      const order = seasonOrderTask(key, property.id);
+      const assigned = providers.filter((provider) => (servicePartnerAssignments[property.id] || []).includes(provider.id));
+      const preferred = order?.partnerId || suggestPartner(property.id, 'inspection');
+      const status = order ? taskStatus(order) : '';
+      const partner = order ? providerById(order.partnerId) : null;
+      if (!assigned.length) return `<div class="season-group-foot season-order">${noPartnerLinkHtml(property.id, 'Für die Beauftragung zuerst einen Servicepartner zuordnen')}</div>`;
+      return `<div class="season-group-foot season-order">${order ? `<div class="season-order-state st-${status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open'}">${icon(status === 'Erledigt' ? 'check' : 'clock')}<span><strong>${status === 'Erledigt' ? 'Prüfung erledigt' : 'Prüfung beauftragt'}${partner ? ` · ${escapeHtml(partner.name)}` : ''}</strong><small>Serviceaufgabe bis ${escapeHtml(fmtDate(order.date))} · ${escapeHtml(status)}</small></span><button type="button" class="small-action" data-season-open-task="${order.id}">Zur Aufgabe</button></div>` : ''}
+        <div class="season-order-row"><label><span class="form-label">Servicepartner für die Prüfung</span><select class="form-control" id="season-order-partner">${assigned.map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === preferred ? 'selected' : ''}>${escapeHtml(provider.name)} · ${partnerCategoryLabel(provider)}</option>`).join('')}</select></label><button type="button" class="primary-btn" data-season-order="${key}">${icon('document')} ${order ? 'Erneut beauftragen' : 'Prüfung beauftragen'}</button></div>
+        <small class="season-order-hint">Der Partner erhält die ${list.length} Prüfpunkte per E-Mail; Husora legt dazu eine Serviceaufgabe an. Ist sie erledigt, werden die Prüfpunkte abgehakt.</small></div>`;
+    }
+    function orderSeasonControls(key) {
+      const property = properties.find((item) => item.id === inspectionProperty) || properties[0];
+      const season = SEASON_CHECKLISTS[key];
+      const partner = providerById(document.getElementById('season-order-partner')?.value);
+      if (!partner) { showToast('Bitte einen Servicepartner wählen.'); return; }
+      const controls = season.items.filter((item) => (SEASON_ITEM_TYPES[key]?.[item.id] || 'control') === 'control');
+      const due = seasonState(key, property.id).due;
+      const date = due && due >= localDateKey(new Date()) ? due : localDateKey(new Date());
+      const description = `Prüfpunkte der ${season.title}:\n${controls.map((item) => `• ${item.title}`).join('\n')}`;
+      const existing = seasonOrderTask(key, property.id);
+      if (existing) Object.assign(existing, { partnerId: partner.id, selfService: false, date, status: 'In Bearbeitung', done: false, description });
+      else tasks = [...tasks, { id: Date.now(), partnerId: partner.id, title: `${season.card}: Prüfung (${controls.length} Punkte)`, property: property.name, propertyId: property.id, date, priority: 'soon', area: season.card, status: 'In Bearbeitung', done: false, repeat: 'Einmalig', description, seasonRef: seasonOrderRef(key, property.id) }];
+      persistTasks();
+      const subject = `${season.title} – Prüfauftrag für ${property.name}`;
+      const body = `Hej ${partner.name},\n\nfür mein Ferienhaus „${property.name}“${property.address ? ` (${property.address})` : ''} bitte ich Sie, bis ${fmtDateFull(date)} folgende Punkte zu prüfen:\n\n${controls.map((item) => `• ${item.title}${item.detail ? `\n  ${item.detail}` : ''}`).join('\n')}\n\nBitte melden Sie mir Auffälligkeiten direkt, damit ich die Reparatur beauftragen kann.\n\nVielen Dank und viele Grüße\n${profileData.name || ''}`;
+      if (partner.email) openMailUrl(webmailUrl(profileData.mailProvider || 'default', partner.email, subject, body), body);
+      render();
+      showToast(partner.email ? `Prüfauftrag an ${partner.name} vorbereitet – E-Mail ist geöffnet, die Serviceaufgabe ist angelegt.` : `Serviceaufgabe für ${partner.name} angelegt – für diesen Partner ist keine E-Mail-Adresse hinterlegt.`);
     }
     function seasonsPage() {
       const property = properties.find((item) => item.id === inspectionProperty) || properties[0];
@@ -13229,7 +13285,7 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
       const group = (type, title, caption) => {
         const list = items.filter((item) => item.type === type);
         const count = list.filter((item) => checked[item.id]).length;
-        return `<section class="card season-group"><div class="season-group-head"><span class="season-type ${type}">${icon(type === 'service' ? 'task' : 'inspection')}</span><div><h2 class="card-title">${title}</h2><p class="card-caption">${caption}</p></div><span class="season-group-count">${count} / ${list.length}</span></div>${list.map(row).join('')}${type === 'service' && list.some((item) => !item.task && !checked[item.id]) ? `<div class="season-group-foot"><button type="button" class="secondary-btn" data-season-task-all>${icon('plus')} Alle offenen Service-Punkte als Aufgaben planen</button></div>` : ''}</section>`;
+        return `<section class="card season-group"><div class="season-group-head"><span class="season-type ${type}">${icon(type === 'service' ? 'task' : 'inspection')}</span><div><h2 class="card-title">${title}</h2><p class="card-caption">${caption}</p></div><span class="season-group-count">${count} / ${list.length}</span></div>${list.map(row).join('')}${type === 'control' ? seasonControlOrderHtml(key, property, list, checked) : ''}${type === 'service' && list.some((item) => !item.task && !checked[item.id]) ? `<div class="season-group-foot"><button type="button" class="secondary-btn" data-season-task-all>${icon('plus')} Alle offenen Service-Punkte als Aufgaben planen</button></div>` : ''}</section>`;
       };
       return `<div class="welcome"><div><p class="eyebrow">Saisonvorbereitung · ${escapeHtml(property.name)}</p><h1>Saison-Checklisten</h1><p class="subtitle">Winter- und Frühjahrsvorbereitung mit beiden Seiten: Punkte, die geprüft werden, und Arbeiten, die erledigt werden müssen.</p></div></div>
         ${singleHouse() ? '' : `<div class="section-toolbar"><label><span class="form-label">Ferienhaus</span><select id="inspection-property" class="filter-select" aria-label="Ferienhaus wählen">${properties.map((item) => `<option value="${escapeHtml(item.id)}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)}</option>`).join('')}</select></label></div>`}
@@ -13326,7 +13382,7 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
     const AUTO_GROUPS = [
       ['guests', 'Gäste & Buchungen', ['Gästewechsel je Buchung', 'Kalender-Synchronisierung']],
       ['care', 'Kontrolle & Saison', ['Hauskontrolle bei Leerstand', 'Saisonale Aufgaben']],
-      ['maintenance', 'Wartung & Reparatur', ['Reparatur & Instandhaltung', 'Sanierung & Renovierung']],
+      ['maintenance', 'Wartung & Reparatur', ['Jahresaufgaben', 'Reparatur & Instandhaltung', 'Sanierung & Renovierung']],
       ['planned', 'Geplant', ['Nächste automatische Schritte']],
       ['log', 'Protokoll', ['Protokoll']]
     ];
@@ -13371,6 +13427,8 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
         showToast(created.length ? `${created.length} Serviceaufgaben angelegt – du findest sie unter Serviceaufgaben.` : 'Alle Service-Punkte sind bereits vergeben.');
         return;
       }
+      const seasonOrder = target.closest('[data-season-order]');
+      if (seasonOrder) { orderSeasonControls(seasonOrder.dataset.seasonOrder); return; }
       const openTask = target.closest('[data-season-open-task]');
       if (openTask) { showTaskInList(Number(openTask.dataset.seasonOpenTask)); return; }
       if (target.closest('[data-template-new]')) { openTemplateEditor(null); return; }
