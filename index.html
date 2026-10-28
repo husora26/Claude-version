@@ -2739,10 +2739,22 @@
     .pkg-edit-btn { display: grid; flex: 0 0 auto; place-items: center; width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 9px; color: var(--green); background: white; cursor: pointer; }
     .pkg-edit-btn svg { width: 15px; height: 15px; }
     .pkg-edit-actions { display: flex; gap: 8px; }
+    .package-modal.picker { width: min(980px, 100%); max-height: 94vh; }
+    .package-modal.picker .pkg-pick.open { padding: 14px 16px; }
+    .package-modal.picker .pkg-pick.open .pkg-fields { gap: 10px; }
+    .package-modal.picker .pkg-pick.open [data-pkg-field="title"] { min-height: 48px; font-size: 15px; }
+    .package-modal.picker .pkg-pick.open .pkg-meta .form-control { min-height: 44px; font-size: 14px; }
+    @media (max-width: 760px) { .package-modal.picker { width: 100%; max-height: none; height: 100%; border-radius: 0; } #package-modal.open:has(.picker) { padding: 0; } }
+    .pkg-chip-wrap { position: relative; display: grid; }
+    .pkg-chip em { margin-left: 4px; padding: 1px 7px; border-radius: 9px; color: #6a4f96; background: #efe9f7; font-size: 11px; font-style: normal; font-weight: 750; }
+    .pkg-chip.own { padding-right: 40px; }
+    .pkg-chip-delete { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 8px; color: var(--red); background: white; cursor: pointer; }
+    .pkg-chip-delete svg { width: 14px; height: 14px; }
     .pkg-spacer { flex: 1; }
     .season-edit { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
     .season-edit svg { width: 15px; height: 15px; }
     @media (max-width: 600px) { .pkg-meta { grid-template-columns: 1fr; } .pkg-add-grid { grid-template-columns: 1fr; } }
+  
   
   
   
@@ -3370,6 +3382,8 @@ html.dark .pkg-remove { background: #1c1c1c; }
 html.dark .pkg-chip { background: #1c1c1c; }
 html.dark .pkg-pick.open { background: #1c1c1c; }
 html.dark .pkg-edit-btn { background: #1c1c1c; }
+html.dark .pkg-chip em { color: #ae9fc7; background: #231d2c; }
+html.dark .pkg-chip-delete { background: #1c1c1c; }
     }
     /* DARK-MODE-END */
   </style>
@@ -13385,6 +13399,36 @@ html.dark .pkg-edit-btn { background: #1c1c1c; }
     let pkgDraft = null;
     const templateFor = (id) => autoTasks.templates.find((template) => template.id === id) || defaultAutoTemplates.find((template) => template.id === id) || null;
     const templateToRow = (template) => ({ id: template.id, title: template.title, interval: Number(template.interval) || 365, season: template.season || 'all', priority: template.priority || 'normal', selected: Boolean(template.selected), builtin: Boolean(template.builtin), category: template.category });
+    // Eigene Aufgabenpakete als Vorlage: werden wie die Standardpakete angeboten.
+    let customPackages = loadStore('stugliv-custom-packages', []).filter((item) => item && item.id && Array.isArray(item.templates));
+    customPackages.forEach((item) => SERVICE_PACKAGES.push({ ...item, custom: true }));
+    function saveCustomPackage() {
+      readPackageInputs();
+      const selected = pkgDraft.rows.filter((row) => row.selected);
+      if (!selected.length) { showToast('Bitte zuerst Aufgaben für das Paket auswählen.'); return; }
+      const name = (window.prompt('Name des neuen Aufgabenpakets', 'Mein Paket') || '').trim();
+      if (!name) return;
+      const entry = { id: newId('pkg'), name, tagline: 'Eigenes Paket', templates: selected.map((row) => row.id), snapshot: selected.filter((row) => !row.builtin).map((row) => ({ ...row })), createdAt: new Date().toISOString() };
+      const next = [...customPackages, entry];
+      if (!saveStore('stugliv-custom-packages', next)) return;
+      customPackages = next;
+      SERVICE_PACKAGES.push({ ...entry, custom: true });
+      pkgDraft.packageId = entry.id;
+      renderPackageModal();
+      showToast(`Aufgabenpaket „${name}“ mit ${selected.length} Aufgaben als Vorlage gespeichert.`);
+    }
+    function deleteCustomPackage(id) {
+      const entry = customPackages.find((item) => item.id === id);
+      if (!entry || !window.confirm(`Eigenes Paket „${entry.name}“ löschen? Die Aufgaben selbst bleiben erhalten.`)) return;
+      customPackages = customPackages.filter((item) => item.id !== id);
+      saveStore('stugliv-custom-packages', customPackages);
+      const index = SERVICE_PACKAGES.findIndex((item) => item.id === id);
+      if (index >= 0) SERVICE_PACKAGES.splice(index, 1);
+      if (pkgDraft?.packageId === id) pkgDraft.packageId = '';
+      if (autoTasks.packageId === id) { autoTasks.packageId = ''; persistAutoTasks(); }
+      renderPackageModal();
+      showToast('Eigenes Paket gelöscht.');
+    }
     function openTemplatePicker() {
       // Alle Vorlagen aus Serviceaufgaben und Servicepaketen zusammenführen; bei gleichem Titel bleibt die Standardvorlage.
       const all = [...autoTasks.templates, ...defaultAutoTemplates.filter((template) => !autoTasks.templates.some((item) => item.id === template.id)).map((template) => ({ ...template, builtin: true, selected: false }))];
@@ -13405,6 +13449,7 @@ html.dark .pkg-edit-btn { background: #1c1c1c; }
       const order = new Map(defaultAutoTemplates.map((template, index) => [template.id, index]));
       const merged = [...byKey.values()].sort((a, b) => (order.get(a.id) ?? 999) - (order.get(b.id) ?? 999));
       pkgDraft = { kind: 'all', packageId: autoTasks.packageId || '', rows: merged.map(templateToRow), removed: duplicates, open: -1 };
+      document.querySelector('#package-modal .package-modal').classList.add('picker');
       document.getElementById('package-modal-title').textContent = 'Aufgabenpaket aus Vorlage wählen';
       document.getElementById('package-modal-subtitle').textContent = 'Paket wählen, Aufgaben an- oder abwählen und per Klick bearbeiten';
       renderPackageModal();
@@ -13415,13 +13460,14 @@ html.dark .pkg-edit-btn { background: #1c1c1c; }
       const groups = TASK_CATEGORIES.map((category) => ({ category, items: pkgDraft.rows.map((row, index) => ({ row, index })).filter(({ row }) => templateCategory(row).id === category.id) })).filter((group) => group.items.length);
       const active = pkgDraft.rows.filter((row) => row.selected).length;
       body.innerHTML = `<span class="form-label">Aufgabenpaket</span>
-        <div class="pkg-chips">${SERVICE_PACKAGES.map((item) => `<button type="button" class="pkg-chip ${pkgDraft.packageId === item.id ? 'active' : ''}" data-pkg-choose="${item.id}"><strong>${escapeHtml(item.name)}</strong><small>${item.templates.length} Aufgaben · ${escapeHtml(item.tagline)}</small></button>`).join('')}</div>
+        <div class="pkg-chips">${SERVICE_PACKAGES.map((item) => `<div class="pkg-chip-wrap"><button type="button" class="pkg-chip ${pkgDraft.packageId === item.id ? 'active' : ''} ${item.custom ? 'own' : ''}" data-pkg-choose="${item.id}"><strong>${escapeHtml(item.name)}${item.custom ? ' <em>Eigenes</em>' : ''}</strong><small>${item.templates.length} Aufgaben · ${escapeHtml(item.tagline)}</small></button>${item.custom ? `<button type="button" class="pkg-chip-delete" data-pkg-delete-package="${item.id}" aria-label="Paket ${escapeHtml(item.name)} löschen">${icon('trash')}</button>` : ''}</div>`).join('')}</div>
         <p class="pkg-intro">${active} von ${pkgDraft.rows.length} Aufgaben ausgewählt. Tippe auf eine Aufgabe, um sie zu bearbeiten.</p>
         ${groups.map(({ category, items }) => `<h3 class="pkg-h">${escapeHtml(category.label)} <small>${items.filter(({ row }) => row.selected).length} von ${items.length}</small></h3><div class="pkg-list">${items.map(({ row, index }) => `<div class="pkg-row pkg-pick ${row.selected ? '' : 'off'} ${pkgDraft.open === index ? 'open' : ''}" data-pkg-index="${index}"><label class="pkg-check"><input type="checkbox" data-pkg-field="selected" ${row.selected ? 'checked' : ''} aria-label="${escapeHtml(row.title)} auswählen"><span class="season-check-box">${icon('check')}</span></label><div class="pkg-fields">${pkgDraft.open === index ? `<input class="form-control" data-pkg-field="title" maxlength="90" value="${escapeHtml(row.title)}" aria-label="Aufgabe"><div class="pkg-meta"><select class="form-control" data-pkg-field="interval" aria-label="Wiederholung">${options(PKG_INTERVALS, row.interval)}</select><select class="form-control" data-pkg-field="season" aria-label="Jahreszeit">${options(Object.entries(SEASONS).map(([id, season]) => [id, season.label]), row.season)}</select><select class="form-control" data-pkg-field="priority" aria-label="Priorität">${options(PKG_PRIORITIES, row.priority)}</select></div><div class="pkg-edit-actions"><button type="button" class="small-action" data-pkg-toggle="${index}">Fertig</button>${row.builtin ? '' : `<button type="button" class="small-action danger" data-pkg-remove="${index}">Löschen</button>`}</div>` : `<button type="button" class="pkg-pick-title" data-pkg-toggle="${index}"><strong>${escapeHtml(row.title)}</strong><small>${escapeHtml(metaText(row))}${row.builtin ? '' : ' · Eigene'}</small></button>`}</div>${pkgDraft.open === index ? '' : `<button type="button" class="pkg-edit-btn" data-pkg-toggle="${index}" aria-label="${escapeHtml(row.title)} bearbeiten">${icon('edit')}</button>`}</div>`).join('')}</div>`).join('')}
         <div class="pkg-add"><span class="form-label">Eigene Aufgabe ergänzen</span><div class="pkg-add-grid"><input class="form-control" id="pkg-new-title" maxlength="90" placeholder="z. B. Boot winterfest machen" aria-label="Neue Aufgabe"><select class="form-control" id="pkg-new-interval" aria-label="Wiederholung">${options(PKG_INTERVALS, 365)}</select><button type="button" class="secondary-btn" data-pkg-add>${icon('plus')} Hinzufügen</button></div></div>`;
-      actions.innerHTML = '<span class="pkg-spacer"></span><button type="button" class="secondary-btn" data-package-close>Abbrechen</button><button type="button" class="primary-btn" data-pkg-save>Übernehmen</button>';
+      actions.innerHTML = '<button type="button" class="secondary-btn" data-pkg-save-package>Als eigenes Paket speichern</button><span class="pkg-spacer"></span><button type="button" class="secondary-btn" data-package-close>Abbrechen</button><button type="button" class="primary-btn" data-pkg-save>Übernehmen</button>';
     }
     function openPackage(ref) {
+      document.querySelector('#package-modal .package-modal').classList.remove('picker');
       if (ref.startsWith('season:')) {
         const key = ref.slice(7);
         const season = SEASON_CHECKLISTS[key];
@@ -13537,6 +13583,9 @@ html.dark .pkg-edit-btn { background: #1c1c1c; }
       if (open) { openPackage(open.dataset.packageOpen); return; }
       if (target.closest('[data-template-picker]')) { openTemplatePicker(); return; }
       if (pkgDraft?.kind === 'all') {
+        if (target.closest('[data-pkg-save-package]')) { saveCustomPackage(); return; }
+        const deletePackage = target.closest('[data-pkg-delete-package]');
+        if (deletePackage) { readPackageInputs(); deleteCustomPackage(deletePackage.dataset.pkgDeletePackage); return; }
         const toggle = target.closest('[data-pkg-toggle]');
         if (toggle) { readPackageInputs(); const index = Number(toggle.dataset.pkgToggle); pkgDraft.open = pkgDraft.open === index ? -1 : index; renderPackageModal(); document.querySelector(`#package-modal-body [data-pkg-index="${index}"]`)?.scrollIntoView({ block: 'nearest' }); return; }
         const choose = target.closest('[data-pkg-choose]');
@@ -13544,8 +13593,8 @@ html.dark .pkg-edit-btn { background: #1c1c1c; }
           readPackageInputs();
           const servicePackage = SERVICE_PACKAGES.find((item) => item.id === choose.dataset.pkgChoose);
           pkgDraft.packageId = servicePackage.id;
-          servicePackage.templates.forEach((id) => { if (!pkgDraft.rows.some((row) => row.id === id)) { const template = defaultAutoTemplates.find((item) => item.id === id); if (template) pkgDraft.rows.push(templateToRow({ ...template, builtin: true })); } });
-          pkgDraft.rows.forEach((row) => { if (row.builtin) row.selected = servicePackage.templates.includes(row.id); });
+          servicePackage.templates.forEach((id) => { if (!pkgDraft.rows.some((row) => row.id === id)) { const template = defaultAutoTemplates.find((item) => item.id === id); const own = servicePackage.snapshot?.find((item) => item.id === id); if (template) pkgDraft.rows.push(templateToRow({ ...template, builtin: true })); else if (own) pkgDraft.rows.push({ ...own }); } });
+          pkgDraft.rows.forEach((row) => { if (row.builtin || servicePackage.custom) row.selected = servicePackage.templates.includes(row.id); });
           renderPackageModal(); return;
         }
       }
