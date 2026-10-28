@@ -2675,6 +2675,17 @@
     .template-meta { color: var(--muted); font-size: 12px; }
     .template-actions { display: flex; flex-wrap: wrap; gap: 8px; }
     .template-actions .primary-btn { min-height: 38px; padding: 0 14px; font-size: 13px; }
+    .template-list { gap: 8px; padding: 12px 16px 16px; }
+    .template-item { padding: 10px 14px; gap: 8px 14px; }
+    .template-main { gap: 2px; flex-basis: 260px; }
+    .template-main > small { font-size: 12px; }
+    .template-card .template-list { grid-template-columns: 1fr; }
+    .template-card .template-title { flex-wrap: nowrap; }
+    .template-card .template-item { flex: 1 1 100%; flex-wrap: nowrap; }
+    .template-card .template-main > small:not(.template-meta) { display: none; }
+    @media (max-width: 640px) { .template-card .template-item { flex-wrap: wrap; } }
+    .template-actions .primary-btn.compact { min-height: 34px; padding: 0 12px; font-size: 12.5px; }
+    .template-actions .small-action { min-height: 34px; }
     /* Automatisierung in Gruppen */
     .auto-groups { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; padding: 5px; border: 1px solid var(--line); border-radius: 12px; background: #f7f5ef; }
     .auto-groups button { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 14px; border: 0; border-radius: 9px; color: #4d5a51; background: transparent; font-size: 13.5px; font-weight: 650; cursor: pointer; }
@@ -2754,6 +2765,9 @@
     .season-edit { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
     .season-edit svg { width: 15px; height: 15px; }
     @media (max-width: 600px) { .pkg-meta { grid-template-columns: 1fr; } .pkg-add-grid { grid-template-columns: 1fr; } }
+  
+  
+  
   
   
   
@@ -13295,7 +13309,7 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
         return { count: titles.length, titles, freqs };
       };
       return `<section class="card template-card" id="control-templates"><div class="card-head"><div><h2 class="card-title">Prüfprotokoll-Vorlagen</h2><p class="card-caption">Kontrolllisten aus einzelnen Prüfpositionen zusammenstellen und als Vorlage für neue Kontrollpläne speichern</p></div><button type="button" class="secondary-btn" data-template-new>${icon('plus')} Neue Vorlage</button></div>
-        <div class="template-list">${allTemplates().map((template) => { const info = summary(template); return `<article class="template-item"><div class="template-main"><div class="template-title"><strong>${escapeHtml(template.name)}</strong><span class="template-badge ${template.builtIn ? '' : 'own'}">${template.builtIn ? 'Standard' : 'Eigene'}</span></div>${template.description ? `<small>${escapeHtml(template.description)}</small>` : ''}<div class="template-chips">${info.titles.slice(0, 5).map((title) => `<span>${escapeHtml(title)}</span>`).join('')}${info.count > 5 ? `<span class="more">+${info.count - 5} weitere</span>` : ''}</div><small class="template-meta">${info.count} ${info.count === 1 ? 'Position' : 'Positionen'} · Taktung ${escapeHtml(info.freqs.join(', ') || '–')}</small></div><div class="template-actions"><button type="button" class="primary-btn" data-template-use="${escapeHtml(template.id)}">Als Kontrollplan nutzen</button><button type="button" class="small-action" data-template-edit="${escapeHtml(template.id)}">${template.builtIn ? 'Anpassen' : 'Bearbeiten'}</button>${template.builtIn ? '' : `<button type="button" class="small-action danger" data-template-delete="${escapeHtml(template.id)}">Löschen</button>`}</div></article>`; }).join('')}</div>
+        <div class="template-list">${allTemplates().map((template) => { const info = summary(template); return `<article class="template-item"><div class="template-main"><div class="template-title"><strong>${escapeHtml(template.name)}</strong><span class="template-badge ${template.builtIn ? '' : 'own'}">${template.builtIn ? 'Standard' : 'Eigene'}</span></div>${template.description ? `<small>${escapeHtml(template.description)}</small>` : ''}<small class="template-meta">${info.count} ${info.count === 1 ? 'Position' : 'Positionen'} · Taktung ${escapeHtml(info.freqs.join(', ') || '–')}</small></div><div class="template-actions"><button type="button" class="primary-btn compact" data-template-use="${escapeHtml(template.id)}">Als Kontrollplan nutzen</button><button type="button" class="small-action" data-template-edit="${escapeHtml(template.id)}">${template.builtIn ? 'Anpassen' : 'Bearbeiten'}</button>${template.builtIn ? '' : `<button type="button" class="small-action danger" data-template-delete="${escapeHtml(template.id)}">Löschen</button>`}</div></article>`; }).join('')}</div>
       </section>`;
     }
 
