@@ -2681,6 +2681,7 @@
     .auto-groups button.active { color: var(--ink); background: white; box-shadow: 0 2px 8px rgba(35, 48, 39, .08); }
     .auto-groups button span { min-width: 20px; padding: 0 6px; border-radius: 10px; color: #6b766e; background: #e8e6df; font-size: 11.5px; line-height: 20px; text-align: center; }
     .automation-grid.grouped { grid-template-columns: 1fr; }
+    @media (max-width: 760px) { .auto-groups { display: none !important; } }
     @media (max-width: 640px) {
       .auto-groups { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
       .auto-groups::-webkit-scrollbar { display: none; }
@@ -2742,6 +2743,7 @@
     .season-edit { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
     .season-edit svg { width: 15px; height: 15px; }
     @media (max-width: 600px) { .pkg-meta { grid-template-columns: 1fr; } .pkg-add-grid { grid-template-columns: 1fr; } }
+  
   
   
   
@@ -12951,6 +12953,16 @@ html.dark .pkg-edit-btn { background: #1c1c1c; }
       const active = TABBAR_ITEMS.some(([page]) => page === currentPage) ? currentPage : (currentPage === 'bookings' ? 'calendar' : '');
       const openCount = tasks.filter((task) => !task.done).length;
       const menuOpen = document.getElementById('main-menu')?.classList.contains('open');
+      // In der Automatisierung trägt die Leiste unten die Reiter der Automatiken.
+      if (currentPage === 'automation') {
+        const groups = [['guests', 'Gäste', 'calendar'], ['care', 'Kontrolle', 'inspection'], ['maintenance', 'Wartung', 'alert'], ['planned', 'Geplant', 'clock'], ['log', 'Protokoll', 'note']].filter(([id]) => id !== 'guests' || bookingsEnabled());
+        const current = groups.some(([id]) => id === automationView) ? automationView : groups[0][0];
+        const autoHtml = groups.map(([id, label, iconName]) => `<button type="button" class="tab ${current === id ? 'active' : ''}" data-auto-view="${id}" ${current === id ? 'aria-current="true"' : ''}>${icon(iconName)}<span>${label}</span></button>`).join('');
+        bars.forEach((bar) => { bar.innerHTML = bar.id === 'tabbar' ? autoHtml : TABBAR_ITEMS.map(([page, label, iconName]) => `<button type="button" class="tab" data-page="${page}">${icon(iconName)}<span>${label}</span></button>`).join('') + `<button type="button" class="tab active-more" data-tab-more aria-haspopup="true" aria-expanded="false" aria-controls="main-menu">${icon('menu')}<span>Mehr</span></button>`; });
+        document.getElementById('tabbar')?.style.setProperty('grid-template-columns', `repeat(${groups.length}, 1fr)`);
+        return;
+      }
+      document.getElementById('tabbar')?.style.removeProperty('grid-template-columns');
       const html = TABBAR_ITEMS.map(([page, label, iconName]) => `<button type="button" class="tab ${active === page ? 'active' : ''}" data-page="${page}" ${active === page ? 'aria-current="page"' : ''}>${icon(iconName)}<span>${label}</span>${page === 'tasks' && openCount ? `<i class="tab-badge">${openCount > 99 ? '99+' : openCount}</i>` : ''}</button>`).join('')
         + `<button type="button" class="tab ${!active || menuOpen ? 'active-more' : ''}" data-tab-more aria-haspopup="true" aria-expanded="${menuOpen ? 'true' : 'false'}" aria-controls="main-menu">${icon('menu')}<span>Mehr</span></button>`;
       bars.forEach((bar) => { bar.innerHTML = html; });
@@ -13293,6 +13305,7 @@ html.dark .pkg-edit-btn { background: #1c1c1c; }
       const counts = Object.fromEntries(present.map(([id]) => [id, cards.filter((card) => groupOf(card) === id).length]));
       grid.insertAdjacentHTML('beforebegin', `<div class="auto-groups" role="tablist" aria-label="Automatiken">${present.map(([id, label]) => `<button type="button" role="tab" aria-selected="${id === automationView}" class="${id === automationView ? 'active' : ''}" data-auto-view="${id}">${label}${['planned', 'log'].includes(id) ? '' : `<span>${counts[id]}</span>`}</button>`).join('')}</div>`);
       grid.classList.add('grouped');
+      renderTabbar();
     }
 
     // --- Seiten-Erweiterungen nach dem Rendern ---
@@ -13347,7 +13360,7 @@ html.dark .pkg-edit-btn { background: #1c1c1c; }
         return;
       }
       const autoView = target.closest('[data-auto-view]');
-      if (autoView) { automationView = autoView.dataset.autoView; render(); }
+      if (autoView) { automationView = autoView.dataset.autoView; render(); if (autoView.closest('#tabbar')) window.scrollTo(0, 0); }
     });
     document.addEventListener('change', (event) => {
       if (event.target.id === 'plan-template-select' && event.target.value) applyTemplateToPlan(event.target.value);
