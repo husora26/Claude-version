@@ -2820,6 +2820,21 @@
   
   
   
+    /* Einfache Darstellung der Startseite */
+    .simple-switch { margin-top: 14px; border: 1px solid var(--line); border-radius: 11px; }
+    .simple-home { display: grid; gap: 8px; margin-bottom: 18px; }
+    .simple-tile { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 68px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 14px; color: var(--ink); background: #fffdf8; text-align: left; cursor: pointer; }
+    .simple-tile:hover { background: #f7f6f1; }
+    .simple-icon { display: grid; flex: 0 0 auto; place-items: center; width: 42px; height: 42px; border-radius: 12px; color: var(--green); background: var(--green-soft); }
+    .simple-icon svg { width: 21px; height: 21px; }
+    .simple-text { flex: 1; min-width: 0; }
+    .simple-text strong { display: block; font-size: 15.5px; }
+    .simple-text small { display: block; margin-top: 2px; overflow: hidden; color: var(--muted); font-size: 13px; white-space: nowrap; text-overflow: ellipsis; }
+    .simple-state { display: grid; flex: 0 0 auto; place-items: center; width: 32px; height: 32px; border-radius: 50%; }
+    .simple-state svg { width: 17px; height: 17px; }
+    .simple-state.ok { color: white; background: #3f8a5f; }
+    .simple-state.due { color: #8a5a00; background: #fff0b3; }
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3450,6 +3465,9 @@ html.dark .season-order-state { color: #a7c3da; background: #1a222a; }
 html.dark .season-order-state.st-done { color: #b5e4ca; background: #212e26; }
 html.dark .pkg-chip em { color: #ae9fc7; background: #231d2c; }
 html.dark .pkg-chip-delete { background: #1c1c1c; }
+html.dark .simple-tile { background: #2b2410; }
+html.dark .simple-tile:hover { background: #26251e; }
+html.dark .simple-state.due { color: #f7d9a1; background: #473e1b; }
     }
     /* DARK-MODE-END */
   </style>
@@ -9420,7 +9438,7 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
       renderTabbar();
       pageContent.innerHTML = pages[currentPage]() + appFooterHtml();
       ensureBackButton();
-      if (currentPage === 'dashboard') enhanceDashboardSections();
+      if (currentPage === 'dashboard') { enhanceDashboardSections(); applySimpleHome(); }
       enhanceWorkPages();
       if (currentPage === 'house3d') fitHouseScene();
       if (currentPage === 'propertyDetail') initPropertyMap();
@@ -12559,6 +12577,7 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
         <span class="form-label">Erscheinungsbild</span>
         <div class="segmented" role="radiogroup" aria-label="Erscheinungsbild">${themes.map(([id, label, iconName]) => `<button type="button" role="radio" aria-checked="${displaySettings.theme === id}" class="${displaySettings.theme === id ? 'active' : ''}" data-display-theme="${id}">${icon(iconName)} ${label}</button>`).join('')}</div>
         <p class="settings-hint" style="margin-top:6px">„Automatisch“ folgt der Einstellung deines Geräts.</p>
+        <label class="settings-switch simple-switch"><span><strong>Einfache Darstellung der Startseite</strong><small>Einfarbige Kacheln in voller Breite mit grünem Haken, wenn ein Bereich aktuell ist – ohne die Bereiche darunter.</small></span><span class="switch"><input type="checkbox" data-simple-home ${displaySettings.simpleHome ? 'checked' : ''}><span class="switch-track"></span></span></label>
         <span class="form-label" style="margin-top:14px;display:block">Schriftgröße</span>
         <div class="segmented" role="radiogroup" aria-label="Schriftgröße">${sizes.map(([id, label]) => `<button type="button" role="radio" aria-checked="${displaySettings.textSize === id}" class="${displaySettings.textSize === id ? 'active' : ''}" data-display-size="${id}"><span style="font-size:${id === 'normal' ? 13 : id === 'large' ? 15 : 17}px">Aa</span> ${label}</button>`).join('')}</div>
         <span class="form-label" style="margin-top:16px;display:block">Sprache für Aufträge und Anschreiben</span>
@@ -12872,6 +12891,8 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
       if (target.closest('[data-notify-read-all]')) { markRemindersRead(collectReminders().map((item) => item.id)); renderNotifyPanel(); return; }
       if (target.closest('.notify-settings')) toggleNotifyPanel(false);
       else if (!target.closest('#notify-panel')) document.getElementById('notify-panel')?.classList.remove('open');
+      const simpleSwitch = target.closest('[data-simple-home]');
+      if (simpleSwitch) { displaySettings = { ...displaySettings, simpleHome: simpleSwitch.checked }; saveStore('stugliv-display', displaySettings); showToast(simpleSwitch.checked ? 'Die Startseite zeigt jetzt die einfache Darstellung.' : 'Die Startseite zeigt wieder Bildkacheln und Bereiche.'); return; }
       const themeButton = target.closest('[data-display-theme]');
       if (themeButton) { displaySettings = { ...displaySettings, theme: themeButton.dataset.displayTheme }; saveStore('stugliv-display', displaySettings); applyDisplaySettings(); render(); return; }
       const sizeButton = target.closest('[data-display-size]');
@@ -13787,6 +13808,48 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
       if (event.key === 'Escape' && document.getElementById('package-modal')?.classList.contains('open')) closePackage();
       if (event.key === 'Enter' && event.target.id === 'pkg-new-title') { event.preventDefault(); document.querySelector('[data-pkg-add]')?.click(); }
     });
+    // ===== Einfache Darstellung der Startseite: einfarbige Kacheln in voller Breite mit Status-Haken =====
+    const SIMPLE_TILES = {
+      properties: ['properties', () => (singleHouse() ? 'Mein Haus' : 'Ferienhäuser'), 'property'], tasks: ['tasks', 'Serviceaufgaben', 'task'], bookings: ['bookings', 'Buchungen', 'calendar'], calendar: ['calendar', 'Kalender', 'calendar'],
+      inspections: ['inspections', 'Hauskontrolle', 'inspection'], repairs: ['repairs', 'Reparatur & Instandhaltung', 'alert'], renovations: ['renovations', 'Sanierung & Renovierung', 'cube'], partners: ['assignedProviders', 'Servicepartner', 'users'],
+      providers: ['providers', 'Servicepartner finden', 'search'], documents: ['documents', 'Dokumente', 'document'], costs: ['costs', 'Kosten', 'cost'], automation: ['automation', 'Automatisierung', 'bolt'], house3d: ['house3d', 'Hausmodell', 'cube'],
+      plans: ['plans', 'Versionen', 'bolt'], profile: ['profile', 'Benutzerprofil', 'users'], seasons: ['seasons', 'Saison-Checklisten', 'snow'], emergency: ['emergency', 'Notfall & Zugang', 'key'], contracts: ['contracts', 'Verträge & Fristen', 'contract'], meters: ['meters', 'Zählerstände', 'meter'], settings: ['settings', 'Einstellungen', 'gear'], help: ['help', 'Hilfe & Support', 'help']
+    };
+    function simpleTileStatus(id) {
+      const today = localDateKey(new Date());
+      const summary = (key) => dashSummary(key) || { level: 'ok', text: '' };
+      const fromSummary = (key) => { const entry = summary(key); return { ok: ['ok', 'muted', 'info'].includes(entry.level), text: entry.text }; };
+      switch (id) {
+        case 'properties': return { ok: true, text: properties.map((property) => property.name).join(' · ') };
+        case 'tasks': return fromSummary('service');
+        case 'bookings': return fromSummary('bookings');
+        case 'calendar': { const count = tasks.filter((task) => !task.done && task.date === today).length + bookings.filter((booking) => booking.startDate === today || booking.endDate === today).length; return { ok: true, text: count ? `${count} ${count === 1 ? 'Termin' : 'Termine'} heute` : 'Heute keine Termine' }; }
+        case 'inspections': { const entry = summary('inspection'); return { ok: entry.level === 'ok', text: entry.text }; }
+        case 'repairs': return fromSummary('repairs');
+        case 'renovations': return fromSummary('renovations');
+        case 'partners': return fromSummary('partners');
+        case 'automation': return { ok: true, text: `${automationActiveCount()} Automatiken aktiv` };
+        case 'seasons': { const property = properties[0]; const key = currentSeasonKey(property?.id); const season = SEASON_CHECKLISTS[key]; const ticks = property ? winterChecks[season.key(property.id)] || {} : {}; const done = season.items.filter((item) => ticks[item.id]).length; return { ok: done === season.items.length, text: `${season.card}: ${done} von ${season.items.length}` }; }
+        case 'emergency': { const filled = properties[0] ? EMERGENCY_FIELDS.flatMap(([, fields]) => fields).filter(([key]) => emergencyFor(properties[0].id)[key]).length : 0; return { ok: filled >= 3, text: filled ? `${filled} Angaben eingetragen` : 'Noch nichts eingetragen' }; }
+        case 'contracts': { const due = properties.flatMap((property) => contractsFor(property.id).map(contractState)).filter((state) => state.level === 'urgent' || state.level === 'soon').length; return { ok: !due, text: due ? `${due} Frist${due === 1 ? '' : 'en'} bald` : 'Keine Frist in Sicht' }; }
+        case 'meters': { const due = properties.flatMap((property) => metersFor(property.id)).filter((meter) => { const last = meter.readings.map((reading) => reading.date).sort().pop(); return !last || last <= shiftDateKey(today, -35); }).length; return { ok: !due, text: due ? `${due} Ablesung${due === 1 ? '' : 'en'} fällig` : 'Alle Zähler aktuell' }; }
+        case 'settings': { let last = ''; try { last = localStorage.getItem('stugliv-last-backup') || ''; } catch (error) { last = ''; } const fresh = last && Date.now() - new Date(last).getTime() < 30 * 86400000; return { ok: Boolean(fresh), text: fresh ? `Gesichert am ${fmtDate(last)}` : 'Datensicherung empfohlen' }; }
+        case 'costs': return { ok: true, text: 'Plan und Ist im Blick' };
+        default: return { ok: true, text: '' };
+      }
+    }
+    function applySimpleHome() {
+      if (currentPage !== 'dashboard' || !displaySettings.simpleHome) return;
+      const stats = pageContent.querySelector('.stats');
+      const ids = dashboardTileIds().filter((id) => SIMPLE_TILES[id]);
+      const html = `<section class="simple-home" aria-label="Übersicht">${ids.map((id) => {
+        const [page, title, iconName] = SIMPLE_TILES[id];
+        const state = simpleTileStatus(id);
+        return `<button type="button" class="simple-tile" data-page="${page}"><span class="simple-icon">${icon(iconName)}</span><span class="simple-text"><strong>${escapeHtml(typeof title === 'function' ? title() : title)}</strong>${state.text ? `<small>${escapeHtml(state.text)}</small>` : ''}</span><span class="simple-state ${state.ok ? 'ok' : 'due'}" aria-label="${state.ok ? 'Aktuell' : 'Nicht aktuell'}">${state.ok ? icon('check') : icon('alert')}</span></button>`;
+      }).join('')}</section>`;
+      if (stats) stats.outerHTML = html;
+      pageContent.querySelectorAll('.dash-sections, .dash-sections-bar, .columns').forEach((node) => node.remove());
+    }
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();
     if (isEuro()) refreshFxRate();
