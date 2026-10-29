@@ -2930,6 +2930,9 @@
     .fin-card .card-head { flex-wrap: wrap; gap: 10px; }
     .cost-collapsed-summary { margin-top: 12px; color: var(--muted); font-size: 13px; line-height: 1.5; }
     .cost-collapse[hidden] { display: none !important; }
+    .cost-collapsible > .card-head { position: relative; padding-right: 60px; cursor: pointer; }
+    .cost-collapsible .cost-arrow svg { transform: rotate(90deg); }
+    .cost-collapsible.collapsed .cost-arrow svg { transform: rotate(0deg); }
     .cost-plan-card .plan-summary { display: none; margin-left: 18px; margin-right: 18px; }
     .cost-plan-card.collapsed .plan-summary { display: block; }
     .cost-plan-card.collapsed .cost-disclaimer, .cost-plan-card.collapsed .source-note, .cost-plan-card.collapsed .cost-source-note { display: none; }
@@ -2988,6 +2991,7 @@
     .archive-diff { font-size: 13px; font-weight: 800; }
     .archive-diff.over { color: var(--red); } .archive-diff.under { color: #1f6b41; }
     .archive-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+  
   
   
   
@@ -14130,7 +14134,7 @@ html.dark .archive-diff.under { color: #b5e4ca; }
       const money = (sek) => Math.round(sekToDisplay(Number(sek) || 0));
       const maxCurve = Math.max(1, ...plan.curve);
       const points = plan.curve.map((value, index) => `${(index / Math.max(1, plan.curve.length - 1)) * 300},${90 - (value / maxCurve) * 80}`).join(' ');
-      return `<section class="card cost-card fin-card" id="cost-financing"><div class="card-head"><div><span class="cost-badge plan">Plan</span><h2 class="card-title">Finanzierung</h2><p class="card-caption">Anschaffung der Immobilie mit Darlehen: monatliche Rate aus Zinsen und Tilgung.</p></div><button type="button" class="status pending cost-toggle" data-cost-collapse="fin" aria-expanded="${costFinOpen}"><span>Bearbeiten</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div>
+      return `<section class="card cost-card fin-card cost-collapsible ${costFinOpen ? '' : 'collapsed'}" id="cost-financing" data-cost-section="fin"><div class="card-head"><div><span class="cost-badge plan">Plan</span><h2 class="card-title">Finanzierung</h2><p class="card-caption">Anschaffung der Immobilie mit Darlehen: monatliche Rate aus Zinsen und Tilgung.</p></div><button type="button" class="dash-toggle cost-arrow" data-cost-collapse="fin" aria-expanded="${costFinOpen}" aria-label="Finanzierung ${costFinOpen ? 'zuklappen' : 'aufklappen'}">${icon('arrow')}</button></div>
         ${costFinOpen ? '' : `<p class="cost-collapsed-summary">${plan.loan > 0 ? `Darlehen ${escapeHtml(formatCost(plan.loan))} · Rate ${escapeHtml(formatCost(Math.round(plan.monthly)))} pro Monat${plan.include ? ' · in den Jahreskosten' : ''}` : 'Noch keine Finanzierung erfasst'}</p>`}
         <div class="cost-collapse" ${costFinOpen ? '' : 'hidden'}>
         <label class="settings-switch fin-include"><span>In Jahreskosten einrechnen</span><span class="switch"><input type="checkbox" data-fin-include ${plan.include ? 'checked' : ''}><span class="switch-track"></span></span></label>
@@ -14256,7 +14260,7 @@ html.dark .archive-diff.under { color: #b5e4ca; }
     }
     function costExtrasHtml() {
       const available = COST_SUGGESTIONS.filter(([id]) => !costCategories.some((category) => category.id === `x-${id}`));
-      return `<section class="card cost-card" id="cost-extras"><div class="card-head"><div><h2 class="card-title">Weitere Kostenpositionen</h2><p class="card-caption">Typische Zusatzkosten eines Ferienhauses in Schweden – mit einem Klick als Planposition übernehmen oder eigene Position anlegen.</p></div><button type="button" class="status pending cost-toggle" data-cost-collapse="extras" aria-expanded="${costExtrasOpen}"><span>Bearbeiten</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div>
+      return `<section class="card cost-card cost-collapsible ${costExtrasOpen ? '' : 'collapsed'}" id="cost-extras" data-cost-section="extras"><div class="card-head"><div><h2 class="card-title">Weitere Kostenpositionen</h2><p class="card-caption">Typische Zusatzkosten eines Ferienhauses in Schweden – mit einem Klick als Planposition übernehmen oder eigene Position anlegen.</p></div><button type="button" class="dash-toggle cost-arrow" data-cost-collapse="extras" aria-expanded="${costExtrasOpen}" aria-label="Weitere Kostenpositionen ${costExtrasOpen ? 'zuklappen' : 'aufklappen'}">${icon('arrow')}</button></div>
         ${costExtrasOpen ? '' : `<p class="cost-collapsed-summary">${customCostCats.length ? `${customCostCats.length} ${customCostCats.length === 1 ? 'eigene Position' : 'eigene Positionen'}: ${escapeHtml(customCostCats.slice(0, 3).map((entry) => entry.label).join(', '))}${customCostCats.length > 3 ? ' …' : ''}` : 'Noch keine weiteren Positionen'} · ${available.length} Vorschläge verfügbar</p>`}
         <div class="cost-collapse" ${costExtrasOpen ? '' : 'hidden'}>
         ${available.length ? `<div class="cost-suggestions">${available.map(([id, group, label, note, amount]) => `<button type="button" class="cost-suggestion" data-cost-suggest="${id}" title="${escapeHtml(note)}">${icon('plus')}<span><strong>${escapeHtml(label)}</strong><small>${escapeHtml(COST_GROUPS.find((entry) => entry.id === group)?.label || '')}${amount ? ` · ca. ${escapeHtml(formatCost(amount))}/Jahr` : ''}</small></span></button>`).join('')}</div>` : ''}
@@ -14439,7 +14443,8 @@ html.dark .archive-diff.under { color: #b5e4ca; }
     document.addEventListener('click', (event) => {
       if (currentPage !== 'costs') return;
       const target = event.target;
-      const collapse = target.closest('[data-cost-collapse]');
+      const headToggle = !target.closest('button, a, input, select, label') && target.closest('.cost-collapsible > .card-head');
+      const collapse = target.closest('[data-cost-collapse]') || (headToggle && { dataset: { costCollapse: headToggle.parentElement.dataset.costSection } });
       if (collapse) { if (collapse.dataset.costCollapse === 'fin') costFinOpen = !costFinOpen; else costExtrasOpen = !costExtrasOpen; const scroll = window.scrollY; render(); window.scrollTo(0, scroll); return; }
       const modeTile = target.closest('[data-cost-mode]');
       if (modeTile) { setCostChartMode(modeTile.dataset.costMode); return; }
