@@ -2842,6 +2842,16 @@
   
     /* Ferienhaus-Kosten */
     .cost-head-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .cost-kpi[data-cost-jump] { cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; }
+    .cost-kpi[data-cost-jump]:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(35, 48, 39, .1); }
+    .cost-kpi[data-cost-jump]::after { position: absolute; top: 10px; right: 14px; content: '›'; font-size: 20px; font-weight: 700; opacity: .5; }
+    .cost-kpi { position: relative; }
+    #cost-pane-actual, #cost-pane-plan { scroll-margin-top: 80px; }
+    @media (max-width: 760px) {
+      .cost-page.view-overview [data-cost-pane]:not([data-cost-pane="overview"]),
+      .cost-page.view-actual [data-cost-pane]:not([data-cost-pane="actual"]),
+      .cost-page.view-plan [data-cost-pane]:not([data-cost-pane="plan"]) { display: none; }
+    }
     .cost-head-actions .secondary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
     .cost-head-actions svg { width: 15px; height: 15px; }
     .cost-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; margin-bottom: 16px; }
@@ -2950,6 +2960,8 @@
     .archive-diff { font-size: 13px; font-weight: 800; }
     .archive-diff.over { color: var(--red); } .archive-diff.under { color: #1f6b41; }
     .archive-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+  
+  
   
     /* DARK-MODE-START */
     @media screen {
@@ -3584,6 +3596,7 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
 html.dark .simple-tile { background: #2b2410; }
 html.dark .simple-tile:hover { background: #26251e; }
 html.dark .simple-state.due { color: #f7d9a1; background: #473e1b; }
+html.dark .cost-kpi[data-cost-jump]:hover { box-shadow: 0 10px 24px rgba(0, 0, 0, 0.27); }
 html.dark .cost-top-row i { background: #2c2b26; }
 html.dark .month-pace em { color: #dcc89c; }
 html.dark .cost-forecast > div { background: #27251f; }
@@ -7401,8 +7414,8 @@ html.dark .archive-diff.under { color: #b5e4ca; }
       const rest = plan - actual;
       const pace = plan ? Math.round((plan / 12) * monthsPassed) : 0;
       return `<div class="cost-kpis" id="cost-kpis">
-        <article class="cost-kpi plan"><span class="cost-kpi-tag">Plan ${year}</span><strong id="annual-total">${formatCost(plan)}</strong><small>Budget · <span id="monthly-total">${formatCost(Math.round(plan / 12))}</span> pro Monat</small></article>
-        <article class="cost-kpi actual"><span class="cost-kpi-tag">Ist ${year}</span><strong>${formatCost(actual)}</strong><small>${share} % vom Plan · Stand ${escapeHtml(new Intl.DateTimeFormat('de-DE', { month: 'long' }).format(new Date()))}</small><span class="cost-kpi-bar" role="img" aria-label="${share} % des Jahresbudgets verbraucht"><i style="width:${Math.min(100, share)}%"></i><b style="left:${Math.min(100, Math.round(monthsPassed / 12 * 100))}%" title="Zeitanteil des Jahres"></b></span></article>
+        <article class="cost-kpi plan" data-cost-jump="plan" role="button" tabindex="0" aria-label="Zu den Planwerten"><span class="cost-kpi-tag">Plan ${year}</span><strong id="annual-total">${formatCost(plan)}</strong><small>Budget · <span id="monthly-total">${formatCost(Math.round(plan / 12))}</span> pro Monat</small></article>
+        <article class="cost-kpi actual" data-cost-jump="actual" role="button" tabindex="0" aria-label="Zu den Ist-Kosten"><span class="cost-kpi-tag">Ist ${year}</span><strong>${formatCost(actual)}</strong><small>${share} % vom Plan · Stand ${escapeHtml(new Intl.DateTimeFormat('de-DE', { month: 'long' }).format(new Date()))}</small><span class="cost-kpi-bar" role="img" aria-label="${share} % des Jahresbudgets verbraucht"><i style="width:${Math.min(100, share)}%"></i><b style="left:${Math.min(100, Math.round(monthsPassed / 12 * 100))}%" title="Zeitanteil des Jahres"></b></span></article>
         <article class="cost-kpi ${rest < 0 ? 'over' : 'rest'}"><span class="cost-kpi-tag">${rest < 0 ? 'Über Plan' : 'Restbudget'}</span><strong>${formatCost(Math.abs(rest))}</strong><small>${actual > pace && plan ? `über dem Jahresverlauf (${formatCost(pace)} bis ${escapeHtml(new Intl.DateTimeFormat('de-DE', { month: 'short' }).format(new Date()))})` : 'im Rahmen des Jahresverlaufs'}</small></article>
       </div>`;
     }
@@ -13231,7 +13244,16 @@ html.dark .archive-diff.under { color: #b5e4ca; }
       const openCount = tasks.filter((task) => !task.done).length;
       const menuOpen = document.getElementById('main-menu')?.classList.contains('open');
       // Trägt die Leiste Reiter der aktuellen Seite, wird sie leicht eingefärbt.
-      document.getElementById('tabbar')?.classList.toggle('contextual', ['settings', 'automation'].includes(currentPage));
+      document.getElementById('tabbar')?.classList.toggle('contextual', ['settings', 'automation', 'costs'].includes(currentPage));
+      // Ferienhaus-Kosten: Übersicht, Ist und Plan in der Leiste unten.
+      if (currentPage === 'costs') {
+        const items = [['overview', 'Übersicht', 'cost'], ['actual', 'Ist', 'document'], ['plan', 'Plan', 'edit']];
+        const tab = document.getElementById('tabbar');
+        if (tab) { tab.innerHTML = items.map(([id, label, iconName]) => `<button type="button" class="tab ${costView === id ? 'active' : ''}" data-cost-view="${id}" ${costView === id ? 'aria-current="true"' : ''}>${icon(iconName)}<span>${label}</span></button>`).join(''); tab.style.setProperty('grid-template-columns', `repeat(${items.length}, 1fr)`); }
+        const top = document.getElementById('top-tabs');
+        if (top) top.innerHTML = TABBAR_ITEMS.map(([page, label, iconName]) => `<button type="button" class="tab" data-page="${page}">${icon(iconName)}<span>${label}</span></button>`).join('') + `<button type="button" class="tab active-more" data-tab-more aria-haspopup="true" aria-expanded="false" aria-controls="main-menu">${icon('menu')}<span>Mehr</span></button>`;
+        return;
+      }
       // In den Einstellungen trägt die Leiste unten die drei Bereiche der Seite.
       if (currentPage === 'settings') {
         const items = [['settings-home', 'Startseite', 'home'], ['settings-look', 'Darstellung', 'text'], ['settings-data', 'Daten & App', 'document']];
@@ -14004,6 +14026,15 @@ html.dark .archive-diff.under { color: #b5e4ca; }
     let customCostCats = loadStore('stugliv-cost-custom-cats', []).filter((entry) => entry && entry.id && entry.label);
     customCostCats.forEach((entry) => { if (!costCategories.some((category) => category.id === entry.id)) costCategories.push({ ...entry, custom: true }); });
     let costSort = loadStore('stugliv-cost-sort', 'default');
+    let costView = 'overview';
+    const costMobile = () => window.matchMedia?.('(max-width: 760px)').matches;
+    document.addEventListener('keydown', (event) => { if ((event.key === 'Enter' || event.key === ' ') && event.target.matches?.('[data-cost-jump]')) { event.preventDefault(); goCostPane(event.target.dataset.costJump); } });
+    function goCostPane(view) {
+      if (costMobile()) { costView = view; if (view === 'plan') costListOpen = true; render(); window.scrollTo(0, 0); return; }
+      const target = document.getElementById(view === 'plan' ? 'cost-pane-plan' : 'cost-pane-actual');
+      if (view === 'plan' && !costListOpen) { costListOpen = true; const scroll = window.scrollY; render(); window.scrollTo(0, scroll); }
+      (document.getElementById(view === 'plan' ? 'cost-pane-plan' : 'cost-pane-actual') || target)?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    }
     let financing = loadStore('stugliv-financing', {});
     let costArchive = loadStore('stugliv-cost-archive', {});
     const sortCostRows = (rows) => (costSort === 'name' ? [...rows].sort((a, b) => a.category.label.localeCompare(b.category.label, 'de')) : costSort === 'price' ? [...rows].sort((a, b) => Math.max(b.plan, b.actual) - Math.max(a.plan, a.actual)) : rows);
@@ -14145,16 +14176,16 @@ html.dark .archive-diff.under { color: #b5e4ca; }
       const sortBar = `<div class="cost-sort" role="group" aria-label="Positionen sortieren"><span>Sortieren</span>${[['default', 'Standard'], ['name', 'Name'], ['price', 'Preis']].map(([id, label]) => `<button type="button" class="${costSort === id ? 'active' : ''}" data-cost-sort="${id}" aria-pressed="${costSort === id}">${label}</button>`).join('')}</div>`;
       const chartCard = tpl.content.querySelector('.cost-chart-card');
       chartCard?.querySelector('.card-head')?.insertAdjacentHTML('beforeend', sortBar);
-      return `<div class="welcome"><div><p class="eyebrow">Jahresplanung · ${isEuro() ? 'EUR' : 'SEK'}</p><h1>Ferienhaus-Kosten</h1><p class="subtitle">Plan, Ist und Finanzierung ${singleHouse() ? 'deines Ferienhauses' : 'je Ferienhaus'} – mit Verlauf, Verteilung und Jahresarchiv.</p>${currencyBar}</div><div class="cost-head-actions"><button type="button" class="secondary-btn" data-cost-pdf="current">${icon('document')} Als PDF exportieren</button></div></div>
+      return `<div class="cost-page view-${costView}"><div class="welcome"><div><p class="eyebrow">Jahresplanung · ${isEuro() ? 'EUR' : 'SEK'}</p><h1>Ferienhaus-Kosten</h1><p class="subtitle">Plan, Ist und Finanzierung ${singleHouse() ? 'deines Ferienhauses' : 'je Ferienhaus'} – mit Verlauf, Verteilung und Jahresarchiv.</p>${currencyBar}</div><div class="cost-head-actions"><button type="button" class="secondary-btn" data-cost-pdf="current">${icon('document')} Als PDF exportieren</button></div></div>
         ${pick('.section-toolbar')}
         ${pick('.cost-import-banner')}
-        ${costSummaryHtml(property, costs)}
-        <div class="cost-charts">${costDonutHtml(property, costs)}${costMonthlyHtml(property, costs)}</div>
-        ${chartCard ? chartCard.outerHTML : ''}
-        ${pick('.cost-actual-card')}
-        ${plan ? plan.outerHTML : ''}
-        <div class="cost-charts">${financingCardHtml(property)}${costExtrasHtml()}</div>
-        ${costArchiveHtml(property)}`;
+        <div data-cost-pane="overview">${costSummaryHtml(property, costs)}</div>
+        <div class="cost-charts" data-cost-pane="overview">${costDonutHtml(property, costs)}${costMonthlyHtml(property, costs)}</div>
+        <div data-cost-pane="overview">${chartCard ? chartCard.outerHTML : ''}</div>
+        <div data-cost-pane="actual" id="cost-pane-actual">${pick('.cost-actual-card')}</div>
+        <div data-cost-pane="plan" id="cost-pane-plan">${plan ? plan.outerHTML : ''}</div>
+        <div class="cost-charts" data-cost-pane="plan">${financingCardHtml(property)}${costExtrasHtml()}</div>
+        <div data-cost-pane="plan">${costArchiveHtml(property)}</div></div>`;
     }
     function refreshCostCharts() {
       if (currentPage !== 'costs') return;
@@ -14289,6 +14320,10 @@ html.dark .archive-diff.under { color: #b5e4ca; }
     document.addEventListener('click', (event) => {
       if (currentPage !== 'costs') return;
       const target = event.target;
+      const jump = target.closest('[data-cost-jump]');
+      if (jump) { goCostPane(jump.dataset.costJump); return; }
+      const paneTab = target.closest('[data-cost-view]');
+      if (paneTab) { costView = paneTab.dataset.costView; if (costView === 'plan') costListOpen = true; render(); window.scrollTo(0, 0); return; }
       const sort = target.closest('[data-cost-sort]');
       if (sort) { costSort = sort.dataset.costSort; saveStore('stugliv-cost-sort', costSort); const scroll = window.scrollY; render(); window.scrollTo(0, scroll); return; }
       const pdf = target.closest('[data-cost-pdf]');
