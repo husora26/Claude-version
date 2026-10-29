@@ -2840,6 +2840,117 @@
   
   
   
+    /* Ferienhaus-Kosten */
+    .cost-head-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .cost-head-actions .secondary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
+    .cost-head-actions svg { width: 15px; height: 15px; }
+    .cost-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; margin-bottom: 16px; }
+    .cost-charts > .card { margin: 0; }
+    @media (max-width: 900px) { .cost-charts { grid-template-columns: 1fr; } }
+    .cost-card { padding-bottom: 18px; }
+    .cost-card > :not(.card-head) { margin-left: 18px; margin-right: 18px; }
+    .donut-wrap { display: grid; grid-template-columns: 160px 1fr; gap: 18px; align-items: center; margin-top: 12px; }
+    @media (max-width: 420px) { .donut-wrap { grid-template-columns: 1fr; justify-items: center; } }
+    .donut { width: 160px; height: 160px; transform: rotate(0deg); }
+    .donut circle { transition: stroke-dasharray .3s ease; }
+    .donut-total { font-size: 4.2px; font-weight: 800; text-anchor: middle; fill: var(--ink); }
+    .donut-sub { font-size: 2.6px; text-anchor: middle; fill: var(--muted); }
+    .donut-legend { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; width: 100%; }
+    .donut-legend li { display: grid; grid-template-columns: 12px 1fr auto auto; align-items: center; gap: 8px; font-size: 13px; }
+    .donut-legend i { width: 12px; height: 12px; border-radius: 3px; }
+    .donut-legend strong { font-size: 13px; }
+    .donut-legend small { min-width: 34px; color: var(--muted); text-align: right; }
+    .cost-top { display: grid; gap: 6px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .cost-top-row { display: grid; grid-template-columns: minmax(0, 1.4fr) 1fr auto; align-items: center; gap: 10px; font-size: 12.5px; }
+    .cost-top-row span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .cost-top-row i { display: block; height: 8px; border-radius: 4px; background: #ecebe4; overflow: hidden; }
+    .cost-top-row b { display: block; height: 100%; border-radius: inherit; background: #6f8d70; }
+    .month-chart { margin-top: 14px; }
+    .month-bars { position: relative; display: grid; grid-template-columns: repeat(12, 1fr); align-items: end; gap: 5px; height: 130px; padding-bottom: 1px; border-bottom: 1px solid var(--line); }
+    .month-col { display: flex; align-items: flex-end; height: 100%; }
+    .month-col i { display: block; width: 100%; border-radius: 5px 5px 2px 2px; background: #315c49; }
+    .month-col i.over { background: #c17b4a; }
+    .month-col.future i { opacity: .35; }
+    .month-pace { position: absolute; right: 0; left: 0; border-top: 2px dashed #d1a64a; pointer-events: none; }
+    .month-pace em { position: absolute; right: 0; top: -17px; color: #9b7a2c; font-size: 10.5px; font-style: normal; font-weight: 700; }
+    .month-labels { display: grid; grid-template-columns: repeat(12, 1fr); gap: 5px; margin-top: 4px; text-align: center; }
+    .month-labels small { color: var(--muted); font-size: 11px; }
+    .month-labels small.now { color: var(--green); font-weight: 800; }
+    .cost-forecast { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+    .cost-forecast > div { padding: 10px 12px; border-radius: 10px; background: #f6f5f0; }
+    .cost-forecast span { display: block; color: var(--muted); font-size: 11.5px; }
+    .cost-forecast strong { display: block; margin-top: 2px; font-size: 15px; }
+    .cost-forecast strong.over { color: var(--red); }
+    .cum-chart { margin: 14px 18px 0; }
+    .cum-chart svg { display: block; width: 100%; height: 90px; border-bottom: 1px solid var(--line); }
+    .cum-plan { stroke: #d1a64a; stroke-width: 1.4; stroke-dasharray: 3 2; vector-effect: non-scaling-stroke; }
+    .cum-actual { fill: rgba(49, 92, 73, .14); stroke: #315c49; stroke-width: 2; vector-effect: non-scaling-stroke; }
+    .cum-chart figcaption { display: flex; gap: 14px; margin-top: 6px; color: var(--muted); font-size: 11.5px; }
+    .cum-chart figcaption i { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 2px; vertical-align: -1px; }
+    .cum-chart .lg-plan { background: #d1a64a; } .cum-chart .lg-actual { background: #315c49; }
+    .cost-sort { display: inline-flex; align-items: center; gap: 4px; padding: 3px; border: 1px solid var(--line); border-radius: 10px; background: #f6f5f0; }
+    .cost-sort span { padding: 0 6px; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .cost-sort button { min-height: 32px; padding: 0 12px; border: 0; border-radius: 8px; color: #4d5a51; background: transparent; font-size: 12.5px; font-weight: 650; cursor: pointer; }
+    .cost-sort button.active { color: var(--ink); background: white; box-shadow: 0 1px 4px rgba(35, 48, 39, .1); }
+    .cost-chart-card .card-head { flex-wrap: wrap; gap: 10px; }
+    .cost-item.computed .cost-input { color: var(--muted); background: #f3f2ec; }
+    .fin-card .card-head { flex-wrap: wrap; gap: 10px; }
+    .fin-include { min-height: 40px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 10px; font-size: 13px; }
+    .fin-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; margin-top: 14px; }
+    @media (max-width: 480px) { .fin-grid { grid-template-columns: 1fr; } }
+    .fin-grid label { display: grid; gap: 4px; }
+    .fin-input { position: relative; display: block; }
+    .fin-input .form-control { width: 100%; min-height: 42px; padding-right: 40px; }
+    .fin-input em { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); color: var(--muted); font-size: 12.5px; font-style: normal; }
+    .fin-hint { margin-top: 8px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .fin-results { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+    @media (max-width: 520px) { .fin-results { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .fin-results > div { padding: 10px 12px; border-radius: 10px; background: #f6f5f0; }
+    .fin-results > div.main { color: white; background: var(--green); }
+    .fin-results span { display: block; font-size: 11.5px; opacity: .8; }
+    .fin-results strong { display: block; margin-top: 2px; font-size: 15px; }
+    .fin-results small { display: block; font-size: 11.5px; opacity: .85; }
+    .fin-chart { margin-top: 14px; }
+    .fin-chart svg { display: block; width: 100%; height: 96px; }
+    .fin-area { fill: rgba(49, 92, 73, .12); stroke: none; }
+    .fin-line { fill: none; stroke: #315c49; stroke-width: 2; vector-effect: non-scaling-stroke; }
+    .fin-chart figcaption { display: flex; justify-content: space-between; color: var(--muted); font-size: 11.5px; }
+    .fin-empty { margin-top: 12px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .cost-suggestions { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; margin-top: 12px; }
+    .cost-suggestion { display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; border: 1px dashed #b9c9bd; border-radius: 11px; color: var(--ink); background: #fbfaf6; text-align: left; cursor: pointer; }
+    .cost-suggestion:hover { border-style: solid; background: white; }
+    .cost-suggestion > svg { flex: 0 0 auto; width: 15px; height: 15px; margin-top: 2px; color: var(--green); }
+    .cost-suggestion strong { display: block; font-size: 13px; }
+    .cost-suggestion small { display: block; color: var(--muted); font-size: 11.5px; }
+    .cost-custom-form { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .cost-custom-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr auto; gap: 8px; margin-top: 6px; }
+    .cost-custom-grid .form-control { min-height: 42px; }
+    .cost-custom-grid .secondary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
+    .cost-custom-grid svg { width: 14px; height: 14px; }
+    @media (max-width: 640px) { .cost-custom-grid { grid-template-columns: 1fr; } }
+    .cost-custom-list { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; }
+    .cost-custom-list .form-label { width: 100%; }
+    .cost-custom-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 6px 4px 10px; border: 1px solid var(--line); border-radius: 16px; background: white; font-size: 12.5px; }
+    .cost-custom-chip button { width: 22px; height: 22px; border: 0; border-radius: 50%; color: var(--red); background: var(--red-soft); font-size: 11px; cursor: pointer; }
+    #cost-archive .card-head { flex-wrap: wrap; gap: 10px; }
+    #cost-archive .card-head .primary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
+    #cost-archive .card-head svg { width: 15px; height: 15px; }
+    .archive-years { display: grid; gap: 8px; margin-top: 14px; }
+    .archive-year { display: grid; grid-template-columns: 90px minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: #fbfaf6; }
+    @media (max-width: 720px) { .archive-year { grid-template-columns: 1fr auto; } .archive-bars { grid-column: 1 / -1; } .archive-actions { grid-column: 1 / -1; } }
+    .archive-year-main strong { display: block; font-size: 17px; }
+    .archive-year-main small { color: var(--muted); font-size: 11.5px; }
+    .archive-bars { display: grid; gap: 4px; }
+    .archive-bars span { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; align-items: center; gap: 8px; font-size: 12px; }
+    .archive-bars i { width: 10px; height: 10px; border-radius: 2px; }
+    .archive-bars .lg-plan { background: #d1a64a; } .archive-bars .lg-actual { background: #315c49; }
+    .archive-bars b { display: block; height: 8px; border-radius: 4px; }
+    .archive-bars b.plan { background: #e8cf8f; } .archive-bars b.actual { background: #315c49; }
+    .archive-bars em { color: var(--muted); font-style: normal; white-space: nowrap; }
+    .archive-diff { font-size: 13px; font-weight: 800; }
+    .archive-diff.over { color: var(--red); } .archive-diff.under { color: #1f6b41; }
+    .archive-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3473,6 +3584,23 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
 html.dark .simple-tile { background: #2b2410; }
 html.dark .simple-tile:hover { background: #26251e; }
 html.dark .simple-state.due { color: #f7d9a1; background: #473e1b; }
+html.dark .cost-top-row i { background: #2c2b26; }
+html.dark .month-pace em { color: #dcc89c; }
+html.dark .cost-forecast > div { background: #27251f; }
+html.dark .cum-actual { fill: rgba(190, 217, 205, 0.14); stroke: #bed9cd; }
+html.dark .cost-sort { background: #27251f; }
+html.dark .cost-sort button { color: #c0c8c3; }
+html.dark .cost-sort button.active { background: #1c1c1c; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27); }
+html.dark .cost-item.computed .cost-input { background: #282721; }
+html.dark .fin-results > div { background: #27251f; }
+html.dark .fin-results > div.main { background: var(--green-solid); }
+html.dark .fin-area { fill: rgba(190, 217, 205, 0.12); }
+html.dark .fin-line { stroke: #bed9cd; }
+html.dark .cost-suggestion { border: 1px dashed #4a524c; background: #25231a; }
+html.dark .cost-suggestion:hover { background: #1c1c1c; }
+html.dark .cost-custom-chip { background: #1c1c1c; }
+html.dark .archive-year { background: #25231a; }
+html.dark .archive-diff.under { color: #b5e4ca; }
     }
     /* DARK-MODE-END */
   </style>
@@ -7283,7 +7411,8 @@ html.dark .simple-state.due { color: #f7d9a1; background: #473e1b; }
       const max = Math.max(1, ...rows.map((row) => Math.max(row.plan, row.actual)));
       const pct = (value) => `${Math.max(value ? 1.5 : 0, (value / max) * 100)}%`;
       return COST_GROUPS.map((group) => {
-        const groupRows = rows.filter((row) => row.category.group === group.id);
+        const groupRows = sortCostRows(rows.filter((row) => row.category.group === group.id));
+        if (!groupRows.length || (['finance', 'other'].includes(group.id) && !groupRows.some((row) => row.plan || row.actual))) return '';
         const planSum = groupRows.reduce((sum, row) => sum + row.plan, 0);
         const actualSum = groupRows.reduce((sum, row) => sum + row.actual, 0);
         return `<div class="bullet-group"><div class="bullet-group-head"><strong>${escapeHtml(group.label)}</strong><span>Ist ${formatCost(actualSum)} <em>von</em> ${formatCost(planSum)} Plan</span></div><ul class="bullet-list">${groupRows.map((row) => {
@@ -9420,7 +9549,7 @@ html.dark .simple-state.due { color: #f7d9a1; background: #473e1b; }
         showToast('Das 3D-Hausmodell ist Teil von Husora Pro.');
         currentPage = 'plans';
       }
-      const pages = { dashboard, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPage, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage };
+      const pages = { dashboard, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPageNew, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage };
       const labels = { dashboard: 'Übersicht', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' };
       if (currentPage !== lastRenderedPage) {
         if (returningToPreviousPage) {
@@ -13855,6 +13984,383 @@ html.dark .simple-state.due { color: #f7d9a1; background: #473e1b; }
       if (stats) stats.outerHTML = html;
       pageContent.querySelectorAll('.dash-sections, .dash-sections-bar, .columns').forEach((node) => node.remove());
     }
+    // ===== Ferienhaus-Kosten: Diagramme, Sortierung, Finanzierung, weitere Positionen, PDF und Jahresarchiv =====
+    COST_GROUPS.push({ id: 'finance', label: 'Finanzierung', hint: 'Darlehen für den Kauf: Zinsen und Tilgung' }, { id: 'other', label: 'Weitere Kosten', hint: 'Eigene und zusätzliche Positionen' });
+    costCategories.push({ id: 'financing', group: 'finance', label: 'Darlehen (Zins + Tilgung)', note: 'Wird aus den Angaben unter „Finanzierung“ berechnet.', amount: 0, computed: true });
+    const COST_SUGGESTIONS = [
+      ['roadAssoc', 'house', 'Wegegemeinschaft (Vägförening / Samfällighet)', 'Beitrag für Unterhalt und Schneeräumung der Privatstraße.', 1500],
+      ['internet', 'house', 'Internet, Telefon & TV', 'Breitband, Mobilfunk-Router oder Glasfaser.', 4800],
+      ['septic', 'house', 'Abwassertank / Klärgrube leeren', 'Slamtömning durch die Gemeinde oder einen Fachbetrieb.', 2500],
+      ['alarm', 'house', 'Alarmanlage & Sicherheitsdienst', 'Überwachung, Wachdienst bei Alarm, Gerätemiete.', 3600],
+      ['leasehold', 'house', 'Grundstückspacht (Tomträtt)', 'Jährliche Pacht, falls das Grundstück nicht im Eigentum ist.', 0],
+      ['management', 'service', 'Hausverwaltung / Schlüsselservice', 'Betreuung vor Ort, Schlüsselübergaben, Ansprechpartner für Gäste.', 6000],
+      ['platform', 'service', 'Provision Buchungsportale', 'Gebühren von Airbnb, Booking.com, Vrbo bei Vermietung.', 0],
+      ['travel', 'other', 'Anreise (Fähre, Fahrtkosten)', 'Fahrten zum Ferienhaus für Kontrolle, Saisonstart und Urlaub.', 6000],
+      ['furnishing', 'other', 'Ausstattung & Inventar', 'Möbel, Bettwäsche, Geräte, Ersatzbeschaffungen.', 3000],
+      ['tax', 'other', 'Steuern & Steuerberatung', 'Steuer auf Mieteinnahmen, Beratung, Erklärung in Schweden.', 0],
+      ['bank', 'other', 'Bank- und Überweisungsgebühren', 'Konto in Schweden, Auslandsüberweisungen, Wechselkursgebühren.', 500],
+      ['boat', 'other', 'Bootsplatz & Steg', 'Liegeplatz, Winterlager, Versicherung des Bootes.', 2000]
+    ];
+    let customCostCats = loadStore('stugliv-cost-custom-cats', []).filter((entry) => entry && entry.id && entry.label);
+    customCostCats.forEach((entry) => { if (!costCategories.some((category) => category.id === entry.id)) costCategories.push({ ...entry, custom: true }); });
+    let costSort = loadStore('stugliv-cost-sort', 'default');
+    let financing = loadStore('stugliv-financing', {});
+    let costArchive = loadStore('stugliv-cost-archive', {});
+    const sortCostRows = (rows) => (costSort === 'name' ? [...rows].sort((a, b) => a.category.label.localeCompare(b.category.label, 'de')) : costSort === 'price' ? [...rows].sort((a, b) => Math.max(b.plan, b.actual) - Math.max(a.plan, a.actual)) : rows);
+    const persistAnnualCosts = () => { try { localStorage.setItem('stugliv-costs', JSON.stringify(annualCosts)); return true; } catch (error) { showToast('Kosten konnten nicht gespeichert werden.'); return false; } };
+    const costsOf = (propertyId) => annualCosts[propertyId] || (annualCosts[propertyId] = { ...(initialCosts[propertyId] || {}) });
+
+    // --- Finanzierung (Annuitätendarlehen: Zins + anfängliche Tilgung) ---
+    function financingPlan(propertyId) {
+      const f = { price: 0, extra: 0, equity: 0, rate: 4, amort: 2, include: true, ...(financing[propertyId] || {}) };
+      const loan = Math.max(0, (Number(f.price) || 0) + (Number(f.extra) || 0) - (Number(f.equity) || 0));
+      const interest = Math.max(0, Number(f.rate) || 0) / 100;
+      const amort = Math.max(0, Number(f.amort) || 0) / 100;
+      const monthly = loan * (interest + amort) / 12;
+      let balance = loan;
+      const curve = [loan];
+      let months = 0;
+      let firstYearInterest = 0;
+      let firstYearPrincipal = 0;
+      while (balance > 0.5 && months < 12 * 60 && monthly > balance * interest / 12) {
+        const zins = balance * interest / 12;
+        const tilgung = Math.min(balance, monthly - zins);
+        if (months < 12) { firstYearInterest += zins; firstYearPrincipal += tilgung; }
+        balance -= tilgung;
+        months += 1;
+        if (months % 12 === 0) curve.push(Math.max(0, balance));
+      }
+      if (balance <= 0.5 && curve[curve.length - 1] !== 0) curve.push(0);
+      const after10 = curve[Math.min(10, curve.length - 1)] ?? 0;
+      return { ...f, loan, monthly, annual: monthly * 12, months, years: Math.ceil(months / 12), firstYearInterest, firstYearPrincipal, curve, after10, payable: loan > 0 && monthly > loan * interest / 12 };
+    }
+    function syncFinancingCost(propertyId) {
+      const plan = financingPlan(propertyId);
+      costsOf(propertyId).financing = plan.include && plan.loan > 0 ? Math.round(plan.annual) : 0;
+      persistAnnualCosts();
+    }
+    function financingCardHtml(property) {
+      const plan = financingPlan(property.id);
+      const unit = isEuro() ? '€' : 'kr';
+      const field = (key, label, value, step, hint = '') => `<label><span class="form-label">${label}</span><span class="fin-input"><input class="form-control" type="number" min="0" step="${step}" inputmode="decimal" data-fin="${key}" value="${value}"><em>${hint || unit}</em></span></label>`;
+      const money = (sek) => Math.round(sekToDisplay(Number(sek) || 0));
+      const maxCurve = Math.max(1, ...plan.curve);
+      const points = plan.curve.map((value, index) => `${(index / Math.max(1, plan.curve.length - 1)) * 300},${90 - (value / maxCurve) * 80}`).join(' ');
+      return `<section class="card cost-card fin-card" id="cost-financing"><div class="card-head"><div><span class="cost-badge plan">Plan</span><h2 class="card-title">Finanzierung</h2><p class="card-caption">Anschaffung der Immobilie mit Darlehen: monatliche Rate aus Zinsen und Tilgung.</p></div><label class="settings-switch fin-include"><span>In Jahreskosten einrechnen</span><span class="switch"><input type="checkbox" data-fin-include ${plan.include ? 'checked' : ''}><span class="switch-track"></span></span></label></div>
+        <div class="fin-grid">
+          ${field('price', 'Kaufpreis', money(plan.price), isEuro() ? 100 : 1000)}
+          ${field('extra', 'Kaufnebenkosten', money(plan.extra), isEuro() ? 10 : 100)}
+          ${field('equity', 'Eigenkapital', money(plan.equity), isEuro() ? 100 : 1000)}
+          ${field('rate', 'Sollzins p. a.', plan.rate, 0.05, '%')}
+          ${field('amort', 'Anfängliche Tilgung p. a.', plan.amort, 0.1, '%')}
+        </div>
+        <p class="fin-hint">Kaufnebenkosten in Schweden: Grundbucheintrag (Lagfart) 1,5 % des Kaufpreises plus Gebühr, Pfandbrief (Pantbrev) 2 % auf neue Hypotheken.</p>
+        ${plan.loan > 0 ? `<div class="fin-results">
+          <div><span>Darlehen</span><strong>${escapeHtml(formatCost(plan.loan))}</strong></div>
+          <div class="main"><span>Monatliche Rate</span><strong>${escapeHtml(formatCost(Math.round(plan.monthly)))}</strong><small>${escapeHtml(formatCost(Math.round(plan.annual)))} pro Jahr</small></div>
+          <div><span>Zinsen im 1. Jahr</span><strong>${escapeHtml(formatCost(Math.round(plan.firstYearInterest)))}</strong></div>
+          <div><span>Tilgung im 1. Jahr</span><strong>${escapeHtml(formatCost(Math.round(plan.firstYearPrincipal)))}</strong></div>
+          <div><span>Restschuld nach 10 Jahren</span><strong>${escapeHtml(formatCost(Math.round(plan.after10)))}</strong></div>
+          <div><span>Schuldenfrei</span><strong>${plan.payable ? `nach ${plan.years} Jahren` : 'Tilgung zu gering'}</strong></div>
+        </div>
+        <figure class="fin-chart"><svg viewBox="0 0 300 96" preserveAspectRatio="none" role="img" aria-label="Restschuld über die Laufzeit"><polyline points="0,90 ${points} 300,90" class="fin-area"/><polyline points="${points}" class="fin-line"/></svg><figcaption><span>Heute</span><span>Restschuld über ${plan.curve.length - 1} Jahre</span><span>${plan.payable ? 'schuldenfrei' : ''}</span></figcaption></figure>` : '<p class="fin-empty">Trage Kaufpreis und Eigenkapital ein – Husora berechnet Rate, Zinsanteil und Restschuld.</p>'}
+      </section>`;
+    }
+
+    // --- Diagramme ---
+    function costDonutHtml(property, costs) {
+      const { rows } = costFigures(property, costs);
+      const groups = COST_GROUPS.map((group, index) => ({ group, value: rows.filter((row) => row.category.group === group.id).reduce((sum, row) => sum + row.plan, 0), color: COST_CHART_COLORS[index % COST_CHART_COLORS.length] })).filter((entry) => entry.value > 0);
+      const total = groups.reduce((sum, entry) => sum + entry.value, 0);
+      const top = [...rows].filter((row) => row.plan > 0).sort((a, b) => b.plan - a.plan).slice(0, 5);
+      let offset = 0;
+      const circles = groups.map((entry) => { const share = total ? entry.value / total * 100 : 0; const circle = `<circle r="15.915" cx="20" cy="20" fill="none" stroke="${entry.color}" stroke-width="6" stroke-dasharray="${share.toFixed(2)} ${(100 - share).toFixed(2)}" stroke-dashoffset="${(25 - offset).toFixed(2)}"><title>${escapeHtml(entry.group.label)}: ${escapeHtml(formatCost(entry.value))}</title></circle>`; offset += share; return circle; }).join('');
+      return `<section class="card cost-card" id="cost-donut"><div class="card-head"><div><h2 class="card-title">Kostenverteilung</h2><p class="card-caption">Plan ${new Date().getFullYear()} nach Bereichen</p></div></div>
+        <div class="donut-wrap"><svg viewBox="0 0 40 40" class="donut" role="img" aria-label="Kostenverteilung nach Bereichen"><circle r="15.915" cx="20" cy="20" fill="none" stroke="#ecebe4" stroke-width="6"/>${circles}<text x="20" y="19.5" class="donut-total">${escapeHtml(formatCost(total))}</text><text x="20" y="24" class="donut-sub">pro Jahr</text></svg>
+          <ul class="donut-legend">${groups.map((entry) => `<li><i style="background:${entry.color}"></i><span>${escapeHtml(entry.group.label)}</span><strong>${escapeHtml(formatCost(entry.value))}</strong><small>${total ? Math.round(entry.value / total * 100) : 0} %</small></li>`).join('') || '<li>Noch keine Planwerte</li>'}</ul></div>
+        ${top.length ? `<div class="cost-top"><span class="form-label">Größte Posten</span>${top.map((row) => `<div class="cost-top-row"><span>${escapeHtml(row.category.label)}</span><i><b style="width:${Math.round(row.plan / top[0].plan * 100)}%"></b></i><strong>${escapeHtml(formatCost(row.plan))}</strong></div>`).join('')}</div>` : ''}
+      </section>`;
+    }
+    function costMonthlyHtml(property, costs) {
+      const year = new Date().getFullYear();
+      const { plan, list } = costFigures(property, costs, year);
+      const months = Array.from({ length: 12 }, (_, index) => list.filter((expense) => Number(String(expense.date).slice(5, 7)) === index + 1).reduce((sum, expense) => sum + Number(expense.amount), 0));
+      const pace = plan / 12;
+      const max = Math.max(1, pace, ...months);
+      const current = new Date().getMonth();
+      const actual = months.reduce((sum, value) => sum + value, 0);
+      const forecast = actual ? Math.round(actual / (current + 1) * 12) : plan;
+      const label = (index) => new Intl.DateTimeFormat('de-DE', { month: 'narrow' }).format(new Date(year, index, 1));
+      let running = 0;
+      const cumulative = months.map((value) => (running += value));
+      const cumMax = Math.max(1, plan, running);
+      const linePoints = cumulative.slice(0, current + 1).map((value, index) => `${index * 100 / 11},${100 - value / cumMax * 100}`).join(' ');
+      return `<section class="card cost-card" id="cost-monthly"><div class="card-head"><div><h2 class="card-title">Monatsverlauf ${year}</h2><p class="card-caption">Gebuchte Ist-Kosten je Monat · Linie: Budget pro Monat</p></div></div>
+        <div class="month-chart" role="img" aria-label="Ist-Kosten je Monat"><div class="month-bars">${months.map((value, index) => `<div class="month-col ${index === current ? 'now' : ''} ${index > current ? 'future' : ''}" title="${escapeHtml(`${new Intl.DateTimeFormat('de-DE', { month: 'long' }).format(new Date(year, index, 1))}: ${formatCost(value)}`)}"><i style="height:${value ? Math.max(3, value / max * 100) : 0}%" class="${value > pace ? 'over' : ''}"></i></div>`).join('')}${pace ? `<span class="month-pace" style="bottom:${pace / max * 100}%"><em>Budget/Monat</em></span>` : ''}</div><div class="month-labels">${months.map((_, index) => `<small class="${index === current ? 'now' : ''}">${label(index)}</small>`).join('')}</div></div>
+        <div class="cost-forecast"><div><span>Ist bisher</span><strong>${escapeHtml(formatCost(actual))}</strong></div><div><span>Hochrechnung Jahresende</span><strong class="${forecast > plan ? 'over' : ''}">${escapeHtml(formatCost(forecast))}</strong></div><div><span>Plan</span><strong>${escapeHtml(formatCost(plan))}</strong></div></div>
+        <figure class="cum-chart"><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Kumulierte Kosten gegenüber dem Jahresplan"><line x1="0" y1="100" x2="100" y2="${100 - plan / cumMax * 100}" class="cum-plan"/>${linePoints ? `<polyline points="0,100 ${linePoints}" class="cum-actual"/>` : ''}</svg><figcaption><span><i class="lg-plan"></i>Plan kumuliert</span><span><i class="lg-actual"></i>Ist kumuliert</span></figcaption></figure>
+      </section>`;
+    }
+    function costArchiveHtml(property) {
+      const year = new Date().getFullYear();
+      const list = (costArchive[property.id] || []).slice().sort((a, b) => b.year - a.year);
+      const max = Math.max(1, ...list.map((entry) => Math.max(entry.planTotal, entry.actualTotal)));
+      return `<section class="card cost-card" id="cost-archive"><div class="card-head"><div><h2 class="card-title">Jahresarchiv</h2><p class="card-caption">Am Jahresende die Ist-Kosten archivieren und als Plan für das nächste Jahr übernehmen.</p></div><button type="button" class="primary-btn" data-cost-close-year="${year}">${icon('document')} Jahr ${year} abschließen</button></div>
+        ${list.length ? `<div class="archive-years">${list.map((entry) => { const diff = entry.actualTotal - entry.planTotal; return `<article class="archive-year"><div class="archive-year-main"><strong>${entry.year}</strong><small>archiviert ${escapeHtml(fmtDate(entry.archivedAt))}</small></div><div class="archive-bars"><span><i class="lg-plan"></i><b style="width:${entry.planTotal / max * 100}%" class="plan"></b><em>Plan ${escapeHtml(formatCost(entry.planTotal))}</em></span><span><i class="lg-actual"></i><b style="width:${entry.actualTotal / max * 100}%" class="actual"></b><em>Ist ${escapeHtml(formatCost(entry.actualTotal))}</em></span></div><span class="archive-diff ${diff > 0 ? 'over' : 'under'}">${diff > 0 ? '+' : '−'}${escapeHtml(formatCost(Math.abs(diff)))}</span><div class="archive-actions"><button type="button" class="small-action" data-cost-adopt="${entry.year}">Als Plan ${year === entry.year ? year + 1 : year} laden</button><button type="button" class="small-action" data-cost-pdf="${entry.year}">PDF</button><button type="button" class="small-action danger" data-cost-archive-delete="${entry.year}">Löschen</button></div></article>`; }).join('')}</div>` : '<p class="fin-empty">Noch kein Jahr archiviert. Mit „Jahr abschließen“ sicherst du Plan und Ist und kannst die Ist-Kosten für das Folgejahr übernehmen.</p>'}
+      </section>`;
+    }
+    function costExtrasHtml() {
+      const available = COST_SUGGESTIONS.filter(([id]) => !costCategories.some((category) => category.id === `x-${id}`));
+      return `<section class="card cost-card" id="cost-extras"><div class="card-head"><div><h2 class="card-title">Weitere Kostenpositionen</h2><p class="card-caption">Typische Zusatzkosten eines Ferienhauses in Schweden – mit einem Klick als Planposition übernehmen oder eigene Position anlegen.</p></div></div>
+        ${available.length ? `<div class="cost-suggestions">${available.map(([id, group, label, note, amount]) => `<button type="button" class="cost-suggestion" data-cost-suggest="${id}" title="${escapeHtml(note)}">${icon('plus')}<span><strong>${escapeHtml(label)}</strong><small>${escapeHtml(COST_GROUPS.find((entry) => entry.id === group)?.label || '')}${amount ? ` · ca. ${escapeHtml(formatCost(amount))}/Jahr` : ''}</small></span></button>`).join('')}</div>` : ''}
+        <form class="cost-custom-form" id="cost-custom-form"><span class="form-label">Eigene Position</span><div class="cost-custom-grid"><input class="form-control" name="label" maxlength="60" required placeholder="z. B. Brennholz" aria-label="Bezeichnung"><select class="form-control" name="group" aria-label="Bereich">${COST_GROUPS.filter((group) => group.id !== 'finance').map((group) => `<option value="${group.id}" ${group.id === 'other' ? 'selected' : ''}>${escapeHtml(group.label)}</option>`).join('')}</select><input class="form-control" name="amount" type="number" min="0" step="1" inputmode="numeric" placeholder="Betrag/Jahr (${isEuro() ? '€' : 'kr'})" aria-label="Betrag pro Jahr"><button type="submit" class="secondary-btn">${icon('plus')} Hinzufügen</button></div></form>
+        ${customCostCats.length ? `<div class="cost-custom-list"><span class="form-label">Deine Positionen</span>${customCostCats.map((category) => `<span class="cost-custom-chip">${escapeHtml(category.label)}<button type="button" data-cost-custom-delete="${escapeHtml(category.id)}" aria-label="${escapeHtml(category.label)} entfernen">✕</button></span>`).join('')}</div>` : ''}
+      </section>`;
+    }
+
+    // --- Seite ---
+    function costsPageNew() {
+      const property = properties.find((item) => item.id === costProperty) || properties[0];
+      const costs = costsOf(property.id);
+      const tpl = document.createElement('template');
+      tpl.innerHTML = costsPage();
+      const pick = (selector) => tpl.content.querySelector(selector)?.outerHTML || '';
+      const currencyBar = pick('.currency-bar');
+      const plan = tpl.content.querySelector('.cost-plan-card');
+      if (plan) {
+        // Planliste nach Name oder Preis sortieren, Finanzierung nur lesend.
+        const list = plan.querySelector('#cost-list');
+        if (list && costSort !== 'default') {
+          [...list.querySelectorAll('.cost-group-title')].forEach((title) => {
+            const items = [];
+            let node = title.nextElementSibling;
+            while (node && node.classList.contains('cost-item')) { items.push(node); node = node.nextElementSibling; }
+            const value = (item) => Number(item.querySelector('[data-cost]')?.value) || 0;
+            items.sort((a, b) => (costSort === 'name' ? a.querySelector('strong').textContent.localeCompare(b.querySelector('strong').textContent, 'de') : value(b) - value(a)));
+            title.after(...items);
+          });
+        }
+        plan.querySelectorAll('[data-cost="financing"]').forEach((input) => { input.readOnly = true; input.setAttribute('readonly', ''); input.closest('.cost-item')?.classList.add('computed'); });
+      }
+      const sortBar = `<div class="cost-sort" role="group" aria-label="Positionen sortieren"><span>Sortieren</span>${[['default', 'Standard'], ['name', 'Name'], ['price', 'Preis']].map(([id, label]) => `<button type="button" class="${costSort === id ? 'active' : ''}" data-cost-sort="${id}" aria-pressed="${costSort === id}">${label}</button>`).join('')}</div>`;
+      const chartCard = tpl.content.querySelector('.cost-chart-card');
+      chartCard?.querySelector('.card-head')?.insertAdjacentHTML('beforeend', sortBar);
+      return `<div class="welcome"><div><p class="eyebrow">Jahresplanung · ${isEuro() ? 'EUR' : 'SEK'}</p><h1>Ferienhaus-Kosten</h1><p class="subtitle">Plan, Ist und Finanzierung ${singleHouse() ? 'deines Ferienhauses' : 'je Ferienhaus'} – mit Verlauf, Verteilung und Jahresarchiv.</p>${currencyBar}</div><div class="cost-head-actions"><button type="button" class="secondary-btn" data-cost-pdf="current">${icon('document')} Als PDF exportieren</button></div></div>
+        ${pick('.section-toolbar')}
+        ${pick('.cost-import-banner')}
+        ${costSummaryHtml(property, costs)}
+        <div class="cost-charts">${costDonutHtml(property, costs)}${costMonthlyHtml(property, costs)}</div>
+        ${chartCard ? chartCard.outerHTML : ''}
+        ${pick('.cost-actual-card')}
+        ${plan ? plan.outerHTML : ''}
+        <div class="cost-charts">${financingCardHtml(property)}${costExtrasHtml()}</div>
+        ${costArchiveHtml(property)}`;
+    }
+    function refreshCostCharts() {
+      if (currentPage !== 'costs') return;
+      const property = properties.find((item) => item.id === costProperty) || properties[0];
+      const costs = costsOf(property.id);
+      document.getElementById('cost-donut')?.insertAdjacentHTML('afterend', costDonutHtml(property, costs));
+      document.getElementById('cost-donut')?.remove();
+      document.getElementById('cost-monthly')?.insertAdjacentHTML('afterend', costMonthlyHtml(property, costs));
+      document.getElementById('cost-monthly')?.remove();
+    }
+
+    // --- Jahresabschluss ---
+    function archiveCostYear(year) {
+      const property = properties.find((item) => item.id === costProperty) || properties[0];
+      const costs = costsOf(property.id);
+      const { rows, plan, actual } = costFigures(property, costs, year);
+      const list = (costArchive[property.id] || []).filter((entry) => entry.year !== year);
+      const exists = (costArchive[property.id] || []).some((entry) => entry.year === year);
+      if (exists && !window.confirm(`Das Jahr ${year} ist bereits archiviert. Mit den aktuellen Werten überschreiben?`)) return;
+      const entry = { year, archivedAt: localDateKey(new Date()), planTotal: plan, actualTotal: actual, plan: Object.fromEntries(rows.map((row) => [row.category.id, row.plan])), actual: Object.fromEntries(rows.map((row) => [row.category.id, row.actual])), labels: Object.fromEntries(rows.map((row) => [row.category.id, row.category.label])) };
+      costArchive = { ...costArchive, [property.id]: [...list, entry] };
+      if (!saveStore('stugliv-cost-archive', costArchive)) return;
+      render();
+      if (actual > 0 && window.confirm(`Jahr ${year} archiviert (Plan ${formatCost(plan)}, Ist ${formatCost(actual)}).\n\nSollen die Ist-Kosten als Plan für ${year + 1} übernommen werden? Positionen ohne Ist-Kosten behalten ihren Planwert.`)) adoptArchivedYear(year, true);
+      else showToast(`Jahr ${year} im Kostenarchiv gespeichert.`);
+    }
+    function adoptArchivedYear(year, skipConfirm = false) {
+      const property = properties.find((item) => item.id === costProperty) || properties[0];
+      const entry = (costArchive[property.id] || []).find((item) => item.year === Number(year));
+      if (!entry) return;
+      if (!skipConfirm && !window.confirm(`Ist-Kosten aus ${entry.year} als neue Planwerte übernehmen? Positionen ohne Ist-Kosten behalten ihren aktuellen Planwert.`)) return;
+      const costs = costsOf(property.id);
+      let changed = 0;
+      Object.entries(entry.actual).forEach(([id, value]) => { if (id !== 'financing' && value > 0) { costs[id] = Math.round(value); changed += 1; } });
+      persistAnnualCosts();
+      render();
+      showToast(`${changed} Planwerte aus den Ist-Kosten ${entry.year} übernommen.`);
+    }
+
+    // --- PDF-Export ---
+    function buildCostsPdf(property, year, archived = null) {
+      const W = 595, H = 842, M = 48;
+      const pages = [];
+      let ops = [];
+      let y = H - M;
+      const f = (n) => (Math.round(n * 100) / 100).toString();
+      const clean = (value) => String(value).replace(/[  ]/g, ' ').replace(/−/g, '-');
+      const text = (value, x, size, bold = false, color = '0.12 0.17 0.14', align = 'left') => { const str = clean(value); const width = align === 'right' ? pdfTextWidth(str, size, bold) : 0; ops.push(`BT /${bold ? 'F2' : 'F1'} ${size} Tf ${color} rg ${f(x - width)} ${f(y)} Td (${pdfEncode(str)}) Tj ET`); };
+      const line = (x1, y1, x2, y2, color = '0.85 0.84 0.8') => ops.push(`${color} RG 0.6 w ${f(x1)} ${f(y1)} m ${f(x2)} ${f(y2)} l S`);
+      const box = (x, y0, w, h, fill) => ops.push(`${fill} rg ${f(x)} ${f(y0)} ${f(w)} ${f(h)} re f`);
+      const newPage = () => { if (ops.length) pages.push(ops); ops = []; y = H - M; };
+      const need = (space) => { if (y - space < M + 20) { newPage(); text(`${property.name} · Kosten ${year} (Fortsetzung)`, M, 9, false, '0.45 0.5 0.46'); y -= 22; } };
+      const costs = archived ? archived.plan : costsOf(property.id);
+      const rows = archived
+        ? Object.keys(archived.plan).map((id) => ({ category: costCategories.find((category) => category.id === id) || { id, label: archived.labels?.[id] || id, group: 'other' }, plan: archived.plan[id] || 0, actual: archived.actual[id] || 0 }))
+        : costFigures(property, costs, year).rows;
+      const planTotal = rows.reduce((sum, row) => sum + row.plan, 0);
+      const actualTotal = rows.reduce((sum, row) => sum + row.actual, 0);
+      box(0, H - 8, W, 8, '0.16 0.36 0.27');
+      text('HUSORA · FERIENHAUS-KOSTEN', M, 9, true, '0.29 0.39 0.32'); y -= 26;
+      text(`Kostenübersicht ${year}`, M, 22, true); y -= 18;
+      text(`${property.name}${property.address ? ` · ${property.address}` : ''} · erstellt am ${fmtDateFull(new Date())} · Beträge in ${isEuro() ? 'Euro' : 'SEK'}${archived ? ' · aus dem Jahresarchiv' : ''}`, M, 9.5, false, '0.4 0.45 0.4'); y -= 26;
+      const kpis = [['Plan', formatCost(planTotal)], ['Ist', formatCost(actualTotal)], [actualTotal > planTotal ? 'Über Plan' : 'Restbudget', formatCost(Math.abs(planTotal - actualTotal))], ['Pro Monat (Plan)', formatCost(Math.round(planTotal / 12))]];
+      const colW = (W - 2 * M) / 4;
+      kpis.forEach(([label, value], index) => { const x = M + index * colW; box(x, y - 34, colW - 8, 44, '0.96 0.95 0.92'); const keep = y; y -= 2; text(label, x + 10, 8.5, false, '0.42 0.46 0.42'); y -= 18; text(value, x + 10, 13, true); y = keep; });
+      y -= 58;
+      const header = () => { text('Position', M, 9, true, '0.35 0.4 0.36'); text('Plan', W - M - 170, 9, true, '0.35 0.4 0.36', 'right'); text('Ist', W - M - 85, 9, true, '0.35 0.4 0.36', 'right'); text('Abweichung', W - M, 9, true, '0.35 0.4 0.36', 'right'); y -= 6; line(M, y, W - M, y); y -= 14; };
+      COST_GROUPS.forEach((group) => {
+        const groupRows = sortCostRows(rows.filter((row) => (row.category.group || 'other') === group.id)).filter((row) => row.plan || row.actual);
+        if (!groupRows.length) return;
+        need(60);
+        text(group.label, M, 12, true); y -= 16;
+        header();
+        groupRows.forEach((row) => {
+          need(16);
+          const diff = row.actual - row.plan;
+          pdfWrap(clean(row.category.label), 10, W - 2 * M - 260, false).slice(0, 2).forEach((part, index) => { if (index) y -= 12; text(part, M, 10); });
+          text(formatCost(row.plan), W - M - 170, 10, false, '0.12 0.17 0.14', 'right');
+          text(formatCost(row.actual), W - M - 85, 10, false, '0.12 0.17 0.14', 'right');
+          text(`${diff > 0 ? '+' : diff < 0 ? '-' : ''}${formatCost(Math.abs(diff))}`, W - M, 10, diff > 0, diff > 0 ? '0.66 0.25 0.2' : '0.2 0.45 0.3', 'right');
+          y -= 15;
+        });
+        const sumPlan = groupRows.reduce((sum, row) => sum + row.plan, 0);
+        const sumActual = groupRows.reduce((sum, row) => sum + row.actual, 0);
+        line(M, y + 9, W - M, y + 9, '0.75 0.74 0.7');
+        text('Summe', M, 10, true); text(formatCost(sumPlan), W - M - 170, 10, true, '0.12 0.17 0.14', 'right'); text(formatCost(sumActual), W - M - 85, 10, true, '0.12 0.17 0.14', 'right');
+        y -= 26;
+      });
+      const fin = financingPlan(property.id);
+      if (!archived && fin.loan > 0) {
+        need(110);
+        text('Finanzierung', M, 12, true); y -= 18;
+        [['Darlehen', formatCost(fin.loan)], ['Sollzins / anfängliche Tilgung', `${fin.rate} % / ${fin.amort} %`], ['Monatliche Rate', formatCost(Math.round(fin.monthly))], ['Zinsen / Tilgung im 1. Jahr', `${formatCost(Math.round(fin.firstYearInterest))} / ${formatCost(Math.round(fin.firstYearPrincipal))}`], ['Restschuld nach 10 Jahren', formatCost(Math.round(fin.after10))], ['Schuldenfrei', fin.payable ? `nach ${fin.years} Jahren` : '–']].forEach(([label, value]) => { text(label, M, 10, false, '0.4 0.45 0.4'); text(value, W - M, 10, true, '0.12 0.17 0.14', 'right'); y -= 15; });
+        y -= 12;
+      }
+      const bookings = archived ? [] : expensesFor(property.id, year).sort((a, b) => String(a.date).localeCompare(String(b.date)));
+      if (bookings.length) {
+        need(60);
+        text(`Gebuchte Ist-Kosten ${year}`, M, 12, true); y -= 16;
+        bookings.forEach((expense) => {
+          need(15);
+          text(fmtDateFull(expense.date), M, 9.5, false, '0.4 0.45 0.4');
+          text(clean(`${expense.vendor || 'Ohne Rechnungssteller'} · ${costCategories.find((category) => category.id === expense.category)?.label || ''}`).slice(0, 70), M + 80, 9.5);
+          text(formatCost(Number(expense.amount)), W - M, 9.5, true, '0.12 0.17 0.14', 'right');
+          y -= 14;
+        });
+      }
+      pages.push(ops);
+      pages.forEach((page, index) => page.push(`BT /F1 8 Tf 0.5 0.55 0.5 rg ${M} 28 Td (${pdfEncode(`${property.name} · Kostenübersicht ${year} · Seite ${index + 1} von ${pages.length} · erstellt mit Husora`)}) Tj ET`));
+      const stream = (data) => `<< /Length ${data.length} >>\nstream\n${data}\nendstream`;
+      const objs = ['<< /Type /Catalog /Pages 2 0 R >>', `<< /Type /Pages /Count ${pages.length} /Kids [${pages.map((_, index) => `${5 + index * 2} 0 R`).join(' ')}] >>`, '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];
+      pages.forEach((page, index) => { objs.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${6 + index * 2} 0 R >>`); objs.push(stream(page.join('\n'))); });
+      let pdf = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';
+      const offsets = [];
+      objs.forEach((body, index) => { offsets.push(pdf.length); pdf += `${index + 1} 0 obj\n${body}\nendobj\n`; });
+      const xref = pdf.length;
+      pdf += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n${offsets.map((offset) => `${String(offset).padStart(10, '0')} 00000 n \n`).join('')}trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+      const bytes = new Uint8Array(pdf.length);
+      for (let index = 0; index < pdf.length; index += 1) bytes[index] = pdf.charCodeAt(index) & 255;
+      return bytes;
+    }
+    function exportCostsPdf(which) {
+      const property = properties.find((item) => item.id === costProperty) || properties[0];
+      const archived = which === 'current' ? null : (costArchive[property.id] || []).find((entry) => entry.year === Number(which));
+      const year = archived ? archived.year : new Date().getFullYear();
+      const bytes = buildCostsPdf(property, year, archived);
+      const name = `Kosten-${String(property.name).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '')}-${year}.pdf`;
+      showPdf(bytes, name, `Kostenübersicht ${year}`);
+    }
+
+    // --- Ereignisse ---
+    document.addEventListener('click', (event) => {
+      if (currentPage !== 'costs') return;
+      const target = event.target;
+      const sort = target.closest('[data-cost-sort]');
+      if (sort) { costSort = sort.dataset.costSort; saveStore('stugliv-cost-sort', costSort); const scroll = window.scrollY; render(); window.scrollTo(0, scroll); return; }
+      const pdf = target.closest('[data-cost-pdf]');
+      if (pdf) { exportCostsPdf(pdf.dataset.costPdf); return; }
+      const close = target.closest('[data-cost-close-year]');
+      if (close) { archiveCostYear(Number(close.dataset.costCloseYear)); return; }
+      const adopt = target.closest('[data-cost-adopt]');
+      if (adopt) { adoptArchivedYear(adopt.dataset.costAdopt); return; }
+      const del = target.closest('[data-cost-archive-delete]');
+      if (del && window.confirm(`Archiv ${del.dataset.costArchiveDelete} löschen?`)) {
+        const property = properties.find((item) => item.id === costProperty) || properties[0];
+        costArchive = { ...costArchive, [property.id]: (costArchive[property.id] || []).filter((entry) => entry.year !== Number(del.dataset.costArchiveDelete)) };
+        saveStore('stugliv-cost-archive', costArchive); render(); return;
+      }
+      const suggest = target.closest('[data-cost-suggest]');
+      if (suggest) {
+        const [id, group, label, note, amount] = COST_SUGGESTIONS.find(([key]) => key === suggest.dataset.costSuggest) || [];
+        if (!id) return;
+        addCustomCostCategory({ id: `x-${id}`, group, label, note, amount });
+        return;
+      }
+      const remove = target.closest('[data-cost-custom-delete]');
+      if (remove) {
+        const category = customCostCats.find((entry) => entry.id === remove.dataset.costCustomDelete);
+        if (!category || !window.confirm(`Position „${category.label}“ entfernen? Planwerte dieser Position werden gelöscht, gebuchte Ist-Kosten bleiben erhalten.`)) return;
+        customCostCats = customCostCats.filter((entry) => entry.id !== category.id);
+        saveStore('stugliv-cost-custom-cats', customCostCats);
+        const index = costCategories.findIndex((entry) => entry.id === category.id);
+        if (index >= 0) costCategories.splice(index, 1);
+        Object.values(annualCosts).forEach((costs) => { if (costs) delete costs[category.id]; });
+        persistAnnualCosts(); render(); showToast('Position entfernt.');
+      }
+    });
+    function addCustomCostCategory({ id, group, label, note = 'Eigene Position', amount = 0 }) {
+      if (costCategories.some((category) => category.id === id)) { showToast('Diese Position gibt es bereits.'); return; }
+      const entry = { id, group: COST_GROUPS.some((item) => item.id === group) ? group : 'other', label, note, amount: 0 };
+      customCostCats = [...customCostCats, entry];
+      if (!saveStore('stugliv-cost-custom-cats', customCostCats)) return;
+      costCategories.push({ ...entry, custom: true });
+      costsOf(costProperty)[id] = Math.max(0, Math.round(Number(amount) || 0));
+      persistAnnualCosts();
+      const scroll = window.scrollY; render(); window.scrollTo(0, scroll);
+      showToast(`„${label}“ als Planposition ergänzt – den Betrag passt du unter „Planwerte“ an.`);
+    }
+    document.addEventListener('submit', (event) => {
+      if (event.target.id !== 'cost-custom-form') return;
+      event.preventDefault();
+      const form = event.target;
+      const label = form.elements.label.value.trim();
+      if (!label) return;
+      addCustomCostCategory({ id: newId('c'), group: form.elements.group.value, label, note: 'Eigene Position', amount: displayToSek(Number(form.elements.amount.value) || 0) });
+    });
+    document.addEventListener('input', (event) => {
+      if (currentPage !== 'costs') return;
+      if (event.target.matches('[data-fin]')) {
+        const key = event.target.dataset.fin;
+        const raw = Number(event.target.value) || 0;
+        financing = { ...financing, [costProperty]: { ...(financing[costProperty] || {}), [key]: ['rate', 'amort'].includes(key) ? raw : Math.round(displayToSek(raw)) } };
+        saveStore('stugliv-financing', financing);
+        clearTimeout(event.target._finTimer);
+        event.target._finTimer = setTimeout(() => { syncFinancingCost(costProperty); const active = document.activeElement?.dataset?.fin; const scroll = window.scrollY; render(); window.scrollTo(0, scroll); const again = active && document.querySelector(`[data-fin="${active}"]`); if (again) { again.focus(); const len = String(again.value).length; try { again.setSelectionRange(len, len); } catch (error) { /* Zahlenfeld */ } } }, 600);
+      }
+      if (event.target.matches('[data-cost]')) setTimeout(refreshCostCharts, 0);
+    });
+    document.addEventListener('change', (event) => {
+      if (currentPage === 'costs' && event.target.matches('[data-fin-include]')) {
+        financing = { ...financing, [costProperty]: { ...(financing[costProperty] || {}), include: event.target.checked } };
+        saveStore('stugliv-financing', financing);
+        syncFinancingCost(costProperty);
+        const scroll = window.scrollY; render(); window.scrollTo(0, scroll);
+      }
+    });
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();
     if (isEuro()) refreshFxRate();
