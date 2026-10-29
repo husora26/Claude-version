@@ -2766,6 +2766,12 @@
     .package-modal.picker .pkg-pick.open .pkg-meta .form-control { min-height: 44px; font-size: 14px; }
     @media (max-width: 760px) { .package-modal.picker { width: 100%; max-height: none; height: 100%; border-radius: 0; } #package-modal.open:has(.picker) { padding: 0; } }
     .pkg-chip-wrap { position: relative; display: grid; }
+    .tab-preview { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 10px 0 14px; padding: 8px 6px; border: 1px solid var(--line); border-radius: 14px; background: #fbfaf6; }
+    .tab-preview span { display: grid; justify-items: center; gap: 3px; color: #4d5a51; }
+    .tab-preview svg { width: 21px; height: 21px; }
+    .tab-preview small { font-size: 11px; font-weight: 650; text-align: center; }
+    .tab-slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
+    .tab-slots .form-control { min-height: 42px; }
     .automation-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
     .automation-actions .primary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
     .automation-actions svg { width: 15px; height: 15px; }
@@ -2797,6 +2803,7 @@
     .season-edit { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
     .season-edit svg { width: 15px; height: 15px; }
     @media (max-width: 600px) { .pkg-meta { grid-template-columns: 1fr; } .pkg-add-grid { grid-template-columns: 1fr; } }
+  
   
   
   
@@ -3437,6 +3444,8 @@ html.dark .pkg-remove { background: #1c1c1c; }
 html.dark .pkg-chip { background: #1c1c1c; }
 html.dark .pkg-pick.open { background: #1c1c1c; }
 html.dark .pkg-edit-btn { background: #1c1c1c; }
+html.dark .tab-preview { background: #25231a; }
+html.dark .tab-preview span { color: #c0c8c3; }
 html.dark .season-order-state { color: #a7c3da; background: #1a222a; }
 html.dark .season-order-state.st-done { color: #b5e4ca; background: #212e26; }
 html.dark .pkg-chip em { color: #ae9fc7; background: #231d2c; }
@@ -12183,7 +12192,7 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
     }
     function settingsPage() {
       const groups = [
-        ['settings-home', 'Startseite gestalten', 'Lege fest, welche Kacheln und Bereiche deine Übersicht zeigt – so gestaltest du die Hauptansicht ganz nach deinem Bedarf.', [dashboardTilesSettingsHtml, dashSectionsSettingsHtml]],
+        ['settings-home', 'Startseite gestalten', 'Lege fest, welche Kacheln, Bereiche und Symbole der unteren Leiste deine Übersicht zeigt – so gestaltest du die Hauptansicht ganz nach deinem Bedarf.', [dashboardTilesSettingsHtml, dashSectionsSettingsHtml, tabbarSettingsHtml]],
         ['settings-look', 'Darstellung & Erinnerungen', 'Hell oder dunkel, Schriftgröße, Sprache der Aufträge und was dir die Glocke meldet.', settingsCardBuilders.filter((build) => build !== backupCardHtml && build !== appInfoCardHtml)],
         ['settings-data', 'Daten & App', 'Datensicherung, Speicher und Informationen zur App.', [backupCardHtml, appInfoCardHtml]]
       ];
@@ -13008,7 +13017,44 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
       if (label) label.textContent = 'Menü';
     }
     buildGroupedNav();
-    const TABBAR_ITEMS = [['dashboard', 'Übersicht', 'home'], ['tasks', 'Aufgaben', 'task'], ['inspections', 'Kontrolle', 'inspection'], ['calendar', 'Kalender', 'calendar']];
+    // Symbole der unteren Leiste: unter Einstellungen → Startseite gestalten wählbar (vier Plätze plus „Mehr“).
+    const TAB_OPTIONS = [['dashboard', 'Übersicht', 'home'], ['tasks', 'Aufgaben', 'task'], ['inspections', 'Kontrolle', 'inspection'], ['calendar', 'Kalender', 'calendar'], ['seasons', 'Saison', 'snow'], ['bookings', 'Buchungen', 'calendar'], ['repairs', 'Reparatur', 'alert'], ['renovations', 'Sanierung', 'cube'], ['properties', 'Mein Haus', 'property'], ['documents', 'Dokumente', 'document'], ['costs', 'Kosten', 'cost'], ['assignedProviders', 'Partner', 'users'], ['providers', 'Partner finden', 'search'], ['contracts', 'Verträge', 'contract'], ['meters', 'Zähler', 'meter'], ['emergency', 'Notfall', 'key'], ['automation', 'Automatik', 'bolt'], ['settings', 'Einstellungen', 'gear'], ['help', 'Hilfe', 'help']];
+    const DEFAULT_TABS = ['dashboard', 'tasks', 'inspections', 'calendar'];
+    const TABBAR_ITEMS = [];
+    function applyTabChoice(ids) {
+      const valid = (Array.isArray(ids) ? ids : []).filter((id, index, list) => TAB_OPTIONS.some(([key]) => key === id) && list.indexOf(id) === index && (id !== 'bookings' || bookingsEnabled())).slice(0, 4);
+      const chosen = valid.length === 4 ? valid : [...valid, ...DEFAULT_TABS.filter((id) => !valid.includes(id))].slice(0, 4);
+      TABBAR_ITEMS.splice(0, TABBAR_ITEMS.length, ...chosen.map((id) => TAB_OPTIONS.find(([key]) => key === id)));
+    }
+    applyTabChoice(loadStore('stugliv-tabbar', DEFAULT_TABS));
+    function tabbarSettingsHtml() {
+      const current = TABBAR_ITEMS.map(([id]) => id);
+      const options = TAB_OPTIONS.filter(([id]) => id !== 'bookings' || bookingsEnabled());
+      return `<section class="card profile-form" id="tabbar-settings"><div class="card-head" style="padding:0 0 4px"><div><h2 class="card-title">Untere Leiste</h2><p class="card-caption">Wähle die vier Symbole der unteren Leiste am Handy und der Bereichs-Buttons im Kopf am Computer. „Mehr“ öffnet immer das Menü.</p></div></div>
+        <div class="tab-preview" aria-hidden="true">${TABBAR_ITEMS.map(([, label, iconName]) => `<span>${icon(iconName)}<small>${escapeHtml(label)}</small></span>`).join('')}<span>${icon('menu')}<small>Mehr</small></span></div>
+        <div class="tab-slots">${current.map((id, index) => `<label><span class="form-label">Platz ${index + 1}</span><select class="form-control" data-tab-slot="${index}">${options.map(([key, label]) => `<option value="${key}" ${key === id ? 'selected' : ''}>${escapeHtml(label)}</option>`).join('')}</select></label>`).join('')}</div>
+        <div class="form-actions" style="justify-content:flex-end;margin-top:12px"><button type="button" class="text-btn" data-tab-reset>Standard wiederherstellen</button></div>
+      </section>`;
+    }
+    document.addEventListener('change', (event) => {
+      const slot = event.target.closest?.('[data-tab-slot]');
+      if (!slot) return;
+      const ids = TABBAR_ITEMS.map(([id]) => id);
+      const index = Number(slot.dataset.tabSlot);
+      const other = ids.indexOf(slot.value);
+      if (other >= 0 && other !== index) ids[other] = ids[index];
+      ids[index] = slot.value;
+      saveStore('stugliv-tabbar', ids);
+      applyTabChoice(ids);
+      const scroll = window.scrollY; render(); window.scrollTo(0, scroll);
+      showToast('Untere Leiste angepasst.');
+    });
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('[data-tab-reset]')) return;
+      saveStore('stugliv-tabbar', DEFAULT_TABS); applyTabChoice(DEFAULT_TABS);
+      const scroll = window.scrollY; render(); window.scrollTo(0, scroll);
+      showToast('Untere Leiste auf Standard zurückgesetzt.');
+    });
     // Kopfzeile: Startseite mit Marke und Bereichen, Unterseiten mit Zurück und dem aktuellen Menüpunkt.
     function updatePageBar(title) {
       const sub = currentPage !== 'dashboard';
