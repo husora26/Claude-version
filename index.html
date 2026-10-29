@@ -2694,6 +2694,14 @@
     .auto-groups button span { min-width: 20px; padding: 0 6px; border-radius: 10px; color: #6b766e; background: #e8e6df; font-size: 11.5px; line-height: 20px; text-align: center; }
     .automation-grid.grouped { grid-template-columns: 1fr; }
     @media (max-width: 760px) { .auto-groups { display: none !important; } }
+    @media (max-width: 760px) {
+      .tabbar { transition: background-color .25s ease, border-color .25s ease; }
+      .tabbar.contextual { border-top-color: #b9d3c2; background: rgba(232, 241, 234, .97); }
+      .tabbar.contextual .tab.active::before { background: #cfe3d5; }
+      html.dark .tabbar.contextual { border-top-color: #2f4a3c; background: rgba(24, 40, 32, .97); }
+      html.dark .tabbar.contextual .tab.active::before { background: #2a4536; }
+    }
+    @media (max-width: 760px) and (prefers-reduced-motion: reduce) { .tabbar { transition: none; } }
     @media (max-width: 640px) {
       .auto-groups { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
       .auto-groups::-webkit-scrollbar { display: none; }
@@ -2789,6 +2797,7 @@
     .season-edit { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
     .season-edit svg { width: 15px; height: 15px; }
     @media (max-width: 600px) { .pkg-meta { grid-template-columns: 1fr; } .pkg-add-grid { grid-template-columns: 1fr; } }
+  
   
   
   
@@ -3417,6 +3426,10 @@ html.dark .auto-groups { background: #28251d; }
 html.dark .auto-groups button { color: #c0c8c3; }
 html.dark .auto-groups button.active { background: #1c1c1c; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.23); }
 html.dark .auto-groups button span { color: #b1b7b3; background: #2e2d28; }
+@media (max-width: 760px) {
+html.dark .tabbar.contextual { border-top-color: #45534a; background: rgba(34, 40, 36, 0.97); }
+html.dark .tabbar.contextual .tab.active::before { background: #2b372f; }
+}
 html.dark .pkg-row { background: #25231a; }
 html.dark .pkg-check input:checked + .season-check-box { background: var(--green-solid); }
 html.dark .pkg-fields .pkg-detail { color: #c0c8c3; }
@@ -13016,6 +13029,8 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
       const active = TABBAR_ITEMS.some(([page]) => page === currentPage) ? currentPage : (currentPage === 'bookings' ? 'calendar' : '');
       const openCount = tasks.filter((task) => !task.done).length;
       const menuOpen = document.getElementById('main-menu')?.classList.contains('open');
+      // Trägt die Leiste Reiter der aktuellen Seite, wird sie leicht eingefärbt.
+      document.getElementById('tabbar')?.classList.toggle('contextual', ['settings', 'automation'].includes(currentPage));
       // In den Einstellungen trägt die Leiste unten die drei Bereiche der Seite.
       if (currentPage === 'settings') {
         const items = [['settings-home', 'Startseite', 'home'], ['settings-look', 'Darstellung', 'text'], ['settings-data', 'Daten & App', 'document']];
