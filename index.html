@@ -2842,9 +2842,32 @@
   
     /* Ferienhaus-Kosten */
     .cost-head-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-    .cost-kpi[data-cost-jump] { cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; }
-    .cost-kpi[data-cost-jump]:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(35, 48, 39, .1); }
-    .cost-kpi[data-cost-jump]::after { position: absolute; top: 10px; right: 14px; content: '›'; font-size: 20px; font-weight: 700; opacity: .5; }
+    .cost-kpis.selectable .cost-kpi { cursor: pointer; color: var(--ink); border: 1px solid var(--line); background: white; transition: background-color .2s ease, color .2s ease, box-shadow .15s ease, transform .15s ease; }
+    .cost-kpis.selectable .cost-kpi:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(35, 48, 39, .1); }
+    .cost-kpis.selectable .cost-kpi .cost-kpi-tag { color: #4d5a51; background: #efeee8; }
+    .cost-kpis.selectable .cost-kpi.over strong { color: var(--red); }
+    .cost-kpis.selectable .cost-kpi small { color: var(--muted); }
+    html.dark .currency-switch .on { color: var(--green); }
+    .cost-kpis.selectable .cost-kpi.selected { color: white; border-color: var(--green); background: var(--green); box-shadow: 0 8px 22px rgba(36, 75, 61, .22); }
+    .cost-kpis.selectable .cost-kpi.selected .cost-kpi-tag { color: var(--green); background: white; }
+    .cost-kpis.selectable .cost-kpi.selected strong { color: white; }
+    .cost-kpis.selectable .cost-kpi.selected small { color: rgba(255, 255, 255, .85); }
+    .cost-kpis.selectable .cost-kpi .cost-kpi-bar { background: #ecebe4; }
+    .cost-kpis.selectable .cost-kpi .cost-kpi-bar i { background: var(--green); }
+    .cost-kpis.selectable .cost-kpi.selected .cost-kpi-bar { background: rgba(255, 255, 255, .25); }
+    .cost-kpis.selectable .cost-kpi.selected .cost-kpi-bar i { background: white; }
+    .cost-kpis.selectable .cost-kpi::after { position: absolute; top: 12px; right: 14px; width: 18px; height: 18px; border: 2px solid #c9d3cc; border-radius: 50%; content: ''; }
+    .cost-kpis.selectable .cost-kpi.selected::after { border-color: white; background: radial-gradient(circle, white 0 4px, transparent 5px); }
+    html.dark .cost-kpis.selectable .cost-kpi:not(.selected) { background: #1c211e; }
+    html.dark .cost-kpis.selectable .cost-kpi.selected { background: var(--green-solid); border-color: var(--green-solid); }
+    .month-col i.planbar { background: #d9c48a; }
+    .month-col i.restbar { background: #8fb39d; }
+    .donut-legend strong.over, .cost-top-row.over strong { color: var(--red); }
+    .cost-top-row.over b { background: #c17b4a; }
+    .donut-rest-bar { grid-template-columns: 1fr !important; margin-top: 4px; }
+    .rest-track { display: block; height: 10px; border-radius: 6px; background: #dfe9e2; overflow: hidden; }
+    .rest-track b { display: block; height: 100%; background: var(--green); }
+    .donut-empty { color: var(--muted); }
     .cost-kpi { position: relative; }
     #cost-pane-actual, #cost-pane-plan { scroll-margin-top: 80px; }
     @media (max-width: 760px) {
@@ -2960,6 +2983,8 @@
     .archive-diff { font-size: 13px; font-weight: 800; }
     .archive-diff.over { color: var(--red); } .archive-diff.under { color: #1f6b41; }
     .archive-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+  
+  
   
   
   
@@ -3596,7 +3621,19 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
 html.dark .simple-tile { background: #2b2410; }
 html.dark .simple-tile:hover { background: #26251e; }
 html.dark .simple-state.due { color: #f7d9a1; background: #473e1b; }
-html.dark .cost-kpi[data-cost-jump]:hover { box-shadow: 0 10px 24px rgba(0, 0, 0, 0.27); }
+html.dark .cost-kpis.selectable .cost-kpi { background: #1c1c1c; }
+html.dark .cost-kpis.selectable .cost-kpi:hover { box-shadow: 0 10px 24px rgba(0, 0, 0, 0.27); }
+html.dark .cost-kpis.selectable .cost-kpi .cost-kpi-tag { color: #c0c8c3; background: #2a2924; }
+html.dark .cost-kpis.selectable .cost-kpi.selected { background: var(--green-solid); box-shadow: 0 8px 22px rgba(0, 0, 0, 0.53); }
+html.dark .cost-kpis.selectable .cost-kpi.selected .cost-kpi-tag { background: #1c1c1c; }
+html.dark .cost-kpis.selectable .cost-kpi .cost-kpi-bar { background: #2c2b26; }
+html.dark .cost-kpis.selectable .cost-kpi .cost-kpi-bar i { background: var(--green-solid); }
+html.dark .cost-kpis.selectable .cost-kpi.selected .cost-kpi-bar { background: rgba(255, 255, 255, 0.03); }
+html.dark .cost-kpis.selectable .cost-kpi.selected .cost-kpi-bar i { background: #1c1c1c; }
+html.dark .cost-kpis.selectable .cost-kpi::after { border: 2px solid #464c48; }
+html.dark .cost-kpis.selectable .cost-kpi.selected::after { border-color: #383838; background: radial-gradient(circle, #1c1c1c 0 4px, transparent 5px); }
+html.dark .rest-track { background: #272e29; }
+html.dark .rest-track b { background: var(--green-solid); }
 html.dark .cost-top-row i { background: #2c2b26; }
 html.dark .month-pace em { color: #dcc89c; }
 html.dark .cost-forecast > div { background: #27251f; }
@@ -7413,10 +7450,10 @@ html.dark .archive-diff.under { color: #b5e4ca; }
       const share = plan ? Math.round((actual / plan) * 100) : 0;
       const rest = plan - actual;
       const pace = plan ? Math.round((plan / 12) * monthsPassed) : 0;
-      return `<div class="cost-kpis" id="cost-kpis">
-        <article class="cost-kpi plan" data-cost-jump="plan" role="button" tabindex="0" aria-label="Zu den Planwerten"><span class="cost-kpi-tag">Plan ${year}</span><strong id="annual-total">${formatCost(plan)}</strong><small>Budget · <span id="monthly-total">${formatCost(Math.round(plan / 12))}</span> pro Monat</small></article>
-        <article class="cost-kpi actual" data-cost-jump="actual" role="button" tabindex="0" aria-label="Zu den Ist-Kosten"><span class="cost-kpi-tag">Ist ${year}</span><strong>${formatCost(actual)}</strong><small>${share} % vom Plan · Stand ${escapeHtml(new Intl.DateTimeFormat('de-DE', { month: 'long' }).format(new Date()))}</small><span class="cost-kpi-bar" role="img" aria-label="${share} % des Jahresbudgets verbraucht"><i style="width:${Math.min(100, share)}%"></i><b style="left:${Math.min(100, Math.round(monthsPassed / 12 * 100))}%" title="Zeitanteil des Jahres"></b></span></article>
-        <article class="cost-kpi ${rest < 0 ? 'over' : 'rest'}"><span class="cost-kpi-tag">${rest < 0 ? 'Über Plan' : 'Restbudget'}</span><strong>${formatCost(Math.abs(rest))}</strong><small>${actual > pace && plan ? `über dem Jahresverlauf (${formatCost(pace)} bis ${escapeHtml(new Intl.DateTimeFormat('de-DE', { month: 'short' }).format(new Date()))})` : 'im Rahmen des Jahresverlaufs'}</small></article>
+      return `<div class="cost-kpis selectable" id="cost-kpis">
+        <article class="cost-kpi plan ${costChartMode === 'plan' ? 'selected' : ''}" data-cost-mode="plan" role="button" tabindex="0" aria-pressed="${costChartMode === 'plan'}" aria-label="Grafiken für den Plan anzeigen"><span class="cost-kpi-tag">Plan ${year}</span><strong id="annual-total">${formatCost(plan)}</strong><small>Budget · <span id="monthly-total">${formatCost(Math.round(plan / 12))}</span> pro Monat</small></article>
+        <article class="cost-kpi actual ${costChartMode === 'actual' ? 'selected' : ''}" data-cost-mode="actual" role="button" tabindex="0" aria-pressed="${costChartMode === 'actual'}" aria-label="Grafiken für die Ist-Kosten anzeigen"><span class="cost-kpi-tag">Ist ${year}</span><strong>${formatCost(actual)}</strong><small>${share} % vom Plan · Stand ${escapeHtml(new Intl.DateTimeFormat('de-DE', { month: 'long' }).format(new Date()))}</small><span class="cost-kpi-bar" role="img" aria-label="${share} % des Jahresbudgets verbraucht"><i style="width:${Math.min(100, share)}%"></i><b style="left:${Math.min(100, Math.round(monthsPassed / 12 * 100))}%" title="Zeitanteil des Jahres"></b></span></article>
+        <article class="cost-kpi ${rest < 0 ? 'over' : 'rest'} ${costChartMode === 'rest' ? 'selected' : ''}" data-cost-mode="rest" role="button" tabindex="0" aria-pressed="${costChartMode === 'rest'}" aria-label="Restbudget in den Grafiken anzeigen"><span class="cost-kpi-tag">${rest < 0 ? 'Über Plan' : 'Restbudget'}</span><strong>${formatCost(Math.abs(rest))}</strong><small>${actual > pace && plan ? `über dem Jahresverlauf (${formatCost(pace)} bis ${escapeHtml(new Intl.DateTimeFormat('de-DE', { month: 'short' }).format(new Date()))})` : 'im Rahmen des Jahresverlaufs'}</small></article>
       </div>`;
     }
     function costBulletHtml(property, costs) {
@@ -14027,8 +14064,14 @@ html.dark .archive-diff.under { color: #b5e4ca; }
     customCostCats.forEach((entry) => { if (!costCategories.some((category) => category.id === entry.id)) costCategories.push({ ...entry, custom: true }); });
     let costSort = loadStore('stugliv-cost-sort', 'default');
     let costView = 'overview';
+    let costChartMode = 'plan';
     const costMobile = () => window.matchMedia?.('(max-width: 760px)').matches;
-    document.addEventListener('keydown', (event) => { if ((event.key === 'Enter' || event.key === ' ') && event.target.matches?.('[data-cost-jump]')) { event.preventDefault(); goCostPane(event.target.dataset.costJump); } });
+    document.addEventListener('keydown', (event) => { if ((event.key === 'Enter' || event.key === ' ') && event.target.matches?.('[data-cost-mode]')) { event.preventDefault(); setCostChartMode(event.target.dataset.costMode); } });
+    function setCostChartMode(mode) {
+      costChartMode = ['plan', 'actual', 'rest'].includes(mode) ? mode : 'plan';
+      document.querySelectorAll('#cost-kpis [data-cost-mode]').forEach((tile) => { const on = tile.dataset.costMode === costChartMode; tile.classList.toggle('selected', on); tile.setAttribute('aria-pressed', String(on)); });
+      refreshCostCharts();
+    }
     function goCostPane(view) {
       if (costMobile()) { costView = view; if (view === 'plan') costListOpen = true; render(); window.scrollTo(0, 0); return; }
       const target = document.getElementById(view === 'plan' ? 'cost-pane-plan' : 'cost-pane-actual');
@@ -14100,36 +14143,93 @@ html.dark .archive-diff.under { color: #b5e4ca; }
 
     // --- Diagramme ---
     function costDonutHtml(property, costs) {
+      const mode = costChartMode;
       const { rows } = costFigures(property, costs);
-      const groups = COST_GROUPS.map((group, index) => ({ group, value: rows.filter((row) => row.category.group === group.id).reduce((sum, row) => sum + row.plan, 0), color: COST_CHART_COLORS[index % COST_CHART_COLORS.length] })).filter((entry) => entry.value > 0);
-      const total = groups.reduce((sum, entry) => sum + entry.value, 0);
-      const top = [...rows].filter((row) => row.plan > 0).sort((a, b) => b.plan - a.plan).slice(0, 5);
+      const year = new Date().getFullYear();
+      const groups = COST_GROUPS.map((group, index) => {
+        const groupRows = rows.filter((row) => row.category.group === group.id);
+        const plan = groupRows.reduce((sum, row) => sum + row.plan, 0);
+        const actual = groupRows.reduce((sum, row) => sum + row.actual, 0);
+        return { group, plan, actual, rest: plan - actual, color: COST_CHART_COLORS[index % COST_CHART_COLORS.length] };
+      });
+      const R = 15.915;
+      let segments = [];
+      let center = '';
+      let caption = '';
+      let legend = '';
+      let top = [];
+      if (mode === 'rest') {
+        const used = groups.filter((entry) => entry.plan > 0 || entry.actual > 0);
+        const base = used.reduce((sum, entry) => sum + Math.max(entry.plan, entry.actual), 0) || 1;
+        used.forEach((entry) => {
+          const spent = Math.min(entry.actual, Math.max(entry.plan, entry.actual));
+          const rest = Math.max(0, entry.plan - entry.actual);
+          segments.push({ share: spent / base * 100, color: entry.color, opacity: 1, title: `${entry.group.label}: verbraucht ${formatCost(spent)}` });
+          if (rest) segments.push({ share: rest / base * 100, color: entry.color, opacity: 0.28, title: `${entry.group.label}: Rest ${formatCost(rest)}`, rest: true });
+        });
+        const totalPlan = groups.reduce((sum, entry) => sum + entry.plan, 0);
+        const totalActual = groups.reduce((sum, entry) => sum + entry.actual, 0);
+        const totalRest = totalPlan - totalActual;
+        center = `<text x="20" y="18.6" class="donut-sub">${totalRest < 0 ? 'über Plan' : 'Rest'}</text><text x="20" y="23" class="donut-total">${escapeHtml(formatCost(Math.abs(totalRest)))}</text><text x="20" y="26.6" class="donut-sub">${totalPlan ? Math.max(0, Math.round(totalRest / totalPlan * 100)) : 0} % vom Plan</text>`;
+        caption = `Plan abzüglich Ist ${year}: kräftig = verbraucht, hell = Restbudget`;
+        legend = used.map((entry) => `<li><i style="background:${entry.color}"></i><span>${escapeHtml(entry.group.label)}</span><strong class="${entry.rest < 0 ? 'over' : ''}">${entry.rest < 0 ? '+' : ''}${escapeHtml(formatCost(Math.abs(entry.rest)))}</strong><small>${entry.rest < 0 ? 'über Plan' : `${entry.plan ? Math.round(entry.rest / entry.plan * 100) : 0} % Rest`}</small></li>`).join('');
+        legend += `<li class="donut-rest-bar"><span class="rest-track"><b style="width:${totalPlan ? Math.min(100, totalActual / totalPlan * 100) : 0}%"></b></span><small>${escapeHtml(formatCost(totalActual))} verbraucht · ${escapeHtml(formatCost(Math.max(0, totalRest)))} übrig</small></li>`;
+        top = [...rows].filter((row) => row.plan > 0).map((row) => ({ label: row.category.label, value: row.plan - row.actual, plan: row.plan })).sort((a, b) => b.value - a.value).slice(0, 5);
+      } else {
+        const key = mode === 'actual' ? 'actual' : 'plan';
+        const used = groups.filter((entry) => entry[key] > 0);
+        const total = used.reduce((sum, entry) => sum + entry[key], 0);
+        segments = used.map((entry) => ({ share: total ? entry[key] / total * 100 : 0, color: entry.color, opacity: 1, title: `${entry.group.label}: ${formatCost(entry[key])}` }));
+        center = `<text x="20" y="19.5" class="donut-total">${escapeHtml(formatCost(total))}</text><text x="20" y="24" class="donut-sub">${key === 'actual' ? 'Ist bisher' : 'Plan pro Jahr'}</text>`;
+        caption = key === 'actual' ? `Gebuchte Ist-Kosten ${year} nach Bereichen` : `Plan ${year} nach Bereichen`;
+        legend = used.map((entry) => `<li><i style="background:${entry.color}"></i><span>${escapeHtml(entry.group.label)}</span><strong>${escapeHtml(formatCost(entry[key]))}</strong><small>${total ? Math.round(entry[key] / total * 100) : 0} %</small></li>`).join('') || `<li class="donut-empty">${key === 'actual' ? 'Noch keine Ist-Kosten gebucht' : 'Noch keine Planwerte'}</li>`;
+        top = [...rows].filter((row) => row[key] > 0).map((row) => ({ label: row.category.label, value: row[key] })).sort((a, b) => b.value - a.value).slice(0, 5);
+      }
       let offset = 0;
-      const circles = groups.map((entry) => { const share = total ? entry.value / total * 100 : 0; const circle = `<circle r="15.915" cx="20" cy="20" fill="none" stroke="${entry.color}" stroke-width="6" stroke-dasharray="${share.toFixed(2)} ${(100 - share).toFixed(2)}" stroke-dashoffset="${(25 - offset).toFixed(2)}"><title>${escapeHtml(entry.group.label)}: ${escapeHtml(formatCost(entry.value))}</title></circle>`; offset += share; return circle; }).join('');
-      return `<section class="card cost-card" id="cost-donut"><div class="card-head"><div><h2 class="card-title">Kostenverteilung</h2><p class="card-caption">Plan ${new Date().getFullYear()} nach Bereichen</p></div></div>
-        <div class="donut-wrap"><svg viewBox="0 0 40 40" class="donut" role="img" aria-label="Kostenverteilung nach Bereichen"><circle r="15.915" cx="20" cy="20" fill="none" stroke="#ecebe4" stroke-width="6"/>${circles}<text x="20" y="19.5" class="donut-total">${escapeHtml(formatCost(total))}</text><text x="20" y="24" class="donut-sub">pro Jahr</text></svg>
-          <ul class="donut-legend">${groups.map((entry) => `<li><i style="background:${entry.color}"></i><span>${escapeHtml(entry.group.label)}</span><strong>${escapeHtml(formatCost(entry.value))}</strong><small>${total ? Math.round(entry.value / total * 100) : 0} %</small></li>`).join('') || '<li>Noch keine Planwerte</li>'}</ul></div>
-        ${top.length ? `<div class="cost-top"><span class="form-label">Größte Posten</span>${top.map((row) => `<div class="cost-top-row"><span>${escapeHtml(row.category.label)}</span><i><b style="width:${Math.round(row.plan / top[0].plan * 100)}%"></b></i><strong>${escapeHtml(formatCost(row.plan))}</strong></div>`).join('')}</div>` : ''}
+      const circles = segments.map((segment) => { const circle = `<circle r="${R}" cx="20" cy="20" fill="none" stroke="${segment.color}" stroke-opacity="${segment.opacity}" stroke-width="6" stroke-dasharray="${segment.share.toFixed(2)} ${(100 - segment.share).toFixed(2)}" stroke-dashoffset="${(25 - offset).toFixed(2)}"><title>${escapeHtml(segment.title)}</title></circle>`; offset += segment.share; return circle; }).join('');
+      const topMax = Math.max(1, ...top.map((entry) => Math.abs(entry.value)));
+      const titles = { plan: 'Kostenverteilung · Plan', actual: 'Kostenverteilung · Ist', rest: 'Kostenverteilung · Restbudget' };
+      const topLabel = { plan: 'Größte Posten (Plan)', actual: 'Größte Posten (Ist)', rest: 'Größtes Restbudget je Posten' };
+      return `<section class="card cost-card mode-${mode}" id="cost-donut"><div class="card-head"><div><h2 class="card-title">${titles[mode]}</h2><p class="card-caption">${caption}</p></div></div>
+        <div class="donut-wrap"><svg viewBox="0 0 40 40" class="donut" role="img" aria-label="${titles[mode]}"><circle r="${R}" cx="20" cy="20" fill="none" stroke="#ecebe4" stroke-width="6"/>${circles}${center}</svg>
+          <ul class="donut-legend">${legend}</ul></div>
+        ${top.length ? `<div class="cost-top"><span class="form-label">${topLabel[mode]}</span>${top.map((entry) => `<div class="cost-top-row ${entry.value < 0 ? 'over' : ''}"><span>${escapeHtml(entry.label)}</span><i><b style="width:${Math.round(Math.abs(entry.value) / topMax * 100)}%"></b></i><strong>${entry.value < 0 ? '+' : ''}${escapeHtml(formatCost(Math.abs(entry.value)))}</strong></div>`).join('')}</div>` : ''}
       </section>`;
     }
     function costMonthlyHtml(property, costs) {
+      const mode = costChartMode;
       const year = new Date().getFullYear();
       const { plan, list } = costFigures(property, costs, year);
       const months = Array.from({ length: 12 }, (_, index) => list.filter((expense) => Number(String(expense.date).slice(5, 7)) === index + 1).reduce((sum, expense) => sum + Number(expense.amount), 0));
       const pace = plan / 12;
-      const max = Math.max(1, pace, ...months);
       const current = new Date().getMonth();
       const actual = months.reduce((sum, value) => sum + value, 0);
       const forecast = actual ? Math.round(actual / (current + 1) * 12) : plan;
       const label = (index) => new Intl.DateTimeFormat('de-DE', { month: 'narrow' }).format(new Date(year, index, 1));
+      const monthName = (index) => new Intl.DateTimeFormat('de-DE', { month: 'long' }).format(new Date(year, index, 1));
       let running = 0;
       const cumulative = months.map((value) => (running += value));
+      const restLine = cumulative.map((value) => plan - value);
+      const values = mode === 'plan' ? months.map(() => pace) : mode === 'rest' ? restLine.map((value, index) => (index > current ? null : value)) : months;
+      const max = Math.max(1, pace, ...values.filter((value) => value !== null).map((value) => Math.abs(value)));
+      const bars = values.map((value, index) => {
+        const height = value === null ? 0 : Math.max(value ? 3 : 0, Math.abs(value) / max * 100);
+        const cls = mode === 'actual' && value > pace ? 'over' : mode === 'rest' && value < 0 ? 'over' : mode === 'plan' ? 'planbar' : mode === 'rest' ? 'restbar' : '';
+        const tip = mode === 'plan' ? `${monthName(index)}: Budget ${formatCost(Math.round(pace))}` : mode === 'rest' ? (value === null ? monthName(index) : `${monthName(index)}: Rest ${formatCost(Math.round(value))}`) : `${monthName(index)}: ${formatCost(value)}`;
+        return `<div class="month-col ${index === current ? 'now' : ''} ${index > current && mode !== 'plan' ? 'future' : ''}" title="${escapeHtml(tip)}"><i style="height:${height}%" class="${cls}"></i></div>`;
+      }).join('');
+      const titles = { plan: `Monatsverlauf ${year} · Plan`, actual: `Monatsverlauf ${year} · Ist`, rest: `Monatsverlauf ${year} · Restbudget` };
+      const captions = { plan: 'Budget je Monat aus dem Jahresplan', actual: 'Gebuchte Ist-Kosten je Monat · Linie: Budget pro Monat', rest: 'Verbleibendes Jahresbudget am Ende jedes Monats' };
       const cumMax = Math.max(1, plan, running);
       const linePoints = cumulative.slice(0, current + 1).map((value, index) => `${index * 100 / 11},${100 - value / cumMax * 100}`).join(' ');
-      return `<section class="card cost-card" id="cost-monthly"><div class="card-head"><div><h2 class="card-title">Monatsverlauf ${year}</h2><p class="card-caption">Gebuchte Ist-Kosten je Monat · Linie: Budget pro Monat</p></div></div>
-        <div class="month-chart" role="img" aria-label="Ist-Kosten je Monat"><div class="month-bars">${months.map((value, index) => `<div class="month-col ${index === current ? 'now' : ''} ${index > current ? 'future' : ''}" title="${escapeHtml(`${new Intl.DateTimeFormat('de-DE', { month: 'long' }).format(new Date(year, index, 1))}: ${formatCost(value)}`)}"><i style="height:${value ? Math.max(3, value / max * 100) : 0}%" class="${value > pace ? 'over' : ''}"></i></div>`).join('')}${pace ? `<span class="month-pace" style="bottom:${pace / max * 100}%"><em>Budget/Monat</em></span>` : ''}</div><div class="month-labels">${months.map((_, index) => `<small class="${index === current ? 'now' : ''}">${label(index)}</small>`).join('')}</div></div>
-        <div class="cost-forecast"><div><span>Ist bisher</span><strong>${escapeHtml(formatCost(actual))}</strong></div><div><span>Hochrechnung Jahresende</span><strong class="${forecast > plan ? 'over' : ''}">${escapeHtml(formatCost(forecast))}</strong></div><div><span>Plan</span><strong>${escapeHtml(formatCost(plan))}</strong></div></div>
-        <figure class="cum-chart"><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Kumulierte Kosten gegenüber dem Jahresplan"><line x1="0" y1="100" x2="100" y2="${100 - plan / cumMax * 100}" class="cum-plan"/>${linePoints ? `<polyline points="0,100 ${linePoints}" class="cum-actual"/>` : ''}</svg><figcaption><span><i class="lg-plan"></i>Plan kumuliert</span><span><i class="lg-actual"></i>Ist kumuliert</span></figcaption></figure>
+      return `<section class="card cost-card mode-${mode}" id="cost-monthly"><div class="card-head"><div><h2 class="card-title">${titles[mode]}</h2><p class="card-caption">${captions[mode]}</p></div></div>
+        <div class="month-chart" role="img" aria-label="${titles[mode]}"><div class="month-bars">${bars}${mode === 'actual' && pace ? `<span class="month-pace" style="bottom:${pace / max * 100}%"><em>Budget/Monat</em></span>` : ''}</div><div class="month-labels">${months.map((_, index) => `<small class="${index === current ? 'now' : ''}">${label(index)}</small>`).join('')}</div></div>
+        <div class="cost-forecast">${mode === 'plan'
+          ? `<div><span>Plan pro Monat</span><strong>${escapeHtml(formatCost(Math.round(pace)))}</strong></div><div><span>Plan bis heute</span><strong>${escapeHtml(formatCost(Math.round(pace * (current + 1))))}</strong></div><div><span>Plan Jahr</span><strong>${escapeHtml(formatCost(plan))}</strong></div>`
+          : mode === 'rest'
+            ? `<div><span>Rest heute</span><strong class="${plan - actual < 0 ? 'over' : ''}">${escapeHtml(formatCost(plan - actual))}</strong></div><div><span>Rest je Monat bis Dez.</span><strong>${escapeHtml(formatCost(Math.round(Math.max(0, plan - actual) / Math.max(1, 11 - current))))}</strong></div><div><span>Rest laut Hochrechnung</span><strong class="${plan - forecast < 0 ? 'over' : ''}">${escapeHtml(formatCost(plan - forecast))}</strong></div>`
+            : `<div><span>Ist bisher</span><strong>${escapeHtml(formatCost(actual))}</strong></div><div><span>Hochrechnung Jahresende</span><strong class="${forecast > plan ? 'over' : ''}">${escapeHtml(formatCost(forecast))}</strong></div><div><span>Plan</span><strong>${escapeHtml(formatCost(plan))}</strong></div>`}</div>
+        <figure class="cum-chart"><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Kumulierte Kosten gegenüber dem Jahresplan"><line x1="0" y1="100" x2="100" y2="${100 - plan / cumMax * 100}" class="cum-plan"/>${linePoints && mode !== 'plan' ? `<polyline points="0,100 ${linePoints}" class="cum-actual"/>` : ''}</svg><figcaption><span><i class="lg-plan"></i>Plan kumuliert</span>${mode !== 'plan' ? '<span><i class="lg-actual"></i>Ist kumuliert</span>' : ''}</figcaption></figure>
       </section>`;
     }
     function costArchiveHtml(property) {
@@ -14320,8 +14420,8 @@ html.dark .archive-diff.under { color: #b5e4ca; }
     document.addEventListener('click', (event) => {
       if (currentPage !== 'costs') return;
       const target = event.target;
-      const jump = target.closest('[data-cost-jump]');
-      if (jump) { goCostPane(jump.dataset.costJump); return; }
+      const modeTile = target.closest('[data-cost-mode]');
+      if (modeTile) { setCostChartMode(modeTile.dataset.costMode); return; }
       const paneTab = target.closest('[data-cost-view]');
       if (paneTab) { costView = paneTab.dataset.costView; if (costView === 'plan') costListOpen = true; render(); window.scrollTo(0, 0); return; }
       const sort = target.closest('[data-cost-sort]');
