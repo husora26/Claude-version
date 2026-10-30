@@ -2999,6 +2999,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -10216,6 +10217,7 @@ html.dark .archive-diff.under { color: #b5e4ca; }
       if (action === 'toggle-cost-list') {
         costListOpen = !costListOpen;
         document.getElementById('cost-toggle')?.setAttribute('aria-expanded', String(costListOpen));
+        document.getElementById('cost-toggle')?.setAttribute('aria-label', `Planwerte ${costListOpen ? 'zuklappen' : 'aufklappen'}`);
         const list = document.getElementById('cost-list');
         if (list) list.hidden = !costListOpen;
         list?.closest('.cost-plan-card')?.classList.toggle('collapsed', !costListOpen);
@@ -14293,6 +14295,10 @@ html.dark .archive-diff.under { color: #b5e4ca; }
           });
         }
         plan.classList.toggle('collapsed', !costListOpen);
+        plan.classList.add('cost-collapsible');
+        plan.dataset.costSection = 'plan';
+        const oldToggle = plan.querySelector('#cost-toggle');
+        if (oldToggle) oldToggle.outerHTML = `<button type="button" class="dash-toggle cost-arrow" id="cost-toggle" data-action="toggle-cost-list" aria-expanded="${costListOpen}" aria-controls="cost-list" aria-label="Planwerte ${costListOpen ? 'zuklappen' : 'aufklappen'}">${icon('arrow')}</button>`;
         if (!plan.querySelector('.cost-collapsed-summary')) { const values = costCategories.map((category) => Number(costs[category.id]) || 0); plan.querySelector('.card-head')?.insertAdjacentHTML('afterend', `<p class="cost-collapsed-summary plan-summary">${costCategories.filter((category) => Number(costs[category.id]) > 0).length} Positionen · ${escapeHtml(formatCost(values.reduce((sum, value) => sum + value, 0)))} pro Jahr</p>`); }
         plan.querySelectorAll('[data-cost="financing"]').forEach((input) => { input.readOnly = true; input.setAttribute('readonly', ''); input.closest('.cost-item')?.classList.add('computed'); });
       }
@@ -14445,6 +14451,7 @@ html.dark .archive-diff.under { color: #b5e4ca; }
       const target = event.target;
       const headToggle = !target.closest('button, a, input, select, label') && target.closest('.cost-collapsible > .card-head');
       const collapse = target.closest('[data-cost-collapse]') || (headToggle && { dataset: { costCollapse: headToggle.parentElement.dataset.costSection } });
+      if (collapse && collapse.dataset.costCollapse === 'plan') { document.getElementById('cost-toggle')?.click(); return; }
       if (collapse) { if (collapse.dataset.costCollapse === 'fin') costFinOpen = !costFinOpen; else costExtrasOpen = !costExtrasOpen; const scroll = window.scrollY; render(); window.scrollTo(0, scroll); return; }
       const modeTile = target.closest('[data-cost-mode]');
       if (modeTile) { setCostChartMode(modeTile.dataset.costMode); return; }
