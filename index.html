@@ -2930,6 +2930,10 @@
     .fin-card .card-head { flex-wrap: wrap; gap: 10px; }
     .cost-collapsed-summary { margin-top: 12px; color: var(--muted); font-size: 13px; line-height: 1.5; }
     .cost-collapse[hidden] { display: none !important; }
+    .cost-chart-card .bars-summary { display: none; margin-left: 18px; margin-right: 18px; padding-bottom: 6px; }
+    .cost-chart-card.collapsed .bars-summary { display: block; }
+    .cost-chart-card.collapsed .bullet-chart, .cost-chart-card.collapsed .cost-sort, .cost-chart-card.collapsed .bullet-legend { display: none !important; }
+    .cost-actual-card.collapsed #expense-entry { display: none !important; }
     .cost-collapsible > .card-head { position: relative; padding-right: 60px; cursor: pointer; }
     .cost-collapsible .cost-arrow svg { transform: rotate(90deg); }
     .cost-collapsible.collapsed .cost-arrow svg { transform: rotate(0deg); }
@@ -2991,6 +2995,8 @@
     .archive-diff { font-size: 13px; font-weight: 800; }
     .archive-diff.over { color: var(--red); } .archive-diff.under { color: #1f6b41; }
     .archive-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+  
+  
   
   
   
@@ -14080,6 +14086,8 @@ html.dark .archive-diff.under { color: #b5e4ca; }
     let costView = 'overview';
     let costChartMode = 'plan';
     let costFinOpen = false;
+    let costBarsOpen = false;
+    let costActualOpen = false;
     let costExtrasOpen = false;
     const costMobile = () => window.matchMedia?.('(max-width: 760px)').matches;
     document.addEventListener('keydown', (event) => { if ((event.key === 'Enter' || event.key === ' ') && event.target.matches?.('[data-cost-mode]')) { event.preventDefault(); setCostChartMode(event.target.dataset.costMode); } });
@@ -14305,13 +14313,30 @@ html.dark .archive-diff.under { color: #b5e4ca; }
       const sortBar = `<div class="cost-sort" role="group" aria-label="Positionen sortieren"><span>Sortieren</span>${[['default', 'Standard'], ['name', 'Name'], ['price', 'Preis']].map(([id, label]) => `<button type="button" class="${costSort === id ? 'active' : ''}" data-cost-sort="${id}" aria-pressed="${costSort === id}">${label}</button>`).join('')}</div>`;
       const chartCard = tpl.content.querySelector('.cost-chart-card');
       chartCard?.querySelector('.card-head')?.insertAdjacentHTML('beforeend', sortBar);
+      // Aufklappbare Karten mit rundem Pfeil: Positionen je Plan/Ist und Erfassung der Ist-Kosten.
+      const arrow = (key, open, label) => `<button type="button" class="dash-toggle cost-arrow" data-cost-collapse="${key}" aria-expanded="${open}" aria-label="${label} ${open ? 'zuklappen' : 'aufklappen'}">${icon('arrow')}</button>`;
+      if (chartCard) {
+        chartCard.classList.add('cost-collapsible');
+        chartCard.classList.toggle('collapsed', !costBarsOpen);
+        chartCard.dataset.costSection = 'bars';
+        chartCard.querySelector('.card-head')?.insertAdjacentHTML('beforeend', arrow('bars', costBarsOpen, 'Positionen'));
+        const { rows: barRows, plan: barPlan, actual: barActual } = costFigures(property, costs);
+        chartCard.querySelector('.card-head')?.insertAdjacentHTML('afterend', `<p class="cost-collapsed-summary bars-summary">${barRows.filter((row) => row.plan || row.actual).length} Positionen · Ist ${escapeHtml(formatCost(barActual))} von ${escapeHtml(formatCost(barPlan))} Plan</p>`);
+      }
+      const actualCard = tpl.content.querySelector('.cost-actual-card');
+      if (actualCard) {
+        actualCard.classList.add('cost-collapsible');
+        actualCard.classList.toggle('collapsed', !costActualOpen);
+        actualCard.dataset.costSection = 'actual';
+        actualCard.querySelector('.card-head')?.insertAdjacentHTML('beforeend', arrow('actual', costActualOpen, 'Ist-Kosten erfassen'));
+      }
       return `<div class="cost-page view-${costView}"><div class="welcome"><div><p class="eyebrow">Jahresplanung · ${isEuro() ? 'EUR' : 'SEK'}</p><h1>Ferienhaus-Kosten</h1><p class="subtitle">Plan, Ist und Finanzierung ${singleHouse() ? 'deines Ferienhauses' : 'je Ferienhaus'} – mit Verlauf, Verteilung und Jahresarchiv.</p>${currencyBar}</div><div class="cost-head-actions"><button type="button" class="secondary-btn" data-cost-pdf="current">${icon('document')} Als PDF exportieren</button></div></div>
         ${pick('.section-toolbar')}
         ${pick('.cost-import-banner')}
         <div data-cost-pane="overview">${costSummaryHtml(property, costs)}</div>
         <div class="cost-charts" data-cost-pane="overview">${costDonutHtml(property, costs)}${costMonthlyHtml(property, costs)}</div>
         <div data-cost-pane="overview">${chartCard ? chartCard.outerHTML : ''}</div>
-        <div data-cost-pane="actual" id="cost-pane-actual">${pick('.cost-actual-card')}</div>
+        <div data-cost-pane="actual" id="cost-pane-actual">${actualCard ? actualCard.outerHTML : ''}</div>
         <div data-cost-pane="plan" id="cost-pane-plan">${plan ? plan.outerHTML : ''}</div>
         <div class="cost-charts" data-cost-pane="plan">${financingCardHtml(property)}${costExtrasHtml()}</div>
         <div data-cost-pane="plan">${costArchiveHtml(property)}</div></div>`;
@@ -14452,7 +14477,7 @@ html.dark .archive-diff.under { color: #b5e4ca; }
       const headToggle = !target.closest('button, a, input, select, label') && target.closest('.cost-collapsible > .card-head');
       const collapse = target.closest('[data-cost-collapse]') || (headToggle && { dataset: { costCollapse: headToggle.parentElement.dataset.costSection } });
       if (collapse && collapse.dataset.costCollapse === 'plan') { document.getElementById('cost-toggle')?.click(); return; }
-      if (collapse) { if (collapse.dataset.costCollapse === 'fin') costFinOpen = !costFinOpen; else costExtrasOpen = !costExtrasOpen; const scroll = window.scrollY; render(); window.scrollTo(0, scroll); return; }
+      if (collapse) { const key = collapse.dataset.costCollapse; if (key === 'fin') costFinOpen = !costFinOpen; else if (key === 'bars') costBarsOpen = !costBarsOpen; else if (key === 'actual') costActualOpen = !costActualOpen; else costExtrasOpen = !costExtrasOpen; const scroll = window.scrollY; render(); window.scrollTo(0, scroll); return; }
       const modeTile = target.closest('[data-cost-mode]');
       if (modeTile) { setCostChartMode(modeTile.dataset.costMode); return; }
       const paneTab = target.closest('[data-cost-view]');
