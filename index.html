@@ -2711,6 +2711,8 @@
       .automation-summary > div { display: grid !important; gap: 2px; padding: 10px !important; }
       .automation-summary strong { font-size: 20px !important; }
       .automation-summary span { font-size: 11.5px !important; line-height: 1.3; }
+      .automation-summary > div { min-width: 0; }
+      .automation-summary span { overflow-wrap: anywhere; hyphens: auto; }
     }
   
   
@@ -3005,6 +3007,12 @@
   
   
   
+  
+    /* Kontrast nachgeschärft */
+    .dash-sections-bar span { color: #66716a; }
+    .insp-step-no { background: #7d8a80; }
+    .status.pending, .inspection-status-badge { color: #6f5420; }
+    .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #000); }
   
     /* DARK-MODE-START */
     @media screen {
@@ -3669,6 +3677,9 @@ html.dark .cost-suggestion:hover { background: #1c1c1c; }
 html.dark .cost-custom-chip { background: #1c1c1c; }
 html.dark .archive-year { background: #25231a; }
 html.dark .archive-diff.under { color: #b5e4ca; }
+html.dark .dash-sections-bar span { color: #b4bab6; }
+html.dark .status.pending, html.dark .inspection-status-badge { color: #e3d3b2; }
+html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2); }
     }
     /* DARK-MODE-END */
   </style>
