@@ -2844,6 +2844,13 @@
   
     /* Ferienhaus-Kosten */
     .cost-head-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .cost-import-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-bottom: 14px; padding: 12px 16px; border: 1px dashed #b9c9bd; border-radius: 12px; background: #fbfaf6; }
+    .cost-import-row .secondary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; cursor: pointer; }
+    .cost-import-row svg { width: 15px; height: 15px; }
+    .cost-import-row small { flex: 1 1 240px; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+    .expense-booked-head { flex-wrap: wrap; gap: 8px; }
+    .cost-pdf-btn { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; }
+    .cost-pdf-btn svg { width: 14px; height: 14px; }
     .cost-kpis.selectable .cost-kpi { cursor: pointer; color: var(--ink); border: 1px solid var(--line); background: white; transition: background-color .2s ease, color .2s ease, box-shadow .15s ease, transform .15s ease; }
     .cost-kpis.selectable .cost-kpi:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(35, 48, 39, .1); }
     .cost-kpis.selectable .cost-kpi .cost-kpi-tag { color: #4d5a51; background: #efeee8; }
@@ -3018,6 +3025,7 @@
     button.cost-figure:hover { transform: translateY(-2px); }
     .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
   
     /* DARK-MODE-START */
     @media screen {
@@ -3652,6 +3660,7 @@ html.dark .pkg-chip-delete { background: #1c1c1c; }
 html.dark .simple-tile { background: #2b2410; }
 html.dark .simple-tile:hover { background: #26251e; }
 html.dark .simple-state.due { color: #f7d9a1; background: #473e1b; }
+html.dark .cost-import-row { border: 1px dashed #4a524c; background: #25231a; }
 html.dark .cost-kpis.selectable .cost-kpi { background: #1c1c1c; }
 html.dark .cost-kpis.selectable .cost-kpi:hover { box-shadow: 0 10px 24px rgba(0, 0, 0, 0.27); }
 html.dark .cost-kpis.selectable .cost-kpi .cost-kpi-tag { color: #c0c8c3; background: #2a2924; }
@@ -14357,15 +14366,16 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         actualCard.classList.toggle('collapsed', !costActualOpen);
         actualCard.dataset.costSection = 'actual';
         actualCard.querySelector('.card-head')?.insertAdjacentHTML('beforeend', arrow('actual', costActualOpen, 'Ist-Kosten erfassen'));
+        actualCard.querySelector('.expense-booked-head')?.insertAdjacentHTML('beforeend', `<button type="button" class="small-action cost-pdf-btn" data-cost-pdf="actual">${icon('document')} Ist-Kosten als PDF</button>`);
       }
-      return `<div class="cost-page view-${costView}"><div class="welcome"><div><p class="eyebrow">Jahresplanung · ${isEuro() ? 'EUR' : 'SEK'}</p><h1>Ferienhaus-Kosten</h1><p class="subtitle">Plan, Ist und Finanzierung ${singleHouse() ? 'deines Ferienhauses' : 'je Ferienhaus'} – mit Verlauf, Verteilung und Jahresarchiv.</p>${currencyBar}</div><div class="cost-head-actions"><button type="button" class="secondary-btn" data-cost-pdf="current">${icon('document')} Als PDF exportieren</button></div></div>
+      return `<div class="cost-page view-${costView}"><div class="welcome"><div><p class="eyebrow">Jahresplanung · ${isEuro() ? 'EUR' : 'SEK'}</p><h1>Ferienhaus-Kosten</h1><p class="subtitle">Plan, Ist und Finanzierung ${singleHouse() ? 'deines Ferienhauses' : 'je Ferienhaus'} – mit Verlauf, Verteilung und Jahresarchiv.</p>${currencyBar}</div></div>
         ${pick('.section-toolbar')}
         ${pick('.cost-import-banner')}
         <div data-cost-pane="overview">${costSummaryHtml(property, costs)}</div>
         <div class="cost-charts" data-cost-pane="overview">${costDonutHtml(property, costs)}${costMonthlyHtml(property, costs)}</div>
         <div data-cost-pane="overview">${chartCard ? chartCard.outerHTML : ''}</div>
         <div data-cost-pane="actual" id="cost-pane-actual">${actualCard ? actualCard.outerHTML : ''}</div>
-        <div data-cost-pane="plan" id="cost-pane-plan">${plan ? plan.outerHTML : ''}</div>
+        <div data-cost-pane="plan" id="cost-pane-plan"><div class="cost-import-row"><label class="secondary-btn">${icon('document')} Ist-Kosten-PDF als Plan einlesen<input type="file" accept="application/pdf,.pdf" data-cost-pdf-import hidden></label><small>Liest die PDF der Ist-Kosten ein und ersetzt die Planwerte der dort aufgeführten Positionen.</small></div>${plan ? plan.outerHTML : ''}</div>
         <div class="cost-charts" data-cost-pane="plan">${financingCardHtml(property)}${costExtrasHtml()}</div>
         <div data-cost-pane="plan">${costArchiveHtml(property)}</div></div>`;
     }
@@ -14408,7 +14418,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
 
     // --- PDF-Export ---
-    function buildCostsPdf(property, year, archived = null) {
+    function buildCostsPdf(property, year, archived = null, onlyActual = false) {
       const W = 595, H = 842, M = 48;
       const pages = [];
       let ops = [];
@@ -14428,15 +14438,19 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const actualTotal = rows.reduce((sum, row) => sum + row.actual, 0);
       box(0, H - 8, W, 8, '0.16 0.36 0.27');
       text('HUSORA · FERIENHAUS-KOSTEN', M, 9, true, '0.29 0.39 0.32'); y -= 26;
-      text(`Kostenübersicht ${year}`, M, 22, true); y -= 18;
+      text(onlyActual ? `Ist-Kosten ${year}` : `Kostenübersicht ${year}`, M, 22, true); y -= 18;
       text(`${property.name}${property.address ? ` · ${property.address}` : ''} · erstellt am ${fmtDateFull(new Date())} · Beträge in ${isEuro() ? 'Euro' : 'SEK'}${archived ? ' · aus dem Jahresarchiv' : ''}`, M, 9.5, false, '0.4 0.45 0.4'); y -= 26;
-      const kpis = [['Plan', formatCost(planTotal)], ['Ist', formatCost(actualTotal)], [actualTotal > planTotal ? 'Über Plan' : 'Restbudget', formatCost(Math.abs(planTotal - actualTotal))], ['Pro Monat (Plan)', formatCost(Math.round(planTotal / 12))]];
+      const bookingCount = archived ? 0 : expensesFor(property.id, year).length;
+      const monthsElapsed = year === new Date().getFullYear() ? new Date().getMonth() + 1 : 12;
+      const kpis = onlyActual
+        ? [['Ist gesamt', formatCost(actualTotal)], ['Buchungen', String(bookingCount)], ['Ø pro Monat', formatCost(Math.round(actualTotal / monthsElapsed))], ['Positionen', String(rows.filter((row) => row.actual > 0).length)]]
+        : [['Plan', formatCost(planTotal)], ['Ist', formatCost(actualTotal)], [actualTotal > planTotal ? 'Über Plan' : 'Restbudget', formatCost(Math.abs(planTotal - actualTotal))], ['Pro Monat (Plan)', formatCost(Math.round(planTotal / 12))]];
       const colW = (W - 2 * M) / 4;
       kpis.forEach(([label, value], index) => { const x = M + index * colW; box(x, y - 34, colW - 8, 44, '0.96 0.95 0.92'); const keep = y; y -= 2; text(label, x + 10, 8.5, false, '0.42 0.46 0.42'); y -= 18; text(value, x + 10, 13, true); y = keep; });
       y -= 58;
-      const header = () => { text('Position', M, 9, true, '0.35 0.4 0.36'); text('Plan', W - M - 170, 9, true, '0.35 0.4 0.36', 'right'); text('Ist', W - M - 85, 9, true, '0.35 0.4 0.36', 'right'); text('Abweichung', W - M, 9, true, '0.35 0.4 0.36', 'right'); y -= 6; line(M, y, W - M, y); y -= 14; };
+      const header = () => { if (onlyActual) { text('Position', M, 9, true, '0.35 0.4 0.36'); text('Ist-Kosten', W - M, 9, true, '0.35 0.4 0.36', 'right'); y -= 6; line(M, y, W - M, y); y -= 14; return; } text('Position', M, 9, true, '0.35 0.4 0.36'); text('Plan', W - M - 170, 9, true, '0.35 0.4 0.36', 'right'); text('Ist', W - M - 85, 9, true, '0.35 0.4 0.36', 'right'); text('Abweichung', W - M, 9, true, '0.35 0.4 0.36', 'right'); y -= 6; line(M, y, W - M, y); y -= 14; };
       COST_GROUPS.forEach((group) => {
-        const groupRows = sortCostRows(rows.filter((row) => (row.category.group || 'other') === group.id)).filter((row) => row.plan || row.actual);
+        const groupRows = sortCostRows(rows.filter((row) => (row.category.group || 'other') === group.id)).filter((row) => (onlyActual ? row.actual > 0 : row.plan || row.actual));
         if (!groupRows.length) return;
         need(60);
         text(group.label, M, 12, true); y -= 16;
@@ -14445,6 +14459,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           need(16);
           const diff = row.actual - row.plan;
           pdfWrap(clean(row.category.label), 10, W - 2 * M - 260, false).slice(0, 2).forEach((part, index) => { if (index) y -= 12; text(part, M, 10); });
+          if (onlyActual) { text(formatCost(row.actual), W - M, 10, true, '0.12 0.17 0.14', 'right'); y -= 15; return; }
           text(formatCost(row.plan), W - M - 170, 10, false, '0.12 0.17 0.14', 'right');
           text(formatCost(row.actual), W - M - 85, 10, false, '0.12 0.17 0.14', 'right');
           text(`${diff > 0 ? '+' : diff < 0 ? '-' : ''}${formatCost(Math.abs(diff))}`, W - M, 10, diff > 0, diff > 0 ? '0.66 0.25 0.2' : '0.2 0.45 0.3', 'right');
@@ -14453,11 +14468,12 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const sumPlan = groupRows.reduce((sum, row) => sum + row.plan, 0);
         const sumActual = groupRows.reduce((sum, row) => sum + row.actual, 0);
         line(M, y + 9, W - M, y + 9, '0.75 0.74 0.7');
+        if (onlyActual) { text('Summe', M, 10, true); text(formatCost(sumActual), W - M, 10, true, '0.12 0.17 0.14', 'right'); y -= 26; return; }
         text('Summe', M, 10, true); text(formatCost(sumPlan), W - M - 170, 10, true, '0.12 0.17 0.14', 'right'); text(formatCost(sumActual), W - M - 85, 10, true, '0.12 0.17 0.14', 'right');
         y -= 26;
       });
       const fin = financingPlan(property.id);
-      if (!archived && fin.loan > 0) {
+      if (!archived && !onlyActual && fin.loan > 0) {
         need(110);
         text('Finanzierung', M, 12, true); y -= 18;
         [['Darlehen', formatCost(fin.loan)], ['Sollzins / anfängliche Tilgung', `${fin.rate} % / ${fin.amort} %`], ['Monatliche Rate', formatCost(Math.round(fin.monthly))], ['Zinsen / Tilgung im 1. Jahr', `${formatCost(Math.round(fin.firstYearInterest))} / ${formatCost(Math.round(fin.firstYearPrincipal))}`], ['Restschuld nach 10 Jahren', formatCost(Math.round(fin.after10))], ['Schuldenfrei', fin.payable ? `nach ${fin.years} Jahren` : '–']].forEach(([label, value]) => { text(label, M, 10, false, '0.4 0.45 0.4'); text(value, W - M, 10, true, '0.12 0.17 0.14', 'right'); y -= 15; });
@@ -14476,26 +14492,77 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         });
       }
       pages.push(ops);
-      pages.forEach((page, index) => page.push(`BT /F1 8 Tf 0.5 0.55 0.5 rg ${M} 28 Td (${pdfEncode(`${property.name} · Kostenübersicht ${year} · Seite ${index + 1} von ${pages.length} · erstellt mit Husora`)}) Tj ET`));
+      pages.forEach((page, index) => page.push(`BT /F1 8 Tf 0.5 0.55 0.5 rg ${M} 28 Td (${pdfEncode(`${property.name} · ${onlyActual ? 'Ist-Kosten' : 'Kostenübersicht'} ${year} · Seite ${index + 1} von ${pages.length} · erstellt mit Husora`)}) Tj ET`));
       const stream = (data) => `<< /Length ${data.length} >>\nstream\n${data}\nendstream`;
       const objs = ['<< /Type /Catalog /Pages 2 0 R >>', `<< /Type /Pages /Count ${pages.length} /Kids [${pages.map((_, index) => `${5 + index * 2} 0 R`).join(' ')}] >>`, '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];
       pages.forEach((page, index) => { objs.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${6 + index * 2} 0 R >>`); objs.push(stream(page.join('\n'))); });
       let pdf = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';
       const offsets = [];
       objs.forEach((body, index) => { offsets.push(pdf.length); pdf += `${index + 1} 0 obj\n${body}\nendobj\n`; });
+      // Maschinenlesbare Ist-Werte (SEK), damit die PDF unter „Plan“ wieder eingelesen werden kann.
+      const data = { app: 'husora', kind: onlyActual ? 'ist' : 'overview', year, property: property.name, currency: 'SEK', items: rows.filter((row) => row.actual > 0).map((row) => ({ id: row.category.id, label: row.category.label, group: row.category.group || 'other', amount: Math.round(row.actual) })) };
+      pdf += `%HUSORA-COSTS ${btoa(unescape(encodeURIComponent(JSON.stringify(data))))}\n`;
       const xref = pdf.length;
       pdf += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n${offsets.map((offset) => `${String(offset).padStart(10, '0')} 00000 n \n`).join('')}trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
       const bytes = new Uint8Array(pdf.length);
       for (let index = 0; index < pdf.length; index += 1) bytes[index] = pdf.charCodeAt(index) & 255;
       return bytes;
     }
+    // PDF der Ist-Kosten einlesen und die Positionen als Planwerte übernehmen.
+    async function importCostsPdf(file) {
+      if (!file) return;
+      const property = properties.find((item) => item.id === costProperty) || properties[0];
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      let raw = '';
+      for (let index = 0; index < bytes.length; index += 1) raw += String.fromCharCode(bytes[index]);
+      let items = [];
+      let year = '';
+      const marker = raw.match(/%HUSORA-COSTS ([A-Za-z0-9+/=]+)/);
+      if (marker) {
+        try { const data = JSON.parse(decodeURIComponent(escape(atob(marker[1])))); items = Array.isArray(data.items) ? data.items : []; year = data.year || ''; } catch (error) { items = []; }
+      }
+      if (!items.length) {
+        // Andere PDFs: Text auslesen und bekannte Positionen mit Betrag suchen.
+        try {
+          const pdfjs = await loadPdfJs();
+          const doc = await pdfjs.getDocument({ data: bytes }).promise;
+          let text = '';
+          for (let page = 1; page <= doc.numPages; page += 1) { const content = await (await doc.getPage(page)).getTextContent(); text += ` ${content.items.map((item) => item.str).join(' ')}`; }
+          const amount = (value) => Number(String(value).replace(/[\s.\u00a0\u202f]/g, '').replace(',', '.'));
+          costCategories.forEach((category) => {
+            const pattern = new RegExp(`${category.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s+([\\d][\\d\\s.\u00a0\u202f]*(?:,\\d+)?)\\s*(kr|€|SEK|EUR)`, 'i');
+            const match = text.match(pattern);
+            if (match) { const value = amount(match[1]); if (value > 0) items.push({ id: category.id, label: category.label, group: category.group, amount: /€|EUR/i.test(match[2]) ? displayToSek(value) : value }); }
+          });
+        } catch (error) { /* pdf.js nicht verfügbar */ }
+      }
+      items = items.filter((item) => item && item.amount > 0 && item.id !== 'financing');
+      if (!items.length) { showToast('In dieser PDF wurden keine Kostenpositionen gefunden. Am besten eignet sich die Ist-Kosten-PDF aus Husora.'); return; }
+      const total = items.reduce((sum, item) => sum + Number(item.amount), 0);
+      if (!window.confirm(`${items.length} Positionen${year ? ` aus den Ist-Kosten ${year}` : ''} gefunden (Summe ${formatCost(total)}).\n\nDiese Beträge ersetzen die Planwerte der jeweiligen Positionen. Alle anderen Planwerte bleiben unverändert. Übernehmen?`)) return;
+      const costs = costsOf(property.id);
+      items.forEach((item) => {
+        if (!costCategories.some((category) => category.id === item.id)) {
+          const entry = { id: item.id, group: COST_GROUPS.some((group) => group.id === item.group) ? item.group : 'other', label: item.label || item.id, note: 'Aus PDF übernommen', amount: 0 };
+          customCostCats = [...customCostCats, entry];
+          costCategories.push({ ...entry, custom: true });
+        }
+        costs[item.id] = Math.round(Number(item.amount));
+      });
+      saveStore('stugliv-cost-custom-cats', customCostCats);
+      persistAnnualCosts();
+      costListOpen = true;
+      const scroll = window.scrollY; render(); window.scrollTo(0, scroll);
+      showToast(`${items.length} Planwerte aus der PDF übernommen.`);
+    }
     function exportCostsPdf(which) {
       const property = properties.find((item) => item.id === costProperty) || properties[0];
-      const archived = which === 'current' ? null : (costArchive[property.id] || []).find((entry) => entry.year === Number(which));
+      const onlyActual = which === 'actual';
+      const archived = which === 'current' || onlyActual ? null : (costArchive[property.id] || []).find((entry) => entry.year === Number(which));
       const year = archived ? archived.year : new Date().getFullYear();
-      const bytes = buildCostsPdf(property, year, archived);
-      const name = `Kosten-${String(property.name).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '')}-${year}.pdf`;
-      showPdf(bytes, name, `Kostenübersicht ${year}`);
+      const bytes = buildCostsPdf(property, year, archived, onlyActual);
+      const name = `${onlyActual ? 'Ist-Kosten' : 'Kosten'}-${String(property.name).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '')}-${year}.pdf`;
+      showPdf(bytes, name, onlyActual ? `Ist-Kosten ${year}` : `Kostenübersicht ${year}`);
     }
 
     // --- Ereignisse ---
@@ -14554,6 +14621,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const scroll = window.scrollY; render(); window.scrollTo(0, scroll);
       showToast(`„${label}“ als Planposition ergänzt – den Betrag passt du unter „Planwerte“ an.`);
     }
+    document.addEventListener('change', (event) => {
+      if (event.target.matches?.('[data-cost-pdf-import]')) { importCostsPdf(event.target.files[0]); event.target.value = ''; }
+    });
     document.addEventListener('submit', (event) => {
       if (event.target.id !== 'cost-custom-form') return;
       event.preventDefault();
