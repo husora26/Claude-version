@@ -3014,6 +3014,11 @@
     .status.pending, .inspection-status-badge { color: #6f5420; }
     .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #000); }
   
+    button.cost-figure { width: 100%; color: var(--ink); text-align: left; font: inherit; cursor: pointer; transition: background-color .2s ease, color .2s ease, transform .15s ease; }
+    button.cost-figure:hover { transform: translateY(-2px); }
+    .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -6800,16 +6805,28 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const conditionTile = `<div class="key-fact condition cond-${conditionClass}"><span class="key-fact-label">${icon('check')} Zustand</span><strong>${escapeHtml(property.condition || 'Noch nicht bewertet')}</strong></div>`;
       return `<div class="key-facts">${energyTile}${conditionTile}${tiles.map(([label, value, name]) => `<div class="key-fact"><span class="key-fact-label">${icon(name)} ${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join('')}</div>`;
     }
+    let detailCostMode = 'plan';
+    document.addEventListener('click', (event) => {
+      const tile = event.target.closest('[data-detail-cost-mode]');
+      if (!tile) return;
+      detailCostMode = tile.dataset.detailCostMode === 'actual' ? 'actual' : 'plan';
+      const scroll = window.scrollY; render(); window.scrollTo(0, scroll);
+    });
     function propertyCostsHtml(property) {
       const costs = annualCosts[property.id] || initialCosts[property.id] || {};
       const plan = costCategories.map((category) => ({ ...category, value: Math.max(0, Number(costs[category.id]) || 0), imported: Boolean(costSources[property.id]?.[category.id]) })).filter((category) => category.value > 0).sort((a, b) => b.value - a.value);
       const total = plan.reduce((sum, category) => sum + category.value, 0);
       const year = new Date().getFullYear();
       const actual = expensesFor(property.id, year).reduce((sum, expense) => sum + Number(expense.amount), 0);
-      const max = plan[0]?.value || 1;
+      const actualByCat = costCategories.map((category) => ({ ...category, value: expensesFor(property.id, year).filter((expense) => expense.category === category.id).reduce((sum, expense) => sum + Number(expense.amount), 0) })).filter((category) => category.value > 0).sort((a, b) => b.value - a.value);
+      const showActual = detailCostMode === 'actual';
+      const list = showActual ? actualByCat : plan;
+      const max = list[0]?.value || 1;
       const listingCosts = (property.facts || []).filter((fact) => /kosten|drift|ekonomi/i.test(fact.group) && fact.value && fact.value !== IMPORT_NO_DATA);
-      return `<div class="cost-overview"><div class="cost-figures"><div class="cost-figure main"><small>Geplante Jahreskosten</small><strong>${escapeHtml(formatCost(total))}</strong><span>≈ ${escapeHtml(formatCost(Math.round(total / 12)))} pro Monat</span></div><div class="cost-figure"><small>Ist-Kosten ${year}</small><strong>${escapeHtml(formatCost(actual))}</strong><span>${total ? `${Math.round((actual / total) * 100)} % vom Plan` : 'aus Rechnungen'}</span></div></div>
-        <ul class="cost-mini-bars">${plan.slice(0, 6).map((category, index) => `<li><span>${escapeHtml(category.label)}${category.imported ? '<em>Inserat</em>' : ''}</span><span class="cost-mini-track"><span style="width:${Math.round((category.value / max) * 100)}%;background:${COST_CHART_COLORS[index % COST_CHART_COLORS.length]}"></span></span><strong>${escapeHtml(formatCost(category.value))}</strong></li>`).join('')}</ul>
+      return `<div class="cost-overview"><div class="cost-figures"><button type="button" class="cost-figure ${showActual ? '' : 'main'}" data-detail-cost-mode="plan" aria-pressed="${!showActual}"><small>Geplante Jahreskosten</small><strong>${escapeHtml(formatCost(total))}</strong><span>≈ ${escapeHtml(formatCost(Math.round(total / 12)))} pro Monat</span></button><button type="button" class="cost-figure ${showActual ? 'main' : ''}" data-detail-cost-mode="actual" aria-pressed="${showActual}"><small>Ist-Kosten ${year}</small><strong>${escapeHtml(formatCost(actual))}</strong><span>${total ? `${Math.round((actual / total) * 100)} % vom Plan` : 'aus Rechnungen'}</span></button></div>
+        <p class="cost-mini-caption">${showActual ? `Gebuchte Ist-Kosten ${year} je Position` : 'Planwerte je Position'}</p>
+        ${showActual && !list.length ? `<p class="cost-mini-empty">Für ${year} sind noch keine Ist-Kosten gebucht.</p>` : ''}
+        <ul class="cost-mini-bars">${list.slice(0, 6).map((category, index) => `<li><span>${escapeHtml(category.label)}${category.imported ? '<em>Inserat</em>' : ''}</span><span class="cost-mini-track"><span style="width:${Math.round((category.value / max) * 100)}%;background:${COST_CHART_COLORS[index % COST_CHART_COLORS.length]}"></span></span><strong>${escapeHtml(formatCost(category.value))}</strong></li>`).join('')}</ul>
         ${listingCosts.length ? `<details class="facts-more"><summary>Kostenangaben aus dem Inserat (${listingCosts.length})</summary><dl class="facts-grid">${listingCosts.map((fact) => `<div><dt>${escapeHtml(fact.label)}</dt><dd>${escapeHtml(fact.value)}</dd></div>`).join('')}</dl></details>` : ''}</div>`;
     }
     // Bildansicht für Hausfotos und Grundrisse.
@@ -6878,12 +6895,12 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const beds = Number.parseInt(property.beds, 10);
       const assignedProviders = providers.filter((provider) => (servicePartnerAssignments[property.id] || []).includes(provider.id));
       const partnerSummary = assignedProviders.length ? assignedProviders.map((provider) => provider.name).join(', ') : 'Keine Servicepartner zugeordnet';
-      return `<div class="welcome"><div><p class="eyebrow">Objektverwaltung · ${escapeHtml(property.region || 'Schweden')}</p><h1>${escapeHtml(property.name)}</h1><p class="subtitle">${escapeHtml(property.address)}</p>${inspectionStatusBadge(property.id)}</div><button class="primary-btn" data-action="edit-property" data-property="${escapeHtml(property.id)}">Bearbeiten</button></div>
+      return `<div class="welcome"><div><p class="eyebrow">Objektverwaltung · ${escapeHtml(property.region || 'Schweden')}</p><h1>${escapeHtml(property.name)}</h1><p class="subtitle">${escapeHtml(property.address)}</p>${inspectionStatusBadge(property.id)}</div></div>
         <section class="card house-glance"><div class="card-head"><div><h2 class="card-title">Auf einen Blick</h2><p class="card-caption">Aktueller Stand – antippen für Details</p></div><div class="house-card-actions">${isPro() ? `<button type="button" class="secondary-btn" data-house-goto="house3d" data-property="${escapeHtml(property.id)}">${icon('cube')} 3D-Modell</button>` : ''}<button type="button" class="secondary-btn" data-house-goto="documents" data-property="${escapeHtml(property.id)}">${icon('document')} Dokumente</button></div></div><div class="house-glance-body">${houseTilesHtml(property)}</div></section>
         ${(() => {
           const photos = propertyPhotos(property);
           const gallery = photos.length ? `<div class="detail-gallery ${photos.length > 1 ? 'multi' : ''}"><button type="button" class="detail-photo-main" data-lightbox-open="photos" data-index="0" aria-label="Foto groß anzeigen"><img src="${escapeHtml(photos[0])}" alt="Hausfoto: ${escapeHtml(property.name)}"><span class="photo-zoom">${icon('search')} Vergrößern</span></button>${photos.length > 1 ? `<div class="detail-photo-thumbs count-${Math.min(4, photos.length - 1)}">${photos.slice(1, 5).map((src, index) => `<button type="button" data-lightbox-open="photos" data-index="${index + 1}" aria-label="Foto ${index + 2} groß anzeigen"><img src="${escapeHtml(src)}" alt="">${index === 3 && photos.length > 5 ? `<span>+${photos.length - 5}</span>` : ''}</button>`).join('')}</div>` : ''}</div>` : '<p class="property-notes" style="margin:0 0 12px">Noch kein Foto – über „Bearbeiten“ hinzufügen.</p>';
-          return detailSection('building', 'Gebäude & Grundstück', 'Fotos, wichtige Angaben, Zustand und Energie', `<div class="detail-body">${gallery}${keyFactsHtml(property)}</div>`, `<button class="text-btn" data-page="properties">${singleHouse() ? '← Mein Ferienhaus' : '← Alle Ferienhäuser'}</button>`);
+          return detailSection('building', 'Gebäude & Grundstück', 'Fotos, wichtige Angaben, Zustand und Energie', `<div class="detail-body">${gallery}${keyFactsHtml(property)}</div>`, `<button type="button" class="text-btn" data-action="edit-property" data-property="${escapeHtml(property.id)}">${icon('edit')} Gebäudedaten bearbeiten</button>`);
         })()}
         ${detailSection('costs', 'Kosten', `Jahresplan und Ist-Kosten ${new Date().getFullYear()}`, propertyCostsHtml(property), `<button type="button" class="text-btn" data-house-goto="costs" data-property="${escapeHtml(property.id)}">Zu den Kosten →</button>`)}
         ${property.importSummary ? detailSection('analysis', 'Analyse aus dem Inserat', `Energieeffizienz, Zustand, Sanierungen und Empfehlungen · ${escapeHtml(property.importSummary.sourceName || 'Import')}`, importSummaryHtml(property.importSummary, { deletable: true }), `<button type="button" class="text-btn" data-house-goto="renovations" data-property="${escapeHtml(property.id)}">Als Sanierung planen →</button>`) : ''}
